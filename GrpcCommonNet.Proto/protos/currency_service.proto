@@ -1,0 +1,155 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Currency";
+
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "protos/common/general.proto";
+import "protos/common/currency.proto";
+
+package currency;
+
+
+// Сервисы
+service CurrencyServices {
+    // *** методы работы с валютой
+    
+    rpc GetCurrency(CurrencyRequest) returns (CurrencyResponse);                        // Получить по id
+    rpc GetListCurrency(ListCurrencyRequest) returns (ListCurrencyResponse);            // Получить список по фильтру
+    rpc CreateCurrency(CreateCurrencyRequest) returns (CurrencyResponse);               // Создать 
+    rpc UpdateCurrency(UpdateCurrencyRequest) returns (CurrencyResponse);               // Редактировать 
+    rpc DeleteCurrency(DeleteCurrencyRequest) returns (DeleteCurrencyResponse);         // Удалить по id
+    rpc DeleteIdsCurrency(DeleteIdsCurrencyRequest) returns (UndeletedIdsCurrencyResponse); // Удалить по списку id 
+
+    // *** методы работы курсами валют
+
+    rpc GetListCurrencyRateDate(GetListCurrencyRateDateRequest) returns (GetListCurrencyRateDateResponse);    // Получить валюты с курсми на определенную дату
+    rpc GetCurrencyRate(CurrencyRateRequest) returns (CurrencyRateResponse);             // Получить курс валюты на определенную дату
+    rpc GetListCurrencyRate(ListCurrencyRateRequest) returns (ListCurrencyRateResponse); // Получить список курсов на валюты за период
+    rpc CreateCurrencyRate(CreateCurrencyRateRequest) returns (CurrencyRateResponse);
+    rpc UpdateCurrencyRate(UpdateCurrencyRateRequest) returns (CurrencyRateResponse);
+    rpc DeleteCurrencyRate(DeleteCurrencyRateRequest) returns (DeleteCurrencyRateResponse);
+    rpc DeleteIdsCurrencyRate(DeleteIdsCurrencyRateRequest) returns (UndeleteIdsCurrencyRateResponse);
+
+
+}
+
+// Запросы списка валют по фильтру
+message ListCurrencyRequest {
+    oneof filter {
+        string currency_code = 1;    // фильтр или по коду валюты
+        string currency_abbrev = 2;  // фильтр или по аббревиатуре валюты
+    };
+    optional bool include_invisible = 3;             // true - все, false - только видимые валюты 
+    optional string order_by = 4;                    // Порядок сортировки, например "currency_order_number asc, currency_abbrev asc"
+    optional google.protobuf.FieldMask field_mask = 5; // Маска полей {"paths": ["currency_id","currency_code", "currency_abbrev", "currency_order_number"]}
+}
+
+// Ответ: Cписок валют по фильтру
+message ListCurrencyResponse {
+    Common.Result result = 1;
+    repeated Common.Currency currencies = 2;
+}
+
+message CurrencyRequest {
+    int32 id = 1;
+    optional google.protobuf.FieldMask field_mask = 2; // Маска полей {"paths": ["currency_id","currency_code", "currency_abbrev", "currency_order_number"]}
+} 
+
+message CurrencyResponse {
+    Common.Result result = 1;
+    Common.Currency currency = 2;
+} 
+
+message CreateCurrencyRequest {
+    Common.Currency currency = 1;
+}
+
+message UpdateCurrencyRequest {
+    Common.Currency currency = 1;
+    optional google.protobuf.FieldMask field_mask = 2; // Маска полей {"paths": ["currency_id","currency_code", "currency_abbrev", "currency_order_number"]}
+}
+
+message DeleteCurrencyRequest {
+    int32 id = 1;
+}
+
+message DeleteCurrencyResponse {
+    Common.Result result = 1;
+}
+
+message DeleteIdsCurrencyRequest {
+    repeated int32 ids = 1;
+}
+
+message UndeletedIdsCurrencyResponse {
+    Common.Result result = 1;    
+    repeated int32 undeleted_ids = 2;
+}
+
+message CurrencyRateRequest {
+    oneof filter {
+        string currency_code = 1;    // фильтр или по коду валюты
+        string currency_abbrev = 2;  // фильтр или по аббревиатуре валюты
+        int32 currency_id = 3;  // фильтр или по аббревиатуре валюты
+    };
+    string date = 4;  // формат YYYY-MM-DD
+}
+
+message CurrencyRateResponse {
+    Common.Result result = 1;    
+    Common.Rate rate = 2;
+}
+
+message ListCurrencyRateRequest {
+    oneof filter {
+        string currency_code = 1;    // фильтр или по коду валюты
+        string currency_abbrev = 2;  // фильтр или по аббревиатуре валюты
+        int32 currency_id = 3;       // фильтр или по идентификатору валюты
+    };
+    optional google.protobuf.Timestamp start_date = 4;         // формат YYYY-MM-DD
+    optional google.protobuf.Timestamp end_date = 5;           // формат YYYY-MM-DD
+    google.protobuf.FieldMask field_mask = 6;
+}
+
+message ListCurrencyRateResponse {
+    Common.Result result = 1;
+    repeated Common.Rate rates = 2;
+}
+
+message CreateCurrencyRateRequest {
+    Common.Rate rate = 1;
+}   
+
+message UpdateCurrencyRateRequest {
+    Common.Rate rate = 1;
+    optional google.protobuf.FieldMask field_mask = 2; // Маска полей {"paths": ["currency_rate_id","currency_id", "date", "rate"]}
+}
+
+message DeleteIdsCurrencyRateRequest {
+    repeated int32 rate_ids = 1;
+}
+message UndeleteIdsCurrencyRateResponse {
+    Common.Result result = 1;    
+    repeated int32 undeleted_rate_ids = 2;
+}
+
+message DeleteCurrencyRateRequest {
+    int64 rate_id = 1;
+}   
+message DeleteCurrencyRateResponse {
+    Common.Result result = 1;    
+}   
+
+message GetListCurrencyRateDateRequest {
+    google.protobuf.Timestamp date = 1;
+    string name = 2;
+    string abbrev = 3;
+    optional bool include_invisible = 4;             // true - все, false - только видимые валюты
+    google.protobuf.FieldMask field_mask = 5;
+}
+
+message GetListCurrencyRateDateResponse {
+    Common.Result result = 1;
+    repeated Common.CurrencyRate currency_rates = 2;
+}

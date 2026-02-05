@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package Contract;
+
+option csharp_namespace = "GrpcCommonNet.Library.Contract";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "protos/common/general.proto";
+import "protos/common/contragent.proto";
+import "protos/common/unit.proto";
+import "protos/common/department.proto";
+import "protos/common/currency.proto";
+import "protos/common/product.proto";
+
+
+
+// Метаданные аудита
+message Metadata {
+  google.protobuf.Timestamp create_at = 1;      // Дата создания записи
+  string create_by = 2;                         // Аббревиатура создателя записи
+  int32 create_userid = 3;                      // Идентификатор создателя (пользователя)
+  google.protobuf.Timestamp update_at = 4;      // Дата последнего редактирования записи
+  string update_by = 5;                         // Аббревиатура последнего редактора записи
+  int32 update_userid = 6;                      // Идентификатор последнего редактора (пользователя)
+}
+
+message Nomenclature {
+	int32 goods_id = 1;
+	string goods_short = 2;
+	Common.Unit unit = 3;
+}
+
+// Строка контракта
+message Line {
+  int32 id = 1;								// Идентификатор строки контракта
+  int32 contract_id	= 2;					// Идентификатор контракта /допсоглашения / счета-договора
+  int32 previous_id	= 3;					// Идентификатор предыдущей строки контракта, которая была изменена
+  Common.Unit unit = 4;                     // Единица измерения
+  Common.Product product = 5;	            // Товара из справочника
+  int32 order = 6;							// Порядковый номер строки
+  string name = 7;							// Наименование в строке контракта
+  Common.DecimalValue qty = 8;	            // Кол-во 
+  Common.DecimalValue price = 9;	        // Цена
+  Common.DecimalValue amount = 10;	        // Сумма без НДС
+  Common.DecimalValue vat_prc = 11;			// Процент НДС
+  Common.DecimalValue sum_vat = 12;	        // Сумма НДС
+  Common.DecimalValue sum = 13;				// Сумма с НДС
+}
+
+message TypeContract {
+	int32 type_contract_id = 1;
+	string type_contract_name = 2;
+} 
+
+// Представление контракта
+message Contract {
+  // Основные Идентификаторы
+  int32 id = 1;											// Идентификатор контракта
+  int32 direct = 2;										// Направление сделки относительно нашей компании: 0 - реализация (Seller = наша орг), 1 - приобретение.
+  int32 root_id = 3;									// Ссылка на Первичный контракт (основной) 
+  int32 parent_id = 4;									// Ссылка на Родительскую запись, из которой "порождена" данная (цепочка допсоглашений)
+  TypeContract type_contract = 5;						// Тип контракта
+  int32 state = 6;										// Статус контракта (новый, выдан клиенту, заключен, в работе, завершен)
+
+  // Контрагенты по контракту
+  Common.Contragent seller = 7;							// Продавец (структура)
+  Common.Contragent buyer = 8;							// Покупатель (структура)
+  Common.Contragent shipper = 9;						// Отправитель (структура)
+  Common.Contragent consignee = 10;						// Получатель (структура)
+
+  // Даты и номера
+  google.protobuf.Timestamp date = 11;					// дата контракта (date -> Timestamp)
+  google.protobuf.Timestamp expiration_date = 12;		// Дата окончания действия
+  string number = 13;									// Номер контракта
+  string name = 14;										// Наименование контракта
+
+  // Валюта и суммы (decimal храним как string для точности)
+  Common.Currency currency = 15;                        // Валюта контракта (структура)
+  Common.DecimalValue sum = 16;                         // сумма с НДС (decimal -> string)
+  Common.DecimalValue amount = 17;                      // сумма без НДС
+  Common.DecimalValue sum_vat = 18;                     // сумма НДС
+
+  // Свободные данные JSON
+  google.protobuf.Struct data = 19;
+
+  // Дополнительные поля
+  Common.Department department = 20;					// Идентификатор подразделение
+  int64 templdoc_id = 24;								// Идентификатор шаблона
+  string comment = 25;									// Комментарий к контракту
+  Metadata metadata = 26;								// Метаданные аудита
+  
+  repeated Line lines = 27;
+}

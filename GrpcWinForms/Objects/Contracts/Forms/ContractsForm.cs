@@ -1,0 +1,225 @@
+﻿using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Contract;
+using GrpcCommonNet.Library.Contragent;
+using GrpcCommonNet.Proto.Utils;
+using GrpcWinForms.Forms;
+using GrpcWinForms.Models;
+using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
+using SmartGrid;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace GrpcWinForms.Objects.Contracts.Forms
+{
+    public partial class ContractsForm : Form
+    {
+        private static ContractServices.ContractServicesClient _service;
+        private Loader loaderContracts = new Loader();
+        private Loader loaderLines = new Loader();
+
+        public ContractsForm()
+        {
+            InitializeComponent();
+            loaderContracts.Parent = smartGridContracts;
+            loaderLines.Parent = smartGridLines;
+        }
+
+        private void toolStripButtonNew_Click(object sender, EventArgs e)
+        {
+
+            foreach (Form child in MdiParent.MdiChildren)
+            {
+                if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == 0) { child.Activate(); return; }
+            }
+            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent };
+            f.Show();
+
+        }
+
+        private async void RefreshContract()
+        {
+            loaderContracts.ShowLoader();
+            try
+            {
+                ListContractsRequest request = new ListContractsRequest()
+                {
+
+                };
+                request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
+                {
+                    Paths = { "id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data" }
+                };
+                ListContractsResponse response = await GrpcClients.GrpcClients.Contract.GetListContractsAsync(request);
+
+                BindingList<Contract> contracts = new BindingList<Contract>(response.Contracts);
+                smartGridContracts.DataSource = contracts;
+                loaderContracts.HideLoader();
+                return;
+            }
+            catch (Exception ex)
+            {
+                loaderContracts.HideLoader();
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+
+            }
+        }
+
+        private void ContractsForm_Load(object sender, EventArgs e)
+        {
+            RefreshContract();
+        }
+
+
+        /// <summary>
+        /// Метод заполнения вычисляемых полей грида
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void smartGridContracts_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
+        {
+            Contract contract = (Contract)smartGridContracts.Rows[e.Row].DataSource;
+            switch (smartGridContracts.Cols[e.Col].Name)
+            {
+                case "colSeller":
+                    {
+                        e.Value = contract.Seller == null ? "" : contract.Seller.Name;
+                        break;
+                    }
+                case "colBuyer":
+                    {
+                        e.Value = contract.Buyer == null ? "" : contract.Buyer.Name;
+                        break;
+                    }
+                case "colAbbrev":
+                    {
+                        e.Value = contract.Currency == null ? "" : contract.Currency.Abbrev;
+                        break;
+                    }
+                case "colDepartment":
+                    {
+                        e.Value = "";
+                        break;
+                    }
+                case "colSum":
+                    {
+                        e.Value = contract.Sum == null || contract.Sum.Units == 0 ? "" : contract.Sum.Units / (decimal)Math.Pow(10, contract.Sum.Scale);
+                        break;
+                    }
+                case "colDate":
+                    {
+                        e.Value = contract.Date == null ? "" : contract.Date.ToDateTime();
+                        break;
+                    }
+                case "colExpirationDate":
+                    {
+                        e.Value = contract.ExpirationDate == null ? "" : contract.ExpirationDate.ToDateTime();
+                        break;
+                    }
+                case "colType":
+                    {
+                        e.Value = contract.TypeContract == null ? "" : contract.TypeContract.TypeContractName ?? "";
+                        break;
+                    }
+            }
+        }
+
+        private void toolStripButtonRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshContract();
+        }
+
+        private void smartGridContracts_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
+        {
+            // Считать строки контракта
+            BindingList<Line> lines = new BindingList<Line>();
+            try
+            {
+                loaderLines.ShowLoader();
+                if (smartGridContracts.Row > smartGridContracts.Rows.Fixed)
+                {
+                    Contract contract = (Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource;
+
+                    ContractLineRequest request = new ContractLineRequest()
+                    {
+                        Id = contract.Id
+                    };
+                    ListContractLinesResponse response = GrpcClients.GrpcClients.Contract.GetListContractLines(request);
+                    lines = new BindingList<Line>(response.Lines);
+                }
+                smartGridLines.DataSource = lines;
+                loaderLines.HideLoader();
+            }
+            catch (Exception ex)
+            {
+                loaderLines.HideLoader();
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+
+            }
+        }
+
+        private void toolStripButtonEdit_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiParent.MdiChildren)
+            {
+                if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == 0) { child.Activate(); return; }
+            }
+            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent };
+            f.ContractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
+            f.Show();
+
+        }
+
+        private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
+        {
+            Line line = (Line)smartGridLines.Rows[e.Row].DataSource;
+            switch (smartGridLines.Cols[e.Col].Name)
+            {
+                case "colUnitName":
+                    {
+                        e.Value = line.Unit == null ? "" : line.Unit.Short;
+                        break;
+                    }
+                case "colQty":
+                    {
+                        e.Value = line.Qty == null || line.Qty.Units == 0 ? "" : MyConvert.ToDecimal(line.Qty);
+                        break;
+                    }
+                case "colPrice":
+                    {
+                        e.Value = line.Price == null || line.Price.Units == 0 ? "" : MyConvert.ToDecimal(line.Price);
+                        break;
+                    }
+                case "colAmount":
+                    {
+                        e.Value = line.Amount == null || line.Amount.Units == 0 ? "" : MyConvert.ToDecimal(line.Amount);
+                        break;
+                    }
+                case "colVatPrc":
+                    {
+                        e.Value = line.VatPrc == null || line.VatPrc.Units == 0 ? "" : MyConvert.ToDecimal(line.VatPrc);
+                        break;
+                    }
+                case "colSumVat":
+                    {
+                        e.Value = line.SumVat == null || line.SumVat.Units == 0 ? "" : MyConvert.ToDecimal(line.SumVat);
+                        break;
+                    }
+                case "colSum":
+                    {
+                        e.Value = line.Sum == null || line.Sum.Units == 0 ? "" : MyConvert.ToDecimal(line.Sum);
+                        break;
+                    }
+            }
+
+        }
+    }
+}

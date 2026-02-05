@@ -1,0 +1,73 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "google/protobuf/timestamp.proto";   
+import "protos/common/contragent.proto";
+import "protos/common/bank.proto";
+import "protos/common/currency.proto";
+
+package Common;
+
+enum BankAccountType {              //  Тип счета: 0 - Р/с, 1 - счета пластиковых карт, 2 - Прочие
+    Standart = 0;
+    PlasticCard = 1;
+    Other = 2;
+}
+
+enum TypeRow {                      //  Тип  строки: 0 - Банковский счет, 1 - Касса
+    Account = 0;
+    CashDesk = 1;
+}
+
+message BankAccount {
+    int32 id = 1;                               //    ID_M_BACCOUNT` int NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор счета в банке',
+    Common.Bank bank_id = 2;                    // `ID_M_BANK` int DEFAULT NULL COMMENT 'Идентификатор банка',
+    Common.Contragent contragent = 3;           // `ID_M_SUBJ` int DEFAULT NULL COMMENT 'Ссылка на субъект',
+    string account = 4;                         // `Account` varchar(50) DEFAULT NULL COMMENT 'Счет',
+    google.protobuf.Timestamp date_open = 5;    //  `DOpen` datetime DEFAULT NULL COMMENT 'Дата открытия',
+    google.protobuf.Timestamp date_close = 6;   //  `DClose` datetime DEFAULT NULL COMMENT 'Дата закрытия',
+    bool is_close = 7;                          // `IsClose` bit(1) DEFAULT b'0' COMMENT 'признак открытого/закрытого счета',
+    bool id_pay = 8;                            // `IsPay` bit(1) DEFAULT b'1' COMMENT 'счет для оплаты', ???????
+    BankAccountType account_type = 9;           //  `AccType` tinyint DEFAULT '0' COMMENT 'Тип счета: 0 - Р/с, 1 - счета пластиковых карт, 2 - Прочие',
+    string comment = 10;                         // `Comment` varchar(100) DEFAULT NULL COMMENT 'Комментарий',
+    TypeRow type_row = 11;                      // `Type` tinyint DEFAULT '0' COMMENT '1 - Касса',
+    string short = 12;                          //  `MCode` varchar(50) NOT NULL COMMENT 'Мнемокод',
+    bool is_blocked = 13;                       //  `IsBlocked` bit(1) DEFAULT b'0' COMMENT 'Счет заблокирован',
+//  `CurrencyId` int DEFAULT NULL COMMENT 'Ссылка на валюту. Убрать ...',
+//  `AccountEXT` varchar(2) DEFAULT NULL COMMENT 'Дополнительное поле для Счета(пара обеспечивает уникальность)',
+//  `FiscalAccount` varchar(27) DEFAULT NULL COMMENT 'Казначейский лицевой счет дохода',
+//  `IsMain` tinyint(1) DEFAULT '0' COMMENT 'Основной счет для организации по валюте',
+//  `IsCrn` bit(1) DEFAULT b'0' COMMENT 'Признак валютного счета',
+//  `IsMainBank` bit(1) DEFAULT b'0' COMMENT 'Основной счет банка для организации по валюте',
+//  `OldRfrId` int DEFAULT NULL COMMENT '!!! Старый идентификатор refers',
+//  `IsSaleBuy` tinyint DEFAULT '1' COMMENT 'Признак реализация/приобретение (0-прочие, 1 - реализ/приобр)',
+//  `DataConvertingDate` datetime DEFAULT NULL COMMENT 'Дата начала перекачки данных RWS <-> bookkeep',
+//  `DataConvertingDirect` tinyint DEFAULT '0' COMMENT 'Направление перекачки: \r\n0 - bookkeep --> RWS\r\n1 - RWS --> bookkeep',
+//  `DataConvertingYes` tinyint DEFAULT '0' COMMENT 'Перекачка включена?',
+//  `State` tinyint DEFAULT '0' COMMENT 'Состояние счета: 1 - заблокирован, 2 - закрыт',
+//  `StateDate` datetime DEFAULT NULL,
+//  `IsMultiCurrency` tinyint DEFAULT '0',
+//  `InPays` tinyint DEFAULT '0' COMMENT '1 - в фильтре Платежей в баз. валюте, 2 -  в фильтре Платежей в проч. валютах',
+//  `IsReRated` tinyint DEFAULT '0' COMMENT 'Переоценивать ли валюту в базовой валюте',
+}
+
+
+message BankAccountCurrency {
+    int32 id = 1;                               // `ID_M_BACCOUNT_CURRENCY` int NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор валюты банковского счета',
+    Common.BankAccount bank_account = 2;        // `ID_M_BACCOUNT` int DEFAULT NULL COMMENT 'Ссылка на банковский счет',
+    Common.Currency currency = 3;               // `CurrencyId` int DEFAULT NULL COMMENT 'Ссылка на валюту',
+    bool is_main = 4;                           // `IsMain` bit(1) DEFAULT b'0' COMMENT 'Основная валюта счета',
+    string short = 5;                           // `MCode` varchar(50) DEFAULT NULL COMMENT 'Мнемокод',
+    string comment =  6;                        // `Rem` varchar(255) DEFAULT NULL COMMENT 'Комментарий',
+    bool is_main_bank = 7;                      // `IsMainBank` bit(1) DEFAULT b'0' COMMENT 'Основной счет банка для организации по валюте',
+//  `IsBlocked` bit(1) DEFAULT b'0' COMMENT 'Счет заблокирован',
+//  `State` tinyint DEFAULT '0' COMMENT 'Состояние счета: 1 - заблокирован, 2 - закрыт',
+//  `StateDate` datetime DEFAULT NULL,
+//  `InPays` tinyint DEFAULT '0' COMMENT '1 - в фильтре Платежей в баз. валюте, 2 -  в фильтре Платежей в проч. валютах',
+//  `IsPay` bit(1) DEFAULT b'1' COMMENT 'счет для оплаты',
+//  `IsClose` bit(1) DEFAULT b'0' COMMENT 'признак открытого/закрытого счета',
+//  `DOpen` datetime DEFAULT NULL COMMENT 'Дата открытия',
+//  `DClose` datetime DEFAULT NULL COMMENT 'Дата закрытия',
+}
+

@@ -1,0 +1,13 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+package Common;
+
+// Модель подразделение
+message Department {
+	int32 id = 1;
+	string name = 2;
+	string short = 3;
+	string symbol = 4;
+}

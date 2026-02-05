@@ -1,0 +1,84 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "google/protobuf/timestamp.proto";
+import "protos/common/general.proto";
+import "protos/common/contragent.proto";
+import "protos/common/unit.proto";
+
+package Common;
+
+// Тип  строки товара
+enum TypeProduct {
+	Goods = 0;
+	Service = 1;
+	OurProduct = 2;
+	All = 3;									// Не может устанавливать у "товарной" строки
+} 
+
+// Строка иерархии товаров (каталога)
+message CatalogLine {
+	int32 id = 1;								// MGoodGroupId Идентификатор группы товара
+	string name =  2;							// MCode Мнемокод
+	int32 parent_id  =  3;						// ParentId Ссылка на родителя
+	string parent_ids  = 4;						// ParentIds  Устанавливает список родителей для всех записей
+	string parent_names = 5;					// MCodes Устанавливает список внутр. имен родителей для всех записей
+	int32 type_line = 6;							// Тип строки иерархии товаров: 0 - группа, 1 - вид товара, 2 - товар (лист - не попадает в в каталог)
+}
+
+// Строка товара
+message Product {
+	int32 id = 1;								// MGoodGroupId Идентификатор группы товара
+												// `Abbreviation` varchar(50) DEFAULT NULL COMMENT 'Аббревиатура вида/группы товара
+	string name =  2;							// MCode Мнемокод
+	optional int32 parent_id  =  3;				// ParentId Ссылка на родителя
+	optional string parent_ids  = 4;			// ParentIds  Устанавливает список родителей для всех записей
+	optional string parent_names = 5;			// MCodes Устанавливает список внутр. имен родителей для всех записей
+	TypeProduct type = 6;						// IsWork 0 - товар, 1 - работа, 2 продукция, и.д.
+	int64 unit_id = 7;							// UnitId` Единица измерения (для продажи)
+	string producer_code = 8;					// ProducerGoodCode Код товара от производителя
+	string our_code = 9;						// OurGoodCode УУТИ (условно уникальный товарный идентификатор)
+	string name_our = 10;						// Name Наименование
+	string name_pricelist = 11;					// PLName Наименование для Прайс-листа
+	string description = 12;					// Descript Описание
+	Common.Contragent vendor = 13;				// `ProducerId` int DEFAULT NULL COMMENT 'Ссылка на производителя',
+	Common.Contragent supplier = 14;						// SupplierId int DEFAULT NULL COMMENT 'Основной поставщик',
+
+	int32 type_display = 16;					// `IsAbsoluteDisplay` int DEFAULT '0',Показывать ли товар (где?)
+	string ikpu = 17;							// `IKPU` varchar(50) DEFAULT NULL COMMENT 'Код ИКПУ',
+	int32 hs_code = 18;							// `CodeTNVEDId` int DEFAULT NULL COMMENT 'Ссылка на справочник кодов ТНВЭД rfr_tnvedcode',
+	int32 trademark_id = 19;					// `GoodTrademarkId` int DEFAULT NULL COMMENT 'ID торговой марки',
+
+	// Временные поля (вероятно в отдельную таблицу все, что касается rws)
+
+	int32 rws_group_id = 20;					// RWSGroupId int DEFAULT NULL COMMENT 'Идентификатор группы в системе RWS',
+	int32 rws_kind_id = 21;						// `RWSKindId` int DEFAULT NULL COMMENT 'Идентификатор вида товара в системе RWS',
+	int32 rws_good_id = 22;						// `RWSGoodId` int DEFAULT NULL COMMENT 'Идетификатор товара в системе RWS',
+	int32 rws_unit_mcode = 23;					// `RWSUnitMCode` varchar(10) DEFAULT NULL COMMENT 'Внутр. наим. ед. изм. товара в системе RWS',
+	int32 rws_free_dep_qty = 24;				// `RWSFreeDepQnt` int DEFAULT NULL COMMENT 'Количество свободного товара на складе в системе RWS',
+	int32 rws_total_dep_qty = 25;				// `RWSTotalDepQnt` int DEFAULT NULL COMMENT 'Общее количество товара на складе в системе RWS',
+	bool from_rws = 26;							// `FromRWS` bit(1) DEFAULT b'0' COMMENT 'Товар пришел из RWS',
+	int32 source_id = 27;						// `SourceId` int DEFAULT '1' COMMENT 'Ссылка на источник товара, вид/группу товара',
+	bool is_has_ref_in_rws = 28;				// `IsHasRefInRWS` tinyint DEFAULT '0' COMMENT 'Есть ли ссылки в RWS',
+
+	// Таблица ценовых параметров
+
+	Common.DecimalValue purchase_qty = 29;		// QtyForPrice_Purchase_Global Кол-во товара, за которое указаны цены закупки
+	int32 purchase_currency_id = 30;			// Crn_Purchase_Global Валюта закупки при "Закупка за пределами государства (глобальная)"
+	Common.DecimalValue purchase_price_gl = 31;	// `Price_PurchaseCrn_Global0` decimal(20,4) DEFAULT '0.0000' COMMENT 'Цена прайса в валюте закупки при "Закупка за пределами государства (глобальная)".',
+	Common.DecimalValue purchase_discont_gl_percent = 32;	//  `DiscountBase_Purchase_Prc_Global` decimal(5,2) DEFAULT NULL COMMENT 'Процент скидки к цене прайса в валюте закупки при "Закупка за пределами государства (глобальная)"',
+	Common.DecimalValue purchase_price  = 33;	//  `Price_PurchaseCrn_Global` decimal(20,4) DEFAULT NULL COMMENT 'Цена в валюте закупки при "Закупка за пределами государства (глобальная)" с учетом скидки',
+	//  `ReplIds` varchar(2000) DEFAULT NULL COMMENT 'Идентификаторы удаленных записей',
+	//  `State` int DEFAULT '0' COMMENT 'Статус',
+	//  `WhoSetStatus` int DEFAULT NULL COMMENT 'Кто поставил статус',
+	//  `WhenSetStatus` datetime DEFAULT '0001-01-01 00:00:00',
+	Common.Unit unit_pl = 34;					//  `UnitId_PL` int DEFAULT NULL COMMENT 'Единица измерения (ценовая)  (?????)',
+	bool unit_direct = 35;						//  `Unit_direct` tinyint DEFAULT NULL COMMENT 'Направление перевода ед. измерения (0-из ценовой в продажную, 1-из продажной в ценовую)  (?????)',
+	Common.DecimalValue unit_coef = 36;			//  `Unit_coef` decimal(10,2) DEFAULT NULL COMMENT 'Коэффициент перевода  (?????)',
+	Common.DecimalValue enp_qty = 37;			//  `EnpQnt` decimal(17,4) DEFAULT '0.0000' COMMENT 'Кол-во на ЕНП  (?????)',
+	Common.DecimalValue vat_qty = 38;			//  `NdsQnt` decimal(17,4) DEFAULT '0.0000' COMMENT 'Кол-во на НДС  (?????)',
+	google.protobuf.Timestamp last_request_datetime = 39;	//  `LastRequestDateTime` datetime DEFAULT NULL COMMENT 'Время последнего запроса',
+	Common.DecimalValue profit_base_pl_percent = 40;	//  `PL_Profit_Base_PRC` decimal(5,2) DEFAULT '0.00' COMMENT 'Базовая рентабельность, %',
+	bool is_archived = 41;						//  `Card_Show_Flag` tinyint DEFAULT '0' COMMENT 'Признак товаров 0 - не архивные,1 - архивные',
+}

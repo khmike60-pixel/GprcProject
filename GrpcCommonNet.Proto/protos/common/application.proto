@@ -1,0 +1,13 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+package Common;
+
+message Application {
+	int32 id = 1;
+	optional string name = 2;
+	optional string db = 3;
+	string product = 4;
+}
+

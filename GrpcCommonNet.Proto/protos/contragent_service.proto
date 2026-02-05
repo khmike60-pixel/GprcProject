@@ -1,0 +1,77 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Contragent";
+
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/contragent.proto";
+
+package contragent;
+
+service ContragentServices {
+	rpc GetContragent(ContragentRequest) returns (ContragentResponse);
+	rpc GetListContragent(ContragentFilterRequest) returns (ListContragentResponse);
+	rpc ShortListContragent(ContragentFilterRequest) returns (ListContragentResponse);
+	rpc CountListContragent(ContragentFilterRequest) returns (CountListContragentResponse);
+	rpc CreateContragent(CreateContragentRequest) returns (ContragentResponse);
+	rpc UpdateContragent(UpdateContragentRequest) returns (ContragentResponse);
+	rpc DeleteContragent(DeleteContragentRequest) returns (DeleteContragentResponse);
+	rpc DeleteIdsContragent(DeleteIdsContragentRequest) returns (UndeletedIdsContragentResponse);
+}
+
+
+message ContragentRequest {
+	int32 id = 1;
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message ContragentResponse {
+	Common.Result result = 1;
+	Common.Contragent contragent = 2;
+}
+
+message ContragentFilterRequest {
+	string name = 1;
+	string taxno = 2;
+	optional Common.ContragentTypeFilter type_filter = 3;
+	int32 country_id = 4;
+	string country_symbol = 5;
+	google.protobuf.FieldMask field_mask = 6;
+	Common.Paging paging = 7;
+}
+
+message ListContragentResponse {
+	Common.Result result = 1;
+	repeated Common.Contragent contragents = 2;
+	optional Common.Paging paging = 3;
+}
+
+message CreateContragentRequest {
+	Common.Contragent contragent = 1;
+}
+
+message UpdateContragentRequest {
+	Common.Contragent contragent = 1;
+}
+
+message DeleteContragentRequest {
+	int32 id = 1;
+}
+
+message DeleteContragentResponse {
+	Common.Result result = 1;
+}
+
+message DeleteIdsContragentRequest {
+	repeated int32 ids = 1;
+}
+
+message UndeletedIdsContragentResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_ids = 2;
+}
+
+message CountListContragentResponse {
+	Common.Result result = 1;
+	int64 count = 2;
+}

@@ -1,0 +1,18 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "protos/common/contragent.proto";
+
+package Common;
+
+message User {
+	int32 user_id = 1;
+	Common.Contragent contragent = 2;
+	string user_login = 3;
+	optional string user_password = 4;
+	string user_symbol = 5;
+	optional bool user_is_blocked = 6;
+	optional bool user_access = 7;
+	string user_name = 8;
+}

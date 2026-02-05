@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>6.0.0.2</Version>
+    <Authors>Micros Development Team</Authors>
+    <Title>GrpcCommon</Title>
+    <Description>
+      Библиотека  классов и методов gRPC  (Server  and Client). 
+      Платформа .NET 8.0
+    </Description>
+    <RepositoryUrl>https://mars.micros.uz:9109/nuget</RepositoryUrl>
+    <PackageTags>gRPC</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Сервисы (Генерация клиента и сервера) -->
+    <Protobuf Include="protos\*.proto" GrpcServices="Both" />
+    <!-- Общие типы данных (Только классы, без сервисов) -->
+    <Protobuf Include="protos\common\*.proto" GrpcServices="Both" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.33.2" />
+    <PackageReference Include="Grpc.Core.Api" Version="2.76.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.76.0" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

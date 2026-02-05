@@ -1,0 +1,71 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Unit";
+
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/unit.proto";
+
+
+package unit;
+
+service UnitServices {
+	rpc GetUnit(UnitRequest) returns (UnitResponse);							// Получить ед.изм. по id
+	rpc GetListUnit(ListUnitRequest) returns (ListUnitResponse);					// Получить список ед.изм. по фильтру
+	rpc CreateUnit(CreateUnitRequest) returns (UnitResponse);								// Создать новую ед.изм. 
+	rpc UpdateUnit(UpdateUnitRequest) returns (UnitResponse);						// Обновить ед.изм. 
+	rpc DeleteUnit(DeleteUnitRequest) returns (DeleteUnitResponse);		// Обновить ед.изм. 
+	rpc DeleteIdsUnit(DeleteIdsUnitRequest) returns (UndeleteIdsUnitResponse);	// Обновить ед.изм. 
+
+}
+
+message UnitRequest {
+	int32 id = 1;
+    optional google.protobuf.FieldMask field_mask = 2; // Маска полей {"paths": ["currency_id","currency_code", "currency_abbrev", "currency_order_number"]}
+}
+
+message UnitResponse {
+	Common.Result result = 1;
+	Common.Unit unit = 2;
+}
+
+message ListUnitRequest {
+	int32 id = 1;
+	string short = 2;
+	optional bool is_archive = 3;
+	optional int64 type_id = 4;
+    optional google.protobuf.FieldMask field_mask = 5; // Маска полей {"paths": ["currency_id","currency_code", "currency_abbrev", "currency_order_number"]}
+}
+
+message ListUnitResponse {
+	Common.Result result = 1;
+	repeated Common.Unit units = 2;
+}
+
+message UpdateUnitRequest {
+	Common.Unit unit = 1;
+    optional google.protobuf.FieldMask field_mask = 2; // Маска полей {"paths": ["currency_id","currency_code", "currency_abbrev", "currency_order_number"]}
+
+}
+
+message DeleteUnitRequest {
+	int32 id = 1;
+}
+
+message DeleteUnitResponse {
+	Common.Result result = 1;
+}
+
+message DeleteIdsUnitRequest {
+	repeated int32 ids = 1;
+}
+
+message UndeleteIdsUnitResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_ids = 2;		// Список не удаленных записей
+}
+
+message CreateUnitRequest {
+	Common.Unit unit = 1;
+	optional google.protobuf.FieldMask field_mask = 2; // Маска полей {"paths": ["currency_id","currency_code", "currency_abbrev", "currency_order_number"]}
+}

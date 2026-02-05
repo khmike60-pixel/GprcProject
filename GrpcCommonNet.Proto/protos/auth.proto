@@ -1,0 +1,39 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Auth";
+
+//import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+
+package auth;
+
+service AuthServices {
+	rpc Auth(AuthRequest) returns (AuthResponse);
+	rpc NameHost(NameHostRequest) returns (NameHostResponse);
+}
+
+message AuthRequest {
+	string username = 1;
+	string password = 2;
+	string application = 3;
+	optional int32 expire_minutes = 4;
+}
+
+message Token {
+	string access_token = 1;
+	string token_type = 2;
+	int32 expires_in = 3;
+}
+
+message AuthResponse {
+	Common.Result result = 1;
+	Token token = 2;
+}
+
+message NameHostRequest{
+}
+
+message NameHostResponse {
+	Common.Result result = 1;
+	string name_host = 2;
+}

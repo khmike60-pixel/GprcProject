@@ -1,0 +1,168 @@
+syntax = "proto3";
+
+package Contract;
+
+option csharp_namespace = "GrpcCommonNet.Library.Contract";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/contract.proto";
+import "protos/common/contragent.proto";
+
+// Служба для управления записями таблицы contracts
+service ContractServices {
+// Контракты
+  rpc GetContract(GetContractRequest) returns (ContractResponse);                         // Получить контракт по id (со строками контракта)
+  rpc GetListContracts(ListContractsRequest) returns (ListContractsResponse);                // Список контрактов без строк контрактов с пагинацией и фильтром на данные
+  rpc CreateContract(CreateContractRequest) returns (ContractResponse);                   // Создать контракт (запрос без id или с id = 0, возвращает созданный контракт с заполненным id)
+  rpc UpdateContract(UpdateContractRequest) returns (ContractResponse);                   // Обновить контракт без строк контракта (поддержка partial update через FieldMask)
+  rpc DeleteContract(DeleteContractRequest) returns (DeleteContractResponse);             // Удалить контракт по id
+  rpc DeleteIdsContract(DeleteIdsContractRequest) returns (UndeleteIdsContractResponse);        // Удалить контракты по массиву ids
+
+// Дополнительные специфические запросы по контрактам
+  rpc GetContractIerarch(GetContractRequest) returns (ContractIerarchResponse);                 // Выдает массив ids, по которому строиться "цепочка" контрактов-допсоглашений-заказов (сверху вниз) 
+
+// Строки контрактов
+  rpc GetContractLine(ContractLineRequest) returns (ContractLineResponse);                // Получить строку контракта по id
+  rpc GetListContractLines(ContractLineRequest) returns (ListContractLinesResponse);         // Список строк контракт без пагинацией
+  rpc CreateContractLine(CreateContractLineRequest) returns (ContractLineResponse);       // Создать строку контракт ((запрос без id или с id = 0, возвращает созданную строку контракта с заполненным id)
+  rpc UpdateContractLine(UpdateContractLineRequest) returns (ContractResponse);           // Обновить строку контракта (поддержка partial update через FieldMask)
+  rpc DeleteContractLine(ContractLineRequest) returns (DeleteContractLineResponse);       // Удалить строку контракта по id
+  rpc DeleteIdsContractLine(DeleteIdsContractLineRequest) returns (UndeleteIdsContractLineResponse); // Удалить строки контракты по массиву ids
+
+// Дополнительные специфические запросы по строкам контрактам
+  rpc GetContractLineChains(ContractLineRequest) returns (ListContractLinesResponse);      // Получить "цепочку" изменений по указанной строке контракта (от верха до низа)
+
+}
+
+
+//
+// Create / Read / Update / Delete запросы и ответы Контрактов
+//
+
+message CreateContractRequest {
+  // В теле — контракт без contract_id (он назначается на сервере). Возможно в теле - контракт с contract_id = 0
+  Contract contract = 1;
+}
+
+message GetContractRequest {
+  int32 contract_id = 1;
+}
+
+message UpdateContractRequest {
+  Contract contract = 1;                         // Полный объект контракта (должен содержать contract_id <> 0)
+  // Маска полей для частичного обновления (если пусто — заменяем целиком). 
+  // Пример {"paths": ["contract_data","sdId":]}, обновляться будут только указанные поля, хотя передана вся модель.
+  google.protobuf.FieldMask update_mask = 2;     
+}
+
+message DeleteContractRequest {
+  int32 id = 1;
+}
+
+message DeleteIdsContractRequest {
+  repeated int32 id = 1;               // массив contract_id для удаления
+}
+
+message ContractResponse {
+  Common.Result result = 1;
+  Contract contract = 2;
+}
+
+message DeleteContractResponse {
+  Common.Result result = 1;
+  int32 id = 2;                        // Возвращает contract_id удаленного объекта
+}
+
+// Возвращается список id контрактов. Используется при удалении - список удаленных, используется при получении "цепочек".
+message UndeleteIdsContractResponse {
+  Common.Result result = 1;
+  repeated int32 ids = 2;              // массив номеров контрактов
+}
+
+//
+// List / Pagination
+//
+
+message ListContractsRequest {
+	google.protobuf.Timestamp start_date = 1; // контракты с дата (date -> Timestamp)
+	google.protobuf.Timestamp end_date = 2;   // контракты до дата включительно (date -> Timestamp)
+	Common.Contragent seller = 3;                   // продавец
+	Common.Contragent buyer = 4;                    // покупатель
+	int32 State_from = 5;                    // Со статуса
+	int32 State_to = 6;                      // До статуса включительно
+
+	// Фильтр в виде json структуры, накладывающий фильтр на свойства модели.
+	// { "isOderd":true, "contract_Name": "%весы%", "or": ["sdID": 5, "sdID": 13] }
+	// структура JSON требует обсуждения
+	google.protobuf.Struct filter_data = 7;  // Свободные данные JSON
+
+	string order_by = 8;                     // Порядок сортировки, например "contract_Date desc" или "contract_id asc"
+	google.protobuf.FieldMask field_mask = 9;     
+	// Пагинация
+	int32 page_size = 10;                     // размер страницы. Если 0 илине указан, то без пагинации
+	string page_token = 11;                  // номер страницы. Если page_size = 0, то от параметр не используется
+
+}
+
+message ListContractsResponse {
+  Common.Result result = 1;
+  repeated Contract contracts = 2;
+  string next_page_token = 3;              // Номер следующей страницы
+}
+
+message ContractIerarchResponse {
+  Common.Result result = 1;
+  repeated int32 ids = 2;                  // Массив ids контрактов в иерархии (цепочке) от верхнего к нижнему
+}
+
+//
+// Create / Read / Update / Delete запросы и ответы Строк контрактов
+//
+message CreateContractLineRequest {
+  // В теле — строка контракта id (id назначается на сервере).
+  Line line = 1;
+}
+
+message ContractLineResponse {
+  Common.Result result = 1;
+  Line line = 2;
+}
+
+message UpdateContractLineRequest {
+  Line line = 1;                         // Полная строка контракта (не должна содержать id или id = 0)
+  // Маска полей для частичного обновления (если пусто — заменяем целиком). 
+  // Пример {"paths": ["contract_data","sdId":]}, обновляться будут только указанные поля, хотя передана вся модель.
+  google.protobuf.FieldMask update_mask = 2;     
+}
+
+message ContractLineRequest {
+  int64 id = 1;
+  google.protobuf.FieldMask field_mask = 2;
+}
+
+message DeleteIdsContractLineRequest {
+  repeated int32 id = 1;               // массив id для удаления
+}
+
+message DeleteContractLineResponse {
+  Common.Result result = 1;
+  int32 id = 2;                        // id удаленной строки контракта
+}
+
+message UndeleteIdsContractLineResponse {
+  Common.Result result = 1;
+  repeated int32 id = 2;              // массив удаленных id 
+}
+
+message ListContractLinesRequest {
+  int32 contract_id = 1;                   // Идентификатор контракта
+  string order_by = 2;                     // Порядок сортировки, например "order asc" или "sum desc"
+}
+
+message ListContractLinesResponse {
+  Common.Result result = 1;
+  repeated Line lines  = 2;
+}

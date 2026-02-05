@@ -1,0 +1,67 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Bank";
+
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/bank.proto";
+
+package bank;
+
+service BankServices {
+	rpc GetBank(BankRequest) returns (BankResponse);
+	rpc GetListBank(BankFilterRequest) returns (ListBankResponse);
+	rpc GetPagedListBank(BankFilterRequest) returns (ListBankResponse);
+	rpc CreateBank(CreateBankRequest) returns (BankResponse);
+	rpc UpdateBank(UpdateBankRequest) returns (BankResponse);
+	rpc DeleteBank(DeleteBankRequest) returns (DeleteBankResponse);
+	rpc DeleteIdsBank(DeleteIdsBankRequest) returns (UndeleteIdsBankResponse);
+}
+
+message BankRequest {
+	int32 id = 1;
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message BankResponse {
+	Common.Result result = 1;
+	Common.Bank bank = 2;
+}
+
+message BankFilterRequest {
+	string name = 1;
+	string mfo = 2;
+	google.protobuf.FieldMask field_mask = 3;
+	Common.Paging paging = 4;
+}
+
+message ListBankResponse {
+	Common.Result result = 1;
+	repeated Common.Bank banks = 2;
+	optional Common.Paging paging = 3;
+}
+
+message CreateBankRequest {
+	Common.Bank bank = 1;
+}
+
+message UpdateBankRequest {
+	Common.Bank bank = 1;
+}
+
+message DeleteBankRequest {
+	int32 id = 1;
+}
+
+message DeleteBankResponse {
+	Common.Result result = 1;
+}
+
+message DeleteIdsBankRequest {
+	repeated int32 ids = 1;
+}
+
+message UndeleteIdsBankResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_ids = 2;
+}	

@@ -1,0 +1,30 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "google/protobuf/timestamp.proto";
+import "protos/common/general.proto";
+
+package Common;
+
+
+// Единица измерений
+message Unit {
+	int32 id = 1;								// Идентификатор единицы измерения
+	optional string code = 2;					// Код по ГОСТу
+	string short = 3;							// Краткое наименование
+	optional string rem = 4;							// Описание
+	optional bool is_main = 5;					// Основная ед.изм.?
+	optional Common.DecimalValue rate = 6;	// Коэффициент
+	optional int64 facture_code = 7;			// Код из справочника E-Factura UZ
+	optional string rws_code = 8;				// RWSCode
+	optional string rws_mcode = 9;				// RWSMCode
+	optional string efacture_mcode = 10;		// EFacturaMCode
+	optional string international = 11;		//
+	optional bool is_checked = 12;				// Признак утвержденности
+	optional int64 checker_id = 13;					// Пользователь, который утвердил
+	optional google.protobuf.Timestamp check_date = 14;	// Дата утверждения
+	optional bool is_archive = 15;				// Признак, что ед. изм. архивная
+	optional string repl_id =16;				// Идентификаторы замененных записей
+	optional string comment = 17;				// Комментарий
+}

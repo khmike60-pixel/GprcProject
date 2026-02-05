@@ -1,0 +1,71 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Application";
+
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/application.proto";
+
+package application;
+
+service ApplicationServices {
+	rpc GetApplication(ApplicationRequest) returns (ApplicationResponse);													// Получить приложение по ID
+	rpc GetListApplication(ApplicationFilterRequest) returns (ListApplicationResponse);										// Получить список приложений по фильтру
+	rpc CreateApplication(CreateApplicationRequest) returns (ApplicationResponse);											// Создать приложение
+	rpc UpdateApplication(UpdateApplicationRequest) returns (ApplicationResponse);											// Обновить приложение
+	rpc DeleteApplication(DeleteApplicationRequest) returns (DeleteApplicationResponse);									// Удалить приложение по ID
+	rpc DeleteIdsApplication(DeleteIdsApplicationRequest) returns (UndeleteIdsApplicationResponse);							// Удалить список приложений по ID
+}
+
+message ApplicationRequest {
+	int32 id = 1;
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message ApplicationResponse {
+	Common.Result result = 1;
+	Common.Application application = 2;
+}
+
+message ApplicationFilterRequest {
+	string name = 1;
+	string db = 2;
+	string product = 3;
+	int32 user_id = 4;
+	google.protobuf.FieldMask field_mask = 5;
+}
+
+message ListApplicationResponse {
+	Common.Result result = 1;
+	repeated Common.Application applications = 2;
+}
+
+message CreateApplicationRequest {
+	optional string name = 1;
+	optional string db = 2;
+	string product = 3;
+}
+
+message UpdateApplicationRequest {
+	int32 id = 1;
+	optional string name = 2;
+	optional string db = 3;
+	string product = 4;
+}
+
+message DeleteIdsApplicationRequest {
+	repeated int32 ids = 1;
+}
+message UndeleteIdsApplicationResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_ids = 2;
+}
+
+message DeleteApplicationRequest {
+	int32 id = 1;
+}
+
+message DeleteApplicationResponse {
+	Common.Result result = 1;
+}
+

@@ -1,0 +1,146 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Product";
+
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/product.proto";
+
+package product;
+
+service ProductServices {
+	rpc GetCatalogLine(CatalogLineReqiest) returns(CatalogLineResponse);
+	rpc TreeCatalog(CatalogFilterRequest) returns(TreeCatalogResponse);
+	rpc CreateCatalogLine(CreateCatalogLineRequest) returns(CreateCatalogLineResponse);
+	rpc UpdateCatalogLine(UpdateCatalogLineRequest) returns(UpdateCatalogLineResponse);
+	rpc DeleteCatalogLine(DeleteCatalogLineRequest) returns(DeleteCatalogLineResponse);
+	rpc DeleteIdsCatalogLine(DeleteIdsCatalogLineRequest) returns(DeleteIdsCatalogLineResponse);
+
+	rpc GetProduct(ProductRequest) returns (ProductResponse);
+	rpc ListProducts(ProductFilterRequest) returns(ListProductsResponse);
+	rpc CreateProduct(CreateProductRequest) returns(CreateProductResponse);
+	rpc UpdateProduct(UpdateProductRequest) returns(UpdateProductResponse);
+	rpc DeleteProduct(DeleteProductRequest) returns(DeleteProductResponse);
+	rpc DeleteIdsProduct(DeleteIdsProductRequest) returns(DeleteIdsProductResponse);
+}
+
+
+// Строки каталога (иерархии)
+
+message CatalogLineReqiest {
+	int32 id = 1;				// Идентификатор строки
+}
+
+message CatalogLineResponse {
+	Common.Result result = 1;
+	Common.CatalogLine catalog_line = 3;
+}
+
+message CatalogFilterRequest {
+	int32 id = 1;								// Идентификатор строки, от которой выстаивается иерархия вверх и вниз. 0 - от корня
+	string  name = 2;							// Строка фильтра по наименованию в иерархии  и в товарах
+	Common.TypeProduct type = 3;
+	string producer_code = 4;
+	string our_code = 5;
+	string trademark_name = 6;
+	int32  actived = 7;
+	google.protobuf.FieldMask field_mask = 8;
+}
+
+message TreeCatalogResponse {
+	Common.Result result = 1;
+	repeated Common.CatalogLine catalog = 2;			// список строк каталога отсортированные нужным образом
+}
+
+message CreateCatalogLineRequest {
+	Common.CatalogLine catalog_line = 1;
+}
+
+message CreateCatalogLineResponse {
+	Common.Result result = 1;
+	Common.CatalogLine catalog_line = 2;
+}
+
+message  UpdateCatalogLineRequest {
+	Common.CatalogLine catalog_line = 1;
+}
+
+message UpdateCatalogLineResponse {
+	Common.Result result = 1;
+	Common.CatalogLine catalog_line = 2;
+}
+
+message DeleteCatalogLineRequest {
+	int32 id = 1;
+}
+
+message DeleteCatalogLineResponse {
+	Common.Result result = 1;
+}
+
+message DeleteIdsCatalogLineRequest {
+	repeated int32 ids = 1;
+}
+
+message DeleteIdsCatalogLineResponse {
+	repeated int32 ids = 1;
+	repeated int32 undeleted_ids = 2;
+}
+
+// товары
+message ProductRequest {
+	int32 id = 1;
+}
+
+message ProductResponse {
+	Common.Result result = 1;
+	Common.Product product = 2;
+}
+
+message ProductFilterRequest {
+	string name_code = 1;
+	int32 producer_id = 2;
+	int32 trademark_id = 3;
+	google.protobuf.FieldMask  field_mask = 4;
+}
+
+message ListProductsResponse {
+	Common.Result result = 1;
+	repeated Common.Product products = 2;
+	google.protobuf.FieldMask field_mask = 4;
+}
+
+message CreateProductRequest {
+	Common.Product product = 1;
+} 
+
+message CreateProductResponse {
+	Common.Result result = 1;
+	Common.Product  product = 2;
+}
+
+message UpdateProductRequest {
+	Common.Product product = 1;
+}
+
+message UpdateProductResponse {
+	Common.Result result = 1;
+	Common.Product product = 2;
+}
+
+message DeleteProductRequest {
+	int32 id =  1;
+}
+
+message DeleteProductResponse {
+	Common.Result result = 1;
+}
+
+message DeleteIdsProductRequest {
+	repeated int32 ids = 1;
+}
+
+message DeleteIdsProductResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_ids = 2;
+}

@@ -1,0 +1,173 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Geolocation";
+
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/geolocation.proto";
+
+package geolocation;
+
+service GeolocationServices {
+	// Методы работы с георафией 
+	rpc GetGeo(GeoRequest) returns (GeoResponse);
+	rpc GetTreeGeo(TreeGeoRequest) returns (TreeGeoResponse);
+	rpc GetListCountry(ListCountryRequest) returns (ListCountryResponse);
+	rpc GetListGeo(GeoFilterRequest) returns (ListGeoResponse);
+	rpc CreateGeo(CreateGeoRequest) returns (GeoResponse);
+	rpc UpdateGeo(UpdateGeoRequest) returns (GeoResponse);
+	rpc DeleteGeo(DeleteGeoRequest) returns (DeleteGeoResponse);
+	rpc DeleteIdsGeo(DeleteIdsGeoRequest) returns (UndeletedIdsGeoResponse);
+
+	//  Методы работы с местами расположения
+	rpc GetPlace(GetPlaceRequest) returns(PlaceResponse);
+	rpc GetTreePlace(TreePlaceRequest) returns(TreePlaceResponse);
+	rpc GetListPlace(PlaceFilterRequest)  returns(ListPlaceResponse);
+	rpc CreatePlace(CreatePlaceRequest) returns (PlaceResponse);
+	rpc UpdatePlace(UpdatePlaceRequest) returns (PlaceResponse);
+	rpc DeletePlace(DeletePlaceRequest) returns (DeletePlaceResponse);
+	rpc DeleteIdsPlace(DeleteIdsPlaceRequest) returns (UndeletedIdsPlaceResponse);
+
+}
+
+message GeoRequest {
+	int32 id = 1;						// Идентификатор географического местоположения
+	google.protobuf.FieldMask field_mask  = 2;
+}
+
+message GeoResponse {
+	Common.Result Result = 1;						// Результат выполнения	
+	Common.Geolocation geolocation = 2;					// Географическое местоположение
+}
+
+message GeoFilterRequest {
+	int32  id = 1;						// Идентификатор географического местоположения
+	int32  parent_id = 2;				// Родитель географического местоположения
+	string name = 3;					// Наименование географического местоположения
+	int32  is_country = 4;				// Признак страны
+	string code2 = 5;					// Двухзначный код ТОЛЬКО ДЛЯ СТРАН
+	Common.Paging paging = 6;				// Параметры постраничного вывода
+}
+
+message ListGeoResponse {
+	Common.Result Result = 1;						// Результат выполнения	
+	repeated Common.Geolocation geolocations = 2;			// Список географических местоположений
+	Common.Paging paging = 3;						// Информация о постраничном выводе
+}
+
+message TreeGeoRequest  {
+	int32 id = 1;
+	string name = 2;
+	google.protobuf.FieldMask field_mask  = 3;
+
+}
+
+message TreeGeoResponse {
+	repeated Common.Geolocation geolocations = 1;
+	Common.Result Result = 2;						// Результат выполнения	
+}
+
+
+message CreateGeoRequest {
+	Common.Geolocation geolocation = 1;					// Географическое местоположение
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message UpdateGeoRequest {
+	Common.Geolocation geolocation = 1;					// Географическое местоположение (свойства names, ids, is_country заполнять не нужно, id должно быть > 0 или null)
+}
+
+message DeleteGeoRequest {
+	int32 id = 1;						// Идентификатор географического местоположения
+}	
+
+message DeleteGeoResponse {
+	Common.Result Result = 1;						// Результат выполнения	
+}	
+
+message DeleteIdsGeoRequest {
+	repeated int32 ids = 1;			// Список идентификаторов географических местоположений
+}	
+
+message UndeletedIdsGeoResponse {
+	Common.Result Result = 1;						// Результат выполнения	
+	repeated int32 undeleted_ids = 2;				// Список не удалённых идентификаторов географических местоположений
+}
+
+message TreeRequest {
+	int32 root = 1;
+}
+
+message TreeResponse {
+	repeated Common.Geolocation geolocations = 1;
+	Common.Result result = 2;
+}
+
+message ListCountryRequest {
+	string name = 1;
+}
+
+message ListCountryResponse {
+	repeated Common.Geolocation geolocations = 1;
+	Common.Result result = 2;
+}
+
+message GetPlaceRequest {
+	int32  id = 1;
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message PlaceResponse {
+	Common.Place place =  1;
+	Common.Result Result = 2;
+}
+
+message TreePlaceRequest {
+	int32  id =  1;
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message TreePlaceResponse {
+	repeated Common.Place places = 1;
+	Common.Result Result = 2;
+}
+
+
+message PlaceFilterRequest {
+	int32 id = 1;
+	string name =  2;
+	int64 geolocation_id = 3;
+	int32 lock = 4;
+	google.protobuf.FieldMask field_mask = 5;
+}
+
+message ListPlaceResponse {
+	repeated Common.Place places = 1;
+	Common.Result Result = 2;
+}
+
+message CreatePlaceRequest {
+	Common.Place place = 1;
+}
+
+message UpdatePlaceRequest {
+	Common.Place place = 1;
+}
+
+message DeletePlaceRequest {
+	int64 id = 1;
+}
+
+message DeletePlaceResponse {
+	Common.Result Result = 1;
+}
+
+message DeleteIdsPlaceRequest {
+	repeated int32 ids = 1;
+}
+
+message UndeletedIdsPlaceResponse {
+	repeated int32 undeleted_ids = 1;
+	Common.Result Result = 2;
+
+}

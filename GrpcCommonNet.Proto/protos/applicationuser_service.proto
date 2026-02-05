@@ -1,0 +1,65 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.ApplicationUser";
+
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/applicationuser.proto";
+
+package applicationuser;
+
+service ApplicationUserServices {
+	rpc GetListApplicationUser(ApplicationUserFilterRequest) returns (ListApplicationUserResponse);				// Список приложений по пользователю
+	rpc AddApplicationUser(AddApplicationUserRequest) returns (AddApplicationUserResponse);						// Добавить приложение пользователю
+	rpc AddIdsApplicationUser(AddIdsApplicationUserRequest) returns (AddIdsApplicationUserResponse);				// Добавить приложение пользователю
+	rpc DeleteApplicationUser(DeleteApplicationUserRequest) returns (DeleteApplicationUserResponse);			// Удалить приложение у пользователю
+	rpc DeleteIdsApplicationUser(DeleteIdsApplicationUserRequest) returns (UndeleteIdsApplicationUserResponse);	// Удалить список приложений у пользователю
+}
+
+message ApplicationUserFilterRequest {
+	string name = 1;
+	string db = 2;
+	string product = 3;
+	int32 user_id = 4;
+	google.protobuf.FieldMask field_mask = 5;
+}
+
+message ListApplicationUserResponse {
+	Common.Result result = 1;
+	repeated Common.ApplicationUser application_users = 2;
+}
+
+message AddApplicationUserRequest {
+	int32 user_id = 1;
+	int32 application_id = 2;
+}
+
+message AddApplicationUserResponse {
+	Common.Result result = 1;
+	Common.ApplicationUser application_user = 2;
+}
+
+message DeleteApplicationUserRequest {
+	int32 id = 1;
+}
+
+message DeleteApplicationUserResponse {
+	Common.Result result = 1;
+}
+
+message DeleteIdsApplicationUserRequest {
+	repeated int32 ids = 1;
+}
+
+message UndeleteIdsApplicationUserResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_application_user_ids = 2;
+}
+message AddIdsApplicationUserRequest {
+	int32 user_id = 1;
+	repeated int32 application_ids = 2;
+}
+message AddIdsApplicationUserResponse {
+	Common.Result result = 1;
+	repeated Common.ApplicationUser application_users = 2;
+}

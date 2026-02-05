@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "protos/common/user.proto";
+import "protos/common/application.proto";
+
+package Common;
+
+message ApplicationUser {
+	int32 id = 1;
+	bool is_blocked = 2;
+	Common.Application application = 3;
+	Common.User user = 4;
+}

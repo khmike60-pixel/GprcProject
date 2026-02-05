@@ -1,0 +1,124 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "google/protobuf/timestamp.proto";
+
+package Common;
+
+// Тип  исключительно в  данных контрагента
+enum ContragentType{
+	entity = 0;
+	person = 1;
+	unknown  = 2;
+}
+
+enum ContragentTypeFilter {
+	entity_filter = 0;
+	person_filter = 1;
+	unknown_filter  = 2;		
+	all = 3;
+}
+
+message Contragent {
+	int32 id = 1;
+	string name = 2;
+	string taxno = 3;
+	ContragentType type = 4;
+	optional int32 country_id = 5;
+	optional string country_symbol = 6;
+	optional string prefix  = 7;
+	oneof data {
+		Entity entity = 8;
+		Person person = 9;
+	}
+}
+
+message Entity {
+	int32 entity_id = 1;											// Идентификатор юр. лиц
+	optional int64 contragent_id = 2;								// Ссылка на субъект
+	optional int64 entity_geocountry_id = 3;						// Ссылка на страну регистрации через геолокации в global_db(geolocations)
+	optional int64 entity_geocountry_id_rsd = 4;					// Ссылка на страну резиденции через геолокации в global_db(geolocations)
+	int64 entity_geolocation_id = 5;								// Ссылка на геолокации в global_db(geolocations)
+	google.protobuf.Timestamp entity_date_actualized = 6;	// Дата актуализации записи,
+	string entity_name = 7;											// Наименование
+	string entity_short = 8;										// Краткое наименование
+	string entity_address = 9;										// Адрес
+	string entity_email = 10;										// EMail
+	string entity_phone = 11;										// Телефон
+	optional string entity_okonh = 12;								// Код ОКОНХ
+	optional string enity_okpo = 13;								// Код ОКПО
+	optional string enity_comment = 14;								// Комментарий
+	optional string enity_site = 15;								// Сайт организации
+	string entity_prefix = 16;										// Аббревиатура организации, если она есть
+	string entity_is_active = 17;									// Признак активности
+	optional google.protobuf.Timestamp entity_date_closed = 18;		// Дата закрытия
+	optional google.protobuf.Timestamp entity_date_open = 19;		// Дата открытия
+	optional string entity_kopf = 20;								// Код КОПФ
+	optional string entity_kfs = 21;								// Код КФС
+	optional string entity_soogu = 22;								// Код СООГУ
+	optional string entity_soato =  23;								// Код СОАТО
+	optional string entity_tax_inspect = 24;						// ГНИ
+	optional string entity_deal = 35;								// Вид деятельности
+	optional string entity_zip =36;									// ZIP
+	optional string entity_contactor =37;							// ФИО контактера
+	optional string entity_contactor_phone =  38;					// Телефон контактера
+	optional string entity_contactor_position =39;					// Должность контактера
+	optional string entity_lat_name = 40;							// Наименование на латинице
+	optional string entity_lat_address = 41;						// Адрес на латинице
+	optional string entity_taxno_control =  42;						// Признак проверенного ИНН ????
+	optional string entity_fact_address = 43;						// Фактический адрес
+	optional string entity_fact_phone = 44;							// Фактический телефон
+	optional bool entity_is_custom = 45;							// Признак таможенного управления  ???
+	optional string entity_kpp =  46;								// Код причины постановки ???
+	optional string entity_ogrn = 47;								// Основной государственный регистрационный номер
+	optional bool enity_is_exporter = 48;							// Экспортер ???
+	optional int32 entity_currency_kind = 49;						// Валюта (0 - любая, 1 - локальная, 2 - иная) ????
+	optional string entity_oked = 50;								// Код ОКЭД
+	optional bool entity_is_vendor = 51;							// Является ли организация вендором ???	
+	optional string entity_vat_number = 52;							// Регистрационный номер плательщика НДС
+}
+
+message Person {
+	int32 person_id = 1;												// Идентификатор физ. лиц
+	optional int64 contragent_id = 2;									// Ссылка на субъект
+	google.protobuf.Timestamp person_date_actualized = 3;				// Дата актуализации записи,
+	string person_surname = 4;											// Фамилия
+	string person_first_name = 5;										// Имя
+	string person_patronymic = 6;										// Отчество
+	string person_name  =  7;											// Имя Отчество Фамилия
+	string person_lat_name = 8;											// Имя Отчество Фамилия (латиницей)
+	string person_short = 9;											// Мнемокод, типа Иванов И.И.
+	optional int32 person_geocuntry_id = 10;							// Ссылка на страну гражданства (NEW геолокации в global_db(geolocations))
+	optional int32 person_geocountry_id_rsd = 11;						//  Ссылка на страну резиденции (NEW геолокации в global_db(geolocations))
+	google.protobuf.Timestamp person_birth_date = 12;					// Дата рождения
+	string person_birth_place = 13;										// Место рождения
+	string person_passport_series = 14;									// Серия паспорта
+	string person_passport_number = 15;									// Номер паспорта
+	google.protobuf.Timestamp person_passport_date_issue = 16;			// Дата выдачи паспорта
+	string person_passport_issued_by = 17;								// Кем выдан паспорт
+	google.protobuf.Timestamp person_passport_date_expired = 18;		// Дата окончания срока действия паспорта
+	string person_address_residence = 19;								// Адрес проживания
+	string person_address_registration = 20;							// Адрес регистрации
+	optional string person_nationality = 21;							// Национальность
+	int32 person_sex = 22;												// Пол. 0 - мужской, 1 - женский
+	optional int32 person_education  = 23;								// Образование. 0 - н/д, 1 - начальное, 2 - неполное среднее, 3 - среднее, 4 - среднее специальное, 5 - неполное высшее,  6 - высшее
+	optional string person_education_institution = 24;					// Учебное заведение
+	optional google.protobuf.Timestamp person_education_end_date = 25;	// Дата окончания учебного заведения
+	optional int32 person_education_kind = 26;							// Вид обучения. 0 - пусто, 1 - очное, 2 - вечернее, 3 - заочное
+	optional string person_diploma_speciality = 27;						// Специальность по диплому
+	optional string person_diploma_qualification = 28;					// Квалификация по диплому
+	optional google.protobuf.Timestamp person_diplom_date_issue = 29;	// Дата выдачи диплома
+	optional string person_diplom_number = 30;							// Номер диплома
+	optional string person_main_profession = 31;						// Основная профессия по специальности
+	optional string person_last_work_place = 32;						// Основное место работы, должность	
+	optional string person_position = 33;								// Должность
+	optional google.protobuf.Timestamp person_disch_date = 34;			// Дата увольнения
+	optional int32 person_family_state = 35;							// Семейное положение. 0 - н/д, 1 - холост/не замужем, 2 - женат/замужем, 3 - разведен/разведена, 4 - вдовец/вдова
+	optional int32 person_child_count = 36;								// Количество детей
+	optional string person_taxno = 37;									// ПИН ФЛ
+	optional string person_inps = 38;									// ИНПС 
+	optional string person_comment = 39;								// Дополнительныесведения
+	optional string person_phone = 40;									// Телефон
+	optional string person_email = 41;										// EMail
+}

@@ -1,0 +1,20 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "protos/common/geolocation.proto";
+
+package Common;
+
+message Bank {
+	int32 id = 1;											// `ID_M_BANK` 'Идентификатор банка',
+	optional string name = 2;										// `NameBank` 'Наименование банка',
+	string short = 3;										// `MCode` 'Мнемокод банка',
+	string mfo = 4;											// `MFO` 'NCS номер',
+	optional string swift = 5;								// `SWIFT` 'Международный код банка',
+	optional string super_short = 6;						// `SuperShort` 'Супер короткое имя (для мнемокода)',
+	optional string micros_code = 7;						// `MicrosCode` 'Код для идентификации в Микросе',
+	optional bool micros_code_confirm = 8;					// `MicrosCodeConfirm` 'Код для идентификации в Микросе утвержден',
+	optional Common.Geolocation geolocation = 9;			// Страна регистрации (new, global_db.geolocations)
+	optional string comment = 10;							// `Comment` 'Комментарий',
+}
