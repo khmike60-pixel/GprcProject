@@ -22,7 +22,7 @@ service ContractServices {
   rpc DeleteIdsContract(DeleteIdsContractRequest) returns (UndeleteIdsContractResponse);        // Удалить контракты по массиву ids
 
 // Дополнительные специфические запросы по контрактам
-  rpc GetContractIerarch(GetContractRequest) returns (ContractIerarchResponse);                 // Выдает массив ids, по которому строиться "цепочка" контрактов-допсоглашений-заказов (сверху вниз) 
+  rpc GetContractIerarch(GetContractByRootRequest) returns (ContractIerarchResponse);                 // Выдает массив ids, по которому строиться "цепочка" контрактов-допсоглашений-заказов (сверху вниз) 
 
 // Строки контрактов
   rpc GetContractLine(ContractLineRequest) returns (ContractLineResponse);                // Получить строку контракта по id
@@ -48,7 +48,7 @@ message CreateContractRequest {
 }
 
 message GetContractRequest {
-  int32 contract_id = 1;
+  int32 Contract_id = 1;
 }
 
 message UpdateContractRequest {
@@ -113,9 +113,16 @@ message ListContractsResponse {
   string next_page_token = 3;              // Номер следующей страницы
 }
 
+message GetContractByRootRequest {
+  int32 root_id = 1;                      // Идентификатор Первичного контракта (основного)
+  google.protobuf.FieldMask field_mask = 2;     
+}
+
 message ContractIerarchResponse {
   Common.Result result = 1;
-  repeated int32 ids = 2;                  // Массив ids контрактов в иерархии (цепочке) от верхнего к нижнему
+  repeated Contract contracts = 2;			// Список контрактов в иерархии (цепочке) от верхнего к нижнему
+  google.protobuf.FieldMask field_mask = 3;     
+
 }
 
 //

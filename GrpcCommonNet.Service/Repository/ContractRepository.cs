@@ -64,18 +64,19 @@ public class ContractRepository
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-                        SELECT 
-                            c.* , l.*,
-                            u.Short,
-                            cu.Abbrev, t.ContractType_Name,
-                            1
-                        FROM cwatis.contracts c 
-                            LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
-                            LEFT JOIN cwatis.contracttypes t ON c.DocumentType_Id = t.DocumentType_Id
-                            LEFT JOIN cwatis.contractlines l ON l.contract_id = c.contract_id
-                            LEFT JOIN global_db.rfr_units u ON u.UnitId = l.UnitId
-                        WHERE 1=1
-                        ORDER BY c.contract_id DESC";
+                    SELECT 
+                        cnt.*, cu.Abbrev, t.ContractType_Name, if(cnt.contract_ParentId is null, ""Основной контракт"", ""Допсоглашение"" )
+                    FROM (
+                        SELECT *, ROW_NUMBER() OVER (
+                                PARTITION BY COALESCE(c.contract_RootId, contract_id) 
+                                ORDER BY c.contract_id DESC
+                            ) as rn
+                        FROM cwatis.contracts c
+                    ) as cnt
+                        LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = cnt.currencyId
+                        LEFT JOIN cwatis.contracttypes t ON cnt.DocumentType_Id = t.DocumentType_Id
+                    WHERE rn = 1
+                    ORDER BY cnt.contract_date DESC";
             using var rdr = await cmd.ExecuteReaderAsync();
 
             while (await rdr.ReadAsync())
@@ -125,6 +126,37 @@ public class ContractRepository
             throw;
         }
     }
+
+    public async Task<List<Contract>> GetContractIerarchAsync(int root_id)
+    {
+        try
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $@"
+                        SELECT 
+                            c.* ,
+                            cu.Abbrev, t.ContractType_Name,
+                            1
+                        FROM cwatis.contracts c 
+                            LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+                            LEFT JOIN cwatis.contracttypes t ON c.DocumentType_Id = t.DocumentType_Id
+                        WHERE 1=1
+                            and c.contract_RootId = {root_id}
+                        ORDER BY c.contract_date ASC";
+            using var rdr = await cmd.ExecuteReaderAsync();
+            
+            var dict = new Dictionary<int, Contract>();
+            return await Fill(rdr, dict);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetContractIerarchAsync: " + ex.Message);
+            throw;
+        }
+    }
+
 
     #endregion
 

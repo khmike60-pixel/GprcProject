@@ -96,5 +96,29 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
 
     }
 
+    public override async Task<ContractIerarchResponse> GetContractIerarch(GetContractByRootRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetContractIerarch called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        try
+        {
+            var contractsHistory = await _repo.GetContractIerarchAsync(request.RootId);
+            ContractIerarchResponse response = new ContractIerarchResponse();
+            if (contractsHistory == null || contractsHistory.Count == 0)
+            {
+                response.Result = new Result { Status = Status.NotFound };
+                return response;
+            }
+            response.Contracts.AddRange(contractsHistory);
+            response.Result = new Result { Status = Status.Ok };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetContractIerarch: " + ex.Message);
+            throw;
+        }
+    }
+
     #endregion
 }

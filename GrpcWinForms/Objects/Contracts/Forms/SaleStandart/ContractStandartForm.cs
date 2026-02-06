@@ -1,6 +1,7 @@
 ﻿using C1.Framework;
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Contract;
+using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
 using System;
 using System.Collections.Generic;
@@ -58,14 +59,26 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             headContractControl.SetControls(response.Contract);
 
             var properties = response.Contract.Data;
-            var root = new ExpandoObject() as IDictionary<string, object>;
-
-            foreach (var field in properties.Fields)
+            if (properties != null)
             {
-                root[field.Key] = field.Value;
+                var root = properties.Fields["Контракт"];
+
+                DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, "Контракт");
+                propertiesControl1.SetTreeNodes(nodes);
             }
 
+            GetContractByRootRequest requestRoot = new GetContractByRootRequest()
+            {
+                RootId = response.Contract.RootId,
+                FieldMask = new FieldMask
+                {
+                    Paths = { "id", "root_id", "type_contract", "date", "number", "name", "sum", "amount", "sum_vat", "currency.abbrev" }
+                }
+            };
 
+            ContractIerarchResponse responseChange = GrpcClients.GrpcClients.Contract.GetContractIerarch(requestRoot);
+
+            historyContractControl.smartGridHistory.DataSource = responseChange.Contracts;
         }
     }
 
