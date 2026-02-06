@@ -143,12 +143,17 @@ public class ContractRepository
                             LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
                             LEFT JOIN cwatis.contracttypes t ON c.DocumentType_Id = t.DocumentType_Id
                         WHERE 1=1
-                            and c.contract_RootId = {root_id}
+                            and (c.contract_RootId = {root_id} Or c.contract_id = {root_id})
                         ORDER BY c.contract_date ASC";
             using var rdr = await cmd.ExecuteReaderAsync();
             
-            var dict = new Dictionary<int, Contract>();
-            return await Fill(rdr, dict);
+            List<Contract> contracts = new List<Contract>();
+            while (await rdr.ReadAsync())
+            {
+                contracts.Add(FillContract(rdr));
+            }
+
+            return contracts;
         }
         catch (Exception ex)
         {
@@ -165,6 +170,8 @@ public class ContractRepository
     {
         Contract contract = new Contract();
         contract.Id = rdr["contract_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_id"]);
+        contract.RootId = rdr["contract_rootid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_rootid"]);
+        contract.ParentId = rdr["contract_ParentId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_ParentId"]);
         contract.Seller = new Contragent()
         {
             Id = rdr["contract_sellerId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_sellerId"]),
@@ -195,6 +202,8 @@ public class ContractRepository
             Abbrev = rdr["Abbrev"] == DBNull.Value ? "" : rdr["Abbrev"].ToString() ?? ""
         };
         contract.Sum = rdr["Sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0,2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Sum"]),2);
+        contract.Amount = rdr["Amount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Amount"]), 2);
+        contract.SumVat = rdr["SumVat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["SumVat"]), 2);
         contract.TypeContract = new TypeContract()
         {
             TypeContractId = rdr["DocumentType_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["DocumentType_Id"]),

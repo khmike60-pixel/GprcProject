@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static C1.Util.Win.Win32;
 
 namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
 {
@@ -53,12 +54,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             if (contractId == 0)
             {
                 return;
-            }   
-            GetContractRequest request = new GetContractRequest { ContractId = contractId};
-            ContractResponse response = GrpcClients.GrpcClients.Contract.GetContract(request);
-            headContractControl.SetControls(response.Contract);
+            }
+            GetContractRequest requestContract = new GetContractRequest { ContractId = contractId };
+            ContractResponse responseContract = GrpcClients.GrpcClients.Contract.GetContract(requestContract);
+            headContractControl.SetControls(responseContract.Contract);
+            sumContractControl1.SetControls(responseContract.Contract);
 
-            var properties = response.Contract.Data;
+            var properties = responseContract.Contract.Data;
             if (properties != null)
             {
                 var root = properties.Fields["Контракт"];
@@ -67,18 +69,114 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
                 propertiesControl1.SetTreeNodes(nodes);
             }
 
+            ContractLineRequest requestLines = new ContractLineRequest()
+            {
+                Id = responseContract.Contract.Id,
+                FieldMask = new FieldMask
+                {
+                    Paths = { "id", "contract_id", "root_id", "previous_id", "unit.short", "order", "name", "qty", "price", "amount", "vat_prc", "sum_vat", "sum" }
+                }
+            };
+            ListContractLinesResponse responseLines = GrpcClients.GrpcClients.Contract.GetListContractLines(requestLines);
+            smartGridLines.DataSource = responseLines.Lines;
+
+
             GetContractByRootRequest requestRoot = new GetContractByRootRequest()
             {
-                RootId = response.Contract.RootId,
+                RootId = responseContract.Contract.RootId,
                 FieldMask = new FieldMask
                 {
                     Paths = { "id", "root_id", "type_contract", "date", "number", "name", "sum", "amount", "sum_vat", "currency.abbrev" }
                 }
             };
+            ContractIerarchResponse responseChain = GrpcClients.GrpcClients.Contract.GetContractIerarch(requestRoot);
 
-            ContractIerarchResponse responseChange = GrpcClients.GrpcClients.Contract.GetContractIerarch(requestRoot);
+            historyContractControl.smartGridHistory.GetUnboundValue += smartGridHistory_GetUnboundValue;
+            historyContractControl.smartGridHistory.DataSource = responseChain.Contracts;
+        }
 
-            historyContractControl.smartGridHistory.DataSource = responseChange.Contracts;
+        private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
+        {
+            Line line = (Line)smartGridLines.Rows[e.Row].DataSource;
+            switch (smartGridLines.Cols[e.Col].Name)
+            {
+                case "colUnitShort":
+                    {
+                        e.Value = line.Unit == null ? "" : line.Unit.Short;
+                        break;
+                    }
+                case "colQty":
+                    {
+                        e.Value = line.Qty == null || line.Qty.Units == 0 ? "" : MyConvert.ToDecimal(line.Qty);
+                        break;
+                    }
+                case "colPrice":
+                    {
+                        e.Value = line.Price == null || line.Price.Units == 0 ? "" : MyConvert.ToDecimal(line.Price);
+                        break;
+                    }
+                case "colAmount":
+                    {
+                        e.Value = line.Amount == null || line.Amount.Units == 0 ? "" : MyConvert.ToDecimal(line.Amount);
+                        break;
+                    }
+                case "colVatPrc":
+                    {
+                        e.Value = line.VatPrc == null || line.VatPrc.Units == 0 ? "" : MyConvert.ToDecimal(line.VatPrc);
+                        break;
+                    }
+                case "colSumVat":
+                    {
+                        e.Value = line.SumVat == null || line.SumVat.Units == 0 ? "" : MyConvert.ToDecimal(line.SumVat);
+                        break;
+                    }
+                case "colSum":
+                    {
+                        e.Value = line.Sum == null || line.Sum.Units == 0 ? "" : MyConvert.ToDecimal(line.Sum);
+                        break;
+                    }
+            }
+        }
+
+        private void smartGridHistory_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
+        {
+            Contract contract = (Contract)historyContractControl.smartGridHistory.Rows[e.Row].DataSource;
+            switch (historyContractControl.smartGridHistory.Cols[e.Col].Name)
+            {
+                case "colDate":
+                    {
+                        e.Value = contract.Date == null ? "" : contract.Date.ToDateTime();
+                        break;
+                    }
+                case "colAbbrev":
+                    {
+                        e.Value = contract.Currency == null ? "" : contract.Currency.Abbrev;
+                        break;
+                    }
+                case "colSum":
+                    {
+                        e.Value = contract.Sum == null || contract.Sum.Units == 0 ? "" : MyConvert.ToDecimal(contract.Sum);
+                        break;
+                    }
+                case "colAmount":
+                    {
+                        e.Value = contract.Amount == null || contract.Amount.Units == 0 ? "" : MyConvert.ToDecimal(contract.Amount);
+                        break;
+                    }
+                case "colSumVat":
+                    {
+                        e.Value = contract.SumVat == null || contract.SumVat.Units == 0 ? "" : MyConvert.ToDecimal(contract.SumVat);
+                        break;
+                    }
+                case "colType":
+                    {
+                        if (contract.RootId == 0)
+                            e.Value = "Основной контракт";
+                        else
+                            e.Value = "Дополнительное соглашение";
+                        break;
+                    }
+            }
         }
     }
 

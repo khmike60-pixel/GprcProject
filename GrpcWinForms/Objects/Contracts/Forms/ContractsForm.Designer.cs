@@ -248,7 +248,7 @@
             smartGridLines.IsEditing = false;
             smartGridLines.Location = new Point(0, 0);
             smartGridLines.Name = "smartGridLines";
-            smartGridLines.Rows.Count = 17;
+            smartGridLines.Rows.Count = 18;
             smartGridLines.Rows.Fixed = 2;
             smartGridLines.SelectedRows = (List<int>)resources.GetObject("smartGridLines.SelectedRows");
             smartGridLines.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
@@ -299,7 +299,7 @@
             smartGridContracts.IsEditing = false;
             smartGridContracts.Location = new Point(0, 31);
             smartGridContracts.Name = "smartGridContracts";
-            smartGridContracts.Rows.Count = 17;
+            smartGridContracts.Rows.Count = 18;
             smartGridContracts.Rows.Fixed = 2;
             smartGridContracts.SelectedRows = (List<int>)resources.GetObject("smartGridContracts.SelectedRows");
             smartGridContracts.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;

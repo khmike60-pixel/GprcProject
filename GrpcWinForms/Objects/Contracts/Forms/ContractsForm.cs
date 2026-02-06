@@ -33,12 +33,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void toolStripButtonNew_Click(object sender, EventArgs e)
         {
-
             foreach (Form child in MdiParent.MdiChildren)
             {
                 if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == 0) { child.Activate(); return; }
             }
-            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent };
+            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent, Owner = this };
             f.Show();
 
         }
@@ -54,7 +53,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 };
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
-                    Paths = { "id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data" }
+                    Paths = { "id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data", "sum" }
                 };
                 ListContractsResponse response = await GrpcClients.GrpcClients.Contract.GetListContractsAsync(request);
 
@@ -143,7 +142,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             try
             {
                 loaderLines.ShowLoader();
-                if (smartGridContracts.Row > smartGridContracts.Rows.Fixed)
+                if (smartGridContracts.Row >= smartGridContracts.Rows.Fixed)
                 {
                     Contract contract = (Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource;
 
@@ -170,9 +169,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         {
             foreach (Form child in MdiParent.MdiChildren)
             {
-                if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == 0) { child.Activate(); return; }
+                if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id) { child.Activate(); return; }
             }
-            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent };
+            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent, Parent = this };
             f.ContractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
             f.Show();
 
@@ -183,7 +182,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             Line line = (Line)smartGridLines.Rows[e.Row].DataSource;
             switch (smartGridLines.Cols[e.Col].Name)
             {
-                case "colUnitName":
+                case "colUnitShort":
                     {
                         e.Value = line.Unit == null ? "" : line.Unit.Short;
                         break;

@@ -30,6 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HistoryContractControl));
+            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             smartGridHistory = new SmartGrid.SmartGrid();
             ((System.ComponentModel.ISupportInitialize)smartGridHistory).BeginInit();
             SuspendLayout();
@@ -42,12 +44,18 @@
             smartGridHistory.ColumnInfo = resources.GetString("smartGridHistory.ColumnInfo");
             smartGridHistory.Dock = DockStyle.Fill;
             smartGridHistory.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 1;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            smartGridHistory.Footers.Descriptions.Add(footerDescription1);
+            smartGridHistory.Footers.Fixed = true;
             smartGridHistory.Headers = null;
             smartGridHistory.IdName = null;
             smartGridHistory.IsEditing = false;
             smartGridHistory.Location = new Point(0, 0);
             smartGridHistory.Name = "smartGridHistory";
-            smartGridHistory.Rows.Count = 10;
+            smartGridHistory.Rows.Count = 3;
             smartGridHistory.SelectedRows = (List<int>)resources.GetObject("smartGridHistory.SelectedRows");
             smartGridHistory.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
             smartGridHistory.Size = new Size(835, 184);
