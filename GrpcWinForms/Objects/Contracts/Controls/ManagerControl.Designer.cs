@@ -176,14 +176,14 @@
 
         private GroupBox groupBox1;
         private Label labelExecutor;
-        private C1.Win.Input.C1DropDownControl lookupExecutor;
-        private C1.Win.Input.C1DropDownControl lookupInittiator;
         private Label labelInitiator;
         private Label labelDescription;
-        private C1.Win.Input.C1DropDownControl c1DropDownControl1;
-        private TextBox textBox1;
-        private C1.Win.Input.C1DropDownControl c1DropDownControl2;
         private Label labelManagerType;
         private Label label1;
+        public C1.Win.Input.C1DropDownControl lookupExecutor;
+        public C1.Win.Input.C1DropDownControl lookupInittiator;
+        public C1.Win.Input.C1DropDownControl c1DropDownControl1;
+        public TextBox textBox1;
+        public C1.Win.Input.C1DropDownControl c1DropDownControl2;
     }
 }

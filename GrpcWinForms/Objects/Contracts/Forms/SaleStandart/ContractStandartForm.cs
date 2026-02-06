@@ -1,10 +1,13 @@
-﻿using GrpcCommonNet.Library.Contract;
+﻿using C1.Framework;
+using Google.Protobuf.WellKnownTypes;
+using GrpcCommonNet.Library.Contract;
 using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,16 +53,18 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             {
                 return;
             }   
-            GetContractRequest request = new GetContractRequest
-            {
-                ContractId = contractId
-            };
+            GetContractRequest request = new GetContractRequest { ContractId = contractId};
             ContractResponse response = GrpcClients.GrpcClients.Contract.GetContract(request);
             headContractControl.SetControls(response.Contract);
 
             var properties = response.Contract.Data;
+            var root = new ExpandoObject() as IDictionary<string, object>;
 
-            //c1DockingTabPageProperies
+            foreach (var field in properties.Fields)
+            {
+                root[field.Key] = field.Value;
+            }
+
 
         }
     }

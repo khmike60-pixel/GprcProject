@@ -1,4 +1,5 @@
-﻿using GrpcCommonNet.Library.Common;
+﻿using Google.Protobuf.WellKnownTypes;
+using GrpcCommonNet.Library.Common;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,6 +7,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace GrpcCommonNet.Proto.Utils
@@ -43,41 +45,61 @@ namespace GrpcCommonNet.Proto.Utils
             return new DecimalValue { };
         }
 
-        /// <summary>
-        /// Функция возвращает список "неудаленных" строк в gride.
-        /// Используется при удалении записей по Ids.
-        /// grid - сам grid
-        /// data - список изображаемых данных в grid
-        /// undeletedList - список не удаленных идентификаторов в данных (по умолчанию "Id")
-        /// markedList - список помеченных строк в grid с учетом заголовков
-        /// fieldNameId - наименование колонки идентификатора в гриде. По умолчанию "Id"
-        /// </summary>
-        /// <returns></returns>
-        //public static List<int> UndeleteList<T>(C1FlexGrid grid, System.ComponentModel.BindingList<T> data, List<int> undeletedlist, List<int> markedList, string fieldNameId = "Id")
-        //{
-        //    List<int> _listGrid = new List<int>();
+        public static class ProtoConverter
+        {
+            public static DataNode ToNodeTree(Struct str, string rootName = "Root")
+            {
+                var root = new DataNode { Name = rootName };
+                foreach (var field in str.Fields)
+                {
+                    root.Children.Add(ProcessValue(field.Key, field.Value));
+                }
+                return root;
+            }
 
-        //    _listGrid.AddRange(markedList); _listGrid.Sort(); // Делаем копию списка помеченных строки в гриде и сортируем
+            private static DataNode ProcessValue(string name, Value value)
+            {
+                var node = new DataNode { Name = name };
 
-        //    for (int j = _listGrid.Count - 1; j >= 0; j--)
-        //    {
-        //        int index_grid = _listGrid[j];  // Номер помеченной строки в гриде
+                switch (value.KindCase)
+                {
+                    case Value.KindOneofCase.StructValue:
+                        foreach (var field in value.StructValue.Fields)
+                            node.Children.Add(ProcessValue(field.Key, field.Value));
+                        break;
 
-        //        int id = Convert.ToInt32(grid.Rows[index_grid][fieldNameId]);  // Значение иденификатора в колонке грида
-        //        if (undeletedlist.IndexOf(id) == -1) // Если в списке неудаленных отсутствует, то
-        //        {
-        //            int countData = grid.Rows.Count - grid.Rows.Fixed - grid.Footers.Descriptions.Count; // кол-во строк данных в гриде
-        //            int index_data = index_grid - grid.Rows.Fixed; // номер строки в данных (без заколовков)
-        //            if (index_data >= 0 && index_data < countData) 
-        //            {
-        //                data.RemoveAt(index_data); // Удаляет элемент из данных
-        //                _listGrid.RemoveAt(j);    // Удаляктся элемент из помеченых
+                    case Value.KindOneofCase.ListValue:
+                        int index = 0;
+                        foreach (var item in value.ListValue.Values)
+                            node.Children.Add(ProcessValue($"[{index++}]", item));
+                        break;
 
-        //            }
-        //        }
-        //    }
-        //    return _listGrid;
-        //}
+                    default:
+                        // String, Number, Bool, NullValue
+                        node.Value = value.KindCase switch
+                        {
+                            Value.KindOneofCase.StringValue => value.StringValue,
+                            Value.KindOneofCase.NumberValue => value.NumberValue,
+                            Value.KindOneofCase.BoolValue => value.BoolValue,
+                            Value.KindOneofCase.NullValue => null,
+                            _ => null
+                        };
+                        break;
+                }
 
+                return node;
+            }
+        }
+
+    }
+
+    public class DataNode
+    {
+        public string Name { get; set; }
+        public object Value { get; set; }
+        public List<DataNode> Children { get; set; } = new();
+
+        // Вспомогательное свойство для проверки, лист это или ветка
+        public bool IsLeaf => Children.Count == 0;
     }
 }
