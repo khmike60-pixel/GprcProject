@@ -1,0 +1,124 @@
+﻿{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Шаблон стандартного договора на продажу",
+    "description": "Шаблон стандартного договора на продажу",
+    "properties": {
+        "Deadlines": {
+            "type": "object",
+            "title": "Сроки действия контракта",
+            "description": "Сроки действия контракта",
+            "properties": {
+                "start": {
+                    "title": "Действует с",
+                    "properties": {
+                        "Order": {
+                            "type": "integer",
+                            "title": "Порядок"
+                        },
+                        "Value": {
+                            "oneOf": [
+                                {
+                                    "type": "string",
+                                    "description": "Формат даты: YYYY-MM-DDThh:mm:ss",
+                                    "format": "date-time"
+                                },
+                                {
+                                    "type": "string",
+                                    "description": "Специальные значения",
+                                    "enum": [
+                                        "с даты акцепта",
+                                        "с момента подписания"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "stop": {
+                    "title": "Действует до",
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "description": "Формат даты: YYYY-MM-DDThh:mm:ss",
+                            "format": "date-time"
+                        },
+                        {
+                            "type": "string",
+                            "description": "Специальные значения",
+                            "enum": [
+                                "до исполнения обязательств",
+                                "до конца текущего года"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "additionalProperties": false,
+            "required": [
+                "start",
+                "stop"
+            ]
+        },
+        "Prepayment": {
+            "type": "object",
+            "title": "Предоплата",
+            "properties": {
+                "TypeDays": {
+                    "title": "Тип дней",
+                    "enum": [
+                        "календарных дней",
+                        "банковских дней"
+                    ]
+                },
+                "PrepayPrc": {
+                    "type": "number",
+                    "title": "Процент предоплаты",
+                    "default": 100.0,
+                    "maximum": 100,
+                    "minimum": 30
+                },
+                "PrepayWithin": {
+                    "type": "integer",
+                    "title": "Предоплата в течение",
+                    "default": 5
+                }
+            }
+        },
+        "FinalyPayments": {
+            "type": "array",
+            "title": "Окончательные взаиморасчеты",
+            "items": {
+                "properties": {
+                    "TypeDays": {
+                        "title": "Тип дней",
+                        "enum": [
+                            "календарных дней",
+                            "банковских дней"
+                        ]
+                    },
+                    "PaymentPrc": {
+                        "type": "number",
+                        "title": "Процент оплаты",
+                        "default": 50
+                    },
+                    "PaymentMoment": {
+                        "type": "string",
+                        "title": "Оплата с момента",
+                        "default": "с момента поставки"
+                    }
+                }
+            }
+        },
+        "Penalties": {
+            "type": "object",
+            "title": "Штрафы и пени"
+        }
+    },
+    "additionalProperties": true,
+    "required": [
+        "Deadlines",
+        "Prepayment",
+        "FinalyPayments"
+    ]
+}

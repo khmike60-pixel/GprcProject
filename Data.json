@@ -1,0 +1,26 @@
+﻿{
+    "Deadlines": {
+        "start": {
+            "Order": 1,
+            "Value": "2026-01-31T00:00:00Z"
+        },
+        "stop": "2026-12-31T00:00:00"
+    },
+    "Prepayment": {
+        "TypeDays": "календарных дней",
+        "PrepayPrc": 30,
+        "PrepayWithin": 5
+    },
+    "FinalyPayments": [
+        {
+            "TypeDays": "банковских дней",
+            "PaymentPrc": 30,
+            "PaymentMoment": "с момента поставки"
+        },
+        {
+            "TypeDays": "банковских дней",
+            "PaymentPrc": 20,
+            "PaymentMoment": "с момента поставки"
+        }
+    ]
+}
