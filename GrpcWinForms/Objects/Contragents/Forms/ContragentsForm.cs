@@ -1,5 +1,4 @@
 ﻿using Google.Protobuf.WellKnownTypes;
-using GrapeCity.DataVisualization.Chart;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contragent;
 using GrpcWinForms.Models;

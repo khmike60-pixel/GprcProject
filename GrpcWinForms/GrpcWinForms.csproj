@@ -8,17 +8,17 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="C1.Excel" Version="5.0.20231.18" />
-    <PackageReference Include="C1.Win.DashboardLayout" Version="6.0.20231.596" />
-    <PackageReference Include="C1.Win.ExpressionEditor" Version="6.0.20231.596" />
-    <PackageReference Include="C1.Win.FlexGrid" Version="6.0.20231.596" />
-    <PackageReference Include="C1.Win.SplitContainer" Version="6.0.20231.596" />
+    <PackageReference Include="C1.Excel" Version="9.0.20251.144" />
+    <PackageReference Include="C1.Win.FlexGrid" Version="8.0.20251.708" />
+    <PackageReference Include="C1.Win.Input.MultiColumnCombo" Version="8.0.20251.708" />
+    <PackageReference Include="C1.Win.SplitContainer" Version="8.0.20251.708" />
     <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
     <PackageReference Include="Google.Protobuf" Version="3.33.2" />
     <PackageReference Include="Grpc.Core.Api" Version="2.76.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
-    <PackageReference Include="SmartGrid" Version="6.0.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="SmartGrid" Version="8.0.0.1" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
   </ItemGroup>
   <ItemGroup>
