@@ -1,4 +1,8 @@
-﻿using System;
+﻿using C1.Win.FlexGrid;
+using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Contragent;
+using SmartGrid;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,47 +16,74 @@ namespace GrpcWinForms.Objects.Contragents.Components
 {
     public partial class TestForm : Form
     {
-        List<Customer> customers;
+
         public TestForm()
         {
             InitializeComponent();
 
-            GenerateData();
-
-            lookup.DataProvider = SearchCustomers;
-        }
-
-        private IEnumerable<LookupItem> SearchCustomers(string text)
-        {
-            return customers
-                .Where(x => x.Name.Contains(text,
-                    System.StringComparison.OrdinalIgnoreCase))
-                .Select(x => new LookupItem
-                {
-                    Value = x.Id,
-                    DisplayValue = x.Name
-                });
-        }
-
-        private void GenerateData()
-        {
-            customers = new List<Customer>();
-
-            for (int i = 1; i <= 100; i++)
+            lookup.DataProviderAsync = SearchCustomers;
+            lookup.Columns.Add(new LookupColumn
             {
-                customers.Add(new Customer
+                Name = "id",
+                Caption = "ID",
+                Width = 60
+            });
+
+            lookup.Columns.Add(new LookupColumn
+            {
+                Name = "name",
+                Caption = "Customer",
+                Width = 250
+            });
+
+        }
+
+        private void TestForm_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Selected Id = " + lookup.SelectedValue);
+        }
+
+        private async Task<IEnumerable<LookupRow>> SearchCustomers(string text)
+        {
+            try
+            {
+                var type = ContragentTypeFilter.All;
+
+                ContragentFilterRequest request = new ContragentFilterRequest()
                 {
-                    Id = i,
-                    Name = "Customer " + i
-                });
+                    TypeFilter = type,
+                    Name = text
+                };
+                request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
+                {
+                    Paths = { "id", "name" }
+                };
+                ListContragentResponse response = await GrpcClients.GrpcClients.Contragent.ShortListContragentAsync(request);
+
+                List<LookupRow> rows = new List<LookupRow>();
+                foreach (var r in response.Contragents)
+                {
+                        LookupRow row = new LookupRow();
+                        row.Values = new Dictionary<string, object>();
+                        row.Values["id"]    = r.Id;
+                        row.Values["name"] = r.Name;
+                        rows.Add(row);
+                }
+                return rows;
+
             }
-            
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
         }
     }
 
-    public class Customer
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
 }

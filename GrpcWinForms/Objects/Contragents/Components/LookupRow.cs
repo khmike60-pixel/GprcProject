@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace GrpcWinForms.Objects.Contragents.Components
 {
-    public class LookupItem
+    public class LookupRow
     {
-        public object Value { get; set; }
-        public string DisplayValue { get; set; }
+        public Dictionary<string, object> Values { get; set; } = new();
     }
 }

@@ -3,6 +3,7 @@ using GrpcWinForms.Models;
 using GrpcWinForms.Objects;
 using GrpcWinForms.Objects.Applications;
 using GrpcWinForms.Objects.Contracts.Forms;
+using GrpcWinForms.Objects.Contragents.Components;
 using GrpcWinForms.Objects.Contragents.Forms;
 using GrpcWinForms.Objects.Currencies.Forms;
 using GrpcWinForms.Objects.Geolocations.GeoForms;
@@ -127,9 +128,9 @@ namespace GrpcWinForms.Forms
         {
             foreach (Form child in MdiChildren)
             {
-                if (child is Form1) { child.Activate(); return; }
+                if (child is TestForm) { child.Activate(); return; }
             }
-            var f = new Form1 { MdiParent = this };
+            var f = new TestForm { MdiParent = this };
             f.Show();
         }
     }

@@ -1,91 +1,203 @@
 ﻿using C1.Win.FlexGrid;
 using C1.Win.Input;
-using GrpcWinForms.Objects.Contragents.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LookupSample.Controls
+namespace GrpcWinForms.Objects.Contragents.Components
 {
     public class LookupDropDownControl : C1DropDownControl
     {
-        private Panel dropPanel;
-        private C1FlexGrid grid;
+        C1FlexGrid grid;
+        System.Windows.Forms.Timer debounceTimer;
 
-        public Func<string, IEnumerable<LookupItem>> DataProvider { get; set; }
+        public List<LookupColumn> Columns { get; } = new();
+
+        public Func<string, Task<IEnumerable<LookupRow>>> DataProviderAsync { get; set; }
+
+        public int MaxRows { get; set; } = 10;
+
+        public string ValueMember { get; set; }
+
+        public string DisplayMember { get; set; }
 
         public object SelectedValue { get; private set; }
 
         public LookupDropDownControl()
         {
-            InitializeDropDown();
+            InitializeGrid();
+            InitializeTimer();
 
-            this.TextChanged += LookupDropDownControl_TextChanged;
-            grid.DoubleClick += Grid_DoubleClick;
+            this.TextChanged += Lookup_TextChanged;
+            this.KeyDown += Lookup_KeyDown;
         }
 
-        private void InitializeDropDown()
+        void InitializeGrid()
         {
-            dropPanel = new Panel();
-            dropPanel.Height = 200;
-
             grid = new C1FlexGrid();
+
             grid.Dock = DockStyle.Fill;
 
+            grid.AllowEditing = false;
+
+
             grid.Rows.Count = 1;
-            grid.Cols.Count = 2;
 
-            grid.Cols[0].Caption = "Value";
-            grid.Cols[1].Caption = "Name";
+            grid.SelectionMode = SelectionModeEnum.Row;
 
-            dropPanel.Controls.Add(grid);
+            grid.TabStop = false;
 
-            // ВАЖНО
-            this.Control = dropPanel;
+            grid.Click += (s, e) => SelectCurrentRow();
+            grid.DoubleClick += (s, e) => SelectCurrentRow();
+
+            grid.Enter += (s, e) => KeepCursor();
+
+            this.Control = grid;
         }
 
-        private void LookupDropDownControl_TextChanged(object sender, EventArgs e)
+        void InitializeColumns()
         {
-            if (DataProvider == null)
+            grid.Cols.Count = Columns.Count;
+
+            for (int i = 0; i < Columns.Count; i++)
+            {
+                var col = Columns[i];
+
+                grid.Cols[i].Name = col.Name;
+                grid.Cols[i].Caption = col.Caption;
+                grid.Cols[i].Width = col.Width;
+                grid.Cols[i].Visible = col.Visible;
+            }
+        }
+
+        void InitializeTimer()
+        {
+            debounceTimer = new System.Windows.Forms.Timer();
+            debounceTimer.Interval = 300;
+
+            debounceTimer.Tick += async (s, e) =>
+            {
+                debounceTimer.Stop();
+                await PerformSearch();
+            };
+        }
+
+        void Lookup_TextChanged(object sender, EventArgs e)
+        {
+            debounceTimer.Stop();
+            debounceTimer.Start();
+        }
+
+        async Task PerformSearch()
+        {
+            if (DataProviderAsync == null)
                 return;
 
             var text = this.Text;
 
-            var data = DataProvider(text)
-                .Take(10)
+            var data = (await DataProviderAsync(text))
+                .Take(MaxRows)
                 .ToList();
 
             FillGrid(data);
 
-            
-            //if (data.Count > 0 && !this.DroppedDown)
-            //    this.DroppedDown = true;
+            if (data.Count > 0)
+            {
+                if (!DroppedDown)
+                    DroppedDown = true;
+
+                grid.Row = 1;
+            }
+
+            KeepCursor();
         }
 
-        private void FillGrid(List<LookupItem> data)
+        void FillGrid(List<LookupRow> rows)
         {
+            if (grid.Cols.Count == 0)
+                InitializeColumns();
+
             grid.Rows.Count = 1;
 
-            foreach (var item in data)
+            foreach (var row in rows)
             {
                 int r = grid.Rows.Count;
                 grid.Rows.Add();
 
-                grid[r, 0] = item.Value;
-                grid[r, 1] = item.DisplayValue;
+                for (int c = 0; c < Columns.Count; c++)
+                {
+                    var col = Columns[c];
+
+                    if (row.Values.TryGetValue(col.Name, out var value))
+                        grid[r, c] = value;
+                }
             }
+
+            grid.AutoSizeCols();
         }
 
-        private void Grid_DoubleClick(object sender, EventArgs e)
+        void Lookup_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (grid.Rows.Count <= 1)
+                return;
+
+            if (e.KeyCode == Keys.Down)
+            {
+                if (grid.Row < grid.Rows.Count - 1)
+                    grid.Row++;
+
+                e.Handled = true;
+            }
+
+            if (e.KeyCode == Keys.Up)
+            {
+                if (grid.Row > 1)
+                    grid.Row--;
+
+                e.Handled = true;
+            }
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                SelectCurrentRow();
+                e.Handled = true;
+            }
+
+            if (e.KeyCode == Keys.Escape)
+            {
+                DroppedDown = false;
+            }
+
+            KeepCursor();
+        }
+
+        void SelectCurrentRow()
         {
             if (grid.Row < 1)
                 return;
 
-            SelectedValue = grid[grid.Row, 0];
-            this.Text = grid[grid.Row, 1]?.ToString();
+            var valueCol = grid.Cols[ValueMember];
+            var displayCol = grid.Cols[DisplayMember];
 
-            this.DroppedDown = false;
+            SelectedValue = grid[grid.Row, valueCol.Index];
+
+            this.Text = grid[grid.Row, displayCol.Index]?.ToString();
+
+            DroppedDown = false;
+
+            KeepCursor();
+        }
+
+        void KeepCursor()
+        {
+            BeginInvoke(new Action(() =>
+            {
+                this.Focus();
+                this.SelectionStart = this.Text.Length;
+                this.SelectionLength = 0;
+            }));
         }
     }
 }
