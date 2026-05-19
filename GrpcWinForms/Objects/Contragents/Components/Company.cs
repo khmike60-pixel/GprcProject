@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace GrpcWinForms.Objects.Contragents.Components
 {
-    public class LookupColumn
+    public class Company
     {
+        public int Id { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }
-
-        public string Caption { get; set; }
-
-        public int Width { get; set; } = 120;
-
-        public bool Visible { get; set; } = true;
     }
 }

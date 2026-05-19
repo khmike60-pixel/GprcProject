@@ -1,6 +1,6 @@
-﻿namespace GrpcWinForms.Objects.Contragents.Components
+﻿namespace GrpcWinForms.Objects.Test
 {
-    partial class TestForm
+    partial class TestLookup
     {
         /// <summary>
         /// Required designer variable.
@@ -28,46 +28,43 @@
         /// </summary>
         private void InitializeComponent()
         {
-            c1ComboBox1 = new C1.Win.Input.C1ComboBox();
+            lookup = new SmartLookup();
             textBox1 = new TextBox();
-            ((System.ComponentModel.ISupportInitialize)c1ComboBox1).BeginInit();
             SuspendLayout();
             // 
-            // c1ComboBox1
+            // lookup
             // 
-            c1ComboBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            c1ComboBox1.DropDownAlign = C1.Framework.DropDownAlignment.Left;
-            c1ComboBox1.DropDownWidth = -1;
-            c1ComboBox1.Location = new Point(146, 124);
-            c1ComboBox1.Name = "c1ComboBox1";
-            c1ComboBox1.Size = new Size(270, 23);
-            c1ComboBox1.TabIndex = 0;
-            c1ComboBox1.Value = "";
-            c1ComboBox1.Resize += c1ComboBox1_Resize;
+            lookup.DataProvider = null;
+            lookup.Location = new Point(72, 118);
+            lookup.MaximumSize = new Size(0, 24);
+            lookup.MinimumSize = new Size(0, 24);
+            lookup.Name = "lookup";
+            lookup.Size = new Size(234, 24);
+            lookup.TabIndex = 0;
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(146, 190);
+            textBox1.Location = new Point(443, 119);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
+            textBox1.Size = new Size(220, 23);
             textBox1.TabIndex = 1;
             // 
-            // TestForm
+            // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(460, 450);
+            ClientSize = new Size(800, 450);
             Controls.Add(textBox1);
-            Controls.Add(c1ComboBox1);
-            Name = "TestForm";
-            Text = "TestForm";
-            ((System.ComponentModel.ISupportInitialize)c1ComboBox1).EndInit();
+            Controls.Add(lookup);
+            Name = "TestLookup";
+            Text = "TestLoolkup";
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-        private C1.Win.Input.C1ComboBox c1ComboBox1;
+
+        private SmartLookup lookup;
         private TextBox textBox1;
     }
 }

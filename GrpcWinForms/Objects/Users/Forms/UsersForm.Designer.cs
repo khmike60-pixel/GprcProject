@@ -156,6 +156,7 @@
             c1SplitContainer1.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
             c1SplitContainer1.BorderWidth = 1;
             c1SplitContainer1.Dock = DockStyle.Fill;
+            c1SplitContainer1.HeaderButtonBackColor = Color.Transparent;
             c1SplitContainer1.Location = new Point(0, 34);
             c1SplitContainer1.Name = "c1SplitContainer1";
             c1SplitContainer1.Panels.Add(c1SplitterPanelApps);
@@ -206,6 +207,7 @@
             smartGridApps.SortingType = SmartGrid.SortingType.Descending;
             smartGridApps.StyleInfo = resources.GetString("smartGridApps.StyleInfo");
             smartGridApps.TabIndex = 2;
+            smartGridApps.GetUnboundValue += smartGridApps_GetUnboundValue;
             // 
             // applicationBindingSource
             // 
@@ -394,7 +396,7 @@
             Controls.Add(c1SplitContainer1);
             Controls.Add(panel1);
             Name = "UsersForm";
-            Text = "UsersForm";
+            Text = "Приложения пользователей";
             Load += UsersForm_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();

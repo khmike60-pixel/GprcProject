@@ -40,7 +40,8 @@ namespace GrpcCommonNet.Service.Repository
                         	or s.BaseName like CONCAT('%',@Name,'%') 
                         	or s.ProductName like CONCAT('%',@Name,'%')
                         )
-                        and us.UserId = @UserId;";   
+                        and us.UserId = @UserId
+                    ORDER BY s.MSysId;";   
 
                 using var command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@UserId", request.UserId);

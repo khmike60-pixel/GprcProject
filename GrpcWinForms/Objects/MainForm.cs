@@ -8,6 +8,7 @@ using GrpcWinForms.Objects.Contragents.Forms;
 using GrpcWinForms.Objects.Currencies.Forms;
 using GrpcWinForms.Objects.Geolocations.GeoForms;
 using GrpcWinForms.Objects.Products.ProductsForm;
+using GrpcWinForms.Objects.Test;
 using GrpcWinForms.Objects.Users.Forms;
 using System;
 using System.Windows.Forms;
@@ -128,9 +129,9 @@ namespace GrpcWinForms.Forms
         {
             foreach (Form child in MdiChildren)
             {
-                if (child is TestForm) { child.Activate(); return; }
+                if (child is TestLookup) { child.Activate(); return; }
             }
-            var f = new TestForm { MdiParent = this };
+            var f = new TestLookup { MdiParent = this };
             f.Show();
         }
     }

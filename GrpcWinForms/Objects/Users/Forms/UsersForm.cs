@@ -1,4 +1,5 @@
 ﻿using C1.Win.FlexGrid;
+using C1.Win.Input;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Application;
@@ -8,6 +9,7 @@ using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Library.User;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Applications;
+//using Microsoft.VisualBasic.ApplicationServices;
 using SmartGrid;
 using System;
 using System.Collections.Generic;
@@ -314,6 +316,30 @@ namespace GrpcWinForms.Objects.Users.Forms
         }
         private void toolStripButtonAppDelete_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void smartGridApps_GetUnboundValue(object sender, UnboundValueEventArgs e)
+        {
+            ApplicationUser relApp = (ApplicationUser)(smartGridApps.Rows[e.Row].DataSource);
+
+            Application app = relApp.Application;
+                
+            switch (smartGridApps.Cols[e.Col].Name)
+            {
+                case "colAppId":
+                    e.Value = app.Id;
+                    break;
+                case "colAppName":
+                    e.Value = app.Name;
+                    break;
+                case "colAppDb":
+                    e.Value = app.Db;
+                    break;
+                case "colAppProduct":
+                    e.Value = app.Product;
+                    break;
+            }
 
         }
     }

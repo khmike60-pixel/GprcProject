@@ -30,8 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContragentsForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             contragentBindingSource = new BindingSource(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
@@ -224,7 +224,7 @@
             labelTaxno.AutoSize = true;
             labelTaxno.Location = new Point(31, 39);
             labelTaxno.Name = "labelTaxno";
-            labelTaxno.Size = new Size(62, 15);
+            labelTaxno.Size = new Size(75, 21);
             labelTaxno.TabIndex = 3;
             labelTaxno.Text = "ИНН/ПИН:";
             // 
@@ -253,11 +253,11 @@
             smartGrid.DataSource = contragentBindingSource;
             smartGrid.Dock = DockStyle.Fill;
             smartGrid.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition2.Caption = "Всего: ";
-            aggregateDefinition2.Column = 2;
-            footerDescription2.Aggregates.Add(aggregateDefinition2);
-            smartGrid.Footers.Descriptions.Add(footerDescription2);
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 2;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            smartGrid.Footers.Descriptions.Add(footerDescription1);
             smartGrid.Footers.Fixed = true;
             smartGrid.Headers = null;
             smartGrid.IdName = null;
@@ -280,6 +280,7 @@
             c1SplitContainer1.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
             c1SplitContainer1.Dock = DockStyle.Fill;
             c1SplitContainer1.EnlargeCollapsingHandle = true;
+            c1SplitContainer1.HeaderButtonBackColor = Color.Transparent;
             c1SplitContainer1.Location = new Point(0, 99);
             c1SplitContainer1.Name = "c1SplitContainer1";
             c1SplitContainer1.Panels.Add(c1SplitterPanel2);
