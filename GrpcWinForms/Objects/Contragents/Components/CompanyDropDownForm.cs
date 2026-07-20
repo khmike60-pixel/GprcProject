@@ -1,9 +1,8 @@
-﻿using C1.Framework;
-using C1.Win.Input;
+﻿using C1.Win.Input;
 using C1.Win.Themes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contragent;
-using GrpcWinForms.Objects.Contragents.Components;
+using GrpcWinForms.Objects.Test;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,20 +13,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Test
+namespace GrpcWinForms.Objects.Contragents.Components
 {
-    public partial class DropDownUserControl : UserControl, IDropDownForm
+    public partial class CompanyDropDownForm : UserControl
     {
-        BindingList<Company> _contragents = new BindingList<Company>();
-
+        private BindingList<Company> _contragents = new BindingList<Company>();
         private Company contragentSelected = null;
-        // Исправлено объявление свойства ContragentSelected
-        public Company ContragentSelected {  get => contragentSelected; set => contragentSelected = value; }
 
-        public DropDownUserControl()
+        public event EventHandler NeedRefreshDataSource;
+
+        public Company ContragentSelected { get => contragentSelected; set => contragentSelected = value; }
+
+        public CompanyDropDownForm()
         {
             InitializeComponent();
-            smart.DataSource = GetData("");
         }
 
         public BindingList<Company> GetData(string filter)
@@ -106,5 +105,6 @@ namespace GrpcWinForms.Objects.Test
         {
             buttonOk_Click(sender, e);
         }
+        
     }
 }

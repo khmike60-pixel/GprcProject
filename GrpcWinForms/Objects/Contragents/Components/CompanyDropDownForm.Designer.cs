@@ -1,6 +1,8 @@
-﻿namespace GrpcWinForms.Objects.Test
+﻿using GrpcWinForms.Properties;
+
+namespace GrpcWinForms.Objects.Contragents.Components
 {
-    partial class DropDownUserControl
+    partial class CompanyDropDownForm
     {
         /// <summary> 
         /// Обязательная переменная конструктора.
@@ -29,26 +31,26 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DropDownUserControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompanyDropDownForm));
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
-            panel1 = new Panel();
+            panelButton = new Panel();
             buttonOk = new Button();
             buttonCancel = new Button();
             smart = new SmartGrid.SmartGrid();
-            panel1.SuspendLayout();
+            panelButton.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)smart).BeginInit();
             SuspendLayout();
             // 
-            // panel1
+            // panelButton
             // 
-            panel1.Controls.Add(buttonOk);
-            panel1.Controls.Add(buttonCancel);
-            panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 270);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(380, 30);
-            panel1.TabIndex = 0;
+            panelButton.Controls.Add(buttonOk);
+            panelButton.Controls.Add(buttonCancel);
+            panelButton.Dock = DockStyle.Bottom;
+            panelButton.Location = new Point(0, 270);
+            panelButton.Name = "panelButton";
+            panelButton.Size = new Size(380, 30);
+            panelButton.TabIndex = 0;
             // 
             // buttonOk
             // 
@@ -101,24 +103,26 @@
             smart.TabIndex = 1;
             smart.DoubleClick += smart_DoubleClick;
             // 
-            // DropDownUserControl
+            // CompanyDropDownForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(smart);
-            Controls.Add(panel1);
-            Name = "DropDownUserControl";
+            Controls.Add(panelButton);
+            Name = "CompanyDropDownForm";
             Size = new Size(380, 300);
-            panel1.ResumeLayout(false);
+            panelButton.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)smart).EndInit();
             ResumeLayout(false);
+
         }
 
         #endregion
 
-        private Panel panel1;
+        private Panel panelButton;
         private Button buttonOk;
         private Button buttonCancel;
         public SmartGrid.SmartGrid smart;
+
     }
 }

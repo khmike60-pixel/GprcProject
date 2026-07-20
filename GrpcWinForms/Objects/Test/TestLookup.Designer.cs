@@ -28,10 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestLookup));
             label2 = new Label();
             c1DropDownControl1 = new C1.Win.Input.C1DropDownControl();
-            textBox1 = new TextBox();
+            label1 = new Label();
+            companyDropDown1 = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             ((System.ComponentModel.ISupportInitialize)c1DropDownControl1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)companyDropDown1).BeginInit();
             SuspendLayout();
             // 
             // label2
@@ -48,33 +52,49 @@
             c1DropDownControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             c1DropDownControl1.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_multiply_16);
             c1DropDownControl1.ButtonsSettings.CustomButton.Visible = true;
-            c1DropDownControl1.Location = new Point(191, 21);
+            c1DropDownControl1.Location = new Point(228, 21);
             c1DropDownControl1.Name = "c1DropDownControl1";
-            c1DropDownControl1.Size = new Size(317, 23);
+            c1DropDownControl1.Size = new Size(387, 23);
             c1DropDownControl1.TabIndex = 4;
             c1DropDownControl1.Value = "";
             c1DropDownControl1.CustomButtonClick += c1DropDownControl1_CustomButtonClick;
             c1DropDownControl1.TextChanged += c1DropDownControl1_TextChanged;
+            c1DropDownControl1.KeyPress += c1DropDownControl1_KeyPress;
             c1DropDownControl1.Leave += c1DropDownControl1_Leave;
             // 
-            // textBox1
+            // label1
             // 
-            textBox1.Location = new Point(191, 92);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
-            textBox1.TabIndex = 5;
+            label1.AutoSize = true;
+            label1.Location = new Point(25, 107);
+            label1.Name = "label1";
+            label1.Size = new Size(181, 15);
+            label1.TabIndex = 5;
+            label1.Text = "Компонент CompanyDropDown";
+            // 
+            // companyDropDown1
+            // 
+            companyDropDown1.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companyDropDown1.ButtonsSettings.CustomButton.Icon"));
+            companyDropDown1.ButtonsSettings.CustomButton.Visible = true;
+            companyDropDown1.GetDataSourceFunc = null;
+            companyDropDown1.Location = new Point(228, 107);
+            companyDropDown1.Name = "companyDropDown1";
+            companyDropDown1.Size = new Size(387, 23);
+            companyDropDown1.TabIndex = 6;
+            companyDropDown1.Value = "";
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(520, 450);
-            Controls.Add(textBox1);
+            ClientSize = new Size(627, 450);
+            Controls.Add(companyDropDown1);
+            Controls.Add(label1);
             Controls.Add(c1DropDownControl1);
             Controls.Add(label2);
             Name = "TestLookup";
             Text = "TestLoolkup";
             ((System.ComponentModel.ISupportInitialize)c1DropDownControl1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)companyDropDown1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -82,6 +102,7 @@
         #endregion
         private Label label2;
         private C1.Win.Input.C1DropDownControl c1DropDownControl1;
-        private TextBox textBox1;
+        private Label label1;
+        private Contragents.Components.CompanyDropDown companyDropDown1;
     }
 }

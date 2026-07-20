@@ -1,16 +1,14 @@
-﻿using C1.Win.FlexGrid;
-using C1.Win.Input;
+﻿using C1.Win.Input;
 
-namespace GrpcWinForms.Objects.Contragents.Controls
+namespace GrpcWinForms.Objects.Contragents.Components
 {
-    partial class EnterpriseLookupControl
+    partial class CompanyDropDown
     {
-        /// <summary> 
+        /// <summary>
         /// Обязательная переменная конструктора.
         /// </summary>
-        
         private System.ComponentModel.IContainer components = null;
-        
+
         /// <summary> 
         /// Освободить все используемые ресурсы.
         /// </summary>
@@ -26,23 +24,29 @@ namespace GrpcWinForms.Objects.Contragents.Controls
 
         #region Код, автоматически созданный конструктором компонентов
 
-        /// <summary> 
+        /// <summary>
         /// Требуемый метод для поддержки конструктора — не изменяйте 
         /// содержимое этого метода с помощью редактора кода.
         /// </summary>
         private void InitializeComponent()
         {
-            SuspendLayout();
-            // 
-            // EnterpriseLookupControl
-            // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            Name = "EnterpriseLookupControl";
-            Size = new Size(406, 225);
-            ResumeLayout(false);
+            components = new System.ComponentModel.Container();
+            companyDropDownForm = new CompanyDropDownForm();
+
+            ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_multiply_16);
+            ButtonsSettings.CustomButton.Visible = true;
+            Name = "CompanyDropDown";
+            Control = companyDropDownForm;
+            TextChanged += CompanyDropDown_TextChanged;
+            CustomButtonClick += CompanyDropDown_CustomButtonClick;
+            Leave += CompanyDropDown_Leave;
+            KeyPress += CompanyDropDown_KeyPress;
+
         }
-    }
 
         #endregion
+
+        private CompanyDropDownForm companyDropDownForm;
+
+    }
 }
