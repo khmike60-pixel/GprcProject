@@ -113,6 +113,16 @@ namespace GrpcWinForms.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_multiply_16 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-multiply-16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_order_history_32 {
             get {
                 object obj = ResourceManager.GetObject("icons8-order-history-32", resourceCulture);

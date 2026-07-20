@@ -17,26 +17,13 @@ namespace GrpcWinForms.Objects.Test
 {
     public partial class TestLookup : Form
     {
-        private List<ShortContragent> _contragents = new List<ShortContragent>();
-        private BindingList<ShortContragent> _bindingList = new BindingList<ShortContragent>();
-        private ListContragentResponse searchResponse;
-        private string _text = String.Empty;
+        private BindingList<ShortContragent> _contragents = new BindingList<ShortContragent>();
+        ShortContragent selectedItem = new ShortContragent();
 
         public TestLookup()
         {
             InitializeComponent();
-            ConfigCustomView();
-            ConfigDropDownControl();
-        }
-
-        private void ConfigCustomView()
-        {
-            DropDownViewCustomControl customView = new DropDownViewCustomControl();
-            c1MultiColumnComboCustom.DropDownView = DropDownView.Custom;
-            c1MultiColumnComboCustom.CustomView = customView;
-
-            _bindingList = GetData("");
-            customView.DataSource = _bindingList;
+            c1DropDownControl1.Control = new DropDownUserControl();
 
         }
 
@@ -46,59 +33,40 @@ namespace GrpcWinForms.Objects.Test
 
         }
 
-        private BindingList<ShortContragent> GetData(string filter)
+        private void c1DropDownControl1_TextChanged(object sender, EventArgs e)
         {
-            SearchRequest searchRequest = new SearchRequest()
-            {
-                Search = filter,
-                Paging = new Paging() { PageNumber = 1, PageSize = 100 }
-            };
+            SmartGrid.SmartGrid grid = ((DropDownUserControl)c1DropDownControl1.Control).smart;
 
-            searchRequest.FieldMask =
-                new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "taxno" } };
-
-            searchResponse = GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
-
-            _contragents.Clear();
-            foreach (Contragent item in searchResponse.Contragents)
-            {
-                _contragents.Add(new ShortContragent()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    TaxNo = item.Taxno
-                });
-            }
-            return new BindingList<ShortContragent>(_contragents);
+            DropDownUserControl userControl = ((DropDownUserControl)c1DropDownControl1.Control);
+            grid.DataSource = userControl.GetData(c1DropDownControl1.Text);
+            
         }
 
-        #region События  c1MultiColumnComboCustom
-        private void c1MultiColumnComboCustom_SelectedIndexChanged(object sender, EventArgs e)
+        private void c1DropDownControl1_CustomButtonClick(object sender, EventArgs e)
         {
-            if (c1MultiColumnComboCustom.SelectedIndex >= 0)
+            c1DropDownControl1.Text = "";
+            selectedItem = new ShortContragent();
+        }
+
+        private void c1DropDownControl1_Leave(object sender, EventArgs e)
+        {
+            DropDownUserControl userControl = ((DropDownUserControl)c1DropDownControl1.Control);
+
+            if (c1DropDownControl1.Text == "") return;
+            if (userControl.contragentSelected == null || userControl.contragentSelected.Id != 0)
             {
-                int selectedIndex = c1MultiColumnComboCustom.CustomView.SelectedIndex;
-                var view = c1MultiColumnComboCustom.CustomView;
-
-                if (selectedIndex > -1)
+                _contragents = userControl.GetData(c1DropDownControl1.Text);
+                if (_contragents.Count == 1)
                 {
-                    ShortContragent selectedItem = _bindingList[selectedIndex];
-                    c1MultiColumnComboCustom.Text = selectedItem.Name;
-                    var value = ((DropDownViewCustomControl)c1MultiColumnComboCustom.CustomView).Value;
-
+                    userControl.contragentSelected = _contragents[0];
+                    c1DropDownControl1.Text = _contragents[0].Name;
+                    return;
                 }
             }
+
+            MessageBox.Show(this, "Такой контрагент не найден!");
+            c1DropDownControl1.Focus();
         }
-
-        private void c1MultiColumnComboCustom_TextChanged(object sender, EventArgs e)
-        {
-            _bindingList = GetData(c1MultiColumnComboCustom.Text);
-            c1MultiColumnComboCustom.CustomView.DataSource = _bindingList;
-        }
-
-        #endregion
-
-        
     }
 
     public class ShortContragent

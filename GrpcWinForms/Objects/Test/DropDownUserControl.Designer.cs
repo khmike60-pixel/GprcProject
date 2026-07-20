@@ -35,9 +35,9 @@
             panel1 = new Panel();
             buttonOk = new Button();
             buttonCancel = new Button();
-            smartGrid1 = new SmartGrid.SmartGrid();
+            smart = new SmartGrid.SmartGrid();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smart).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -45,7 +45,7 @@
             panel1.Controls.Add(buttonOk);
             panel1.Controls.Add(buttonCancel);
             panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 233);
+            panel1.Location = new Point(0, 268);
             panel1.Name = "panel1";
             panel1.Size = new Size(381, 30);
             panel1.TabIndex = 0;
@@ -70,43 +70,46 @@
             buttonCancel.TabIndex = 0;
             buttonCancel.Text = "Cancel";
             buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Click += buttonCancel_Click;
             // 
-            // smartGrid1
+            // smart
             // 
-            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
-            smartGrid1.AllowNodeMove = false;
-            smartGrid1.ColumnInfo = "4,1,0,0,0,-1,Columns:0{Width:30;}\t1{Width:50;Name:\"Id\";Caption:\"Id\";}\t2{Width:182;StarWidth:\"*\";Name:\"Name\";Caption:\"Наименование\";}\t3{Width:100;Name:\"TaxNo\";Caption:\"ИНН/ПИНФЛ\";}\t";
-            smartGrid1.Dock = DockStyle.Fill;
-            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smart.AllowEditing = false;
+            smart.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smart.AllowNodeMove = false;
+            smart.ColumnInfo = "4,1,0,0,0,-1,Columns:0{Width:30;}\t1{Width:50;Name:\"Id\";Caption:\"Id\";}\t2{Width:199;StarWidth:\"*\";Name:\"Name\";Caption:\"Наименование\";}\t3{Width:100;Name:\"TaxNo\";Caption:\"ИНН/ПИНФЛ\";}\t";
+            smart.Dock = DockStyle.Fill;
+            smart.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
             aggregateDefinition1.Column = 1;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid1.Footers.Descriptions.Add(footerDescription1);
-            smartGrid1.Footers.Fixed = true;
-            smartGrid1.Headers = null;
-            smartGrid1.IdName = null;
-            smartGrid1.IsEditing = false;
-            smartGrid1.Location = new Point(0, 0);
-            smartGrid1.Name = "smartGrid1";
-            smartGrid1.Rows.Count = 11;
-            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
-            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid1.Size = new Size(381, 233);
-            smartGrid1.SortingType = SmartGrid.SortingType.Descending;
-            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
-            smartGrid1.TabIndex = 1;
+            smart.Footers.Descriptions.Add(footerDescription1);
+            smart.Footers.Fixed = true;
+            smart.Headers = null;
+            smart.IdName = null;
+            smart.IsEditing = false;
+            smart.Location = new Point(0, 0);
+            smart.Name = "smart";
+            smart.Rows.Count = 12;
+            smart.SelectedRows = (List<int>)resources.GetObject("smart.SelectedRows");
+            smart.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smart.Size = new Size(381, 268);
+            smart.SortingType = SmartGrid.SortingType.Descending;
+            smart.StyleInfo = resources.GetString("smart.StyleInfo");
+            smart.TabIndex = 1;
+            smart.DoubleClick += smart_DoubleClick;
             // 
             // DropDownUserControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(smartGrid1);
+            Controls.Add(smart);
             Controls.Add(panel1);
             Name = "DropDownUserControl";
-            Size = new Size(381, 263);
+            Size = new Size(381, 298);
             panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smart).EndInit();
             ResumeLayout(false);
         }
 
@@ -115,6 +118,6 @@
         private Panel panel1;
         private Button buttonOk;
         private Button buttonCancel;
-        private SmartGrid.SmartGrid smartGrid1;
+        public SmartGrid.SmartGrid smart;
     }
 }
