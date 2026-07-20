@@ -28,7 +28,8 @@ namespace GrpcWinForms.Objects.Contragents.Components
                 {
                     try
                     {
-                        UpdateGridData(this.Text ?? string.Empty);
+                        SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
+                        grid.DataSource = UpdateGridData(this.Text ?? string.Empty);
                     }
                     catch
                     {
@@ -39,19 +40,21 @@ namespace GrpcWinForms.Objects.Contragents.Components
         }
 
         // Метод внутри компонента, который запрашивает данные
-        private void UpdateGridData(string filterText)
+        private BindingList<Company> UpdateGridData(string filterText)
         {
+            BindingList<Company> result = new BindingList<Company>();
             SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
             //CompanyDropDownForm userControl = ((CompanyDropDownForm)Control);
 
             if (GetDataSourceFunc != null)
             {
                 // Вызываем метод в форме и сразу получаем результат
-                BindingList<Company> result = GetDataSourceFunc.Invoke(filterText);
+                result = GetDataSourceFunc.Invoke(filterText);
 
                 // Передаем полученный список в ваш DropDownForm
-                grid.DataSource = result;
+                // grid.DataSource = result;
             }
+            return result;
         }
 
         public CompanyDropDown()
@@ -65,23 +68,14 @@ namespace GrpcWinForms.Objects.Contragents.Components
             container.Add(this);
 
             InitializeComponent();
-            SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
-            CompanyDropDownForm userControl = ((CompanyDropDownForm)Control);
-
-            if (GetDataSourceFunc != null)
-            {
-                // Вызываем метод в форме и сразу получаем результат
-                BindingList<Company> result = GetDataSourceFunc.Invoke("");
-
-                // Передаем полученный список в ваш DropDownForm
-                grid.DataSource = result;
-            }
+            UpdateGridData("");
         }
 
 
         private void CompanyDropDown_TextChanged(object sender, EventArgs e)
         {
-            UpdateGridData(Text);
+            SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
+            grid.DataSource = UpdateGridData(Text);
         }
 
 
@@ -94,7 +88,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
         private void CompanyDropDown_Leave(object sender, EventArgs e)
         {
             CompanyDropDownForm userControl = ((CompanyDropDownForm)Control);
-            /*
+            
             if (Text == "") return;
             if (userControl.ContragentSelected == null || userControl.ContragentSelected.Id != 0)
             {
@@ -108,7 +102,6 @@ namespace GrpcWinForms.Objects.Contragents.Components
             }
             MessageBox.Show(this, "Такой контрагент не найден!");
             Focus();
-            */
         }
 
         private void CompanyDropDown_KeyPress(object sender, KeyPressEventArgs e)
