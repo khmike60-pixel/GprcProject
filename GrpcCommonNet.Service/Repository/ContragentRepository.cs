@@ -7,6 +7,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Data;
 using System.Data.Common;
+using System.Drawing.Printing;
 using static System.Net.Mime.MediaTypeNames;
 
 public class ContragentRepository
@@ -456,6 +457,60 @@ public class ContragentRepository
         }
     }
 
+    public List<Contragent> SearchList(string searchText, int? pageNumber, int? pageSize, 
+        UserData userData)
+    {
+        try
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            conn.Open();
+            using var cmd = conn.CreateCommand();
+
+            string _contragentFilter = string.Empty;
+
+            cmd.CommandText = @"
+                    SELECT 
+                        s.ID_M_SUBJ Id,
+                        s.MCODE_SUBJ Name,
+                        IF(s.TYPE_SUBJ = 0, s.TIN_SUBJ, IF(s.TYPE_SUBJ = 1, s.PIN_SUBJ, '')) as TaxNo
+                    FROM global_db.m_subject s ";
+            cmd.CommandText += $@"
+                    WHERE 1 = 1
+                        AND (
+                            s.MCODE_SUBJ LIKE CONCAT('%',@contragentName,'%')
+                            OR
+                            s.TIN_SUBJ LIKE CONCAT('%',@contragentTaxno,'%') 
+                            OR 
+                            s.PIN_SUBJ LIKE CONCAT('%',@contragentTaxno,'%')
+                        ) ";
+
+            cmd.CommandText += $@"
+                                ORDER BY s.MCODE_SUBJ ";
+
+            cmd.Parameters.AddWithValue("@contragentName", searchText);
+            cmd.Parameters.AddWithValue("@contragentTaxno", searchText);
+            if (pageNumber != null && pageNumber > 0)
+            {
+                cmd.CommandText += " LIMIT @offset, @pageSize";
+                cmd.Parameters.AddWithValue("@offset", (pageNumber - 1) * pageSize);
+                cmd.Parameters.AddWithValue("@pageSize", pageSize);
+            }
+            using var rdr = cmd.ExecuteReader();
+            List<Contragent> contragents = new List<Contragent>();
+
+            while (rdr.Read())
+            {
+                Contragent contragent = ContragentSearchFill(rdr);
+                contragents.Add(contragent);
+            }
+            return contragents;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Ошибка в SearchList: " + ex.Message);
+        }
+    }
+
 
     public async Task<long> CountAllAsync(
         string contragentName,
@@ -708,6 +763,171 @@ public class ContragentRepository
 
     #endregion
 
+    #region Методы работы со своими организациями
+
+    public async Task<Contragent> GetOurCompanyAsync(int id, UserData userData)
+    {
+        try
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+
+            cmd.CommandText = with + @"
+                    SELECT 
+                        s.*,
+                        e.*,
+                        p.*,
+                        e.NameOrg as EntityName,
+                        e.DATE_BEG as EntityActualDate,
+                        p.Name as PersonName,
+                        p.DATE_BEG as PersonActualDate,
+	                    s.TIN_SUBJ,
+	                    s.PIN_SUBJ,
+                        c.Geolocation_Code2
+                    FROM global_db.m_subject s
+                        LEFT JOIN Entity e ON e.ID_M_SUBJ = s.ID_M_SUBJ AND e.rn = 1 AND s.TYPE_SUBJ = 0
+                        LEFT JOIN Person p ON p.ID_M_SUBJ = s.ID_M_SUBJ AND p.rn = 1 AND s.TYPE_SUBJ = 1
+                        LEFT JOIN global_db.Geolocations c ON c.GeoLocation_Id = s.ID_M_GEOCOUNTRY
+                        RIGHT JOIN refers.m_oursubject oc ON oc.ID_M_SUBJ = s.ID_M_SUBJ
+                ";
+
+            cmd.CommandText += $@"
+                                where 1 = 1
+                                and oc.ID_M_SUBJ = {id};";
+            cmd.Parameters.AddWithValue("@target_date", DateTime.Now);
+
+            using var rdr = await cmd.ExecuteReaderAsync();
+            Contragent contragent = new Contragent();
+            if (await rdr.ReadAsync())
+            {
+                contragent = new Contragent();
+                contragent = ContragentFill(rdr);
+
+                switch (contragent.Type)
+                {
+                    case ContragentType.Entity:
+                        contragent.Entity = new Entity();
+                        contragent.Entity = EntityFill(rdr);
+                        break;
+                    case ContragentType.Person:
+                        contragent.Person = new Person();
+                        contragent.Person = PersonFill(rdr);
+                        break;
+                }
+            }
+            return contragent;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Ошибка в GeOurCompanyAsync:", ex);
+        }
+    }
+
+    public async Task<List<Contragent>> ListOurCompanyAsync(
+        string contragentName,
+        string contragentTaxno,
+        ContragentTypeFilter contragentTypeFilter,
+        string countrySymbol,
+        int? pageNumber, int? pageSize,
+        UserData userData)
+    {
+        try
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+
+            string _contragentFilter = string.Empty;
+            switch (contragentTypeFilter)
+            {
+                case ContragentTypeFilter.EntityFilter:
+                    _contragentFilter = "0";
+                    break;
+                case ContragentTypeFilter.PersonFilter:
+                    _contragentFilter = "1";
+                    break;
+                case ContragentTypeFilter.UnknownFilter:
+                    _contragentFilter = "2,3";
+                    break;
+                case ContragentTypeFilter.All:
+                default:
+                    _contragentFilter = "0,1,2,3";
+                    break;
+            }
+
+            cmd.CommandText = with + @"
+                    SELECT 
+                        s.*,
+                        e.*,
+                        p.*,
+                        e.NameOrg as EntityName,
+                        e.DATE_BEG as EntityActualDate,
+                        p.Name as PersonName,
+                        p.DATE_BEG as PersonActualDate,
+                        s.TIN_SUBJ,
+                        s.PIN_SUBJ,
+                        c.Geolocation_Code2
+                    FROM global_db.m_subject s
+                        LEFT JOIN Entity e ON e.ID_M_SUBJ = s.ID_M_SUBJ AND e.rn = 1 AND s.TYPE_SUBJ = 0
+                        LEFT JOIN Person p ON p.ID_M_SUBJ = s.ID_M_SUBJ AND p.rn = 1 AND s.TYPE_SUBJ = 1
+                        LEFT JOIN global_db.Geolocations c ON c.GeoLocation_Id = s.ID_M_GEOCOUNTRY
+                        RIGHT JOIN refers.m_oursubject oc ON oc.ID_M_SUBJ = s.ID_M_SUBJ
+                ";
+
+            cmd.CommandText += $@"
+                                WHERE 1 = 1
+                                    AND (@contragentName is null or @contragentName = '' or s.MCODE_SUBJ LIKE CONCAT('%',@contragentName,'%'))
+                                    AND (@contragentTaxno is null or @contragentTaxno = '' or s.TIN_SUBJ LIKE CONCAT('%',@contragentTaxno,'%') OR s.PIN_SUBJ LIKE CONCAT('%',@contragentTaxno,'%'))
+                                    AND (s.TYPE_SUBJ in ({_contragentFilter}))
+                                    AND (@countrySymbol is null or @countrySymbol = '' or c.GeoLocation_Code2 LIKE CONCAT('%',@countrySymbol,'%')) ";
+
+            cmd.CommandText += $@"
+                                ORDER BY s.MCODE_SUBJ ";
+
+            cmd.Parameters.AddWithValue("@contragentName", contragentName);
+            cmd.Parameters.AddWithValue("@contragentTaxno", contragentTaxno);
+            cmd.Parameters.AddWithValue("@countrySymbol", countrySymbol);
+            cmd.Parameters.AddWithValue("@target_date", DateTime.Now);
+            if (pageNumber != null && pageNumber > 0)
+            {
+                cmd.CommandText += " LIMIT @offset, @pageSize";
+                cmd.Parameters.AddWithValue("@offset", (pageNumber - 1) * pageSize);
+                cmd.Parameters.AddWithValue("@pageSize", pageSize);
+            }
+            
+            
+            using var rdr = await cmd.ExecuteReaderAsync();
+            List<Contragent> contragents = new List<Contragent>();
+
+            while (await rdr.ReadAsync())
+            {
+                Contragent contragent = new Contragent();
+                contragent = ContragentFill(rdr);
+
+                //switch (contragent.Type)
+                //{
+                //    case ContragentType.Person:
+                //        contragent.Person = new Person();
+                //        contragent.Person = PersonFill(rdr);
+                //        break;
+                //    case ContragentType.Entity:
+                //        contragent.Entity = new Entity();
+                //        contragent.Entity = EntityFill(rdr);
+                //        break;
+                //}
+                contragents.Add(contragent);
+            }
+            return contragents;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Ошибка в ListOurCompanyAsync:", ex);
+        }
+    }
+
+    #endregion
+
     #region Внутренние методы
     private Entity EntityFill(System.Data.Common.DbDataReader rdr)
     {
@@ -856,6 +1076,16 @@ public class ContragentRepository
 
         return contragent;
     }
+
+    private Contragent ContragentSearchFill(DbDataReader rdr)
+    {
+        Contragent contragent = new Contragent();
+        contragent.Id   = rdr["Id"]     == DBNull.Value ? 0 : Convert.ToInt32(rdr["Id"]);
+        contragent.Name = rdr["Name"]   == DBNull.Value ? string.Empty : Convert.ToString(rdr["Name"]);
+        contragent.Taxno= rdr["TaxNo"]  == DBNull.Value ? string.Empty : Convert.ToString(rdr["TaxNo"]);
+        return contragent;  
+    }
+
 
     #endregion
 }

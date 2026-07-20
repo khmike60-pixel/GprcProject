@@ -13,10 +13,18 @@ namespace GrpcWinForms.Objects.Contragents.Components
         private bool _isNavigating = false; // Флаг, блокирующий изменения текста при навигации стрелками
         private string _userTypedText = string.Empty; // Буфер для хранения реального текста пользователя
 
+        private bool _isUpdating2 = false;
+        private bool _isNavigating2 = false; // Флаг, блокирующий изменения текста при навигации стрелками
+        private string _userTypedText2 = string.Empty; // Буфер для хранения реального текста пользователя
+
+        private bool _isSelecting2 = false;
+        private BindingList<ContragentItem> _contragentItems;
+
         public TestForm()
         {
             InitializeComponent();
             ConfigureC1ComboBox();
+            ConfigureComboBox2();
         }
 
         private void ConfigureC1ComboBox()
@@ -27,7 +35,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
             // Отключаем встроенное локальное автозаполнение WinForms
             c1ComboBox1.AutoCompleteMode = AutoCompleteMode.None;
 
-            c1ComboBox1.TranslateValue= false;
+            c1ComboBox1.TranslateValue = false;
 
             // Привязываем события изменения текста и нажатия Enter
             c1ComboBox1.TextChanged -= c1ComboBox1_TextChanged;
@@ -65,30 +73,29 @@ namespace GrpcWinForms.Objects.Contragents.Components
                 // Подготовка gRPC запроса
                 var type = ContragentTypeFilter.All;
 
-                ContragentFilterRequest request = new ContragentFilterRequest()
+                SearchRequest searchRequest = new SearchRequest()
                 {
-                    TypeFilter = type,
-                    Taxno = String.Empty,
-                    Name = filterText,
+                    Search = filterText,
                     Paging = new Paging()
                     {
                         PageNumber = 1,
                         PageSize = 10
-                    }
+                    },
                 };
-                request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
+
+                searchRequest.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
                     Paths = { "id", "name", "taxno" }
                 };
 
-                // Асинхронное получение данных из gRPC
-                ListContragentResponse response = await GrpcClients.GrpcClients.Contragent.ShortListContragentAsync(request);
-                contragents = new BindingList<Contragent>(response.Contragents);
+                ListContragentResponse searchResponse = GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
+                contragents = new BindingList<Contragent>(searchResponse.Contragents);
 
                 List<string> suggestions = new List<string>();
                 foreach (var contragent in contragents)
                 {
-                    suggestions.Add($"{contragent.Name}");
+                    //suggestions.Add($"{contragent.Name}");
+                    suggestions.Add($"{contragent.Name} {contragent.Taxno}");
                 }
 
                 int selectionStart = c1ComboBox1.SelectionStart;
@@ -233,5 +240,111 @@ namespace GrpcWinForms.Objects.Contragents.Components
         {
             c1ComboBox1.DropDownWidth = c1ComboBox1.Size.Width;
         }
+
+        private void ConfigureComboBox2()
+        {
+            // Конфигурация второго комбобокса
+            c1ComboBox2.DropDownStyle = C1.Win.Input.DropDownStyle.Default;
+            c1ComboBox2.AutoCompleteMode = AutoCompleteMode.None;
+            c1ComboBox2.TranslateValue = false;
+            c1ComboBox2.DropDownWidth = c1ComboBox2.Size.Width;
+            c1ComboBox2.SelectedItemChanged += c1ComboBox2_SelectedItemChanged;
+
+        }
+
+        private void c1ComboBox2_TextChanged(object sender, EventArgs e)
+        {
+            //if (_isSelecting2) return;
+            //if (!c1ComboBox2.Focused) return;
+
+            //_userTypedText2 = c1ComboBox2.Text;
+            //string filterText = _userTypedText2.Trim();
+
+            //if (string.IsNullOrEmpty(filterText))
+            //{
+            //    c1ComboBox2.DroppedDown = false;
+            //    return;
+            //}
+
+            try
+            {
+                SearchRequest searchRequest = new SearchRequest()
+                {
+                    Search = c1ComboBox2.Text, // filterText,
+                    Paging = new Paging()
+                    {
+                        PageNumber = 1,
+                        PageSize = 10
+                    }
+                };
+
+                searchRequest.FieldMask =
+                    new Google.Protobuf.WellKnownTypes.FieldMask()
+                    {
+                        Paths = { "id", "name", "taxno" }
+                    };
+
+                c1ComboBox2.ItemsDisplayMember = "Name";
+
+                ListContragentResponse searchResponse =
+                    GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
+
+                c1ComboBox2.ItemsDataSource = _contragentItems;
+
+                _contragentItems =
+                    new BindingList<ContragentItem>(
+                        searchResponse.Contragents
+                            .Select(x => new ContragentItem()
+                            {
+                                Id = x.Id,
+                                Name = x.Name
+                            })
+                            .ToList());
+
+                //if (_contragentItems.Count > 0)
+                //{
+                //    c1ComboBox2.DroppedDown = false;
+                //    c1ComboBox2.DroppedDown = true;
+                //}
+                //else
+                //{
+                //    c1ComboBox2.DroppedDown = false;
+                //}
+            }
+            finally
+            {
+
+            }
+        }
+
+        private void c1ComboBox2_SelectedItemChanged(object sender, EventArgs e)
+        {
+            //if (c1ComboBox2.SelectedIndex < 0) return;
+
+            
+            //_isSelecting2 = true;
+
+            try
+            {
+                ContragentItem item = c1ComboBox2.SelectedItem.Value as ContragentItem;
+
+                //c1ComboBox2.SelectedIndex = 0;
+                c1ComboBox2.Text = item.Name;
+                c1ComboBox2.DroppedDown = false;
+
+                int id = item.Id;
+            }
+            finally
+            {
+                //_isSelecting2 = false;
+            }
+        }
+
+    }
+
+    class ContragentItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

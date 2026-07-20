@@ -1,5 +1,8 @@
-﻿using GrpcCommonNet.Library.Common;
+﻿using C1.Win.Input;
+using C1.Win.Input.MultiColumnCombo;
+using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contragent;
+using GrpcWinForms.Objects.Contragents.Components;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,51 +17,94 @@ namespace GrpcWinForms.Objects.Test
 {
     public partial class TestLookup : Form
     {
+        private List<ShortContragent> _contragents = new List<ShortContragent>();
+        private BindingList<ShortContragent> _bindingList = new BindingList<ShortContragent>();
+        private ListContragentResponse searchResponse;
+        private string _text = String.Empty;
+
         public TestLookup()
         {
             InitializeComponent();
-
-            lookup.DataProvider =
-                new ContragentLookupProvider();
-
-            lookup.ValueSelected += (s, e) =>
-            {
-                Contragent contragent =
-                    (Contragent)e.Tag;
-
-                MessageBox.Show(contragent.Name);
-            };
-            this.Controls.Add(lookup);
+            ConfigCustomView();
+            ConfigDropDownControl();
         }
-    }
-    public class ContragentLookupProvider : ISmartLookupDataProvider<LookupItem>
-    {
-        public async Task<List<LookupItem>> SearchAsync(
-            string text,
-            int take = 20)
+
+        private void ConfigCustomView()
         {
-            var request = new ContragentFilterRequest
+            DropDownViewCustomControl customView = new DropDownViewCustomControl();
+            c1MultiColumnComboCustom.DropDownView = DropDownView.Custom;
+            c1MultiColumnComboCustom.CustomView = customView;
+
+            _bindingList = GetData("");
+            customView.DataSource = _bindingList;
+
+        }
+
+        private void ConfigDropDownControl()
+        {
+            c1DropDownControl1.Control = new DropDownUserControl();
+
+        }
+
+        private BindingList<ShortContragent> GetData(string filter)
+        {
+            SearchRequest searchRequest = new SearchRequest()
             {
-                Name = text,
-                Paging = new Paging
-                {
-                    PageNumber = 1,
-                    PageSize = take
-                }
+                Search = filter,
+                Paging = new Paging() { PageNumber = 1, PageSize = 100 }
             };
 
-            var response =
-                await GrpcClients.GrpcClients.Contragent
-                    .ShortListContragentAsync(request);
+            searchRequest.FieldMask =
+                new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "taxno" } };
 
-            return response.Contragents
-                .Select(x => new LookupItem
+            searchResponse = GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
+
+            _contragents.Clear();
+            foreach (Contragent item in searchResponse.Contragents)
+            {
+                _contragents.Add(new ShortContragent()
                 {
-                    Value = x.Id,
-                    DisplayText = x.Name,
-                    Tag = x
-                })
-                .ToList();
+                    Id = item.Id,
+                    Name = item.Name,
+                    TaxNo = item.Taxno
+                });
+            }
+            return new BindingList<ShortContragent>(_contragents);
         }
+
+        #region События  c1MultiColumnComboCustom
+        private void c1MultiColumnComboCustom_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (c1MultiColumnComboCustom.SelectedIndex >= 0)
+            {
+                int selectedIndex = c1MultiColumnComboCustom.CustomView.SelectedIndex;
+                var view = c1MultiColumnComboCustom.CustomView;
+
+                if (selectedIndex > -1)
+                {
+                    ShortContragent selectedItem = _bindingList[selectedIndex];
+                    c1MultiColumnComboCustom.Text = selectedItem.Name;
+                    var value = ((DropDownViewCustomControl)c1MultiColumnComboCustom.CustomView).Value;
+
+                }
+            }
+        }
+
+        private void c1MultiColumnComboCustom_TextChanged(object sender, EventArgs e)
+        {
+            _bindingList = GetData(c1MultiColumnComboCustom.Text);
+            c1MultiColumnComboCustom.CustomView.DataSource = _bindingList;
+        }
+
+        #endregion
+
+        
+    }
+
+    public class ShortContragent
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string TaxNo { get; set; }
     }
 }

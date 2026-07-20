@@ -131,6 +131,35 @@ public class ContragentServiceImpl : ContragentServices.ContragentServicesBase
         }
     }
 
+    public override async Task<ListContragentResponse> SearchListContragent(SearchRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"SearchListContragent called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        try
+        {
+            List<Contragent> contragents = _repo.SearchList(request.Search ?? string.Empty, request.Paging.PageNumber, request.Paging.PageSize, userData);
+            ListContragentResponse response = new ListContragentResponse
+            {
+                Result = new Result { Status = Status.Ok }
+            };
+            foreach (var contragent in contragents)
+            {
+                Contragent maskContragent = new Contragent();
+                if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                    maskContragent = contragent;
+                else
+                    request.FieldMask.Merge(contragent, maskContragent);
+                response.Contragents.Add(maskContragent);
+            }
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return new ListContragentResponse { Result = new Result { Status = Status.BadRequest } };
+        }
+    }
+
     public override async Task<CountListContragentResponse> CountListContragent(ContragentFilterRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
@@ -243,6 +272,75 @@ public class ContragentServiceImpl : ContragentServices.ContragentServicesBase
         {
             _logger.LogError(ex, ex.Message);
             return new UndeletedIdsContragentResponse { Result = new Result { Status = Status.BadRequest } };
+        }
+    }
+
+    #endregion
+
+    #region Методы работы со своими организациями (OurCompanies)
+
+    public override async Task<ContragentResponse> GetOurCompany(ContragentRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetContragent called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        try
+        {
+            Contragent contragent = await _repo.GetOurCompanyAsync(request.Id, userData);
+            if (contragent != null && !contragent.ToString().Equals("{ }"))
+            {
+                ContragentResponse response = new ContragentResponse
+                {
+                    Contragent = new Contragent(),
+                    Result = new Result { Status = Status.Ok }
+                };
+                if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                    response.Contragent = contragent;
+                else
+                    request.FieldMask.Merge(contragent, response.Contragent);
+                return response;
+            }
+            else return new ContragentResponse { Result = new Result { Status = Status.NotFound } };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return new ContragentResponse { Result = new Result { Status = Status.BadRequest } };
+        }
+    }
+
+    public override async Task<ListContragentResponse> GetListOurCompany(ContragentFilterRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetListOurCompanies called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        try
+        {
+            List<Contragent> contragents = await _repo.ListOurCompanyAsync(
+                request.Name ?? string.Empty,
+                request.Taxno ?? string.Empty,
+                request.TypeFilter,
+                request.CountrySymbol ?? string.Empty,
+                request.Paging?.PageNumber ?? 0,
+                request.Paging?.PageSize ?? 0,
+                userData);
+            ListContragentResponse response = new ListContragentResponse
+            {
+                Result = new Result { Status = Status.Ok }
+            };
+            foreach (var contragent in contragents)
+            {
+                Contragent maskContragent = new Contragent();
+                if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                    maskContragent = contragent;
+                else
+                    request.FieldMask.Merge(contragent, maskContragent);
+                response.Contragents.Add(maskContragent);
+            }
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return new ListContragentResponse { Result = new Result { Status = Status.BadRequest } };
         }
     }
 

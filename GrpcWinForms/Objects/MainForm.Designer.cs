@@ -120,6 +120,7 @@ namespace GrpcWinForms.Forms
             нашиОрганизацииToolStripMenuItem.Name = "нашиОрганизацииToolStripMenuItem";
             нашиОрганизацииToolStripMenuItem.Size = new Size(228, 22);
             нашиОрганизацииToolStripMenuItem.Text = "Наши организации";
+            нашиОрганизацииToolStripMenuItem.Click += нашиОрганизацииToolStripMenuItem_Click;
             // 
             // подразделенияToolStripMenuItem
             // 

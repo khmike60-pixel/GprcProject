@@ -17,6 +17,13 @@ service ContragentServices {
 	rpc UpdateContragent(UpdateContragentRequest) returns (ContragentResponse);
 	rpc DeleteContragent(DeleteContragentRequest) returns (DeleteContragentResponse);
 	rpc DeleteIdsContragent(DeleteIdsContragentRequest) returns (UndeletedIdsContragentResponse);
+	rpc SearchListContragent(SearchRequest) returns (ListContragentResponse);
+
+	rpc GetOurCompany(ContragentRequest) returns (ContragentResponse);
+	rpc GetListOurCompany(ContragentFilterRequest) returns (ListContragentResponse);
+	rpc CreateOurCompany(CreateContragentRequest) returns (ContragentResponse);
+	rpc DeleteOurCompany(DeleteContragentRequest) returns (DeleteContragentResponse);
+	rpc DeleteIdsOurCompany(DeleteIdsContragentRequest) returns (UndeletedIdsContragentResponse);
 }
 
 
@@ -75,3 +82,9 @@ message CountListContragentResponse {
 	Common.Result result = 1;
 	int64 count = 2;
 }
+
+message SearchRequest {
+	string search = 1;
+	google.protobuf.FieldMask field_mask = 2;
+	Common.Paging paging = 3;
+}	

@@ -7,6 +7,7 @@ using GrpcWinForms.Objects.Contragents.Components;
 using GrpcWinForms.Objects.Contragents.Forms;
 using GrpcWinForms.Objects.Currencies.Forms;
 using GrpcWinForms.Objects.Geolocations.GeoForms;
+using GrpcWinForms.Objects.OurCompanies.Forms;
 using GrpcWinForms.Objects.Products.ProductsForm;
 using GrpcWinForms.Objects.Test;
 using GrpcWinForms.Objects.Users.Forms;
@@ -133,6 +134,17 @@ namespace GrpcWinForms.Forms
             }
             var f = new TestLookup { MdiParent = this };
             f.Show();
+        }
+
+        private void нашиОрганизацииToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is OurCompaniesForm) { child.Activate(); return; }
+            }
+            var f = new OurCompaniesForm { MdiParent = this };
+            f.Show();
+
         }
     }
 }
