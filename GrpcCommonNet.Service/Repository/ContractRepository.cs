@@ -65,7 +65,9 @@ public class ContractRepository
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
                     SELECT 
-                        cnt.*, cu.Abbrev, t.ContractType_Name, if(cnt.contract_ParentId is null, ""Основной контракт"", ""Допсоглашение"" )
+                        cnt.*, cu.Abbrev, t.ContractType_Name, 
+                        /*if(cnt.contract_ParentId is null, ""Основной контракт"", ""Допсоглашение"" )*/
+                        ""Основной контракт""
                     FROM (
                         SELECT *, ROW_NUMBER() OVER (
                                 PARTITION BY COALESCE(c.contract_RootId, contract_id) 

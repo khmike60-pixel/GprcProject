@@ -13,7 +13,8 @@ namespace GrpcWinForms.Objects.Contragents.Components
 {
     public partial class CompanyDropDown : C1DropDownControl
     {
-        public Company selectedItem = new Company();
+        private Company selectedItem = new Company();
+        public Company SelectedItem {  get { return selectedItem; } }
 
         // Делегат: принимает string (вход), возвращает BindingList<Company> (выход)
         private Func<string, BindingList<Company>>? _getDataSourceFunc;
@@ -29,6 +30,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
                     try
                     {
                         SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
+
                         grid.DataSource = UpdateGridData(this.Text ?? string.Empty);
                     }
                     catch
@@ -44,13 +46,13 @@ namespace GrpcWinForms.Objects.Contragents.Components
         {
             BindingList<Company> result = new BindingList<Company>();
             SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
-            //CompanyDropDownForm userControl = ((CompanyDropDownForm)Control);
+            CompanyDropDownForm userControl = ((CompanyDropDownForm)Control);
 
             if (GetDataSourceFunc != null)
             {
                 // Вызываем метод в форме и сразу получаем результат
                 result = GetDataSourceFunc.Invoke(filterText);
-
+                userControl.Contragents = result;
                 // Передаем полученный список в ваш DropDownForm
                 // grid.DataSource = result;
             }
@@ -96,7 +98,8 @@ namespace GrpcWinForms.Objects.Contragents.Components
                 if (_contragents.Count == 1)
                 {
                     userControl.ContragentSelected = _contragents[0];
-                    Text = _contragents[0].Name;
+                    selectedItem = _contragents[0];
+                    Text = selectedItem.Name;
                     return;
                 }
             }

@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HeadContractControl));
             labelBuyer = new Label();
             lookupContragentBuyer = new C1.Win.Input.C1DropDownControl();
             labelTaxNoBuyer = new Label();
@@ -45,6 +47,8 @@
             labelDateStop = new Label();
             dateTimePickerStop = new DateTimePicker();
             groupBoxMain = new GroupBox();
+            companySeller = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
+            companyBuyer = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             labelCurrency = new Label();
             comboBoxCurrency = new C1.Win.Input.C1ComboBox();
             c1FlexGrid1 = new C1.Win.FlexGrid.C1FlexGrid();
@@ -54,6 +58,8 @@
             ((System.ComponentModel.ISupportInitialize)lookupContragentSeller).BeginInit();
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).BeginInit();
             groupBoxMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)companyBuyer).BeginInit();
             ((System.ComponentModel.ISupportInitialize)comboBoxCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1FlexGrid1).BeginInit();
             SuspendLayout();
@@ -220,6 +226,8 @@
             // groupBoxMain
             // 
             groupBoxMain.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBoxMain.Controls.Add(companySeller);
+            groupBoxMain.Controls.Add(companyBuyer);
             groupBoxMain.Controls.Add(dateTimePickerStop);
             groupBoxMain.Controls.Add(labelDateStop);
             groupBoxMain.Controls.Add(lookupContragentSeller);
@@ -240,9 +248,31 @@
             groupBoxMain.Controls.Add(labelSeller);
             groupBoxMain.Location = new Point(3, 0);
             groupBoxMain.Name = "groupBoxMain";
-            groupBoxMain.Size = new Size(569, 133);
+            groupBoxMain.Size = new Size(569, 231);
             groupBoxMain.TabIndex = 16;
             groupBoxMain.TabStop = false;
+            // 
+            // companySeller
+            // 
+            companySeller.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companySeller.ButtonsSettings.CustomButton.Icon"));
+            companySeller.ButtonsSettings.CustomButton.Visible = true;
+            companySeller.GetDataSourceFunc = null;
+            companySeller.Location = new Point(125, 198);
+            companySeller.Name = "companySeller";
+            companySeller.Size = new Size(235, 23);
+            companySeller.TabIndex = 18;
+            companySeller.Value = "";
+            // 
+            // companyBuyer
+            // 
+            companyBuyer.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companyBuyer.ButtonsSettings.CustomButton.Icon"));
+            companyBuyer.ButtonsSettings.CustomButton.Visible = true;
+            companyBuyer.GetDataSourceFunc = null;
+            companyBuyer.Location = new Point(125, 159);
+            companyBuyer.Name = "companyBuyer";
+            companyBuyer.Size = new Size(235, 23);
+            companyBuyer.TabIndex = 17;
+            companyBuyer.Value = "";
             // 
             // labelCurrency
             // 
@@ -294,12 +324,14 @@
             Controls.Add(groupBoxMain);
             MinimumSize = new Size(575, 136);
             Name = "HeadContractControl";
-            Size = new Size(575, 136);
+            Size = new Size(575, 234);
             ((System.ComponentModel.ISupportInitialize)lookupContragentBuyer).EndInit();
             ((System.ComponentModel.ISupportInitialize)lookupContragentSeller).EndInit();
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).EndInit();
             groupBoxMain.ResumeLayout(false);
             groupBoxMain.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)companySeller).EndInit();
+            ((System.ComponentModel.ISupportInitialize)companyBuyer).EndInit();
             ((System.ComponentModel.ISupportInitialize)comboBoxCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1FlexGrid1).EndInit();
             ResumeLayout(false);
@@ -329,5 +361,7 @@
         public DateTimePicker dateTimePickerStart;
         public DateTimePicker dateTimePickerStop;
         public C1.Win.Input.C1ComboBox comboBoxCurrency;
+        public Contragents.Components.CompanyDropDown companySeller;
+        public Contragents.Components.CompanyDropDown companyBuyer;
     }
 }

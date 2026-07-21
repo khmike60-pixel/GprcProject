@@ -28,8 +28,8 @@ namespace GrpcWinForms.Objects.Test
 
         }
 
-        #region Методы c1DropDownControl1
-        
+        #region Методы c1DropDownControl1 не контрол
+
         private void ConfigDropDownControl()
         {
             c1DropDownControl1.Control = new DropDownUserControl();
@@ -107,5 +107,19 @@ namespace GrpcWinForms.Objects.Test
             return _contragents;
         }
 
+        private void buttonCancel_Click(object sender, EventArgs e) // Cancel
+        {
+            this.Close();
+        }
+
+        private void buttonUpdate_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(
+                $"Будет сохранен следующий контрагент"                  + Environment.NewLine +
+                $"Идентификатор : {companyDropDown1.SelectedItem.Id}"   + Environment.NewLine +
+                $"Наименование  : {companyDropDown1.SelectedItem.Name}" + Environment.NewLine +
+                $"ИНН / ПИНФЛ   : {companyDropDown1.SelectedItem.TaxNo}"
+                );
+        }
     }
 }

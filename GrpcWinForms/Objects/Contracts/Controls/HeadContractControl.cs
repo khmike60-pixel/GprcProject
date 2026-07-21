@@ -1,4 +1,7 @@
-﻿using GrpcCommonNet.Library.Contract;
+﻿using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Contract;
+using GrpcCommonNet.Library.Contragent;
+using GrpcWinForms.Objects.Contragents.Components;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,11 +14,17 @@ using System.Windows.Forms;
 
 namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 {
+
     public partial class HeadContractControl : UserControl
     {
+        private Company SelectedSeller;
+        private Company SelectedBuyer;
+
         public HeadContractControl()
         {
             InitializeComponent();
+            companyBuyer.GetDataSourceFunc = Load;
+            companySeller.GetDataSourceFunc = Load;
            
         }
 
@@ -39,6 +48,39 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             comboBoxContractType.Text = contract.TypeContract.ToString();   // Тип договора
             comboBoxCurrency.Text = contract.Currency.Abbrev;               // Валюта договора
 
+            companySeller.Text = contract.Seller.Name;
+            companyBuyer.Text = contract.Buyer.Name;
+
         }
+
+        #region Методы для companyDropDown
+        private BindingList<Company> Load(string filter)
+        {
+            SearchRequest searchRequest = new SearchRequest()
+            {
+                Search = filter,
+                Paging = new Paging() { PageNumber = 1, PageSize = 10 }
+            };
+
+            searchRequest.FieldMask =
+                new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "taxno" } };
+
+            ListContragentResponse searchResponse = GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
+
+            BindingList<Company> _contragents = new BindingList<Company>();
+            foreach (Contragent item in searchResponse.Contragents)
+            {
+                _contragents.Add(new Company()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    TaxNo = item.Taxno
+                });
+            }
+            return _contragents;
+        }
+
+
+        #endregion
     }
 }

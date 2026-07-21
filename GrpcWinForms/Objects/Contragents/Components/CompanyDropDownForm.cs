@@ -18,9 +18,10 @@ namespace GrpcWinForms.Objects.Contragents.Components
     public partial class CompanyDropDownForm : UserControl
     {
         private BindingList<Company> _contragents = new BindingList<Company>();
+        public BindingList<Company> Contragents { get => _contragents; set => _contragents = value; }
         private Company contragentSelected = null;
 
-        public event EventHandler NeedRefreshDataSource;
+        // public event EventHandler NeedRefreshDataSource;
 
         public Company ContragentSelected { get => contragentSelected; set => contragentSelected = value; }
 
@@ -29,41 +30,21 @@ namespace GrpcWinForms.Objects.Contragents.Components
             InitializeComponent();
         }
 
-        public BindingList<Company> GetData(string filter)
-        {
-            SearchRequest searchRequest = new SearchRequest()
-            {
-                Search = filter,
-                Paging = new Paging() { PageNumber = 1, PageSize = 10 }
-            };
-
-            searchRequest.FieldMask =
-                new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "taxno" } };
-
-            ListContragentResponse searchResponse = GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
-
-            _contragents.Clear();
-            foreach (Contragent item in searchResponse.Contragents)
-            {
-                _contragents.Add(new Company()
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    TaxNo = item.Taxno
-                });
-            }
-            return new BindingList<Company>(_contragents);
-        }
-
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            int rowIndex = smart.Row;
-            int bindingIndex = smart.Row - smart.Rows.Fixed;
-            contragentSelected = _contragents[bindingIndex];
+            try
+            {
 
-            C1DropDownControl parent = (C1DropDownControl)((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner;
 
-            parent.Text = contragentSelected.Name;
+                int rowIndex = smart.Row;
+                int bindingIndex = smart.Row - smart.Rows.Fixed;
+                contragentSelected = _contragents[bindingIndex];
+
+                C1DropDownControl parent = (C1DropDownControl)((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner;
+
+                parent.Text = contragentSelected.Name;
+            }
+            catch { }
 
         }
 

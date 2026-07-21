@@ -34,6 +34,9 @@
             c1DropDownControl1 = new C1.Win.Input.C1DropDownControl();
             label1 = new Label();
             companyDropDown1 = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
+            buttonCancel = new Button();
+            buttonUpdate = new Button();
+            buttonUpdateExit = new Button();
             ((System.ComponentModel.ISupportInitialize)c1DropDownControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companyDropDown1).BeginInit();
             SuspendLayout();
@@ -82,11 +85,44 @@
             companyDropDown1.TabIndex = 6;
             companyDropDown1.Value = "";
             // 
+            // buttonCancel
+            // 
+            buttonCancel.AutoSize = true;
+            buttonCancel.Location = new Point(546, 415);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(75, 25);
+            buttonCancel.TabIndex = 7;
+            buttonCancel.Text = "Cancel";
+            buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Click += buttonCancel_Click;
+            // 
+            // buttonUpdate
+            // 
+            buttonUpdate.Location = new Point(465, 417);
+            buttonUpdate.Name = "buttonUpdate";
+            buttonUpdate.Size = new Size(75, 23);
+            buttonUpdate.TabIndex = 8;
+            buttonUpdate.Text = "Записать";
+            buttonUpdate.UseVisualStyleBackColor = true;
+            buttonUpdate.Click += buttonUpdate_Click;
+            // 
+            // buttonUpdateExit
+            // 
+            buttonUpdateExit.Location = new Point(337, 417);
+            buttonUpdateExit.Name = "buttonUpdateExit";
+            buttonUpdateExit.Size = new Size(122, 23);
+            buttonUpdateExit.TabIndex = 9;
+            buttonUpdateExit.Text = "Записать и выйти";
+            buttonUpdateExit.UseVisualStyleBackColor = true;
+            // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(627, 450);
+            Controls.Add(buttonUpdateExit);
+            Controls.Add(buttonUpdate);
+            Controls.Add(buttonCancel);
             Controls.Add(companyDropDown1);
             Controls.Add(label1);
             Controls.Add(c1DropDownControl1);
@@ -104,5 +140,8 @@
         private C1.Win.Input.C1DropDownControl c1DropDownControl1;
         private Label label1;
         private Contragents.Components.CompanyDropDown companyDropDown1;
+        private Button buttonCancel;
+        private Button buttonUpdate;
+        private Button buttonUpdateExit;
     }
 }
