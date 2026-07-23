@@ -30,17 +30,31 @@ namespace GrpcWinForms.Objects.Contragents.Components
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompanyDropDown));
             companyDropDownForm = new CompanyDropDownForm();
-
+            ((System.ComponentModel.ISupportInitialize)this).BeginInit();
+            SuspendLayout();
+            // 
+            // companyDropDownForm
+            // 
+            companyDropDownForm.ContragentSelected = null;
+            companyDropDownForm.Name = "companyDropDownForm";
+            companyDropDownForm.Size = new Size(380, 300);
+            companyDropDownForm.TabIndex = 0;
+            // 
+            // CompanyDropDown
+            // 
             ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_multiply_16);
             ButtonsSettings.CustomButton.Visible = true;
-            Name = "CompanyDropDown";
             Control = companyDropDownForm;
-            TextChanged += CompanyDropDown_TextChanged;
+            DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            DropDownWidth = 300;
             CustomButtonClick += CompanyDropDown_CustomButtonClick;
-            Leave += CompanyDropDown_Leave;
+            TextChanged += CompanyDropDown_TextChanged;
             KeyPress += CompanyDropDown_KeyPress;
+            Leave += CompanyDropDown_Leave;
+            ((System.ComponentModel.ISupportInitialize)this).EndInit();
+            ResumeLayout(false);
 
         }
 

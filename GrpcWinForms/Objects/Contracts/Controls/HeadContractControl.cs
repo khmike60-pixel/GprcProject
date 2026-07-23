@@ -42,9 +42,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
                 dateTimePickerStop.Text = string.Empty;
             
             textBoxTaxnoBuyer.Text = contract.Buyer.Taxno;                  // ИНН покупателя
-            lookupContragentBuyer.Value = contract.Buyer.Name;              // Контрагент покупатель
+            companyBuyer.Text = contract.Buyer.Name;                        // Контрагент покупатель
+//            lookupContragentBuyer.Value = contract.Buyer.Name;            // Контрагент покупатель
             textBoxTaxnoSeller.Text = contract.Seller.Taxno;                // ИНН продавца
-            lookupContragentSeller.Value = contract.Seller.Name;            // Контрагент продавец
+            companySeller.Text = contract.Seller.Name;                      // Контрагент продавец
+//            lookupContragentSeller.Value = contract.Seller.Name;            // Контрагент продавец
             comboBoxContractType.Text = contract.TypeContract.ToString();   // Тип договора
             comboBoxCurrency.Text = contract.Currency.Abbrev;               // Валюта договора
 

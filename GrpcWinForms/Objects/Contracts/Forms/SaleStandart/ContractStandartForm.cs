@@ -29,6 +29,14 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
         public ContractStandartForm()
         {
             InitializeComponent();
+
+            smartGridLines.Headers = new string[]
+            {
+                "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
+                "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС",
+                "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС"
+            };
+
         }
 
         public ContractStandartForm(int id)
@@ -59,16 +67,23 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             ContractResponse responseContract = GrpcClients.GrpcClients.Contract.GetContract(requestContract);
             headContractControl.SetControls(responseContract.Contract);
             sumContractControl1.SetControls(responseContract.Contract);
-
-            var properties = responseContract.Contract.Data;
-            if (properties != null)
+            try
             {
-                var root = properties.Fields["Контракт"];
+                var properties = responseContract.Contract.Data;
+                if (properties != null)
+                {
+                    var _root = properties.Fields;
+                    var firstName = properties.Fields.Keys.First();
 
-                DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, "Контракт");
-                propertiesControl1.SetTreeNodes(nodes);
+                    var root = properties.Fields[firstName];
+
+                    DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, firstName);
+                    propertiesControl1.SetTreeNodes(nodes);
+                }
+            } catch
+            {
+                MessageBox.Show("Ошибка в дополнительных параметрах");
             }
-
             ContractLineRequest requestLines = new ContractLineRequest()
             {
                 Id = responseContract.Contract.Id,

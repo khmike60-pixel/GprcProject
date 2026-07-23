@@ -43,6 +43,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
                 C1DropDownControl parent = (C1DropDownControl)((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner;
 
                 parent.Text = contragentSelected.Name;
+                CloseForm();
             }
             catch { }
 

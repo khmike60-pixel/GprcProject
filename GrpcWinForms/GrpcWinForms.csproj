@@ -8,6 +8,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Objects\Contracts\Forms\ContractsForm.resx~RF3ff13d93.TMP" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="C1.Excel" Version="9.0.20251.144" />
     <PackageReference Include="C1.Win.FlexGrid" Version="8.0.20251.708" />
     <PackageReference Include="C1.Win.Input.MultiColumnCombo" Version="8.0.20251.708" />

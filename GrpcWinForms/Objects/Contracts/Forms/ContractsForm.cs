@@ -5,6 +5,7 @@ using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Forms;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
+using GrpcWinForms.Objects.Contragents.Components;
 using SmartGrid;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,22 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             InitializeComponent();
             loaderContracts.Parent = smartGridContracts;
             loaderLines.Parent = smartGridLines;
+
+            smartGridContracts.Headers = new string[]
+            {
+                "...\tId\tКонтракт\tКонтракт\tКонтракт\tКонтракт\tКонтрагенты\tКонтрагенты\tТип\tОперации\tОперации\tДействует до",
+                "...\tId\tДата\tНомер\tСумма\tСумма\tПокупатель\tПродавец\tТип\tОплачено\tОтгружено\tДействует до"
+            };
+
+            smartGridLines.Headers = new string[]
+            {
+                "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
+                "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС"
+            };
+
+            companyBuyer.GetDataSourceFunc  = CompanyFilterLoad;
+            companySeller.GetDataSourceFunc = CompanyFilterLoad;
+
         }
 
         private void toolStripButtonNew_Click(object sender, EventArgs e)
@@ -171,7 +188,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id) { child.Activate(); return; }
             }
-            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent, Parent = this };
+            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent};
             f.ContractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
             f.Show();
 
@@ -220,5 +237,36 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             }
 
         }
+
+        #region Методы для companyDropDown
+        private BindingList<Company> CompanyFilterLoad(string filter)
+        {
+            SearchRequest searchRequest = new SearchRequest()
+            {
+                Search = filter,
+                Paging = new Paging() { PageNumber = 1, PageSize = 10 }
+            };
+
+            searchRequest.FieldMask =
+                new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "taxno" } };
+
+            ListContragentResponse searchResponse = GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
+
+            BindingList<Company> _contragents = new BindingList<Company>();
+            foreach (Contragent item in searchResponse.Contragents)
+            {
+                _contragents.Add(new Company()
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    TaxNo = item.Taxno
+                });
+            }
+            return _contragents;
+        }
+
+
+        #endregion
+
     }
 }

@@ -121,8 +121,22 @@
   <data name="companyDropDown1.ButtonsSettings.CustomButton.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DgAACw4BQL7hQQAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
+        DQAACw0B7QfALAAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
         RQZQ7IU7QIysAcQGiY0C6gMGBgBzORJ7p2197QAAAABJRU5ErkJggg==
 </value>
+  </data>
+  <data name="smartGrid1.ColumnInfo" xml:space="preserve">
+    <value>12,1,0,0,0,-1,Columns:0{Width:30;Caption:"№";AllowMerging:True;}	1{Caption:"1";AllowMerging:True;}	2{Caption:"1";AllowMerging:True;}	3{Caption:"1";AllowMerging:True;}	4{Caption:"2";AllowMerging:True;}	5{Caption:"...";AllowMerging:True;}	6{Caption:"...";AllowMerging:True;}	7{Caption:"...";AllowMerging:True;}	8{Caption:"...";AllowMerging:True;}	9{Caption:"...";AllowMerging:True;}	10{Caption:"...";AllowMerging:True;}	11{Caption:"...";AllowMerging:True;}	</value>
+  </data>
+  <data name="smartGrid1.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAEAQAAAH5TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW1N5
+        c3RlbS5JbnQzMiwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJs
+        aWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgcAAAgI
+        CAkCAAAAAAAAAAAAAAAPAgAAAAAAAAAICw==
+</value>
+  </data>
+  <data name="smartGrid1.StyleInfo" xml:space="preserve">
+    <value>Normal{Margins:1, 1, 1, 1;}	Alternate{}	Hover{}	Fixed{BackColor:Control;ForeColor:ControlText;TextAlign:CenterCenter;Border:Flat,1,ControlDark,Both;BorderHorz:1,Black;BorderVert:1,Black;BackgroundImageLayout:Hide;}	Highlight{BackColor:Info;ForeColor:ControlText;SearchBackColor:Orange;}	Focus{BackColor:Info;ForeColor:ControlText;}	Editor{}	Search{BackColor:Highlight;ForeColor:HighlightText;}	Frozen{BackColor:Beige;}	FrozenAlternate{}	NewRow{ForeColor:GrayText;}	EmptyArea{BackColor:AppWorkspace;Border:None,1,Black,Both;BorderHorz:1,Black;BorderVert:1,Black;}	SelectedColumnHeader{}	SelectedRowHeader{}	GrandTotal{BackColor:Black;ForeColor:White;}	Subtotal0{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal1{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal2{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal3{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal4{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal5{BackColor:ControlDarkDark;ForeColor:White;}	FilterEditor{}	Footer{BackColor:Window;ForeColor:ControlText;Border:Flat,1,ControlDark,Both;BorderHorz:1,Black;BorderVert:1,Black;BackgroundImageLayout:Hide;}	FirstCustomStyle{}	Selected{ForeColor:Red;Margins:1, 1, 1, 1;}	</value>
   </data>
 </root>

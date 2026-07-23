@@ -40,6 +40,9 @@
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition6 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition7 = new C1.Win.FlexGrid.AggregateDefinition();
             panel1 = new Panel();
+            labelBuyer = new Label();
+            companySeller = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
+            companyBuyer = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             c1ComboBox2 = new C1.Win.Input.C1ComboBox();
             labelCurrency = new Label();
             c1ComboBox1 = new C1.Win.Input.C1ComboBox();
@@ -49,7 +52,6 @@
             labelPeriod = new Label();
             lookupSeller = new C1.Win.Input.C1DropDownControl();
             lookupBuyer = new C1.Win.Input.C1DropDownControl();
-            labelПокупатель = new C1.Win.Input.C1Label();
             labelSeller = new Label();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanelContractLinesList = new C1.Win.SplitContainer.C1SplitterPanel();
@@ -66,12 +68,13 @@
             toolStripButtonHistory = new ToolStripButton();
             toolStripButton1 = new ToolStripButton();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)companyBuyer).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)periodContract).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lookupSeller).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lookupBuyer).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)labelПокупатель).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanelContractLinesList.SuspendLayout();
@@ -83,6 +86,9 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(labelBuyer);
+            panel1.Controls.Add(companySeller);
+            panel1.Controls.Add(companyBuyer);
             panel1.Controls.Add(c1ComboBox2);
             panel1.Controls.Add(labelCurrency);
             panel1.Controls.Add(c1ComboBox1);
@@ -92,13 +98,47 @@
             panel1.Controls.Add(labelPeriod);
             panel1.Controls.Add(lookupSeller);
             panel1.Controls.Add(lookupBuyer);
-            panel1.Controls.Add(labelПокупатель);
             panel1.Controls.Add(labelSeller);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1077, 93);
+            panel1.Size = new Size(1085, 93);
             panel1.TabIndex = 5;
+            // 
+            // labelBuyer
+            // 
+            labelBuyer.AutoSize = true;
+            labelBuyer.Location = new Point(18, 10);
+            labelBuyer.Name = "labelBuyer";
+            labelBuyer.Size = new Size(75, 15);
+            labelBuyer.TabIndex = 18;
+            labelBuyer.Text = "Покупатель:";
+            // 
+            // companySeller
+            // 
+            companySeller.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companySeller.ButtonsSettings.CustomButton.Icon"));
+            companySeller.ButtonsSettings.CustomButton.Visible = true;
+            companySeller.DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            companySeller.DropDownWidth = 300;
+            companySeller.GetDataSourceFunc = null;
+            companySeller.Location = new Point(99, 35);
+            companySeller.Name = "companySeller";
+            companySeller.Size = new Size(207, 23);
+            companySeller.TabIndex = 17;
+            companySeller.Value = "";
+            // 
+            // companyBuyer
+            // 
+            companyBuyer.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companyBuyer.ButtonsSettings.CustomButton.Icon"));
+            companyBuyer.ButtonsSettings.CustomButton.Visible = true;
+            companyBuyer.DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            companyBuyer.DropDownWidth = 300;
+            companyBuyer.GetDataSourceFunc = null;
+            companyBuyer.Location = new Point(99, 6);
+            companyBuyer.Name = "companyBuyer";
+            companyBuyer.Size = new Size(207, 23);
+            companyBuyer.TabIndex = 16;
+            companyBuyer.Value = "";
             // 
             // c1ComboBox2
             // 
@@ -126,7 +166,7 @@
             // labelContractType
             // 
             labelContractType.AutoSize = true;
-            labelContractType.Location = new Point(312, 9);
+            labelContractType.Location = new Point(312, 10);
             labelContractType.Name = "labelContractType";
             labelContractType.Size = new Size(88, 15);
             labelContractType.TabIndex = 12;
@@ -135,7 +175,7 @@
             // checkBoxAll
             // 
             checkBoxAll.AutoSize = true;
-            checkBoxAll.Location = new Point(261, 67);
+            checkBoxAll.Location = new Point(274, 66);
             checkBoxAll.Name = "checkBoxAll";
             checkBoxAll.Size = new Size(45, 19);
             checkBoxAll.TabIndex = 7;
@@ -144,7 +184,7 @@
             // 
             // periodContract
             // 
-            periodContract.Location = new Point(86, 64);
+            periodContract.Location = new Point(99, 64);
             periodContract.Name = "periodContract";
             periodContract.Size = new Size(169, 23);
             periodContract.TabIndex = 6;
@@ -152,7 +192,7 @@
             // labelPeriod
             // 
             labelPeriod.AutoSize = true;
-            labelPeriod.Location = new Point(28, 68);
+            labelPeriod.Location = new Point(41, 68);
             labelPeriod.Name = "labelPeriod";
             labelPeriod.Size = new Size(52, 15);
             labelPeriod.TabIndex = 5;
@@ -161,7 +201,7 @@
             // lookupSeller
             // 
             lookupSeller.ButtonsSettings.ModalButton.Visible = true;
-            lookupSeller.Location = new Point(86, 35);
+            lookupSeller.Location = new Point(627, 35);
             lookupSeller.Name = "lookupSeller";
             lookupSeller.Size = new Size(220, 23);
             lookupSeller.TabIndex = 11;
@@ -169,24 +209,15 @@
             // lookupBuyer
             // 
             lookupBuyer.ButtonsSettings.ModalButton.Visible = true;
-            lookupBuyer.Location = new Point(86, 6);
+            lookupBuyer.Location = new Point(627, 6);
             lookupBuyer.Name = "lookupBuyer";
             lookupBuyer.Size = new Size(220, 23);
             lookupBuyer.TabIndex = 2;
             // 
-            // labelПокупатель
-            // 
-            labelПокупатель.AutoSize = true;
-            labelПокупатель.Location = new Point(12, 9);
-            labelПокупатель.Name = "labelПокупатель";
-            labelПокупатель.Size = new Size(68, 15);
-            labelПокупатель.TabIndex = 1;
-            labelПокупатель.Text = "Покупатель:";
-            // 
             // labelSeller
             // 
             labelSeller.AutoSize = true;
-            labelSeller.Location = new Point(16, 39);
+            labelSeller.Location = new Point(29, 39);
             labelSeller.Name = "labelSeller";
             labelSeller.Size = new Size(64, 15);
             labelSeller.TabIndex = 3;
@@ -196,11 +227,12 @@
             // 
             c1SplitContainer1.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
             c1SplitContainer1.Dock = DockStyle.Fill;
+            c1SplitContainer1.HeaderButtonBackColor = Color.Transparent;
             c1SplitContainer1.Location = new Point(0, 93);
             c1SplitContainer1.Name = "c1SplitContainer1";
             c1SplitContainer1.Panels.Add(c1SplitterPanelContractLinesList);
             c1SplitContainer1.Panels.Add(c1SplitterPanelContractList);
-            c1SplitContainer1.Size = new Size(1077, 443);
+            c1SplitContainer1.Size = new Size(1085, 443);
             c1SplitContainer1.TabIndex = 6;
             // 
             // c1SplitterPanelContractLinesList
@@ -211,7 +243,7 @@
             c1SplitterPanelContractLinesList.Height = 168;
             c1SplitterPanelContractLinesList.Location = new Point(0, 282);
             c1SplitterPanelContractLinesList.Name = "c1SplitterPanelContractLinesList";
-            c1SplitterPanelContractLinesList.Size = new Size(1077, 161);
+            c1SplitterPanelContractLinesList.Size = new Size(1085, 161);
             c1SplitterPanelContractLinesList.SizeRatio = 38.363D;
             c1SplitterPanelContractLinesList.TabIndex = 0;
             // 
@@ -252,7 +284,7 @@
             smartGridLines.Rows.Fixed = 2;
             smartGridLines.SelectedRows = (List<int>)resources.GetObject("smartGridLines.SelectedRows");
             smartGridLines.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridLines.Size = new Size(1077, 161);
+            smartGridLines.Size = new Size(1085, 161);
             smartGridLines.SortingType = SmartGrid.SortingType.Descending;
             smartGridLines.StyleInfo = resources.GetString("smartGridLines.StyleInfo");
             smartGridLines.TabIndex = 0;
@@ -265,7 +297,7 @@
             c1SplitterPanelContractList.Height = 271;
             c1SplitterPanelContractList.Location = new Point(0, 0);
             c1SplitterPanelContractList.Name = "c1SplitterPanelContractList";
-            c1SplitterPanelContractList.Size = new Size(1077, 271);
+            c1SplitterPanelContractList.Size = new Size(1085, 271);
             c1SplitterPanelContractList.TabIndex = 1;
             // 
             // smartGridContracts
@@ -292,8 +324,8 @@
             smartGridContracts.Footers.Fixed = true;
             smartGridContracts.Headers = new string[]
     {
-    "...\tId\tКонтракт\tКонтракт\tКонтракт\tКонтракт\tКонтрагенты\tКонтрагенты\tТип\tОперации\tОперации\tДействует до",
-    "...\tId\tДата\tНомер\tСумма\tСумма\tПокупатель\tПродавец\tТип\tОплачено\tОтгружено\tДействует до"
+    "...\t\t...\t...\t...\t...\t...\t...\t...\t...\t...\t...",
+    "...\t...\t...\t...\t...\t...\t...\t...\t...\t...\t...\t..."
     };
             smartGridContracts.IdName = null;
             smartGridContracts.IsEditing = false;
@@ -303,7 +335,7 @@
             smartGridContracts.Rows.Fixed = 2;
             smartGridContracts.SelectedRows = (List<int>)resources.GetObject("smartGridContracts.SelectedRows");
             smartGridContracts.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridContracts.Size = new Size(1077, 240);
+            smartGridContracts.Size = new Size(1085, 240);
             smartGridContracts.SortingType = SmartGrid.SortingType.Descending;
             smartGridContracts.StyleInfo = resources.GetString("smartGridContracts.StyleInfo");
             smartGridContracts.TabIndex = 5;
@@ -317,7 +349,7 @@
             toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1, toolStripButtonHistory, toolStripButton1 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1077, 31);
+            toolStrip1.Size = new Size(1085, 31);
             toolStrip1.TabIndex = 4;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -399,20 +431,22 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1077, 536);
+            ClientSize = new Size(1085, 536);
             Controls.Add(c1SplitContainer1);
             Controls.Add(panel1);
+            MinimumSize = new Size(1015, 575);
             Name = "ContractsForm";
             Text = "Контракты";
             Load += ContractsForm_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)companySeller).EndInit();
+            ((System.ComponentModel.ISupportInitialize)companyBuyer).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)periodContract).EndInit();
             ((System.ComponentModel.ISupportInitialize)lookupSeller).EndInit();
             ((System.ComponentModel.ISupportInitialize)lookupBuyer).EndInit();
-            ((System.ComponentModel.ISupportInitialize)labelПокупатель).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanelContractLinesList.ResumeLayout(false);
@@ -428,7 +462,6 @@
         #endregion
 
         private Panel panel1;
-        private C1.Win.Input.C1Label labelПокупатель;
         private Label labelSeller;
         private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanelContractLinesList;
@@ -453,5 +486,8 @@
         private Label labelCurrency;
         private ToolStripButton toolStripButtonHistory;
         private ToolStripButton toolStripButton1;
+        private Label labelBuyer;
+        private Contragents.Components.CompanyDropDown companySeller;
+        private Contragents.Components.CompanyDropDown companyBuyer;
     }
 }

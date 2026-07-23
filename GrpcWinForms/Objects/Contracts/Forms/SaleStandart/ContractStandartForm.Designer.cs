@@ -94,11 +94,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             // 
             c1SplitContainer1.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
             c1SplitContainer1.Dock = DockStyle.Fill;
+            c1SplitContainer1.HeaderButtonBackColor = Color.Transparent;
             c1SplitContainer1.Location = new Point(0, 0);
             c1SplitContainer1.Name = "c1SplitContainer1";
             c1SplitContainer1.Panels.Add(c1SplitterPanelMain);
             c1SplitContainer1.Panels.Add(c1SplitterPanelSpecification);
-            c1SplitContainer1.Size = new Size(864, 622);
+            c1SplitContainer1.Size = new Size(926, 622);
             c1SplitContainer1.TabIndex = 2;
             // 
             // c1SplitterPanelMain
@@ -111,11 +112,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             c1SplitterPanelMain.MinHeight = 320;
             c1SplitterPanelMain.MinWidth = 800;
             c1SplitterPanelMain.Name = "c1SplitterPanelMain";
-            c1SplitterPanelMain.Size = new Size(864, 292);
+            c1SplitterPanelMain.Size = new Size(926, 292);
             c1SplitterPanelMain.SizeRatio = 51.78D;
             c1SplitterPanelMain.TabIndex = 1;
             c1SplitterPanelMain.Text = "Текущее состояние контракта";
-            c1SplitterPanelMain.Width = 864;
+            c1SplitterPanelMain.Width = 926;
             // 
             // c1DockingTab2
             // 
@@ -125,7 +126,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             c1DockingTab2.Dock = DockStyle.Fill;
             c1DockingTab2.Location = new Point(0, 0);
             c1DockingTab2.Name = "c1DockingTab2";
-            c1DockingTab2.Size = new Size(864, 292);
+            c1DockingTab2.Size = new Size(926, 292);
             c1DockingTab2.TabIndex = 7;
             // 
             // c1DockingTabPageMain
@@ -136,7 +137,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             c1DockingTabPageMain.Controls.Add(sumContractControl1);
             c1DockingTabPageMain.Location = new Point(1, 27);
             c1DockingTabPageMain.Name = "c1DockingTabPageMain";
-            c1DockingTabPageMain.Size = new Size(862, 264);
+            c1DockingTabPageMain.Size = new Size(924, 264);
             c1DockingTabPageMain.TabIndex = 0;
             c1DockingTabPageMain.Text = "Основное";
             // 
@@ -146,7 +147,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             headContractControl.Location = new Point(5, 34);
             headContractControl.MinimumSize = new Size(575, 136);
             headContractControl.Name = "headContractControl";
-            headContractControl.Size = new Size(575, 136);
+            headContractControl.Size = new Size(637, 136);
             headContractControl.TabIndex = 0;
             // 
             // toolStripHead
@@ -155,7 +156,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             toolStripHead.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1 });
             toolStripHead.Location = new Point(0, 0);
             toolStripHead.Name = "toolStripHead";
-            toolStripHead.Size = new Size(862, 31);
+            toolStripHead.Size = new Size(924, 31);
             toolStripHead.TabIndex = 5;
             toolStripHead.Text = "toolStrip1";
             // 
@@ -218,13 +219,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             managerControl1.Location = new Point(5, 176);
             managerControl1.MinimumSize = new Size(575, 84);
             managerControl1.Name = "managerControl1";
-            managerControl1.Size = new Size(854, 84);
+            managerControl1.Size = new Size(916, 84);
             managerControl1.TabIndex = 6;
             // 
             // sumContractControl1
             // 
             sumContractControl1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            sumContractControl1.Location = new Point(582, 34);
+            sumContractControl1.Location = new Point(644, 34);
             sumContractControl1.MinimumSize = new Size(277, 136);
             sumContractControl1.Name = "sumContractControl1";
             sumContractControl1.Size = new Size(277, 136);
@@ -235,7 +236,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             c1DockingTabPageProperties.Controls.Add(propertiesControl1);
             c1DockingTabPageProperties.Location = new Point(1, 27);
             c1DockingTabPageProperties.Name = "c1DockingTabPageProperties";
-            c1DockingTabPageProperties.Size = new Size(862, 264);
+            c1DockingTabPageProperties.Size = new Size(924, 264);
             c1DockingTabPageProperties.TabIndex = 1;
             c1DockingTabPageProperties.Text = "Дополнительные параметры";
             // 
@@ -244,7 +245,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             propertiesControl1.Dock = DockStyle.Fill;
             propertiesControl1.Location = new Point(0, 0);
             propertiesControl1.Name = "propertiesControl1";
-            propertiesControl1.Size = new Size(862, 264);
+            propertiesControl1.Size = new Size(924, 264);
             propertiesControl1.TabIndex = 0;
             // 
             // c1DockingTabPageHistory
@@ -252,7 +253,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             c1DockingTabPageHistory.Controls.Add(historyContractControl);
             c1DockingTabPageHistory.Location = new Point(1, 27);
             c1DockingTabPageHistory.Name = "c1DockingTabPageHistory";
-            c1DockingTabPageHistory.Size = new Size(862, 264);
+            c1DockingTabPageHistory.Size = new Size(924, 264);
             c1DockingTabPageHistory.TabIndex = 2;
             c1DockingTabPageHistory.Text = "История";
             // 
@@ -261,7 +262,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             historyContractControl.Dock = DockStyle.Fill;
             historyContractControl.Location = new Point(0, 0);
             historyContractControl.Name = "historyContractControl";
-            historyContractControl.Size = new Size(862, 264);
+            historyContractControl.Size = new Size(924, 264);
             historyContractControl.TabIndex = 0;
             // 
             // c1SplitterPanelSpecification
@@ -272,7 +273,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             c1SplitterPanelSpecification.Height = 298;
             c1SplitterPanelSpecification.Location = new Point(0, 345);
             c1SplitterPanelSpecification.Name = "c1SplitterPanelSpecification";
-            c1SplitterPanelSpecification.Size = new Size(864, 277);
+            c1SplitterPanelSpecification.Size = new Size(926, 277);
             c1SplitterPanelSpecification.TabIndex = 0;
             c1SplitterPanelSpecification.Text = "Спецификации";
             // 
@@ -282,7 +283,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             c1DockingTab1.Dock = DockStyle.Fill;
             c1DockingTab1.Location = new Point(0, 0);
             c1DockingTab1.Name = "c1DockingTab1";
-            c1DockingTab1.Size = new Size(864, 277);
+            c1DockingTab1.Size = new Size(926, 277);
             c1DockingTab1.TabIndex = 7;
             // 
             // c1DockingTabPageSpecification
@@ -291,7 +292,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             c1DockingTabPageSpecification.Controls.Add(toolStripLines);
             c1DockingTabPageSpecification.Location = new Point(1, 27);
             c1DockingTabPageSpecification.Name = "c1DockingTabPageSpecification";
-            c1DockingTabPageSpecification.Size = new Size(862, 249);
+            c1DockingTabPageSpecification.Size = new Size(924, 249);
             c1DockingTabPageSpecification.TabIndex = 0;
             c1DockingTabPageSpecification.Text = "Спецификация";
             // 
@@ -321,8 +322,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             smartGridLines.Headers = new string[]
     {
     "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
-    "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС",
-    "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС"
+    "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t(%)\tСумма\tСумма с НДС",
+    "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t(%)\tСумма\tСумма с НДС"
     };
             smartGridLines.IdName = null;
             smartGridLines.IsEditing = false;
@@ -332,7 +333,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             smartGridLines.Rows.Fixed = 3;
             smartGridLines.SelectedRows = (List<int>)resources.GetObject("smartGridLines.SelectedRows");
             smartGridLines.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridLines.Size = new Size(862, 218);
+            smartGridLines.Size = new Size(924, 218);
             smartGridLines.SortingType = SmartGrid.SortingType.Descending;
             smartGridLines.StyleInfo = resources.GetString("smartGridLines.StyleInfo");
             smartGridLines.TabIndex = 6;
@@ -344,7 +345,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             toolStripLines.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2, toolStripButton3, toolStripButton4, toolStripButton5, toolStripSeparator2, toolStripButtonSetupSpecification });
             toolStripLines.Location = new Point(0, 0);
             toolStripLines.Name = "toolStripLines";
-            toolStripLines.Size = new Size(862, 31);
+            toolStripLines.Size = new Size(924, 31);
             toolStripLines.TabIndex = 5;
             toolStripLines.Text = "toolStrip2";
             // 
@@ -416,13 +417,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             panelOk.Dock = DockStyle.Bottom;
             panelOk.Location = new Point(0, 622);
             panelOk.Name = "panelOk";
-            panelOk.Size = new Size(864, 32);
+            panelOk.Size = new Size(926, 32);
             panelOk.TabIndex = 0;
             // 
             // buttonOk
             // 
             buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonOk.Location = new Point(784, 4);
+            buttonOk.Location = new Point(846, 4);
             buttonOk.Name = "buttonOk";
             buttonOk.Size = new Size(75, 23);
             buttonOk.TabIndex = 0;
@@ -432,7 +433,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             // buttonCancel
             // 
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonCancel.Location = new Point(703, 4);
+            buttonCancel.Location = new Point(765, 4);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 23);
             buttonCancel.TabIndex = 1;
@@ -445,14 +446,14 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(864, 622);
+            panel1.Size = new Size(926, 622);
             panel1.TabIndex = 3;
             // 
             // ContractStandartForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(864, 654);
+            ClientSize = new Size(926, 654);
             Controls.Add(panel1);
             Controls.Add(panelOk);
             MinimumSize = new Size(880, 633);
@@ -481,6 +482,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             panelOk.ResumeLayout(false);
             panel1.ResumeLayout(false);
             ResumeLayout(false);
+
         }
 
         #endregion

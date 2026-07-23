@@ -76,7 +76,7 @@ public class ContractRepository
                         FROM cwatis.contracts c
                     ) as cnt
                         LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = cnt.currencyId
-                        LEFT JOIN cwatis.contracttypes t ON cnt.DocumentType_Id = t.DocumentType_Id
+                        LEFT JOIN cwatis.contracttypes t ON cnt.DocumentType_Id = t.ContractType_Id
                     WHERE rn = 1
                     ORDER BY cnt.contract_date DESC";
             using var rdr = await cmd.ExecuteReaderAsync();
@@ -143,7 +143,7 @@ public class ContractRepository
                             1
                         FROM cwatis.contracts c 
                             LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
-                            LEFT JOIN cwatis.contracttypes t ON c.DocumentType_Id = t.DocumentType_Id
+                            LEFT JOIN cwatis.contracttypes t ON c.DocumentType_Id = t.ContractType_Id
                         WHERE 1=1
                             and (c.contract_RootId = {root_id} Or c.contract_id = {root_id})
                         ORDER BY c.contract_date ASC";
@@ -173,7 +173,7 @@ public class ContractRepository
         Contract contract = new Contract();
         contract.Id = rdr["contract_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_id"]);
         contract.RootId = rdr["contract_rootid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_rootid"]);
-        contract.ParentId = rdr["contract_ParentId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_ParentId"]);
+        //contract.ParentId = rdr["contract_ParentId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_ParentId"]);
         contract.Seller = new Contragent()
         {
             Id = rdr["contract_sellerId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_sellerId"]),

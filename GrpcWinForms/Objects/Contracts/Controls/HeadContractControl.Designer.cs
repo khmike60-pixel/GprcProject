@@ -31,11 +31,9 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HeadContractControl));
             labelBuyer = new Label();
-            lookupContragentBuyer = new C1.Win.Input.C1DropDownControl();
             labelTaxNoBuyer = new Label();
             textBoxTaxnoBuyer = new TextBox();
             labelSeller = new Label();
-            lookupContragentSeller = new C1.Win.Input.C1DropDownControl();
             labelTaxnoSeller = new Label();
             textBoxTaxnoSeller = new TextBox();
             ContractType = new Label();
@@ -54,8 +52,6 @@
             c1FlexGrid1 = new C1.Win.FlexGrid.C1FlexGrid();
             control1 = new Control();
             control2 = new Control();
-            ((System.ComponentModel.ISupportInitialize)lookupContragentBuyer).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)lookupContragentSeller).BeginInit();
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).BeginInit();
             groupBoxMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
@@ -73,17 +69,6 @@
             labelBuyer.TabIndex = 0;
             labelBuyer.Text = "Покупатель:";
             labelBuyer.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lookupContragentBuyer
-            // 
-            lookupContragentBuyer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lookupContragentBuyer.AutoSize = false;
-            lookupContragentBuyer.ButtonsSettings.ModalButton.Visible = true;
-            lookupContragentBuyer.CaseSensitive = true;
-            lookupContragentBuyer.Location = new Point(125, 13);
-            lookupContragentBuyer.Name = "lookupContragentBuyer";
-            lookupContragentBuyer.Size = new Size(235, 23);
-            lookupContragentBuyer.TabIndex = 1;
             // 
             // labelTaxNoBuyer
             // 
@@ -115,16 +100,6 @@
             labelSeller.TabIndex = 4;
             labelSeller.Text = "Продавец:";
             labelSeller.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // lookupContragentSeller
-            // 
-            lookupContragentSeller.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            lookupContragentSeller.AutoSize = false;
-            lookupContragentSeller.ButtonsSettings.ModalButton.Visible = true;
-            lookupContragentSeller.Location = new Point(125, 42);
-            lookupContragentSeller.Name = "lookupContragentSeller";
-            lookupContragentSeller.Size = new Size(235, 23);
-            lookupContragentSeller.TabIndex = 5;
             // 
             // labelTaxnoSeller
             // 
@@ -230,7 +205,6 @@
             groupBoxMain.Controls.Add(companyBuyer);
             groupBoxMain.Controls.Add(dateTimePickerStop);
             groupBoxMain.Controls.Add(labelDateStop);
-            groupBoxMain.Controls.Add(lookupContragentSeller);
             groupBoxMain.Controls.Add(dateTimePickerStart);
             groupBoxMain.Controls.Add(labelDateStart);
             groupBoxMain.Controls.Add(textBoxNumber);
@@ -238,7 +212,6 @@
             groupBoxMain.Controls.Add(labelNumber);
             groupBoxMain.Controls.Add(labelBuyer);
             groupBoxMain.Controls.Add(labelCurrency);
-            groupBoxMain.Controls.Add(lookupContragentBuyer);
             groupBoxMain.Controls.Add(comboBoxCurrency);
             groupBoxMain.Controls.Add(textBoxTaxnoBuyer);
             groupBoxMain.Controls.Add(ContractType);
@@ -248,7 +221,7 @@
             groupBoxMain.Controls.Add(labelSeller);
             groupBoxMain.Location = new Point(3, 0);
             groupBoxMain.Name = "groupBoxMain";
-            groupBoxMain.Size = new Size(569, 231);
+            groupBoxMain.Size = new Size(569, 133);
             groupBoxMain.TabIndex = 16;
             groupBoxMain.TabStop = false;
             // 
@@ -257,7 +230,7 @@
             companySeller.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companySeller.ButtonsSettings.CustomButton.Icon"));
             companySeller.ButtonsSettings.CustomButton.Visible = true;
             companySeller.GetDataSourceFunc = null;
-            companySeller.Location = new Point(125, 198);
+            companySeller.Location = new Point(125, 42);
             companySeller.Name = "companySeller";
             companySeller.Size = new Size(235, 23);
             companySeller.TabIndex = 18;
@@ -268,7 +241,7 @@
             companyBuyer.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companyBuyer.ButtonsSettings.CustomButton.Icon"));
             companyBuyer.ButtonsSettings.CustomButton.Visible = true;
             companyBuyer.GetDataSourceFunc = null;
-            companyBuyer.Location = new Point(125, 159);
+            companyBuyer.Location = new Point(125, 13);
             companyBuyer.Name = "companyBuyer";
             companyBuyer.Size = new Size(235, 23);
             companyBuyer.TabIndex = 17;
@@ -324,9 +297,7 @@
             Controls.Add(groupBoxMain);
             MinimumSize = new Size(575, 136);
             Name = "HeadContractControl";
-            Size = new Size(575, 234);
-            ((System.ComponentModel.ISupportInitialize)lookupContragentBuyer).EndInit();
-            ((System.ComponentModel.ISupportInitialize)lookupContragentSeller).EndInit();
+            Size = new Size(575, 136);
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).EndInit();
             groupBoxMain.ResumeLayout(false);
             groupBoxMain.PerformLayout();
@@ -354,8 +325,6 @@
         private Control control2;
         private C1.Win.FlexGrid.C1FlexGrid c1FlexGrid1;
         private Label labelCurrency;
-        public C1.Win.Input.C1DropDownControl lookupContragentBuyer;
-        public C1.Win.Input.C1DropDownControl lookupContragentSeller;
         public C1.Win.Input.C1ComboBox comboBoxContractType;
         public TextBox textBoxNumber;
         public DateTimePicker dateTimePickerStart;
