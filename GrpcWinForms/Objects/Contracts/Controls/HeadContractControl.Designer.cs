@@ -232,6 +232,7 @@
             companySeller.GetDataSourceFunc = null;
             companySeller.Location = new Point(125, 42);
             companySeller.Name = "companySeller";
+            companySeller.ReadOnly = true;
             companySeller.Size = new Size(235, 23);
             companySeller.TabIndex = 18;
             companySeller.Value = "";

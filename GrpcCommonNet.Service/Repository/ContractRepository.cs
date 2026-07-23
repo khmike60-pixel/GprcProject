@@ -59,26 +59,32 @@ public class ContractRepository
     {
         try
         {
+            DateTime dateStart = request.StartDate == null ? DateTime.MinValue: request.StartDate.ToDateTime().Date;
+            DateTime dateEnd   = request.EndDate == null ? DateTime.MaxValue: request.EndDate.ToDateTime().Date;
+            Contragent buyer   = request.Buyer;
+            Contragent seller  = request.Seller;
+            int stateFrom      = request.StateFrom;
+            int stateTo        = request.StateTo;
+
+
             List<Contract> contracts = new List<Contract>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-                    SELECT 
-                        cnt.*, cu.Abbrev, t.ContractType_Name, 
-                        /*if(cnt.contract_ParentId is null, ""Основной контракт"", ""Допсоглашение"" )*/
-                        ""Основной контракт""
-                    FROM (
-                        SELECT *, ROW_NUMBER() OVER (
-                                PARTITION BY COALESCE(c.contract_RootId, contract_id) 
-                                ORDER BY c.contract_id DESC
-                            ) as rn
-                        FROM cwatis.contracts c
-                    ) as cnt
-                        LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = cnt.currencyId
-                        LEFT JOIN cwatis.contracttypes t ON cnt.DocumentType_Id = t.ContractType_Id
-                    WHERE rn = 1
-                    ORDER BY cnt.contract_date DESC";
+                with cnt as (
+	                SELECT c.*
+                    FROM cwatis.contracts c
+                    where c.contract_ParentId is null
+                )
+                SELECT * 
+                from cnt
+	                left join cwatis.contracttypes c    on c.ContractType_Id = cnt.DocumentType_Id
+                    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = cnt.currencyId
+                where 
+	                1 = 1
+                order by cnt.contract_date desc;
+            ";
             using var rdr = await cmd.ExecuteReaderAsync();
 
             while (await rdr.ReadAsync())

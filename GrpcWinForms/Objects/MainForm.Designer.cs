@@ -46,6 +46,7 @@ namespace GrpcWinForms.Forms
             UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             ApplicationsToolStripMenuItem = new ToolStripMenuItem();
             тестоваяФормаToolStripMenuItem = new ToolStripMenuItem();
+            типыКонтрактовToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -60,7 +61,7 @@ namespace GrpcWinForms.Forms
             // 
             // ContractsToolStripMenuItem
             // 
-            ContractsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ToolStripMenuItemContrtacts });
+            ContractsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ToolStripMenuItemContrtacts, типыКонтрактовToolStripMenuItem });
             ContractsToolStripMenuItem.Name = "ContractsToolStripMenuItem";
             ContractsToolStripMenuItem.Size = new Size(78, 20);
             ContractsToolStripMenuItem.Text = "Контракты";
@@ -68,7 +69,7 @@ namespace GrpcWinForms.Forms
             // ToolStripMenuItemContrtacts
             // 
             ToolStripMenuItemContrtacts.Name = "ToolStripMenuItemContrtacts";
-            ToolStripMenuItemContrtacts.Size = new Size(133, 22);
+            ToolStripMenuItemContrtacts.Size = new Size(180, 22);
             ToolStripMenuItemContrtacts.Text = "Контракты";
             ToolStripMenuItemContrtacts.Click += ToolStripMenuItemContrtacts_Click;
             // 
@@ -275,6 +276,13 @@ namespace GrpcWinForms.Forms
             тестоваяФормаToolStripMenuItem.Text = "Тестовая форма";
             тестоваяФормаToolStripMenuItem.Click += тестоваяФормаToolStripMenuItem_Click;
             // 
+            // типыКонтрактовToolStripMenuItem
+            // 
+            типыКонтрактовToolStripMenuItem.Name = "типыКонтрактовToolStripMenuItem";
+            типыКонтрактовToolStripMenuItem.Size = new Size(180, 22);
+            типыКонтрактовToolStripMenuItem.Text = "Типы контрактов";
+            типыКонтрактовToolStripMenuItem.Click += типыКонтрактовToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
             ClientSize = new Size(1100, 364);
@@ -323,5 +331,6 @@ namespace GrpcWinForms.Forms
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem ToolStripMenuItemContrtacts;
         private ToolStripMenuItem тестоваяФормаToolStripMenuItem;
+        private ToolStripMenuItem типыКонтрактовToolStripMenuItem;
     }
 }

@@ -3,6 +3,7 @@ using GrpcWinForms.Models;
 using GrpcWinForms.Objects;
 using GrpcWinForms.Objects.Applications;
 using GrpcWinForms.Objects.Contracts.Forms;
+using GrpcWinForms.Objects.ContractTypes.Forms;
 using GrpcWinForms.Objects.Contragents.Components;
 using GrpcWinForms.Objects.Contragents.Forms;
 using GrpcWinForms.Objects.Currencies.Forms;
@@ -145,6 +146,16 @@ namespace GrpcWinForms.Forms
             var f = new OurCompaniesForm { MdiParent = this };
             f.Show();
 
+        }
+
+        private void типыКонтрактовToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach(Form child in MdiChildren)
+            {
+                if(child is ContractTypesForm) { child.Activate(); return; }
+            }
+            var f = new ContractTypesForm { MdiParent = this };
+            f.Show();
         }
     }
 }

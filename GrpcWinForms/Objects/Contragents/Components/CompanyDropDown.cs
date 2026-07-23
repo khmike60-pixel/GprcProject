@@ -112,9 +112,15 @@ namespace GrpcWinForms.Objects.Contragents.Components
             // Если нажата клавиша Enter
             if (e.KeyChar == (char)Keys.Enter)
             {
-                Form parent = (Form)this.Parent;
-                this.SelectNextControl(parent.ActiveControl, forward: true,
+                Control parent = this.Parent;
+                bool isForm = false;
+                while (parent.GetType().BaseType.Name.ToString() != "Form")
+                    parent = parent.Parent;
+
+                Form form = (Form)parent;
+                this.SelectNextControl(form.ActiveControl, forward: true,
                        tabStopOnly: true, nested: true, wrap: true);
+
             }
 
         }
