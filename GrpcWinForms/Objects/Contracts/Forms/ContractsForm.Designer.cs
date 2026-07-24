@@ -342,6 +342,7 @@
             smartGridContracts.UseCompatibleTextRendering = true;
             smartGridContracts.AfterSelChange += smartGridContracts_AfterSelChange;
             smartGridContracts.GetUnboundValue += smartGridContracts_GetUnboundValue;
+            smartGridContracts.DoubleClick += smartGridContracts_DoubleClick;
             // 
             // toolStrip1
             // 

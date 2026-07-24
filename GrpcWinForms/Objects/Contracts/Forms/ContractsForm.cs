@@ -43,7 +43,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС"
             };
 
-            companyBuyer.GetDataSourceFunc  = CompanyFilterLoad;
+            companyBuyer.GetDataSourceFunc = CompanyFilterLoad;
             companySeller.GetDataSourceFunc = CompanyFilterLoad;
 
         }
@@ -188,7 +188,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id) { child.Activate(); return; }
             }
-            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent};
+            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent };
             f.ContractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
             f.Show();
 
@@ -268,5 +268,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         #endregion
 
+        private void smartGridContracts_DoubleClick(object sender, EventArgs e)
+        {
+            toolStripButtonEdit_Click(sender, e);
+        }
     }
 }

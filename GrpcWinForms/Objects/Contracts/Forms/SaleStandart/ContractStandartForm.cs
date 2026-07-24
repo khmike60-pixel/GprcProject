@@ -33,8 +33,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             smartGridLines.Headers = new string[]
             {
                 "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
-                "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС",
-                "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС"
+                "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t(%)\tСумма\tСумма с НДС",
+                "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t(%)\tСумма\tСумма с НДС"
             };
 
         }
@@ -80,7 +80,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
                     DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, firstName);
                     propertiesControl1.SetTreeNodes(nodes);
                 }
-            } catch
+            }
+            catch
             {
                 MessageBox.Show("Ошибка в дополнительных параметрах");
             }
@@ -192,6 +193,17 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
                         break;
                     }
             }
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void buttonOk_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Данные будут записаны");
+            Close();
         }
     }
 

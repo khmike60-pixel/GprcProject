@@ -227,6 +227,7 @@
             // 
             // companySeller
             // 
+            companySeller.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             companySeller.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companySeller.ButtonsSettings.CustomButton.Icon"));
             companySeller.ButtonsSettings.CustomButton.Visible = true;
             companySeller.GetDataSourceFunc = null;
@@ -239,6 +240,7 @@
             // 
             // companyBuyer
             // 
+            companyBuyer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             companyBuyer.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companyBuyer.ButtonsSettings.CustomButton.Icon"));
             companyBuyer.ButtonsSettings.CustomButton.Visible = true;
             companyBuyer.GetDataSourceFunc = null;
