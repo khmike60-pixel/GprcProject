@@ -37,10 +37,8 @@
             buttonCancel = new Button();
             buttonUpdate = new Button();
             buttonUpdateExit = new Button();
-            smartGrid1 = new SmartGrid.SmartGrid();
             ((System.ComponentModel.ISupportInitialize)c1DropDownControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companyDropDown1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             SuspendLayout();
             // 
             // label2
@@ -116,37 +114,13 @@
             buttonUpdateExit.TabIndex = 9;
             buttonUpdateExit.Text = "Записать и выйти";
             buttonUpdateExit.UseVisualStyleBackColor = true;
-            // 
-            // smartGrid1
-            // 
-            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowNodeMove = false;
-            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
-            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            smartGrid1.Headers = new string[]
-    {
-    "№\t1\t1\t1\t2\t...\t...\t...\t...\t...\t...\t...",
-    "№\t1.1\t1.2\t1.3\t2\t...\t...\t...\t...\t...\t...\t..."
-    };
-            smartGrid1.IdName = null;
-            smartGrid1.IsEditing = false;
-            smartGrid1.Location = new Point(29, 169);
-            smartGrid1.Name = "smartGrid1";
-            smartGrid1.Rows.Count = 10;
-            smartGrid1.Rows.Fixed = 2;
-            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
-            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid1.Size = new Size(566, 204);
-            smartGrid1.SortingType = SmartGrid.SortingType.Descending;
-            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
-            smartGrid1.TabIndex = 10;
+
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(627, 450);
-            Controls.Add(smartGrid1);
             Controls.Add(buttonUpdateExit);
             Controls.Add(buttonUpdate);
             Controls.Add(buttonCancel);
@@ -158,7 +132,6 @@
             Text = "TestLoolkup";
             ((System.ComponentModel.ISupportInitialize)c1DropDownControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)companyDropDown1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -171,6 +144,5 @@
         private Button buttonCancel;
         private Button buttonUpdate;
         private Button buttonUpdateExit;
-        private SmartGrid.SmartGrid smartGrid1;
     }
 }

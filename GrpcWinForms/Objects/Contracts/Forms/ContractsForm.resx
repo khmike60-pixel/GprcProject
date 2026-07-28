@@ -121,14 +121,14 @@
   <data name="companySeller.ButtonsSettings.CustomButton.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EAAACxABrSO9dQAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
+        DwAACw8BkvkDpQAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
         RQZQ7IU7QIysAcQGiY0C6gMGBgBzORJ7p2197QAAAABJRU5ErkJggg==
 </value>
   </data>
   <data name="companyBuyer.ButtonsSettings.CustomButton.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        EAAACxABrSO9dQAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
+        DwAACw8BkvkDpQAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
         RQZQ7IU7QIysAcQGiY0C6gMGBgBzORJ7p2197QAAAABJRU5ErkJggg==
 </value>
   </data>
@@ -162,5 +162,8 @@
   </data>
   <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>62</value>
   </metadata>
 </root>

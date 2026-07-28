@@ -1,4 +1,5 @@
-﻿using GrpcCommonNet.Library.Common;
+﻿using GrapeCity.Documents.Common;
+using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
 using GrpcCommonNet.Proto.Utils;
@@ -24,6 +25,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         private static ContractServices.ContractServicesClient _service;
         private Loader loaderContracts = new Loader();
         private Loader loaderLines = new Loader();
+        private BindingList<Contract> contracts;
 
         public ContractsForm()
         {
@@ -31,17 +33,17 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             loaderContracts.Parent = smartGridContracts;
             loaderLines.Parent = smartGridLines;
 
-            smartGridContracts.Headers = new string[]
-            {
-                "...\tId\tКонтракт\tКонтракт\tКонтракт\tКонтракт\tКонтрагенты\tКонтрагенты\tТип\tОперации\tОперации\tДействует до",
-                "...\tId\tДата\tНомер\tСумма\tСумма\tПокупатель\tПродавец\tТип\tОплачено\tОтгружено\tДействует до"
-            };
+            //smartGridContracts.Headers = new string[]
+            //{
+            //    "...\tId\tКонтракт\tКонтракт\tКонтракт\tКонтракт\tКонтрагенты\tКонтрагенты\tТип\tОперации\tОперации\tДействует до",
+            //    "...\tId\tДата\tНомер\tСумма\tСумма\tПокупатель\tПродавец\tТип\tОплачено\tОтгружено\tДействует до"
+            //};
 
-            smartGridLines.Headers = new string[]
-            {
-                "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
-                "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС"
-            };
+            //smartGridLines.Headers = new string[]
+            //{
+            //    "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
+            //    "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС"
+            //};
 
             companyBuyer.GetDataSourceFunc = CompanyFilterLoad;
             companySeller.GetDataSourceFunc = CompanyFilterLoad;
@@ -54,7 +56,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == 0) { child.Activate(); return; }
             }
-            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent, Owner = this };
+            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent};
             f.Show();
 
         }
@@ -74,7 +76,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 };
                 ListContractsResponse response = await GrpcClients.GrpcClients.Contract.GetListContractsAsync(request);
 
-                BindingList<Contract> contracts = new BindingList<Contract>(response.Contracts);
+                contracts = new BindingList<Contract>(response.Contracts);
                 smartGridContracts.DataSource = contracts;
                 loaderContracts.HideLoader();
                 return;
@@ -126,7 +128,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     }
                 case "colSum":
                     {
-                        e.Value = contract.Sum == null || contract.Sum.Units == 0 ? "" : contract.Sum.Units / (decimal)Math.Pow(10, contract.Sum.Scale);
+                        e.Value = contract.Sum == null || contract.Sum.Units == 0 ? "" : MyConvert.ToDecimal(contract.Sum);
                         break;
                     }
                 case "colDate":

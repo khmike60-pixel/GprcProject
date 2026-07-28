@@ -324,8 +324,8 @@
             smartGridContracts.Footers.Fixed = true;
             smartGridContracts.Headers = new string[]
     {
-    "...\t\t...\t...\t...\t...\t...\t...\t...\t...\t...\t...",
-    "...\t...\t...\t...\t...\t...\t...\t...\t...\t...\t...\t..."
+    "...\tId\tКонтракт\tКонтракт\tКонтракт\tКонтракт\tКонтрагенты\tКонтрагенты\tТип\tОперации\tОперации\tДействует до",
+    "...\tId\tДата\tНомер\tСумма\tСумма\tПокупатель\tПродавец\tТип\tОплачено\tОтгружено\tДействует до"
     };
             smartGridContracts.IdName = null;
             smartGridContracts.IsEditing = false;
