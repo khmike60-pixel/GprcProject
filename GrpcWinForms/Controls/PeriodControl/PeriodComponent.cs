@@ -13,7 +13,7 @@ namespace GrpcWinForms.Controls.PeriodControl
     {
         private DateTime _startDate;
         private DateTime _endDate;
-        private PeriodDropDownForm form = new PeriodDropDownForm();
+        private PeriodDropDownForm form;
 
         public DateTime StartDate { get => _startDate; set => _startDate = value; }
         public DateTime EndDate { get => _endDate; set => _endDate = value; }
@@ -22,8 +22,9 @@ namespace GrpcWinForms.Controls.PeriodControl
         public PeriodComponent()
         {
             InitializeComponent();
-            form.SetPeriod(null, null);
-            Control = form; 
+            form = new PeriodDropDownForm();
+            form.DropDownOwner = this;
+            Control = form;
         }
 
         public PeriodComponent(IContainer container)
@@ -31,11 +32,17 @@ namespace GrpcWinForms.Controls.PeriodControl
             container.Add(this);
 
             InitializeComponent();
-            form.SetPeriod(null, null);
+            form = new PeriodDropDownForm();
+            form.DropDownOwner = this;
             Control = form;
-
 
         }
 
+        private void PeriodComponent_Layout(object sender, LayoutEventArgs e)
+        {
+            form.SetPeriod(null, null);
+            this.DropDownWidth = form.Width;
+
+        }
     }
 }

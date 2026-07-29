@@ -1,4 +1,7 @@
-﻿namespace GrpcWinForms.Controls.PeriodControl
+﻿// <содержимое файла полностью заменено>
+using C1.Win.Input;
+
+namespace GrpcWinForms.Controls.PeriodControl
 {
     partial class PeriodDropDownForm
     {
@@ -28,18 +31,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            C1.Win.Input.ComboBoxItem comboBoxItem1 = new C1.Win.Input.ComboBoxItem();
-            C1.Win.Input.ComboBoxItem comboBoxItem2 = new C1.Win.Input.ComboBoxItem();
-            C1.Win.Input.ComboBoxItem comboBoxItem3 = new C1.Win.Input.ComboBoxItem();
-            C1.Win.Input.ComboBoxItem comboBoxItem4 = new C1.Win.Input.ComboBoxItem();
             labelYear = new Label();
             labelQuarter = new Label();
             labelMonth = new Label();
             labelStart = new Label();
             labelStop = new Label();
-            editYear = new C1.Win.Input.C1NumericEdit();
-            editQuarter = new C1.Win.Input.C1ComboBox();
-            editMonth = new C1.Win.Input.C1ComboBox();
+            editYear = new C1NumericEdit();
+            editQuarter = new C1ComboBox();
+            editMonth = new C1ComboBox();
             rbYear = new RadioButton();
             rbQuater = new RadioButton();
             rbMonth = new RadioButton();
@@ -86,7 +85,7 @@
             // labelStart
             // 
             labelStart.AutoSize = true;
-            labelStart.Location = new Point(12, 142);
+            labelStart.Location = new Point(12, 125);
             labelStart.Name = "labelStart";
             labelStart.Size = new Size(52, 15);
             labelStart.TabIndex = 0;
@@ -95,7 +94,7 @@
             // labelStop
             // 
             labelStop.AutoSize = true;
-            labelStop.Location = new Point(12, 171);
+            labelStop.Location = new Point(12, 154);
             labelStop.Name = "labelStop";
             labelStop.Size = new Size(72, 15);
             labelStop.TabIndex = 1;
@@ -104,45 +103,49 @@
             // editYear
             // 
             editYear.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            editYear.Location = new Point(107, 10);
+            editYear.DataType = typeof(int);
+            editYear.DisplayFormat.FormatType = FormatType.Integer;
+            editYear.DisplayFormat.Inherit = FormatInfoInheritProperties.CustomFormat | FormatInfoInheritProperties.NullText | FormatInfoInheritProperties.EmptyAsNull | FormatInfoInheritProperties.TrimStart | FormatInfoInheritProperties.TrimEnd | FormatInfoInheritProperties.CalendarType;
+            editYear.EditFormat.FormatType = FormatType.Integer;
+            editYear.EditFormat.Inherit = FormatInfoInheritProperties.CustomFormat | FormatInfoInheritProperties.NullText | FormatInfoInheritProperties.EmptyAsNull | FormatInfoInheritProperties.TrimStart | FormatInfoInheritProperties.TrimEnd | FormatInfoInheritProperties.CalendarType;
+            editYear.Enabled = false;
+            editYear.Location = new Point(91, 10);
             editYear.Name = "editYear";
-            editYear.Size = new Size(100, 23);
+            editYear.Size = new Size(116, 23);
             editYear.TabIndex = 1;
-            editYear.Value = new decimal(new int[] { 0, 0, 0, 0 });
+            editYear.Value = 2026;
+            editYear.TextChanged += editYear_TextChanged;
             // 
             // editQuarter
             // 
             editQuarter.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            editQuarter.AutoCompleteSource = AutoCompleteSource.ListItems;
+            editQuarter.DropDownStyle = DropDownStyle.DropDownList;
             editQuarter.HideSelection = false;
-            editQuarter.Location = new Point(107, 39);
+            editQuarter.InitialSelection = InitialSelection.CaretAtStart;
+            editQuarter.Location = new Point(91, 39);
             editQuarter.Name = "editQuarter";
-            editQuarter.Size = new Size(100, 23);
+            editQuarter.ReadOnly = true;
+            editQuarter.Size = new Size(116, 23);
             editQuarter.TabIndex = 3;
-            editQuarter.Value = "1";
+            editQuarter.Value = "";
+            editQuarter.SelectedIndexChanged += editQuarter_SelectedIndexChanged;
+            editQuarter.Leave += editQuarter_Leave;
             // 
             // editMonth
             // 
             editMonth.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            editMonth.DropDownStyle = C1.Win.Input.DropDownStyle.DropDownList;
-            editMonth.InitialSelection = C1.Win.Input.InitialSelection.CaretAtStart;
-            comboBoxItem1.DisplayText = "1";
-            comboBoxItem1.Value = "1";
-            comboBoxItem2.DisplayText = "2";
-            comboBoxItem2.Value = "2";
-            comboBoxItem3.DisplayText = "3";
-            comboBoxItem3.Value = "3";
-            comboBoxItem4.DisplayText = "4";
-            comboBoxItem4.Value = "4";
-            editMonth.Items.Add(comboBoxItem1);
-            editMonth.Items.Add(comboBoxItem2);
-            editMonth.Items.Add(comboBoxItem3);
-            editMonth.Items.Add(comboBoxItem4);
-            editMonth.Location = new Point(107, 68);
+            editMonth.AutoCompleteSource = AutoCompleteSource.ListItems;
+            editMonth.DropDownStyle = DropDownStyle.DropDownList;
+            editMonth.Enabled = false;
+            editMonth.InitialSelection = InitialSelection.CaretAtStart;
+            editMonth.Location = new Point(91, 68);
             editMonth.Name = "editMonth";
             editMonth.ReadOnly = true;
-            editMonth.Size = new Size(100, 23);
+            editMonth.Size = new Size(116, 23);
             editMonth.TabIndex = 5;
-            editMonth.Value = "1";
+            editMonth.Value = "";
+            editMonth.SelectedIndexChanged += editMonth_SelectedIndexChanged;
             // 
             // rbYear
             // 
@@ -153,16 +156,20 @@
             rbYear.Size = new Size(14, 13);
             rbYear.TabIndex = 2;
             rbYear.UseVisualStyleBackColor = true;
+            rbYear.CheckedChanged += rb_CheckedChanged;
             // 
             // rbQuater
             // 
             rbQuater.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             rbQuater.AutoSize = true;
+            rbQuater.Checked = true;
             rbQuater.Location = new Point(223, 44);
             rbQuater.Name = "rbQuater";
             rbQuater.Size = new Size(14, 13);
             rbQuater.TabIndex = 4;
+            rbQuater.TabStop = true;
             rbQuater.UseVisualStyleBackColor = true;
+            rbQuater.CheckedChanged += rb_CheckedChanged;
             // 
             // rbMonth
             // 
@@ -173,11 +180,12 @@
             rbMonth.Size = new Size(14, 13);
             rbMonth.TabIndex = 6;
             rbMonth.UseVisualStyleBackColor = true;
+            rbMonth.CheckedChanged += rb_CheckedChanged;
             // 
             // labelFree
             // 
             labelFree.AutoSize = true;
-            labelFree.Location = new Point(10, 114);
+            labelFree.Location = new Point(10, 101);
             labelFree.Name = "labelFree";
             labelFree.Size = new Size(148, 15);
             labelFree.TabIndex = 9;
@@ -186,7 +194,7 @@
             // btnCancel
             // 
             btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnCancel.Location = new Point(172, 214);
+            btnCancel.Location = new Point(172, 180);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(75, 23);
             btnCancel.TabIndex = 11;
@@ -197,7 +205,7 @@
             // btnOk
             // 
             btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnOk.Location = new Point(91, 214);
+            btnOk.Location = new Point(91, 180);
             btnOk.Name = "btnOk";
             btnOk.Size = new Size(75, 23);
             btnOk.TabIndex = 10;
@@ -211,14 +219,15 @@
             editStart.ButtonsSettings.UpDownButton.Visible = false;
             editStart.Calendar.MaxDate = new DateTime(2099, 12, 31, 23, 59, 0, 0);
             editStart.Calendar.MinDate = new DateTime(2000, 1, 1, 0, 0, 0, 0);
-            editStart.DisplayFormat.FormatType = C1.Win.Input.FormatType.ShortDate;
-            editStart.DisplayFormat.Inherit = C1.Win.Input.FormatInfoInheritProperties.CustomFormat | C1.Win.Input.FormatInfoInheritProperties.NullText | C1.Win.Input.FormatInfoInheritProperties.EmptyAsNull | C1.Win.Input.FormatInfoInheritProperties.TrimStart | C1.Win.Input.FormatInfoInheritProperties.TrimEnd | C1.Win.Input.FormatInfoInheritProperties.CalendarType;
-            editStart.EditFormat.FormatType = C1.Win.Input.FormatType.ShortDate;
-            editStart.EditFormat.Inherit = C1.Win.Input.FormatInfoInheritProperties.CustomFormat | C1.Win.Input.FormatInfoInheritProperties.NullText | C1.Win.Input.FormatInfoInheritProperties.EmptyAsNull | C1.Win.Input.FormatInfoInheritProperties.TrimStart | C1.Win.Input.FormatInfoInheritProperties.TrimEnd | C1.Win.Input.FormatInfoInheritProperties.CalendarType;
-            editStart.FormatType = C1.Win.Input.FormatType.ShortDate;
-            editStart.Location = new Point(107, 138);
+            editStart.DisplayFormat.FormatType = FormatType.ShortDate;
+            editStart.DisplayFormat.Inherit = FormatInfoInheritProperties.CustomFormat | FormatInfoInheritProperties.NullText | FormatInfoInheritProperties.EmptyAsNull | FormatInfoInheritProperties.TrimStart | FormatInfoInheritProperties.TrimEnd | FormatInfoInheritProperties.CalendarType;
+            editStart.EditFormat.FormatType = FormatType.ShortDate;
+            editStart.EditFormat.Inherit = FormatInfoInheritProperties.CustomFormat | FormatInfoInheritProperties.NullText | FormatInfoInheritProperties.EmptyAsNull | FormatInfoInheritProperties.TrimStart | FormatInfoInheritProperties.TrimEnd | FormatInfoInheritProperties.CalendarType;
+            editStart.Enabled = false;
+            editStart.FormatType = FormatType.ShortDate;
+            editStart.Location = new Point(91, 121);
             editStart.Name = "editStart";
-            editStart.Size = new Size(100, 23);
+            editStart.Size = new Size(116, 23);
             editStart.TabIndex = 8;
             editStart.Value = new DateTime(2026, 1, 1, 0, 0, 0, 0);
             // 
@@ -229,15 +238,16 @@
             editEnd.Calendar.MaxDate = new DateTime(2099, 12, 31, 23, 59, 0, 0);
             editEnd.Calendar.MinDate = new DateTime(2000, 1, 1, 0, 0, 0, 0);
             editEnd.DisplayFormat.EmptyAsNull = true;
-            editEnd.DisplayFormat.FormatType = C1.Win.Input.FormatType.ShortDate;
-            editEnd.DisplayFormat.Inherit = C1.Win.Input.FormatInfoInheritProperties.CustomFormat | C1.Win.Input.FormatInfoInheritProperties.NullText | C1.Win.Input.FormatInfoInheritProperties.TrimStart | C1.Win.Input.FormatInfoInheritProperties.TrimEnd | C1.Win.Input.FormatInfoInheritProperties.CalendarType;
+            editEnd.DisplayFormat.FormatType = FormatType.ShortDate;
+            editEnd.DisplayFormat.Inherit = FormatInfoInheritProperties.CustomFormat | FormatInfoInheritProperties.NullText | FormatInfoInheritProperties.TrimStart | FormatInfoInheritProperties.TrimEnd | FormatInfoInheritProperties.CalendarType;
             editEnd.EditFormat.EmptyAsNull = true;
-            editEnd.EditFormat.FormatType = C1.Win.Input.FormatType.ShortDate;
-            editEnd.EditFormat.Inherit = C1.Win.Input.FormatInfoInheritProperties.CustomFormat | C1.Win.Input.FormatInfoInheritProperties.NullText | C1.Win.Input.FormatInfoInheritProperties.TrimStart | C1.Win.Input.FormatInfoInheritProperties.TrimEnd | C1.Win.Input.FormatInfoInheritProperties.CalendarType;
-            editEnd.FormatType = C1.Win.Input.FormatType.ShortDate;
-            editEnd.Location = new Point(107, 167);
+            editEnd.EditFormat.FormatType = FormatType.ShortDate;
+            editEnd.EditFormat.Inherit = FormatInfoInheritProperties.CustomFormat | FormatInfoInheritProperties.NullText | FormatInfoInheritProperties.TrimStart | FormatInfoInheritProperties.TrimEnd | FormatInfoInheritProperties.CalendarType;
+            editEnd.Enabled = false;
+            editEnd.FormatType = FormatType.ShortDate;
+            editEnd.Location = new Point(91, 150);
             editEnd.Name = "editEnd";
-            editEnd.Size = new Size(100, 23);
+            editEnd.Size = new Size(116, 23);
             editEnd.TabIndex = 9;
             editEnd.Value = new DateTime(2026, 12, 31, 0, 0, 0, 0);
             // 
@@ -245,13 +255,12 @@
             // 
             rbFree.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             rbFree.AutoSize = true;
-            rbFree.Checked = true;
-            rbFree.Location = new Point(223, 114);
+            rbFree.Location = new Point(223, 101);
             rbFree.Name = "rbFree";
             rbFree.Size = new Size(14, 13);
             rbFree.TabIndex = 7;
-            rbFree.TabStop = true;
             rbFree.UseVisualStyleBackColor = true;
+            rbFree.CheckedChanged += rb_CheckedChanged;
             // 
             // PeriodDropDownForm
             // 
@@ -275,7 +284,7 @@
             Controls.Add(labelQuarter);
             Controls.Add(labelYear);
             Name = "PeriodDropDownForm";
-            Size = new Size(250, 240);
+            Size = new Size(250, 206);
             ((System.ComponentModel.ISupportInitialize)editYear).EndInit();
             ((System.ComponentModel.ISupportInitialize)editQuarter).EndInit();
             ((System.ComponentModel.ISupportInitialize)editMonth).EndInit();
@@ -290,6 +299,7 @@
         private Label labelYear;
         private Label labelQuarter;
         private Label labelMonth;
+        private Label stop;
         private Label labelStop;
         private Label labelStart;
         private C1.Win.Input.C1NumericEdit editYear;
