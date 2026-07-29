@@ -73,16 +73,16 @@ public class ContractRepository
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
                 with cnt as (
-	                SELECT c.*
+                    SELECT c.*
                     FROM cwatis.contracts c
-                    where c.contract_ParentId is null
+                    where c.contract_PreviousId is null
                 )
                 SELECT * 
                 from cnt
-	                left join cwatis.contracttypes c    on c.ContractType_Id = cnt.DocumentType_Id
+                    left join cwatis.documenttypes c on c.DocumentType_Id = cnt.DocumentType_Id
                     LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = cnt.currencyId
                 where 
-	                1 = 1
+                    1 = 1
                 order by cnt.contract_date desc;
             ";
             using var rdr = await cmd.ExecuteReaderAsync();
@@ -143,16 +143,17 @@ public class ContractRepository
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-                        SELECT 
-                            c.* ,
-                            cu.Abbrev, t.ContractType_Name,
-                            1
-                        FROM cwatis.contracts c 
-                            LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
-                            LEFT JOIN cwatis.contracttypes t ON c.DocumentType_Id = t.ContractType_Id
-                        WHERE 1=1
-                            and (c.contract_RootId = {root_id} Or c.contract_id = {root_id})
-                        ORDER BY c.contract_date ASC";
+                SELECT 
+                    c.* ,
+                    cu.Abbrev, t.DocumentType_Name,
+                    1
+                FROM cwatis.contracts c 
+                    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+                    LEFT JOIN cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
+                WHERE 1=1
+                and (c.contract_RootId = {root_id} Or c.contract_id = {root_id})
+                ORDER BY c.contract_date ASC
+            ";
             using var rdr = await cmd.ExecuteReaderAsync();
             
             List<Contract> contracts = new List<Contract>();

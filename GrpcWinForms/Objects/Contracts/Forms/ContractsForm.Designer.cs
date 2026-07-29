@@ -50,8 +50,6 @@
             checkBoxAll = new CheckBox();
             periodContract = new C1.Win.Input.C1DropDownControl();
             labelPeriod = new Label();
-            lookupSeller = new C1.Win.Input.C1DropDownControl();
-            lookupBuyer = new C1.Win.Input.C1DropDownControl();
             labelSeller = new Label();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanelContractLinesList = new C1.Win.SplitContainer.C1SplitterPanel();
@@ -73,8 +71,6 @@
             ((System.ComponentModel.ISupportInitialize)c1ComboBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)periodContract).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)lookupSeller).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)lookupBuyer).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanelContractLinesList.SuspendLayout();
@@ -96,8 +92,6 @@
             panel1.Controls.Add(checkBoxAll);
             panel1.Controls.Add(periodContract);
             panel1.Controls.Add(labelPeriod);
-            panel1.Controls.Add(lookupSeller);
-            panel1.Controls.Add(lookupBuyer);
             panel1.Controls.Add(labelSeller);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
@@ -197,22 +191,6 @@
             labelPeriod.Size = new Size(52, 15);
             labelPeriod.TabIndex = 5;
             labelPeriod.Text = "Период:";
-            // 
-            // lookupSeller
-            // 
-            lookupSeller.ButtonsSettings.ModalButton.Visible = true;
-            lookupSeller.Location = new Point(627, 35);
-            lookupSeller.Name = "lookupSeller";
-            lookupSeller.Size = new Size(220, 23);
-            lookupSeller.TabIndex = 11;
-            // 
-            // lookupBuyer
-            // 
-            lookupBuyer.ButtonsSettings.ModalButton.Visible = true;
-            lookupBuyer.Location = new Point(627, 6);
-            lookupBuyer.Name = "lookupBuyer";
-            lookupBuyer.Size = new Size(220, 23);
-            lookupBuyer.TabIndex = 2;
             // 
             // labelSeller
             // 
@@ -446,8 +424,6 @@
             ((System.ComponentModel.ISupportInitialize)c1ComboBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)periodContract).EndInit();
-            ((System.ComponentModel.ISupportInitialize)lookupSeller).EndInit();
-            ((System.ComponentModel.ISupportInitialize)lookupBuyer).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanelContractLinesList.ResumeLayout(false);
@@ -476,11 +452,9 @@
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator1;
         private SmartGrid.SmartGrid smartGridLines;
-        private C1.Win.Input.C1DropDownControl lookupBuyer;
         private CheckBox checkBoxAll;
         private C1.Win.Input.C1DropDownControl periodContract;
         private Label labelPeriod;
-        private C1.Win.Input.C1DropDownControl lookupSeller;
         private C1.Win.Input.C1ComboBox c1ComboBox1;
         private Label labelContractType;
         private C1.Win.Input.C1ComboBox c1ComboBox2;

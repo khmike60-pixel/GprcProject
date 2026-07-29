@@ -37,8 +37,10 @@
             buttonCancel = new Button();
             buttonUpdate = new Button();
             buttonUpdateExit = new Button();
+            periodComponent1 = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
             ((System.ComponentModel.ISupportInitialize)c1DropDownControl1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companyDropDown1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)periodComponent1).BeginInit();
             SuspendLayout();
             // 
             // label2
@@ -78,6 +80,8 @@
             // 
             companyDropDown1.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companyDropDown1.ButtonsSettings.CustomButton.Icon"));
             companyDropDown1.ButtonsSettings.CustomButton.Visible = true;
+            companyDropDown1.DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            companyDropDown1.DropDownWidth = 300;
             companyDropDown1.GetDataSourceFunc = null;
             companyDropDown1.Location = new Point(228, 107);
             companyDropDown1.Name = "companyDropDown1";
@@ -114,13 +118,23 @@
             buttonUpdateExit.TabIndex = 9;
             buttonUpdateExit.Text = "Записать и выйти";
             buttonUpdateExit.UseVisualStyleBackColor = true;
-
+            // 
+            // periodComponent1
+            // 
+            periodComponent1.EndDate = new DateTime(0L);
+            periodComponent1.Location = new Point(228, 184);
+            periodComponent1.Name = "periodComponent1";
+            periodComponent1.Size = new Size(179, 23);
+            periodComponent1.StartDate = new DateTime(0L);
+            periodComponent1.TabIndex = 10;
+            periodComponent1.Value = "";
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(627, 450);
+            Controls.Add(periodComponent1);
             Controls.Add(buttonUpdateExit);
             Controls.Add(buttonUpdate);
             Controls.Add(buttonCancel);
@@ -132,6 +146,7 @@
             Text = "TestLoolkup";
             ((System.ComponentModel.ISupportInitialize)c1DropDownControl1).EndInit();
             ((System.ComponentModel.ISupportInitialize)companyDropDown1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)periodComponent1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -144,5 +159,6 @@
         private Button buttonCancel;
         private Button buttonUpdate;
         private Button buttonUpdateExit;
+        private Controls.PeriodControl.PeriodComponent periodComponent1;
     }
 }

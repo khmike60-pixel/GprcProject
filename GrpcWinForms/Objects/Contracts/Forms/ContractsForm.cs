@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Line = GrpcCommonNet.Library.Contract.Line;
 
 namespace GrpcWinForms.Objects.Contracts.Forms
 {

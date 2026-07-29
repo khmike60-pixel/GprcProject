@@ -24,7 +24,7 @@ namespace GrpcCommonNet.Proto.Utils
         {
             if (value == null) 
                 return new DecimalValue { Units = 0, Scale = scale };
-            return new DecimalValue{ Units = (int)((double)value * Math.Pow(10, scale)), Scale = scale };    
+            return new DecimalValue{ Units = (long)((double)value * Math.Pow(10, scale)), Scale = scale };    
         }
 
         public static DecimalValue ToDecimalValueField(DbDataReader rdr, string fieldName, DataTable? schema = null)
