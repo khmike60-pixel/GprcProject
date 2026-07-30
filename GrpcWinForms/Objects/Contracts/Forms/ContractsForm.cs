@@ -1,12 +1,13 @@
-﻿using GrapeCity.Documents.Common;
+﻿using Google.Protobuf.WellKnownTypes;
+using GrapeCity.Documents.Common;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
 using GrpcCommonNet.Proto.Utils;
+using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Forms;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
-using GrpcWinForms.Objects.Contragents.Components;
 using SmartGrid;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 ListContractsRequest request = new ListContractsRequest()
                 {
-
+                    StartDate = period.StartDate.ToUniversalTime().ToTimestamp(), 
+                    EndDate = period.EndDate.ToUniversalTime().ToTimestamp()
                 };
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
@@ -93,6 +95,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void ContractsForm_Load(object sender, EventArgs e)
         {
+            period.StartDate = new DateTime(DateTime.Now.Year, 1, 1);
+            period.EndDate   = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
+
             RefreshContract();
         }
 

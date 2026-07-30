@@ -59,8 +59,8 @@ public class ContractRepository
     {
         try
         {
-            DateTime dateStart = request.StartDate == null ? DateTime.MinValue: request.StartDate.ToDateTime().Date;
-            DateTime dateEnd   = request.EndDate == null ? DateTime.MaxValue: request.EndDate.ToDateTime().Date;
+            DateTime dateStart = request.StartDate == null ? DateTime.MinValue: request.StartDate.ToDateTime().ToLocalTime();
+            DateTime dateEnd   = request.EndDate == null ? DateTime.MaxValue: request.EndDate.ToDateTime().ToLocalTime();
             Contragent buyer   = request.Buyer;
             Contragent seller  = request.Seller;
             int stateFrom      = request.StateFrom;
@@ -83,8 +83,13 @@ public class ContractRepository
                     LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = cnt.currencyId
                 where 
                     1 = 1
+                    and cnt.contract_Date >= @startdate and cnt.contract_Date <= @enddate
                 order by cnt.contract_date desc;
             ";
+
+            cmd.Parameters.AddWithValue("startdate", dateStart);
+            cmd.Parameters.AddWithValue("enddate", dateEnd);
+
             using var rdr = await cmd.ExecuteReaderAsync();
 
             while (await rdr.ReadAsync())

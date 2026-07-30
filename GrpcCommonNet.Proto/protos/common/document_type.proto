@@ -1,0 +1,30 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "protos/common/general.proto";
+
+package Common;
+
+// Модель Проверено/Утверждено
+message Checked {
+	int32 id = 1;
+	google.protobuf.Timestamp date = 2;
+	string symbol = 3;
+}
+
+// Модель типа документа
+message DocumentType {
+	int32 id = 1;
+	int32 parent = 2;
+	string name = 3;
+	string code = 4;
+	int32 currency_type = 5;
+	string data = 6;
+	int32 country_currency_id = 7;
+	string view_master = 8;
+	string view_detail = 9;
+	Checked approved = 10;
+}

@@ -14,6 +14,7 @@ namespace GrpcWinForms.Forms
             menuStrip1 = new MenuStrip();
             ContractsToolStripMenuItem = new ToolStripMenuItem();
             ToolStripMenuItemContrtacts = new ToolStripMenuItem();
+            типыКонтрактовToolStripMenuItem = new ToolStripMenuItem();
             MainDictionariesToolStripMenuItem = new ToolStripMenuItem();
             контрагентыToolStripMenuItem = new ToolStripMenuItem();
             ContragentsToolStripMenuItem = new ToolStripMenuItem();
@@ -46,7 +47,8 @@ namespace GrpcWinForms.Forms
             UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             ApplicationsToolStripMenuItem = new ToolStripMenuItem();
             тестоваяФормаToolStripMenuItem = new ToolStripMenuItem();
-            типыКонтрактовToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator5 = new ToolStripSeparator();
+            DocumentTypesToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -73,9 +75,16 @@ namespace GrpcWinForms.Forms
             ToolStripMenuItemContrtacts.Text = "Контракты";
             ToolStripMenuItemContrtacts.Click += ToolStripMenuItemContrtacts_Click;
             // 
+            // типыКонтрактовToolStripMenuItem
+            // 
+            типыКонтрактовToolStripMenuItem.Name = "типыКонтрактовToolStripMenuItem";
+            типыКонтрактовToolStripMenuItem.Size = new Size(180, 22);
+            типыКонтрактовToolStripMenuItem.Text = "Типы контрактов";
+            типыКонтрактовToolStripMenuItem.Click += типыКонтрактовToolStripMenuItem_Click;
+            // 
             // MainDictionariesToolStripMenuItem
             // 
-            MainDictionariesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { контрагентыToolStripMenuItem, toolStripSeparator4, нашиОрганизацииToolStripMenuItem, подразделенияToolStripMenuItem, toolStripSeparator3, CatalogToolStripMenuItem, toolStripSeparator1, CurrenciesAndRatesToolStripMenuItem, toolStripSeparator2, GeographAndPlacesToolStripMenuItem });
+            MainDictionariesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { контрагентыToolStripMenuItem, toolStripSeparator4, нашиОрганизацииToolStripMenuItem, подразделенияToolStripMenuItem, toolStripSeparator3, CatalogToolStripMenuItem, toolStripSeparator1, CurrenciesAndRatesToolStripMenuItem, toolStripSeparator2, GeographAndPlacesToolStripMenuItem, toolStripSeparator5, DocumentTypesToolStripMenuItem });
             MainDictionariesToolStripMenuItem.Name = "MainDictionariesToolStripMenuItem";
             MainDictionariesToolStripMenuItem.Size = new Size(135, 20);
             MainDictionariesToolStripMenuItem.Text = "Общие справочники";
@@ -276,12 +285,17 @@ namespace GrpcWinForms.Forms
             тестоваяФормаToolStripMenuItem.Text = "Тестовая форма";
             тестоваяФормаToolStripMenuItem.Click += тестоваяФормаToolStripMenuItem_Click;
             // 
-            // типыКонтрактовToolStripMenuItem
+            // toolStripSeparator5
             // 
-            типыКонтрактовToolStripMenuItem.Name = "типыКонтрактовToolStripMenuItem";
-            типыКонтрактовToolStripMenuItem.Size = new Size(180, 22);
-            типыКонтрактовToolStripMenuItem.Text = "Типы контрактов";
-            типыКонтрактовToolStripMenuItem.Click += типыКонтрактовToolStripMenuItem_Click;
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new Size(225, 6);
+            // 
+            // DocumentTypesToolStripMenuItem
+            // 
+            DocumentTypesToolStripMenuItem.Name = "DocumentTypesToolStripMenuItem";
+            DocumentTypesToolStripMenuItem.Size = new Size(228, 22);
+            DocumentTypesToolStripMenuItem.Text = "Типы документов";
+            DocumentTypesToolStripMenuItem.Click += DocumentTypesToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -332,5 +346,7 @@ namespace GrpcWinForms.Forms
         private ToolStripMenuItem ToolStripMenuItemContrtacts;
         private ToolStripMenuItem тестоваяФормаToolStripMenuItem;
         private ToolStripMenuItem типыКонтрактовToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator5;
+        private ToolStripMenuItem DocumentTypesToolStripMenuItem;
     }
 }

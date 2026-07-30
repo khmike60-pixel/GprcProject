@@ -43,8 +43,6 @@ namespace GrpcWinForms.Controls.PeriodControl
             rbQuater = new RadioButton();
             rbMonth = new RadioButton();
             labelFree = new Label();
-            btnCancel = new Button();
-            btnOk = new Button();
             editStart = new C1.Win.Calendar.C1DateEdit();
             editEnd = new C1.Win.Calendar.C1DateEdit();
             rbFree = new RadioButton();
@@ -191,28 +189,6 @@ namespace GrpcWinForms.Controls.PeriodControl
             labelFree.TabIndex = 9;
             labelFree.Text = "Произвольный интервал:";
             // 
-            // btnCancel
-            // 
-            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnCancel.Location = new Point(172, 180);
-            btnCancel.Name = "btnCancel";
-            btnCancel.Size = new Size(75, 23);
-            btnCancel.TabIndex = 11;
-            btnCancel.Text = "Отменить";
-            btnCancel.UseVisualStyleBackColor = true;
-            btnCancel.Click += btnCancel_Click;
-            // 
-            // btnOk
-            // 
-            btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnOk.Location = new Point(91, 180);
-            btnOk.Name = "btnOk";
-            btnOk.Size = new Size(75, 23);
-            btnOk.TabIndex = 10;
-            btnOk.Text = "Ok";
-            btnOk.UseVisualStyleBackColor = true;
-            btnOk.Click += btnOk_Click;
-            // 
             // editStart
             // 
             editStart.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -230,6 +206,7 @@ namespace GrpcWinForms.Controls.PeriodControl
             editStart.Size = new Size(116, 23);
             editStart.TabIndex = 8;
             editStart.Value = new DateTime(2026, 1, 1, 0, 0, 0, 0);
+            editStart.TextChanged += editStart_TextChanged;
             // 
             // editEnd
             // 
@@ -250,12 +227,13 @@ namespace GrpcWinForms.Controls.PeriodControl
             editEnd.Size = new Size(116, 23);
             editEnd.TabIndex = 9;
             editEnd.Value = new DateTime(2026, 12, 31, 0, 0, 0, 0);
+            editEnd.TextChanged += editEnd_TextChanged;
             // 
             // rbFree
             // 
             rbFree.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             rbFree.AutoSize = true;
-            rbFree.Location = new Point(223, 101);
+            rbFree.Location = new Point(224, 101);
             rbFree.Name = "rbFree";
             rbFree.Size = new Size(14, 13);
             rbFree.TabIndex = 7;
@@ -269,8 +247,6 @@ namespace GrpcWinForms.Controls.PeriodControl
             Controls.Add(rbFree);
             Controls.Add(editEnd);
             Controls.Add(editStart);
-            Controls.Add(btnOk);
-            Controls.Add(btnCancel);
             Controls.Add(labelFree);
             Controls.Add(rbMonth);
             Controls.Add(rbQuater);
@@ -284,7 +260,7 @@ namespace GrpcWinForms.Controls.PeriodControl
             Controls.Add(labelQuarter);
             Controls.Add(labelYear);
             Name = "PeriodDropDownForm";
-            Size = new Size(250, 206);
+            Size = new Size(250, 180);
             ((System.ComponentModel.ISupportInitialize)editYear).EndInit();
             ((System.ComponentModel.ISupportInitialize)editQuarter).EndInit();
             ((System.ComponentModel.ISupportInitialize)editMonth).EndInit();
@@ -309,8 +285,6 @@ namespace GrpcWinForms.Controls.PeriodControl
         private RadioButton rbQuater;
         private RadioButton rbMonth;
         private Label labelFree;
-        private Button btnCancel;
-        private Button btnOk;
         private C1.Win.Calendar.C1DateEdit editStart;
         private C1.Win.Calendar.C1DateEdit editEnd;
         private RadioButton rbFree;

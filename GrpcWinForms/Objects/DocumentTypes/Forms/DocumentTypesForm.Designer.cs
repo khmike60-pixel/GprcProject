@@ -1,6 +1,6 @@
-﻿namespace GrpcWinForms.Objects.ContractTypes.Forms
+﻿namespace GrpcWinForms.Objects.DocumentTypes.Forms
 {
-    partial class ContractTypesForm
+    partial class DocumentTypesForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContractTypesForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DocumentTypesForm));
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             panel1 = new Panel();
             textBoxContractTypeName = new TextBox();
             labelName = new Label();
             panel2 = new Panel();
-            smartGridContractTypes = new SmartGrid.SmartGrid();
+            smartGridDocumentTypes = new SmartGrid.SmartGrid();
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -45,7 +45,7 @@
             toolStripSeparator1 = new ToolStripSeparator();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridContractTypes).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smartGridDocumentTypes).BeginInit();
             toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -77,7 +77,7 @@
             // 
             // panel2
             // 
-            panel2.Controls.Add(smartGridContractTypes);
+            panel2.Controls.Add(smartGridDocumentTypes);
             panel2.Controls.Add(toolStrip1);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 34);
@@ -85,29 +85,29 @@
             panel2.Size = new Size(800, 416);
             panel2.TabIndex = 2;
             // 
-            // smartGridContractTypes
+            // smartGridDocumentTypes
             // 
-            smartGridContractTypes.AllowEditing = false;
-            smartGridContractTypes.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
-            smartGridContractTypes.AllowNodeMove = false;
-            smartGridContractTypes.AutoGenerateColumns = false;
-            smartGridContractTypes.ColumnInfo = resources.GetString("smartGridContractTypes.ColumnInfo");
-            smartGridContractTypes.Dock = DockStyle.Fill;
-            smartGridContractTypes.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            smartGridContractTypes.Footers.Descriptions.Add(footerDescription1);
-            smartGridContractTypes.Footers.Fixed = true;
-            smartGridContractTypes.Headers = null;
-            smartGridContractTypes.IdName = null;
-            smartGridContractTypes.IsEditing = false;
-            smartGridContractTypes.Location = new Point(0, 31);
-            smartGridContractTypes.Name = "smartGridContractTypes";
-            smartGridContractTypes.Rows.Count = 4;
-            smartGridContractTypes.SelectedRows = (List<int>)resources.GetObject("smartGridContractTypes.SelectedRows");
-            smartGridContractTypes.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridContractTypes.Size = new Size(800, 385);
-            smartGridContractTypes.SortingType = SmartGrid.SortingType.Descending;
-            smartGridContractTypes.StyleInfo = resources.GetString("smartGridContractTypes.StyleInfo");
-            smartGridContractTypes.TabIndex = 2;
+            smartGridDocumentTypes.AllowEditing = false;
+            smartGridDocumentTypes.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGridDocumentTypes.AllowNodeMove = false;
+            smartGridDocumentTypes.AutoGenerateColumns = false;
+            smartGridDocumentTypes.ColumnInfo = resources.GetString("smartGridDocumentTypes.ColumnInfo");
+            smartGridDocumentTypes.Dock = DockStyle.Fill;
+            smartGridDocumentTypes.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smartGridDocumentTypes.Footers.Descriptions.Add(footerDescription1);
+            smartGridDocumentTypes.Footers.Fixed = true;
+            smartGridDocumentTypes.Headers = null;
+            smartGridDocumentTypes.IdName = null;
+            smartGridDocumentTypes.IsEditing = false;
+            smartGridDocumentTypes.Location = new Point(0, 31);
+            smartGridDocumentTypes.Name = "smartGridDocumentTypes";
+            smartGridDocumentTypes.Rows.Count = 4;
+            smartGridDocumentTypes.SelectedRows = (List<int>)resources.GetObject("smartGridDocumentTypes.SelectedRows");
+            smartGridDocumentTypes.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGridDocumentTypes.Size = new Size(800, 385);
+            smartGridDocumentTypes.SortingType = SmartGrid.SortingType.Descending;
+            smartGridDocumentTypes.StyleInfo = resources.GetString("smartGridDocumentTypes.StyleInfo");
+            smartGridDocumentTypes.TabIndex = 2;
             // 
             // toolStrip1
             // 
@@ -171,21 +171,21 @@
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(6, 31);
             // 
-            // ContractTypesForm
+            // DocumentTypesForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(panel2);
             Controls.Add(panel1);
-            Name = "ContractTypesForm";
-            Text = "Типы контрактов";
+            Name = "DocumentTypesForm";
+            Text = "Типы документов";
             Load += ContractTypesForm_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridContractTypes).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartGridDocumentTypes).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             ResumeLayout(false);
@@ -204,6 +204,6 @@
         private ToolStripButton toolStripButtonDelete;
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator1;
-        public SmartGrid.SmartGrid smartGridContractTypes;
+        public SmartGrid.SmartGrid smartGridDocumentTypes;
     }
 }

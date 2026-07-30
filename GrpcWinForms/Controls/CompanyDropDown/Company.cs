@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrpcWinForms.Objects.Contragents.Components
+namespace GrpcWinForms.Controls.CompanyDropDown
 {
     public class Company
     {

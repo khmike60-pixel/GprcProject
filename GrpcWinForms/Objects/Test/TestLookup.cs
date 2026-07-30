@@ -2,7 +2,7 @@
 using C1.Win.Input.MultiColumnCombo;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contragent;
-using GrpcWinForms.Objects.Contragents.Components;
+using GrpcWinForms.Controls.CompanyDropDown;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

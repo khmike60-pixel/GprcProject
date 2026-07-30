@@ -40,6 +40,7 @@
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition6 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition7 = new C1.Win.FlexGrid.AggregateDefinition();
             panel1 = new Panel();
+            period = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
             labelBuyer = new Label();
             companySeller = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             companyBuyer = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
@@ -48,7 +49,6 @@
             c1ComboBox1 = new C1.Win.Input.C1ComboBox();
             labelContractType = new Label();
             checkBoxAll = new CheckBox();
-            periodContract = new C1.Win.Input.C1DropDownControl();
             labelPeriod = new Label();
             labelSeller = new Label();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
@@ -66,11 +66,11 @@
             toolStripButtonHistory = new ToolStripButton();
             toolStripButton1 = new ToolStripButton();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)period).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companyBuyer).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)periodContract).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanelContractLinesList.SuspendLayout();
@@ -82,6 +82,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(period);
             panel1.Controls.Add(labelBuyer);
             panel1.Controls.Add(companySeller);
             panel1.Controls.Add(companyBuyer);
@@ -90,7 +91,6 @@
             panel1.Controls.Add(c1ComboBox1);
             panel1.Controls.Add(labelContractType);
             panel1.Controls.Add(checkBoxAll);
-            panel1.Controls.Add(periodContract);
             panel1.Controls.Add(labelPeriod);
             panel1.Controls.Add(labelSeller);
             panel1.Dock = DockStyle.Top;
@@ -98,6 +98,18 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1085, 93);
             panel1.TabIndex = 5;
+            // 
+            // period
+            // 
+            period.DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            period.DropDownWidth = 250;
+            period.EndDate = new DateTime(2026, 3, 31, 23, 59, 59, 0);
+            period.Location = new Point(99, 62);
+            period.Name = "period";
+            period.Size = new Size(150, 23);
+            period.StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0);
+            period.TabIndex = 19;
+            period.Value = "01.01.2026 - 31.12.2026";
             // 
             // labelBuyer
             // 
@@ -154,7 +166,7 @@
             // 
             c1ComboBox1.Location = new Point(406, 6);
             c1ComboBox1.Name = "c1ComboBox1";
-            c1ComboBox1.Size = new Size(71, 23);
+            c1ComboBox1.Size = new Size(169, 23);
             c1ComboBox1.TabIndex = 13;
             // 
             // labelContractType
@@ -169,19 +181,12 @@
             // checkBoxAll
             // 
             checkBoxAll.AutoSize = true;
-            checkBoxAll.Location = new Point(274, 66);
+            checkBoxAll.Location = new Point(260, 66);
             checkBoxAll.Name = "checkBoxAll";
             checkBoxAll.Size = new Size(45, 19);
             checkBoxAll.TabIndex = 7;
             checkBoxAll.Text = "Все";
             checkBoxAll.UseVisualStyleBackColor = true;
-            // 
-            // periodContract
-            // 
-            periodContract.Location = new Point(99, 64);
-            periodContract.Name = "periodContract";
-            periodContract.Size = new Size(169, 23);
-            periodContract.TabIndex = 6;
             // 
             // labelPeriod
             // 
@@ -419,11 +424,11 @@
             Load += ContractsForm_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)period).EndInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).EndInit();
             ((System.ComponentModel.ISupportInitialize)companyBuyer).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)periodContract).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanelContractLinesList.ResumeLayout(false);
@@ -453,7 +458,6 @@
         private ToolStripSeparator toolStripSeparator1;
         private SmartGrid.SmartGrid smartGridLines;
         private CheckBox checkBoxAll;
-        private C1.Win.Input.C1DropDownControl periodContract;
         private Label labelPeriod;
         private C1.Win.Input.C1ComboBox c1ComboBox1;
         private Label labelContractType;
@@ -464,5 +468,6 @@
         private Label labelBuyer;
         private Contragents.Components.CompanyDropDown companySeller;
         private Contragents.Components.CompanyDropDown companyBuyer;
+        private GrpcWinForms.Controls.PeriodControl.PeriodComponent period;
     }
 }

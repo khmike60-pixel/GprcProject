@@ -17,27 +17,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.ContractTypes.Forms
+namespace GrpcWinForms.Objects.DocumentTypes.Forms
 {
-    public partial class ContractTypesForm : Form
+    public partial class DocumentTypesForm : Form
     {
-        private Loader loaderComtractTypes = new Loader();
-        private BindingList<ContractType> contractTypes;
+        private Loader loaderDocumentTypes = new Loader();
+        private BindingList<DocumentType> contractTypes;
         private int maxLevel = 0;
-        public ContractTypesForm()
+
+        public string HeadCode = string.Empty;
+        public DocumentTypesForm()
         {
             InitializeComponent();
-            loaderComtractTypes.Parent = smartGridContractTypes;
-            loaderComtractTypes.Size = smartGridContractTypes.Size;
+            loaderDocumentTypes.Parent = smartGridDocumentTypes;
+            loaderDocumentTypes.Size = smartGridDocumentTypes.Size;
         }
 
-        public async void RefreshContractTypes()
+        public async void RefreshDocumentTypes()
         {
-            loaderComtractTypes.ShowLoader();
+            loaderDocumentTypes.ShowLoader();
             try
             {
-                smartGridContractTypes.BeginUpdate();
-                List<ContractType> treeContractTypes = new List<ContractType>();
+                smartGridDocumentTypes.BeginUpdate();
+                List<DocumentType> treeContractTypes = new List<DocumentType>();
                 /*
                 CatalogFilterRequest request = new CatalogFilterRequest()
                 {
@@ -70,12 +72,12 @@ namespace GrpcWinForms.Objects.ContractTypes.Forms
                     });
                 }
                 */
-                IEnumerable<ContractType> tree = treeContractTypes.AsEnumerable();
+                IEnumerable<DocumentType> tree = treeContractTypes.AsEnumerable();
 
                 //smartGridContractTypes.BuildTree(tree);
 
                 // Находим максимальный уровень среди всех строк, которые являются узлами
-                int maxLevel = smartGridContractTypes.GetDepth();
+                int maxLevel = smartGridDocumentTypes.GetDepth();
 
                 for (int i = 1; i <= maxLevel; i++)
                 {
@@ -83,40 +85,39 @@ namespace GrpcWinForms.Objects.ContractTypes.Forms
                     int level = i; // Локальная копия для замыкания
                     levelItem.Click += (s, e) =>
                     {
-                        smartGridContractTypes.BeginUpdate();
-                        smartGridContractTypes.ExpandByLevel(level);
+                        smartGridDocumentTypes.BeginUpdate();
+                        smartGridDocumentTypes.ExpandByLevel(level);
                         //if (toolStripButtonPath.Checked) toolStripButtonPath.Checked = false;
-                        smartGridContractTypes.EndUpdate();
+                        smartGridDocumentTypes.EndUpdate();
                     };
                     //                    toolStripButtonLevels.DropDownItems.Add(levelItem);
                 }
-                smartGridContractTypes.EndUpdate();
+                smartGridDocumentTypes.EndUpdate();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            loaderComtractTypes.HideLoader();
+            loaderDocumentTypes.HideLoader();
         }
 
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
-            RefreshContractTypes();
+            RefreshDocumentTypes();
         }
 
         private void ContractTypesForm_Load(object sender, EventArgs e)
         {
-            RefreshContractTypes();
+            RefreshDocumentTypes();
         }
     }
 
 
     // Временный класс - потом удалить
-    class ContractType
+    class DocumentType
     {
         public int Id;
         public int Parent;
-        public int DocumentTypeId;
         public int KindId;
         public int ContractCurrencyTypeId;
         public string Name;
