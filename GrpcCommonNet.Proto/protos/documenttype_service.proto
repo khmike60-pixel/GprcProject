@@ -1,0 +1,63 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.DocumentType";
+
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/documenttype.proto";
+
+package documenttype;
+
+service DocumentTypeServices {
+	rpc GetDocumentType(DocumentTypeRequest) returns (DocumentTypeResponse);
+	rpc GetIerarDocumentTypes(DocumentTypeFilterRequest) returns (ListDocumentTypeResponse);
+	rpc CreateDocumentType(CreateDocumentTypeRequest) returns (DocumentTypeResponse);
+	rpc UpdateContragent(UpdateDocumentTypeRequest) returns (DocumentTypeResponse);
+	rpc DeleteContragent(DeleteDocumentTypeRequest) returns (DeleteDocumentTypeResponse);
+	rpc DeleteIdsContragent(DeleteIdsDocumentTypeRequest) returns (UndeletedIdsDocumentTypeResponse);
+}
+
+
+message DocumentTypeRequest {
+	int32 id = 1;
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message DocumentTypeResponse{
+	Common.Result result = 1;
+	Common.DocumentType contragent = 2;
+}
+
+message DocumentTypeFilterRequest {
+	string Head = 1;
+}
+
+message ListDocumentTypeResponse {
+	Common.Result result = 1;
+	repeated Common.DocumentType document_type = 2;
+}
+
+message CreateDocumentTypeRequest {
+	Common.DocumentType document_type = 1;
+}
+
+message UpdateDocumentTypeRequest {
+	Common.DocumentType document_type = 1;
+}
+
+message DeleteDocumentTypeRequest {
+	int32 id = 1;
+}
+
+message DeleteDocumentTypeResponse {
+	Common.Result result = 1;
+}
+
+message DeleteIdsDocumentTypeRequest {
+	repeated int32 id = 1;
+}
+
+message UndeletedIdsDocumentTypeResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_ids = 2;
+}

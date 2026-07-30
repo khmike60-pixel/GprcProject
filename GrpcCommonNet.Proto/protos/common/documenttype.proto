@@ -19,12 +19,15 @@ message Checked {
 message DocumentType {
 	int32 id = 1;
 	int32 parent = 2;
-	string name = 3;
-	string code = 4;
-	int32 currency_type = 5;
-	string data = 6;
-	int32 country_currency_id = 7;
-	string view_master = 8;
-	string view_detail = 9;
-	Checked approved = 10;
+	string ids = 3;
+	string parents = 4;
+	string name = 5;
+	string code = 6;
+	int32 currency_type = 7;
+	google.protobuf.Struct data = 8;
+	int32 country_currency_id = 9;
+	string view_master = 10;
+	string view_detail = 11;
+	bool is_default = 12;
+	Checked approved = 13;
 }
