@@ -25,7 +25,7 @@ message DocumentTypeRequest {
 
 message DocumentTypeResponse{
 	Common.Result result = 1;
-	Common.DocumentType contragent = 2;
+	Common.DocumentType document_type= 2;
 }
 
 message DocumentTypeFilterRequest {

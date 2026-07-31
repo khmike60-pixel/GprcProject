@@ -8,7 +8,6 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Serilog;
 using GrpcCommonNet.Service.Repository;
-using GrpcCommonNet.Service.Services;
 
 try
 {
