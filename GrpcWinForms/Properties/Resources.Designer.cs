@@ -93,6 +93,16 @@ namespace GrpcWinForms.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_json_50 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-json-50", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_loader {
             get {
                 object obj = ResourceManager.GetObject("icons8_loader", resourceCulture);

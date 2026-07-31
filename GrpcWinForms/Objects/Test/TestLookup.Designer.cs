@@ -69,11 +69,11 @@
             // 
             periodComponent1.DropDownAlign = C1.Framework.DropDownAlignment.Left;
             periodComponent1.DropDownWidth = 250;
-            periodComponent1.EndDate = new DateTime(0L);
+            periodComponent1.EndDate = new DateTime(2026, 3, 31, 23, 59, 59, 0);
             periodComponent1.Location = new Point(154, 21);
             periodComponent1.Name = "periodComponent1";
             periodComponent1.Size = new Size(179, 23);
-            periodComponent1.StartDate = new DateTime(0L);
+            periodComponent1.StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0);
             periodComponent1.TabIndex = 10;
             periodComponent1.Value = "01.01.2026 - 31.12.2026";
             // 

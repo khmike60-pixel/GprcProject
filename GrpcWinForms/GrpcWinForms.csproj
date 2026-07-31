@@ -45,6 +45,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controls\CurrencyType\" />
     <Folder Include="Objects\Geolocations\Places\" />
   </ItemGroup>
   <ItemGroup>

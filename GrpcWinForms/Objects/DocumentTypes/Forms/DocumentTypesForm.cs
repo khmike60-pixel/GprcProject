@@ -42,13 +42,14 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 smartGridDocumentTypes.BeginUpdate();
                 List<DocumentType> treeContractTypes = new List<DocumentType>();
 
-                DocumentTypeFilterRequest request = new DocumentTypeFilterRequest() 
-                { 
-                    Head = "", // Получить весь список
-                    FieldMask = new FieldMask() { 
+                DocumentTypeFilterRequest request = new DocumentTypeFilterRequest()
+                {
+                    Head = HeadCode, // Получить весь список
+                    FieldMask = new FieldMask()
+                    {
                         Paths = { "id", "parent", "ids", "parents", "name", "code", "currency_type", "data", "country_currency_id", "view_master", "view_detail", "is_default", "approved", "kind_id" }
                     }
-                }; 
+                };
                 ListDocumentTypeResponse response = new ListDocumentTypeResponse();
                 response = await GrpcClients.GrpcClients.DocumentType.GetBranchDocumentTypesAsync(request);
 
@@ -103,11 +104,6 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             loaderDocumentTypes.HideLoader();
         }
 
-        private async void AddNode(Node ParentNode, DataRow row)
-        {
-
-        }
-
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             RefreshDocumentTypes();
@@ -117,6 +113,78 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         {
             RefreshDocumentTypes();
         }
+
+        private void smartGridDocumentTypes_DoubleClick(object sender, EventArgs e)
+        {
+            try
+            {
+                Node oldTree = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
+
+                DocumentType documentType = NodeToDocumentType(oldTree);
+                using DocumentTypeForm f = new DocumentTypeForm();
+                f.documentType = documentType;
+                f.EditMode = false;
+                f.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка: \n" + ex.Message, "Оишбка");
+            }
+        }
+
+        private void toolStripButtonEdit_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Node oldTree = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
+                DocumentType documentType = NodeToDocumentType(oldTree);
+
+                using DocumentTypeForm f = new DocumentTypeForm();
+                f.documentType = documentType;
+                f.EditMode = true;
+                if (DialogResult.OK == f.ShowDialog())
+                {
+                    // UpdateDocumentType();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка: \n" + ex.Message, "Оишбка");
+            }
+        }
+
+
+        #region Технические методы
+
+        private DocumentType NodeToDocumentType(Node node)
+        {
+            DocumentType documentType = new DocumentType();
+            try
+            {
+                TreeDocumentType tree = node.Key as TreeDocumentType;
+
+                documentType = new DocumentType()
+                {
+                    Name = tree.Name,
+                    Parent = tree.ParentId,
+                    Code = tree.Code,
+                    IsDefault = tree.IsDefault,
+                    //                    CountryCurrencyId = tree.CountryCurrencyId,
+                    ViewMaster = tree.ViewMaster,
+                    ViewDetail = tree.ViewDetail,
+                    //                    CurrencyType = tree.CurrencyType,
+                    Data = tree.Data
+                };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка конвертации NodeToDocumentType");
+            }
+            return documentType;
+        }
+
+        #endregion
+
     }
 
     public class TreeDocumentType : ITreeData

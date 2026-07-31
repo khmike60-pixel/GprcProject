@@ -90,15 +90,19 @@
             // smartGridDocumentTypes
             // 
             smartGridDocumentTypes.AllowEditing = false;
-            smartGridDocumentTypes.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGridDocumentTypes.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridDocumentTypes.AllowNodeMove = false;
+            smartGridDocumentTypes.AllowSorting = C1.Win.FlexGrid.AllowSortingEnum.None;
             smartGridDocumentTypes.AutoGenerateColumns = false;
             smartGridDocumentTypes.ColumnInfo = resources.GetString("smartGridDocumentTypes.ColumnInfo");
             smartGridDocumentTypes.Dock = DockStyle.Fill;
             smartGridDocumentTypes.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             smartGridDocumentTypes.Footers.Descriptions.Add(footerDescription1);
             smartGridDocumentTypes.Footers.Fixed = true;
-            smartGridDocumentTypes.Headers = null;
+            smartGridDocumentTypes.Headers = new string[]
+    {
+    "...\tНаименование\tКод\tВышестояшие\tId"
+    };
             smartGridDocumentTypes.IdName = null;
             smartGridDocumentTypes.IsEditing = false;
             smartGridDocumentTypes.Location = new Point(0, 31);
@@ -111,6 +115,7 @@
             smartGridDocumentTypes.StyleInfo = resources.GetString("smartGridDocumentTypes.StyleInfo");
             smartGridDocumentTypes.TabIndex = 2;
             smartGridDocumentTypes.Tree.Column = 3;
+            smartGridDocumentTypes.DoubleClick += smartGridDocumentTypes_DoubleClick;
             // 
             // toolStrip1
             // 
@@ -149,6 +154,7 @@
             toolStripButtonEdit.Name = "toolStripButtonEdit";
             toolStripButtonEdit.Size = new Size(28, 28);
             toolStripButtonEdit.Text = "Редактировать";
+            toolStripButtonEdit.Click += toolStripButtonEdit_Click;
             // 
             // toolStripButtonDelete
             // 

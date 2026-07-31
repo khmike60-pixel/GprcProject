@@ -160,12 +160,24 @@ namespace GrpcWinForms.Forms
 
         private void DocumentTypesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            foreach(Form child in MdiChildren)
+            foreach (Form child in MdiChildren)
             {
                 if (child is DocumentTypesForm) { child.Activate(); return; }
             }
-            var f = new DocumentTypesForm { MdiParent= this };
+            var f = new DocumentTypesForm { MdiParent = this };
             f.Show();
+        }
+
+        private void ContractTypesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is DocumentTypesForm) { child.Activate(); return; }
+            }
+            var f = new DocumentTypesForm { MdiParent = this };
+            f.HeadCode = "Contracts";
+            f.Show();
+
         }
     }
 }
