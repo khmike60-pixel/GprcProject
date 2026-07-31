@@ -43,6 +43,8 @@
             toolStripButtonDelete = new ToolStripButton();
             toolStripButtonRefresh = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
+            toolStripButtonLevels = new ToolStripSplitButton();
+            toolStripButtonPath = new ToolStripButton();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)smartGridDocumentTypes).BeginInit();
@@ -108,11 +110,12 @@
             smartGridDocumentTypes.SortingType = SmartGrid.SortingType.Descending;
             smartGridDocumentTypes.StyleInfo = resources.GetString("smartGridDocumentTypes.StyleInfo");
             smartGridDocumentTypes.TabIndex = 2;
+            smartGridDocumentTypes.Tree.Column = 3;
             // 
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(24, 24);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1, toolStripButtonLevels, toolStripButtonPath });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(800, 31);
@@ -171,6 +174,25 @@
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(6, 31);
             // 
+            // toolStripButtonLevels
+            // 
+            toolStripButtonLevels.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButtonLevels.Image = Properties.Resources.icons8_дерево_папок_40;
+            toolStripButtonLevels.ImageTransparentColor = Color.Magenta;
+            toolStripButtonLevels.Name = "toolStripButtonLevels";
+            toolStripButtonLevels.Size = new Size(40, 28);
+            toolStripButtonLevels.Text = "Уровень группировок";
+            // 
+            // toolStripButtonPath
+            // 
+            toolStripButtonPath.CheckOnClick = true;
+            toolStripButtonPath.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButtonPath.Image = Properties.Resources.icons8_древовидная_структура_50;
+            toolStripButtonPath.ImageTransparentColor = Color.Magenta;
+            toolStripButtonPath.Name = "toolStripButtonPath";
+            toolStripButtonPath.Size = new Size(28, 28);
+            toolStripButtonPath.Text = "Только текущая ветка";
+            // 
             // DocumentTypesForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -205,5 +227,7 @@
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator1;
         public SmartGrid.SmartGrid smartGridDocumentTypes;
+        private ToolStripSplitButton toolStripButtonLevels;
+        private ToolStripButton toolStripButtonPath;
     }
 }

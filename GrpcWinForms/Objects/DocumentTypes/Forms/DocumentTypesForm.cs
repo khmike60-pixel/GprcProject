@@ -1,6 +1,7 @@
 ﻿using C1.Win.FlexGrid;
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.DocumentType;
 using GrpcCommonNet.Library.Product;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Models;
@@ -22,7 +23,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
     public partial class DocumentTypesForm : Form
     {
         private Loader loaderDocumentTypes = new Loader();
-        private BindingList<DocumentType> contractTypes;
+        private BindingList<DocumentType> documentTypes;
         private int maxLevel = 0;
 
         public string HeadCode = string.Empty;
@@ -40,41 +41,42 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             {
                 smartGridDocumentTypes.BeginUpdate();
                 List<DocumentType> treeContractTypes = new List<DocumentType>();
-                /*
-                CatalogFilterRequest request = new CatalogFilterRequest()
+
+                DocumentTypeFilterRequest request = new DocumentTypeFilterRequest() 
+                { 
+                    Head = "", // Получить весь список
+                    FieldMask = new FieldMask() { 
+                        Paths = { "id", "parent", "ids", "parents", "name", "code", "currency_type", "data", "country_currency_id", "view_master", "view_detail", "is_default", "approved", "kind_id" }
+                    }
+                }; 
+                ListDocumentTypeResponse response = new ListDocumentTypeResponse();
+                response = await GrpcClients.GrpcClients.DocumentType.GetBranchDocumentTypesAsync(request);
+
+                List<TreeDocumentType> treeDocumentTypes = new List<TreeDocumentType>();
+
+                foreach (DocumentType item in response.DocumentTypes)
                 {
-                    Id = 0
-                };
-                request.FieldMask = new FieldMask();
-                request.FieldMask.Paths.Add("id");
-                request.FieldMask.Paths.Add("name");
-                request.FieldMask.Paths.Add("parent_id");
-                request.FieldMask.Paths.Add("parent_ids");
-                request.FieldMask.Paths.Add("parent_names");
-                request.FieldMask.Paths.Add("is_product_kind");
-                request.FieldMask.Paths.Add("is_list");
-
-                TreeCatalogResponse response = await GrpcClients.GrpcClients.Product.TreeCatalogAsync(request);
-
-                List<TreeCatalog> treeCatalogs = new List<TreeCatalog>();
-
-                foreach (var item in response.Catalog)
-                {
-                    treeCatalogs.Add(new TreeCatalog()
+                    treeDocumentTypes.Add(new TreeDocumentType()
                     {
                         Id = Convert.ToInt32(item.Id),
                         Name = item.Name,
-                        ParentId = Convert.ToInt32(item.ParentId),
-                        ParentIds = item.ParentIds,
-                        ParentNames = item.ParentNames,
-                        //IsProductKind = item.IsProductKind,
-                        //IsList = item.IsList
+                        Code = item.Code,
+                        ParentId = Convert.ToInt32(item.Parent),
+                        ParentIds = item.Ids,
+                        ParentNames = item.Parents,
+                        KindId = Convert.ToInt32(item.KindId),
+                        IsDefault = item.IsDefault,
+                        //CountryCurrencyId = Convert.ToInt32(item.CountryCurrencyId),
+                        //CurrencyType = item.CurrencyType,
+                        Data = item.Data,
+                        ViewMaster = item.ViewMaster,
+                        ViewDetail = item.ViewDetail
                     });
                 }
-                */
-                IEnumerable<DocumentType> tree = treeContractTypes.AsEnumerable();
 
-                //smartGridContractTypes.BuildTree(tree);
+                var tree = treeDocumentTypes.AsEnumerable();
+
+                smartGridDocumentTypes.BuildTree(tree);
 
                 // Находим максимальный уровень среди всех строк, которые являются узлами
                 int maxLevel = smartGridDocumentTypes.GetDepth();
@@ -101,6 +103,11 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             loaderDocumentTypes.HideLoader();
         }
 
+        private async void AddNode(Node ParentNode, DataRow row)
+        {
+
+        }
+
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             RefreshDocumentTypes();
@@ -112,16 +119,18 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         }
     }
 
-
-    // Временный класс - потом удалить
-    class DocumentType
+    public class TreeDocumentType : ITreeData
     {
-        public int Id;
-        public int Parent;
-        public int KindId;
-        public int ContractCurrencyTypeId;
-        public string Name;
-        public string Code;
-        public bool isLeaf;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public int ParentId { get; set; }
+        public string ParentIds { get; set; }
+        public string ParentNames { get; set; }
+        public string ViewMaster {  get; set; }
+        public string ViewDetail {  get; set; }
+        public Struct Data { get; set; }
+        public bool IsDefault {  get; set; }
+        public int KindId {  get; set; }
     }
 }

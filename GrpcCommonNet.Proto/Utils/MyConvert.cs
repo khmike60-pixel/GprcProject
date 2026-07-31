@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using System;
 using System.Collections.Generic;
@@ -88,6 +89,36 @@ namespace GrpcCommonNet.Proto.Utils
                 }
 
                 return node;
+            }
+        }
+
+        public static Struct JsonToStruct(string  json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return new Struct();
+            }
+
+            try
+            {
+                // Ожидается, что root JSON — объект
+                return JsonParser.Default.Parse<Struct>(json);
+            }
+            catch (Exception)
+            {
+                // Если не объект — попытаемся распарсить как Value и поместить в поле "value"
+                try
+                {
+                    var val = JsonParser.Default.Parse<Value>(json);
+                    var s = new Struct();
+                    s.Fields["value"] = val;
+                    return s;
+                }
+                catch (Exception ex)
+                {
+                    // В случае полной ошибки бросаем информативное исключение
+                    throw new InvalidOperationException("Не удалось преобразовать JSON в Protobuf Struct/Value.", ex);
+                }
             }
         }
 

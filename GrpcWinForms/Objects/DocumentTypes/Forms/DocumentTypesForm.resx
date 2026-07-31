@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="smartGridDocumentTypes.ColumnInfo" xml:space="preserve">
-    <value>5,1,0,0,0,-1,Columns:0{Width:30;StyleFixed:"TextAlign:CenterCenter;";}	1{Width:50;StyleFixed:"TextAlign:CenterCenter;";}	2{Width:304;StarWidth:"*";AllowEditing:False;StyleFixed:"TextAlign:CenterCenter;";}	3{Width:304;StarWidth:"*";StyleFixed:"TextAlign:CenterCenter;";}	4{StyleFixed:"TextAlign:CenterCenter;";}	</value>
+    <value>5,1,0,0,0,-1,Columns:0{Width:30;StyleFixed:"TextAlign:CenterCenter;";}	1{Width:50;Name:"Id";StyleFixed:"TextAlign:CenterCenter;";}	2{Width:132;Name:"Name";AllowEditing:False;StyleFixed:"TextAlign:CenterCenter;";}	3{Width:100;Name:"ParentNames";StyleFixed:"TextAlign:CenterCenter;";}	4{Name:"Code";StyleFixed:"TextAlign:CenterCenter;";}	</value>
   </data>
   <data name="smartGridDocumentTypes.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>

@@ -30,4 +30,5 @@ message DocumentType {
 	string view_detail = 11;
 	bool is_default = 12;
 	Checked approved = 13;
+	int32 kind_id = 14;
 }
