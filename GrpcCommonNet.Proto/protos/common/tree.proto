@@ -1,0 +1,13 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+package Common;
+
+message Tree {
+	int32 id = 1;
+	string name = 2;
+	int32 parent = 3;
+	string ids = 4;
+	string parents = 5;
+}

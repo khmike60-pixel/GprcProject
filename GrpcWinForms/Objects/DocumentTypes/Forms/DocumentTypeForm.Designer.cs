@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            C1.Win.Input.ComboBoxItem comboBoxItem1 = new C1.Win.Input.ComboBoxItem();
             lName = new Label();
             lParent = new Label();
             lCurrencyType = new Label();
@@ -35,9 +36,7 @@
             lViewMaster = new Label();
             lViewDetail = new Label();
             tbName = new TextBox();
-            cddParent = new C1.Win.Input.C1DropDownControl();
             cbCurrency = new C1.Win.Input.C1ComboBox();
-            cbCountryCurrency = new C1.Win.Input.C1ComboBox();
             chkDefault = new C1.Win.Input.C1CheckBox();
             btnAdditionalParameters = new C1.Win.Input.C1Button();
             lCode = new Label();
@@ -46,11 +45,12 @@
             tbViewDetail = new TextBox();
             btnCancel = new Button();
             btnOk = new Button();
-            ((System.ComponentModel.ISupportInitialize)cddParent).BeginInit();
+            tbParent = new TextBox();
+            cbCountryCurrency = new C1.Win.Input.C1ComboBox();
             ((System.ComponentModel.ISupportInitialize)cbCurrency).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)cbCountryCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chkDefault).BeginInit();
             ((System.ComponentModel.ISupportInitialize)btnAdditionalParameters).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cbCountryCurrency).BeginInit();
             SuspendLayout();
             // 
             // lName
@@ -115,31 +115,17 @@
             tbName.Size = new Size(318, 23);
             tbName.TabIndex = 1;
             // 
-            // cddParent
-            // 
-            cddParent.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            cddParent.Location = new Point(14, 116);
-            cddParent.Name = "cddParent";
-            cddParent.Size = new Size(318, 23);
-            cddParent.TabIndex = 3;
-            cddParent.Value = "";
-            // 
             // cbCurrency
             // 
+            cbCurrency.DropDownStyle = C1.Win.Input.DropDownStyle.DropDownList;
+            cbCurrency.InitialSelection = C1.Win.Input.InitialSelection.CaretAtStart;
             cbCurrency.Location = new Point(14, 204);
             cbCurrency.Name = "cbCurrency";
+            cbCurrency.ReadOnly = true;
             cbCurrency.Size = new Size(78, 23);
             cbCurrency.TabIndex = 5;
             cbCurrency.Value = "";
-            // 
-            // cbCountryCurrency
-            // 
-            cbCountryCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            cbCountryCurrency.Location = new Point(14, 160);
-            cbCountryCurrency.Name = "cbCountryCurrency";
-            cbCountryCurrency.Size = new Size(318, 23);
-            cbCountryCurrency.TabIndex = 4;
-            cbCountryCurrency.Value = "";
+            cbCurrency.SelectedItemChanged += cbCurrency_SelectedItemChanged;
             // 
             // chkDefault
             // 
@@ -220,12 +206,39 @@
             btnOk.TabIndex = 10;
             btnOk.Text = "Ok";
             btnOk.UseVisualStyleBackColor = true;
+            btnOk.Click += btnOk_Click;
+            // 
+            // tbParent
+            // 
+            tbParent.Location = new Point(14, 116);
+            tbParent.Name = "tbParent";
+            tbParent.ReadOnly = true;
+            tbParent.Size = new Size(316, 23);
+            tbParent.TabIndex = 3;
+            // 
+            // cbCountryCurrency
+            // 
+            cbCountryCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cbCountryCurrency.AutoCompleteMode = AutoCompleteMode.Suggest;
+            cbCountryCurrency.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cbCountryCurrency.DropDownStyle = C1.Win.Input.DropDownStyle.DropDownList;
+            cbCountryCurrency.InitialSelection = C1.Win.Input.InitialSelection.CaretAtStart;
+            comboBoxItem1.DisplayText = "Продажа в DDP (Узбекистан)";
+            comboBoxItem1.Value = "1";
+            cbCountryCurrency.Items.Add(comboBoxItem1);
+            cbCountryCurrency.Location = new Point(14, 160);
+            cbCountryCurrency.Name = "cbCountryCurrency";
+            cbCountryCurrency.ReadOnly = true;
+            cbCountryCurrency.Size = new Size(318, 23);
+            cbCountryCurrency.TabIndex = 4;
+            cbCountryCurrency.Value = "";
             // 
             // DocumentTypeForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(342, 397);
+            Controls.Add(tbParent);
             Controls.Add(btnOk);
             Controls.Add(btnCancel);
             Controls.Add(tbViewDetail);
@@ -236,7 +249,6 @@
             Controls.Add(chkDefault);
             Controls.Add(cbCountryCurrency);
             Controls.Add(cbCurrency);
-            Controls.Add(cddParent);
             Controls.Add(tbName);
             Controls.Add(lViewDetail);
             Controls.Add(lViewMaster);
@@ -248,11 +260,10 @@
             Name = "DocumentTypeForm";
             Text = "Тип документа";
             Load += DocumentTypeForm_Load;
-            ((System.ComponentModel.ISupportInitialize)cddParent).EndInit();
             ((System.ComponentModel.ISupportInitialize)cbCurrency).EndInit();
-            ((System.ComponentModel.ISupportInitialize)cbCountryCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)chkDefault).EndInit();
             ((System.ComponentModel.ISupportInitialize)btnAdditionalParameters).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cbCountryCurrency).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -266,9 +277,7 @@
         private Label lViewMaster;
         private Label lViewDetail;
         private TextBox tbName;
-        private C1.Win.Input.C1DropDownControl cddParent;
         private C1.Win.Input.C1ComboBox cbCurrency;
-        private C1.Win.Input.C1ComboBox cbCountryCurrency;
         private C1.Win.Input.C1CheckBox chkDefault;
         private C1.Win.Input.C1Button btnAdditionalParameters;
         private Label lCode;
@@ -277,5 +286,7 @@
         private TextBox tbViewDetail;
         private Button btnCancel;
         private Button btnOk;
+        private TextBox tbParent;
+        private C1.Win.Input.C1ComboBox cbCountryCurrency;
     }
 }

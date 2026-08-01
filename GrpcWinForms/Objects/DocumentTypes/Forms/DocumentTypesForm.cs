@@ -1,4 +1,5 @@
-﻿using C1.Win.FlexGrid;
+﻿using Accessibility;
+using C1.Win.FlexGrid;
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.DocumentType;
@@ -62,7 +63,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         Id = Convert.ToInt32(item.Id),
                         Name = item.Name,
                         Code = item.Code,
-                        ParentId = Convert.ToInt32(item.Parent),
+                        ParentId = Convert.ToInt32(item.Parent.Id),
+                        Parent = item.Parent,
                         ParentIds = item.Ids,
                         ParentNames = item.Parents,
                         KindId = Convert.ToInt32(item.KindId),
@@ -114,17 +116,19 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             RefreshDocumentTypes();
         }
 
-        private void smartGridDocumentTypes_DoubleClick(object sender, EventArgs e)
+        private async void smartGridDocumentTypes_DoubleClick(object sender, EventArgs e)
         {
             try
             {
-                Node oldTree = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
+                Node treeNode = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
+                TreeDocumentType treeNodeKey = (TreeDocumentType)treeNode.Key;
+                DocumentTypeRequest requestById = new DocumentTypeRequest() { Id = treeNodeKey.Id };
 
-                DocumentType documentType = NodeToDocumentType(oldTree);
-                using DocumentTypeForm f = new DocumentTypeForm();
-                f.documentType = documentType;
-                f.EditMode = false;
-                f.ShowDialog();
+                DocumentTypeResponse responseById = await GrpcClients.GrpcClients.DocumentType.GetDocumentTypeAsync(requestById);
+                using DocumentTypeForm form = new DocumentTypeForm();
+                form.EditMode = false;
+                form.DocumentType = responseById.DocumentType;
+                form.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -132,19 +136,118 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             }
         }
 
-        private void toolStripButtonEdit_Click(object sender, EventArgs e)
+        private async void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
             try
             {
-                Node oldTree = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
-                DocumentType documentType = NodeToDocumentType(oldTree);
+                Node treeNode = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
+                TreeDocumentType treeNodeKey = (TreeDocumentType)treeNode.Key;
+                DocumentTypeRequest requestById = new DocumentTypeRequest() { Id = treeNodeKey.Id };
 
-                using DocumentTypeForm f = new DocumentTypeForm();
-                f.documentType = documentType;
-                f.EditMode = true;
-                if (DialogResult.OK == f.ShowDialog())
+                DocumentTypeResponse responseById = await GrpcClients.GrpcClients.DocumentType.GetDocumentTypeAsync(requestById);
+                using DocumentTypeForm form = new DocumentTypeForm();
+                form.EditMode = true;
+                form.DocumentType = responseById.DocumentType;
+
+                if (DialogResult.OK == form.ShowDialog())
                 {
-                    // UpdateDocumentType();
+                    UpdateDocumentTypeRequest request = new UpdateDocumentTypeRequest()
+                    {
+                        DocumentType = form.DocumentType
+                    };
+
+                    DocumentTypeResponse response = await GrpcClients.GrpcClients.DocumentType.UpdateDocumentTypeAsync(request);
+                    if (response.Result.Status == Status.Ok)
+                    {
+                        DocumentTypeToNode(response.DocumentType, treeNode);
+                        smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node.Data = response.DocumentType.Name;
+                        smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["ParentNames"] = response.DocumentType.Parents;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка: \n" + response.Result.Message, "Оишбка");
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка: \n" + ex.Message, "Оишбка");
+            }
+        }
+
+        private void smartGridDocumentTypes_AfterNodeMove(Node currentNode, Node parentNode, ref bool allowMove)
+        {
+
+            MoveDocumentTypeRequest request = new MoveDocumentTypeRequest()
+            {
+                Id = ((TreeDocumentType)currentNode.Key).Id,
+                NewParentId = ((TreeDocumentType)parentNode.Key).Id
+            };
+
+            DocumentTypeResponse response = GrpcClients.GrpcClients.DocumentType.MoveDocumentType(request);
+            if (response.Result.Status != Status.Ok)
+            {
+                MessageBox.Show("Ошибка: \n" + response.Result.Message, "Оишбка");
+                allowMove = false;
+                return;
+            }
+            //smartGridDocumentTypes.MoveNode(currentNode, parentNode);
+        }
+
+        private void smartGridDocumentTypes_BeforeNodeMove(Node currentNode, Node parentNode, ref bool allowMove)
+        {
+
+        }
+
+        private async void toolStripButtonNew_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Node ParentNode = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
+                TreeDocumentType currentNodeKey = (TreeDocumentType)ParentNode.Key;
+                using DocumentTypeForm form = new DocumentTypeForm();
+                form.EditMode = true;
+                form.DocumentType = new DocumentType()
+                {
+                    Name = "Новый тип документа",
+                    Parent = new Tree() { Id = currentNodeKey.Id, Name = currentNodeKey.Name }
+                };
+
+                if(DialogResult.OK != form.ShowDialog())
+                {
+                    return;
+                }
+
+                CreateDocumentTypeRequest request = new CreateDocumentTypeRequest()
+                {
+                    DocumentType = form.DocumentType
+                };
+
+                DocumentTypeResponse response = await GrpcClients.GrpcClients.DocumentType.CreateDocumentTypeAsync(request);
+                if (response.Result.Status == Status.Ok)
+                {
+
+                    ParentNode.AddNode(NodeTypeEnum.FirstChild, new TreeDocumentType()
+                    {
+                        Id = response.DocumentType.Id,
+                        Name = response.DocumentType.Name,
+                        Code = response.DocumentType.Code,
+                        IsDefault = response.DocumentType.IsDefault,
+                        KindId = response.DocumentType.KindId,
+                        CountryCurrency_Id = response.DocumentType.CountryCurrencyId,
+                        CurrencyType_Id = response.DocumentType.CurrencyType,
+                        Data = response.DocumentType.Data,
+                        ViewDetail = response.DocumentType.ViewDetail,
+                        ViewMaster = response.DocumentType.ViewMaster
+                    });
+                
+                    smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node.Data = response.DocumentType.Name;
+                    smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["ParentNames"] = response.DocumentType.Parents;
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка: \n" + response.Result.Message, "Оишбка");
                 }
             }
             catch (Exception ex)
@@ -156,31 +259,30 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
         #region Технические методы
 
-        private DocumentType NodeToDocumentType(Node node)
+        private Node DocumentTypeToNode(DocumentType documentType, Node node)
         {
-            DocumentType documentType = new DocumentType();
             try
             {
-                TreeDocumentType tree = node.Key as TreeDocumentType;
-
-                documentType = new DocumentType()
-                {
-                    Name = tree.Name,
-                    Parent = tree.ParentId,
-                    Code = tree.Code,
-                    IsDefault = tree.IsDefault,
-                    //                    CountryCurrencyId = tree.CountryCurrencyId,
-                    ViewMaster = tree.ViewMaster,
-                    ViewDetail = tree.ViewDetail,
-                    //                    CurrencyType = tree.CurrencyType,
-                    Data = tree.Data
-                };
+                var tree = (TreeDocumentType)node.Key;
+                tree.Id = Convert.ToInt32(documentType.Id);
+                tree.Name = documentType.Name;
+                tree.Code = documentType.Code;
+                tree.ParentId = Convert.ToInt32(documentType.Parent.Id);
+                tree.Parent = documentType.Parent;
+                tree.ParentIds = documentType.Ids;
+                tree.ParentNames = documentType.Parents;
+                tree.KindId = Convert.ToInt32(documentType.KindId);
+                tree.IsDefault = documentType.IsDefault;
+                tree.ViewMaster = documentType.ViewMaster ?? string.Empty;
+                tree.ViewDetail = documentType.ViewDetail ?? string.Empty;
+                tree.Data = documentType.Data ?? new Struct();
+                return node;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка конвертации NodeToDocumentType");
+                return null;
             }
-            return documentType;
+
         }
 
         #endregion
@@ -193,12 +295,16 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         public string Name { get; set; }
         public string Code { get; set; }
         public int ParentId { get; set; }
+        public Tree Parent { get; set; }
         public string ParentIds { get; set; }
         public string ParentNames { get; set; }
         public string ViewMaster {  get; set; }
         public string ViewDetail {  get; set; }
         public Struct Data { get; set; }
         public bool IsDefault {  get; set; }
+        public int CurrencyType_Id { get; set; }
+        public int CountryCurrency_Id { get; set; }
         public int KindId {  get; set; }
     }
+
 }

@@ -13,6 +13,7 @@ service DocumentTypeServices {
 	rpc GetBranchDocumentTypes(DocumentTypeFilterRequest) returns (ListDocumentTypeResponse);
 	rpc CreateDocumentType(CreateDocumentTypeRequest) returns (DocumentTypeResponse);
 	rpc UpdateDocumentType(UpdateDocumentTypeRequest) returns (DocumentTypeResponse);
+	rpc MoveDocumentType(MoveDocumentTypeRequest) returns (DocumentTypeResponse);
 	rpc DeleteDocumentType(DeleteDocumentTypeRequest) returns (DeleteDocumentTypeResponse);
 	rpc DeleteIdsDocumentType(DeleteIdsDocumentTypeRequest) returns (UndeletedIdsDocumentTypeResponse);
 }
@@ -61,4 +62,9 @@ message DeleteIdsDocumentTypeRequest {
 message UndeletedIdsDocumentTypeResponse {
 	Common.Result result = 1;
 	repeated int32 undeleted_ids = 2;
+}
+
+message MoveDocumentTypeRequest {
+	int32 id = 1;
+	int32 new_parent_id = 2;
 }

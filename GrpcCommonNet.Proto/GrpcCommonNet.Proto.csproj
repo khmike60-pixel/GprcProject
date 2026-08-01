@@ -25,4 +25,7 @@
     <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
     <PackageReference Include="Grpc.Tools" Version="2.76.0" PrivateAssets="All" />
   </ItemGroup>
+  <ItemGroup>
+    <Protobuf Update="protos\common\currency.proto" GrpcServices="Both" />
+  </ItemGroup>
 </Project>

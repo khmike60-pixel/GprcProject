@@ -91,7 +91,7 @@
             // 
             smartGridDocumentTypes.AllowEditing = false;
             smartGridDocumentTypes.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridDocumentTypes.AllowNodeMove = false;
+            smartGridDocumentTypes.AllowNodeMove = true;
             smartGridDocumentTypes.AllowSorting = C1.Win.FlexGrid.AllowSortingEnum.None;
             smartGridDocumentTypes.AutoGenerateColumns = false;
             smartGridDocumentTypes.ColumnInfo = resources.GetString("smartGridDocumentTypes.ColumnInfo");
@@ -115,6 +115,8 @@
             smartGridDocumentTypes.StyleInfo = resources.GetString("smartGridDocumentTypes.StyleInfo");
             smartGridDocumentTypes.TabIndex = 2;
             smartGridDocumentTypes.Tree.Column = 3;
+            smartGridDocumentTypes.BeforeNodeMove += smartGridDocumentTypes_BeforeNodeMove;
+            smartGridDocumentTypes.AfterNodeMove += smartGridDocumentTypes_AfterNodeMove;
             smartGridDocumentTypes.DoubleClick += smartGridDocumentTypes_DoubleClick;
             // 
             // toolStrip1
@@ -135,6 +137,7 @@
             toolStripButtonNew.Name = "toolStripButtonNew";
             toolStripButtonNew.Size = new Size(28, 28);
             toolStripButtonNew.Text = "Новый";
+            toolStripButtonNew.Click += toolStripButtonNew_Click;
             // 
             // toolStripButtonDouble
             // 

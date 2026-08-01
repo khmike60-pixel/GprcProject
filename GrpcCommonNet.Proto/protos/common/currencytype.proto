@@ -1,0 +1,12 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+package Common;
+
+message CurrencyType {
+    int32 id = 1;
+    string name = 2;
+    string code = 3;
+    string comment = 4;
+}

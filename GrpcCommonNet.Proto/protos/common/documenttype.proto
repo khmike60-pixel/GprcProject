@@ -4,7 +4,7 @@ option csharp_namespace = "GrpcCommonNet.Library.Common";
 
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
-import "protos/common/general.proto";
+import "protos/common/tree.proto";
 
 package Common;
 
@@ -18,7 +18,7 @@ message Checked {
 // Модель типа документа
 message DocumentType {
 	int32 id = 1;
-	int32 parent = 2;
+	Tree parent = 2;
 	string ids = 3;
 	string parents = 4;
 	string name = 5;

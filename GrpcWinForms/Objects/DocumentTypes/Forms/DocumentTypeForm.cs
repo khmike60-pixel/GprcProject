@@ -13,7 +13,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 {
     public partial class DocumentTypeForm : Form
     {
-        public DocumentType documentType { get; set; } = new DocumentType();
+        public DocumentType DocumentType { get; set; } = new DocumentType();
         public bool EditMode { get; set; } = false;
 
         public DocumentTypeForm()
@@ -29,32 +29,55 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
         private void DocumentTypeForm_Load(object sender, EventArgs e)
         {
+            // Инициализация ComboBox для выбора типа валюты
             cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "Базовая", Value = 0 });
-            cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "Иная", Value = 0 });
-            cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "УЕ/ЦБ", Value = 0 });
-            cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "Другое", Value = 0 });
+            cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "Иная", Value = 1 });
+            cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "УЕ/ЦБ", Value = 2 });
+            cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "Другое", Value = 3 });
             cbCurrency.AutoCompleteMode = AutoCompleteMode.Suggest;
             cbCurrency.AutoCompleteSource = AutoCompleteSource.ListItems;
             cbCurrency.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.StartsWith;
-            //cbCurrency.SelectedItem = cbCurrency.Items[0];
+            cbCurrency.SelectedItem = cbCurrency.Items[DocumentType.CurrencyType];
 
+            // Инициализация ComboBox для выбора валюты страны
+            cbCountryCurrency.SelectedItem = cbCountryCurrency.Items[DocumentType.CountryCurrencyId];
 
-            tbName.Text = documentType.Name.ToString();
-            tbCode.Text = documentType.Code.ToString();
-            tbViewDetail.Text = documentType.ViewDetail.ToString();
-            tbViewMaster.Text = documentType.ViewMaster.ToString();
-            cbCurrency.SelectedItem = cbCurrency.Items[documentType.CurrencyType];
-            cddParent.Text = documentType.Parent.ToString();
-            chkDefault.Checked = documentType.IsDefault;
+            // Установка значений полей формы на основе объекта documentType
+            tbName.Text = DocumentType.Name.ToString();
+            tbCode.Text = DocumentType.Code.ToString();
+            tbViewDetail.Text = DocumentType.ViewDetail.ToString();
+            tbViewMaster.Text = DocumentType.ViewMaster.ToString();
+            tbParent.Text = DocumentType.Parent.Name.ToString();
+
+            // Установка значения флажка по умолчанию
+            chkDefault.Checked = DocumentType.IsDefault;
 
             if (!EditMode)
             {
                 tbName.ReadOnly = tbCode.ReadOnly = tbViewDetail.ReadOnly = tbViewMaster.ReadOnly = true;
-                cbCurrency.ReadOnly = cddParent.ReadOnly = cbCountryCurrency.ReadOnly = true;
+                cbCurrency.ReadOnly = cbCountryCurrency.ReadOnly = true;
                 chkDefault.Enabled = false;
                 btnOk.Enabled = false;
             }
 
+        }
+
+        private void cbCurrency_SelectedItemChanged(object sender, EventArgs e)
+        {
+            cbCurrency.Text = cbCurrency.SelectedItem.DisplayText;
+            DocumentType.CurrencyType = Convert.ToInt32(cbCurrency.SelectedItem.Value);
+
+        }
+
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            DocumentType.Name = tbName.Text;
+            DocumentType.Code = tbCode.Text;
+            DocumentType.ViewDetail = tbViewDetail.Text;
+            DocumentType.ViewMaster = tbViewMaster.Text;
+            DocumentType.CurrencyType = Convert.ToInt32(cbCurrency.SelectedItem.Value);
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

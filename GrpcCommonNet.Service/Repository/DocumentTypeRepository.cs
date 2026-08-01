@@ -1,5 +1,6 @@
 ﻿using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.DocumentType;
+using GrpcCommonNet.Library.Product;
 using GrpcCommonNet.Proto.Utils;
 using GrpcCommonNet.Service.Models;
 using MySql.Data.MySqlClient;
@@ -29,9 +30,10 @@ namespace GrpcCommonNet.Service.Repository
                 using var cmd = conn.CreateCommand();
                 cmd.CommandText = $@"
                     Select 
-                        *
-                    FROM cwatis.documenttypes d
-                    WHERE d.documenttype_id = @id;
+                        t.*, p.DocumentType_Name as ParentName
+                    FROM cwatis.documenttypes t
+                        left join cwatis.documenttypes p on p.documenttype_id = t.parentid
+                    WHERE t.documenttype_id = @id;
                 ";
                 cmd.Parameters.AddWithValue("id", id);   
                 using var rdr = await cmd.ExecuteReaderAsync();
@@ -111,22 +113,25 @@ namespace GrpcCommonNet.Service.Repository
                         @Approved_By, 
                         @Approved_Date
                     );
-                    select * from cwatis.DocumentTypes t where t.DocumentType_Id = LAST_INSERT_ID();
+                    select t.*, p.DocumentType_Name as ParentName
+                    from cwatis.DocumentTypes t 
+                        left join cwatis.DocumentTypes p on p.DocumentType_Id = t.ParentId
+                    where t.DocumentType_Id = LAST_INSERT_ID();
                 ";
 
                 cmd.Parameters.AddWithValue("DocumentType_Name", documentType.Name);
-                cmd.Parameters.AddWithValue("ParentId", documentType.Parent);
+                cmd.Parameters.AddWithValue("ParentId", documentType.Parent.Id );
                 cmd.Parameters.AddWithValue("DocumentType_Code", documentType.Code);
-                cmd.Parameters.AddWithValue("KindId", documentType.KindId);
+                cmd.Parameters.AddWithValue("KindId", documentType.KindId == 0? null: documentType.KindId);
                 cmd.Parameters.AddWithValue("ContractCurrencyType_Id", documentType.CurrencyType);
                 cmd.Parameters.AddWithValue("DocumentType_Data", documentType.Data);
-                cmd.Parameters.AddWithValue("rfr_countryCurr_Id", documentType.CountryCurrencyId);
+                cmd.Parameters.AddWithValue("rfr_countryCurr_Id", documentType.CountryCurrencyId == 0? null : documentType.CountryCurrencyId);
                 cmd.Parameters.AddWithValue("ViewMaster", documentType.ViewMaster);
                 cmd.Parameters.AddWithValue("ViewDetail", documentType.ViewDetail);
                 cmd.Parameters.AddWithValue("DocumentType_IsDefault", documentType.IsDefault);
-                cmd.Parameters.AddWithValue("Approved_UserId", documentType.Approved.Id);
-                cmd.Parameters.AddWithValue("Approved_By", documentType.Approved.Symbol);
-                cmd.Parameters.AddWithValue("Approved_Date", documentType.Approved.Date);
+                cmd.Parameters.AddWithValue("Approved_UserId", documentType.Approved == null? null : documentType.Approved.Id == 0? null : documentType.Approved.Id);
+                cmd.Parameters.AddWithValue("Approved_By", documentType.Approved == null ? null : documentType.Approved.Symbol);
+                cmd.Parameters.AddWithValue("Approved_Date", documentType.Approved == null ? null : documentType.Approved.Date);
 
                 using var rdr = await cmd.ExecuteReaderAsync();
 
@@ -162,28 +167,31 @@ namespace GrpcCommonNet.Service.Repository
                         t.ContractCurrencyType_Id = @ContractCurrencyType_Id,
                         t.rfr_countryCurr_Id = @rfr_countryCurr_Id,
                         t.ViewMaster = @ViewMaster, ViewDetail = @ViewDetail,
-                        t.DocumentType_IsDefault = @DocumentType_IsDefault, 
+                        -- t.DocumentType_IsDefault = @DocumentType_IsDefault, 
                         t.Approved_UserId = @Approved_UserId,
                         t.Approved_By = @Approved_By, 
                         t.Approved_Date = @Approved_Date
                     where t.DocumentType_Id = @DocumentType_Id;
-                    select * from cwatis.DocumentTypes t where t.DocumentType_Id = @DocumentType_Id;
+                    select t.*, p.DocumentType_Name as ParentName
+                    from cwatis.DocumentTypes t 
+                        left join cwatis.DocumentTypes p on p.DocumentType_Id = t.ParentId
+                    where t.DocumentType_Id = @DocumentType_Id;
                 ";
 
                 cmd.Parameters.AddWithValue("DocumentType_Id", documentType.Id);
                 cmd.Parameters.AddWithValue("DocumentType_Name", documentType.Name);
-                cmd.Parameters.AddWithValue("ParentId", documentType.Parent);
+                cmd.Parameters.AddWithValue("ParentId", documentType.Parent.Id);
                 cmd.Parameters.AddWithValue("DocumentType_Code", documentType.Code);
-                cmd.Parameters.AddWithValue("KindId", documentType.KindId);
-                cmd.Parameters.AddWithValue("ContractCurrencyType_Id", documentType.CurrencyType);
+                cmd.Parameters.AddWithValue("KindId", documentType.KindId == 0? null : documentType.KindId);
+                cmd.Parameters.AddWithValue("ContractCurrencyType_Id", documentType.CurrencyType == 0 ? null : documentType.CurrencyType);
                 cmd.Parameters.AddWithValue("DocumentType_Data", documentType.Data);
-                cmd.Parameters.AddWithValue("rfr_countryCurr_Id", documentType.CountryCurrencyId);
+                cmd.Parameters.AddWithValue("rfr_countryCurr_Id", documentType.CountryCurrencyId == 0 ? null : documentType.CountryCurrencyId);
                 cmd.Parameters.AddWithValue("ViewMaster", documentType.ViewMaster);
                 cmd.Parameters.AddWithValue("ViewDetail", documentType.ViewDetail);
                 cmd.Parameters.AddWithValue("DocumentType_IsDefault", documentType.IsDefault);
-                cmd.Parameters.AddWithValue("Approved_UserId", documentType.Approved.Id);
-                cmd.Parameters.AddWithValue("Approved_By", documentType.Approved.Symbol);
-                cmd.Parameters.AddWithValue("Approved_Date", documentType.Approved.Date);
+                cmd.Parameters.AddWithValue("Approved_UserId", documentType.Approved == null? null : documentType.Approved.Id);
+                cmd.Parameters.AddWithValue("Approved_By", documentType.Approved == null ? null : documentType.Approved.Symbol);
+                cmd.Parameters.AddWithValue("Approved_Date", documentType.Approved == null ? null : documentType.Approved.Date);
 
                 using var rdr = await cmd.ExecuteReaderAsync();
 
@@ -201,6 +209,40 @@ namespace GrpcCommonNet.Service.Repository
             return null;
         }
 
+        public async Task<DocumentType> MoveDocumentTypeAsync(int id, int newParentId)
+        {
+            try
+            {
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = $@"
+                    UPDATE cwatis.documenttypes t
+                    SET 
+                        t.ParentId = @NewParentId
+                    where t.DocumentType_Id = @DocumentType_Id;
+                    select t.*, p.DocumentType_Name as ParentName
+                    from cwatis.DocumentTypes t 
+                        left join cwatis.DocumentTypes p on p.DocumentType_Id = t.ParentId
+                    where t.DocumentType_Id = @DocumentType_Id;
+                ";
+                cmd.Parameters.AddWithValue("DocumentType_Id", id);
+                cmd.Parameters.AddWithValue("NewParentId", newParentId);
+                var rdr = await cmd.ExecuteReaderAsync();
+                if (await rdr.ReadAsync())
+                {
+                    DocumentType docType = FillDocType(rdr);
+                    return docType;
+                }
+                else return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in MoveDocumentTypeAsync: " + ex.Message);
+                throw;
+            }
+        }
+
 
         #endregion
 
@@ -210,7 +252,9 @@ namespace GrpcCommonNet.Service.Repository
         {
             DocumentType docType = new DocumentType();
             docType.Id = rdr["DocumentType_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["DocumentType_id"]);
-            docType.Parent = rdr["ParentId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["ParentId"]);
+            docType.Parent = new Tree();
+            docType.Parent.Id = rdr["ParentId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["ParentId"]);
+            docType.Parent.Name = rdr["ParentName"] == DBNull.Value ? "" : rdr["ParentName"].ToString();
             docType.Ids = rdr["Ids"] == DBNull.Value ? "" : rdr["Ids"].ToString() ?? "";
             docType.Parents = rdr["Parents"] == DBNull.Value ? "" : rdr["Parents"].ToString() ?? "";
             docType.Name = rdr["DocumentType_Name"] == DBNull.Value ? "" : rdr["DocumentType_Name"].ToString() ?? "";
