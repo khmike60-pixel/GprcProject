@@ -17,13 +17,17 @@ namespace GrpcWinForms.Controls.PeriodControl
     {
         private DateTime _startDate;
         private DateTime _endDate;
+        private DateTime _oldStartDate;
+        private DateTime _oldEndDate;
+
         public C1.Win.Input.Base.C1DropDownControlBase DropDownOwner;
         public DateTime StartDate
         {
             get => _startDate;
             set
             {
-                DropDownOwner.Text = value.ToShortDateString() + " - " + _endDate.ToShortDateString();
+                if (DropDownOwner != null) 
+                    DropDownOwner.Text = value.ToShortDateString() + " - " + _endDate.ToShortDateString();
                 _startDate = value;
             }
         }
@@ -32,7 +36,8 @@ namespace GrpcWinForms.Controls.PeriodControl
             get => _endDate;
             set
             {
-                DropDownOwner.Text = _startDate.ToShortDateString() + " - " + value.ToShortDateString();
+                if (DropDownOwner != null)
+                    DropDownOwner.Text = _startDate.ToShortDateString() + " - " + value.ToShortDateString();
                 _endDate = value;
             }
         }
@@ -62,6 +67,8 @@ namespace GrpcWinForms.Controls.PeriodControl
                         "I квартал ", "II квартал ", "III квартал ", "IV квартал "
                     };
             editQuarter.Items.AddRange(quarters);
+            _oldEndDate = StartDate;
+            _oldStartDate = StartDate;
         }
 
         public void SetPeriod(DateTime? startDate, DateTime? endDate)
@@ -100,18 +107,6 @@ namespace GrpcWinForms.Controls.PeriodControl
 
         public DateTime GetStartPeriod() => StartDate;
         public DateTime GetEndPeriod() => EndDate;
-
-        private void btnOk_Click(object sender, EventArgs e)
-        {
-            PeriodComponent p = (PeriodComponent)(((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner);
-            if (p.DroppedDown) p.DroppedDown = false;
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            PeriodComponent p = (PeriodComponent)(((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner);
-            if (p.DroppedDown) p.DroppedDown = false;
-        }
 
         private void rb_CheckedChanged(object sender, EventArgs e)
         {
@@ -312,5 +307,35 @@ namespace GrpcWinForms.Controls.PeriodControl
             if (DropDownOwner == null) return;
             EndDate = DateTime.Parse(editEnd.Value.ToString());
         }
+
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            StartDate = DateTime.Parse(editStart.Value.ToString());
+            EndDate = DateTime.Parse(editEnd.Value.ToString());
+            PeriodComponent p = (PeriodComponent)(((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner);
+            if (p.DroppedDown) p.DroppedDown = false;
+
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            StartDate = _oldStartDate;
+            EndDate = _oldEndDate;
+            PeriodComponent p = (PeriodComponent)(((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner);
+            if (p.DroppedDown) p.DroppedDown = false;
+
+        }
+
+        private void control_Enter(object sender, EventArgs e)
+        {
+            StartDate = DateTime.Parse(editStart.Value.ToString());
+            EndDate = DateTime.Parse(editEnd.Value.ToString());
+            if (((C1.Win.Input.DropDownForm)this.Parent) != null)
+            {
+                PeriodComponent p = (PeriodComponent)(((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner);
+                if (p.DroppedDown) p.DroppedDown = false;
+            }
+        }
+
     }
 }

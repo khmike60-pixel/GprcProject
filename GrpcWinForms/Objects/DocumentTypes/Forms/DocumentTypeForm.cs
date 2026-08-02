@@ -40,7 +40,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             cbCurrency.SelectedItem = cbCurrency.Items[DocumentType.CurrencyType];
 
             // Инициализация ComboBox для выбора валюты страны
-            cbCountryCurrency.SelectedItem = cbCountryCurrency.Items[DocumentType.CountryCurrencyId];
+            if (DocumentType.CountryCurrencyId == 0) DocumentType.CountryCurrencyId = 1; // Установка значения по умолчанию, если оно равно 0
+            cbCountryCurrency.SelectedItem = cbCountryCurrency.Items[DocumentType.CountryCurrencyId - 1 ];
 
             // Установка значений полей формы на основе объекта documentType
             tbName.Text = DocumentType.Name.ToString();

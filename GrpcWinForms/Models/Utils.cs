@@ -1,4 +1,5 @@
 ﻿using C1.Win.FlexGrid;
+using GrpcWinForms.Objects.Contracts.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,44 @@ namespace GrpcWinForms.Models
                 }
             }
             return _listGrid;
+        }
+
+        /// <summary>
+        /// Динамически создает экземпляр формы контракта по ее текстовому типу.
+        /// </summary>
+        /// <param name="contractId">Идентификатор контракта.</param>
+        /// <param name="contractType">Полное имя класса формы (включая Namespace).</param>
+        /// <returns>Экземпляр созданной формы или null в случае ошибки.</returns>
+        public static ContractFormClass CreateForm(string contractType = "GrpcWinForms.Objects.Contracts.Forms.SaleStandart.ContractStandartForm")
+        {
+            try
+            {
+                // Получаем тип формы по строковому имени
+                Type formType = Type.GetType(contractType);
+
+                // Проверяем, существует ли тип и является ли он формой
+                if (formType != null && typeof(ContractFormClass).IsAssignableFrom(formType))
+                {
+                    // Создаем экземпляр формы и возвращаем его
+                    ContractFormClass form = (ContractFormClass)Activator.CreateInstance(formType);
+                    return form;
+                }
+                else
+                { 
+                    MessageBox.Show($"Ошибка: Тип формы '{contractType}' не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+            }
+            catch (MissingMethodException)
+            {
+                MessageBox.Show($"Ошибка: У формы '{contractType}' нет конструктора, принимающего int.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
         }
     }
 }

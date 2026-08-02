@@ -167,6 +167,7 @@
             toolStripButtonDelete.Name = "toolStripButtonDelete";
             toolStripButtonDelete.Size = new Size(28, 28);
             toolStripButtonDelete.Text = "Удалить";
+            toolStripButtonDelete.Click += toolStripButtonDelete_Click;
             // 
             // toolStripButtonRefresh
             // 
@@ -201,6 +202,7 @@
             toolStripButtonPath.Name = "toolStripButtonPath";
             toolStripButtonPath.Size = new Size(28, 28);
             toolStripButtonPath.Text = "Только текущая ветка";
+            toolStripButtonPath.Click += toolStripButtonPath_Click;
             // 
             // DocumentTypesForm
             // 

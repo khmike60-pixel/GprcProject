@@ -8,6 +8,7 @@ using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Forms;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
+using GrpcWinForms.Objects.Contracts.Models;
 using SmartGrid;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == 0) { child.Activate(); return; }
             }
-            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent};
+            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent };
             f.Show();
 
         }
@@ -70,7 +71,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 ListContractsRequest request = new ListContractsRequest()
                 {
-                    StartDate = period.StartDate.ToUniversalTime().ToTimestamp(), 
+                    StartDate = period.StartDate.ToUniversalTime().ToTimestamp(),
                     EndDate = period.EndDate.ToUniversalTime().ToTimestamp()
                 };
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
@@ -96,7 +97,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         private void ContractsForm_Load(object sender, EventArgs e)
         {
             period.StartDate = new DateTime(DateTime.Now.Year, 1, 1);
-            period.EndDate   = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
+            period.EndDate = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
 
             RefreshContract();
         }
@@ -149,7 +150,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     }
                 case "colType":
                     {
-                        e.Value = contract.TypeContract == null ? "" : contract.TypeContract.TypeContractName ?? "";
+                        e.Value = contract.TypeContract == null ? "" : contract.TypeContract.Name ?? "";
                         break;
                     }
             }
@@ -194,12 +195,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         {
             foreach (Form child in MdiParent.MdiChildren)
             {
-                if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id) { child.Activate(); return; }
+                if (child is ContractStandartForm &&
+                    ((ContractStandartForm)child).ContractId == ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id)
+                { child.Activate(); return; }
             }
             var f = new ContractStandartForm(0) { MdiParent = this.MdiParent };
             f.ContractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
             f.Show();
-
         }
 
         private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
@@ -246,6 +248,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         }
 
+        private void smartGridContracts_DoubleClick(object sender, EventArgs e)
+        {
+            toolStripButtonEdit_Click(sender, e);
+        }
+
+
         #region Методы для companyDropDown
         private BindingList<Company> CompanyFilterLoad(string filter)
         {
@@ -273,12 +281,38 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             return _contragents;
         }
 
-
         #endregion
 
-        private void smartGridContracts_DoubleClick(object sender, EventArgs e)
+        private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            toolStripButtonEdit_Click(sender, e);
+            try
+            {
+                int contractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
+                string contractType = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Name ?? "";
+
+                // Проверяем, не открыт ли уже экземпляр с таким ContractId
+                foreach (Form child in MdiParent.MdiChildren)
+                {
+                    if (child is ContractFormClass contractForm && contractForm.ContractId == contractId)
+                    {
+                        child.Activate();
+                        return;
+                    }
+                }
+
+                // НЕ использовать using для форм, показываемых модельно (Show)
+                string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.SaleStandart";
+                string nameForm = "ContractStandartForm";
+                var form = (ContractFormClass)Utils.CreateForm($"{nameSpace}.{nameForm}");
+                form.MdiParent = this.MdiParent;
+                form.ContractId = contractId;
+                form.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
         }
     }
 }

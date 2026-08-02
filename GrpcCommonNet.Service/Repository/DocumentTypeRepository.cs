@@ -243,6 +243,67 @@ namespace GrpcCommonNet.Service.Repository
             }
         }
 
+        public async Task<bool> DeleteByIdAsync(int id)
+        {
+            try
+            {
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = @"DELETE FROM cwatis.documenttypes t WHERE t.DocumentType_Id = @Id";
+                cmd.Parameters.AddWithValue("@Id", id);
+                var rowsAffected = await cmd.ExecuteNonQueryAsync();
+                return rowsAffected > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в DeleteByIdAsync: " + ex.Message);
+            }
+
+        }
+
+        public async Task<List<int>> DeleteIdsAsync(IEnumerable<int> ids)
+        {
+            try
+            {
+                var deleted = new List<int>();
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+                using var cmd = conn.CreateCommand();
+                // Build parameters
+                var idx = 0;
+                var parts = new List<string>();
+                foreach (var id in ids)
+                {
+                    var pname = "@id" + idx++;
+                    parts.Add(pname);
+                    cmd.Parameters.AddWithValue(pname, id);
+                }
+                if (parts.Count == 0) return deleted;
+                cmd.CommandText =
+                   $"DELETE IGNORE FROM cwatis.documenttypes t WHERE t.DocumentType_Id IN ({string.Join(',', parts)}); " +
+                   $"SELECT GROUP_CONCAT(t.DocumentType_Id) FROM cwatis.documenttypes t WHERE t.DocumentType_Id IN ({string.Join(',', parts)}); ";
+
+                var rdr = await cmd.ExecuteReaderAsync();
+
+                var listAffected = rdr.Read() ? rdr.GetValue(0) : String.Empty;
+
+                string[] numberStrings = { };
+                List<int> Affected = new List<int>();
+
+                if (listAffected != null && !listAffected.ToString().Equals(String.Empty))
+                {
+                    numberStrings = ((string)listAffected).Split(',');
+                    Affected = numberStrings.Select(s => int.Parse(s.Trim())).ToList();
+                }
+
+                return Affected;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в DeleteIdsAsync: " + ex.Message);
+            }
+        }
 
         #endregion
 

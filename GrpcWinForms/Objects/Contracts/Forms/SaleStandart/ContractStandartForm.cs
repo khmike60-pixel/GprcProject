@@ -3,6 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
+using GrpcWinForms.Objects.Contracts.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,8 +18,8 @@ using static C1.Util.Win.Win32;
 
 namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
 {
-    public partial class ContractStandartForm : Form
-    {
+    public partial class ContractStandartForm : ContractFormClass
+    {        
         private int contractId = 0;
         public int ContractId
         {

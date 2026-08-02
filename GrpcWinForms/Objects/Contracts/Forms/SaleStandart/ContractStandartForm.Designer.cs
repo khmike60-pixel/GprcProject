@@ -1,8 +1,9 @@
 ﻿using GrpcWinForms.Objects.Contracts.Forms.Controls;
+using GrpcWinForms.Objects.Contracts.Models;
 
 namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
 {
-    partial class ContractStandartForm
+    partial class ContractStandartForm 
     {
         /// <summary>
         /// Required designer variable.

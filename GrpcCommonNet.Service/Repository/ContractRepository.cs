@@ -31,9 +31,10 @@ public class ContractRepository
                         SELECT 
                             c.* , l.*, 
                             u.Short,
-                            cu.Abbrev
+                            cu.Abbrev, t.DocumentType_Name
                         FROM cwatis.contracts c 
                             LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+                            left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
                             LEFT JOIN cwatis.contractlines l ON c.contract_id = l.contract_Id
                             LEFT JOIN global_db.rfr_units u ON l.UnitId = u.UnitId
                         WHERE 1=1
@@ -77,7 +78,10 @@ public class ContractRepository
                     FROM cwatis.contracts c
                     where c.contract_PreviousId is null
                 )
-                SELECT * 
+                SELECT 
+                    cnt.*,
+                    c.DocumentType_Name as DocumentType_Name,
+                    cu.Abbrev as Abbrev
                 from cnt
                     left join cwatis.documenttypes c on c.DocumentType_Id = cnt.DocumentType_Id
                     LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = cnt.currencyId
@@ -218,10 +222,10 @@ public class ContractRepository
         contract.Sum = rdr["Sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0,2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Sum"]),2);
         contract.Amount = rdr["Amount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Amount"]), 2);
         contract.SumVat = rdr["SumVat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["SumVat"]), 2);
-        contract.TypeContract = new TypeContract()
+        contract.TypeContract = new DocumentType()
         {
-            TypeContractId = rdr["DocumentType_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["DocumentType_Id"]),
-            //TypeContractName = rdr["ContractType_Name"] == DBNull.Value ? "" : rdr["ContractType_Name"].ToString() ?? ""
+            Id = rdr["DocumentType_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["DocumentType_Id"]),
+            Name = rdr["DocumentType_Name"] == DBNull.Value ? "" : rdr["DocumentType_Name"].ToString() ?? ""
         };
         // Исправление: преобразование строки JSON в Struct
         if (rdr["contract_data"] == DBNull.Value || string.IsNullOrWhiteSpace(rdr["contract_data"].ToString()))

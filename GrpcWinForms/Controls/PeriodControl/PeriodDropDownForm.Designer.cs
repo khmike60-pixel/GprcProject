@@ -46,6 +46,8 @@ namespace GrpcWinForms.Controls.PeriodControl
             editStart = new C1.Win.Calendar.C1DateEdit();
             editEnd = new C1.Win.Calendar.C1DateEdit();
             rbFree = new RadioButton();
+            btnCancel = new Button();
+            btnOk = new Button();
             ((System.ComponentModel.ISupportInitialize)editYear).BeginInit();
             ((System.ComponentModel.ISupportInitialize)editQuarter).BeginInit();
             ((System.ComponentModel.ISupportInitialize)editMonth).BeginInit();
@@ -113,6 +115,7 @@ namespace GrpcWinForms.Controls.PeriodControl
             editYear.TabIndex = 1;
             editYear.Value = 2026;
             editYear.TextChanged += editYear_TextChanged;
+            editYear.Enter += control_Enter;
             // 
             // editQuarter
             // 
@@ -128,6 +131,7 @@ namespace GrpcWinForms.Controls.PeriodControl
             editQuarter.TabIndex = 3;
             editQuarter.Value = "";
             editQuarter.SelectedIndexChanged += editQuarter_SelectedIndexChanged;
+            editQuarter.Enter += control_Enter;
             editQuarter.Leave += editQuarter_Leave;
             // 
             // editMonth
@@ -144,6 +148,7 @@ namespace GrpcWinForms.Controls.PeriodControl
             editMonth.TabIndex = 5;
             editMonth.Value = "";
             editMonth.SelectedIndexChanged += editMonth_SelectedIndexChanged;
+            editMonth.Enter += control_Enter;
             // 
             // rbYear
             // 
@@ -207,6 +212,7 @@ namespace GrpcWinForms.Controls.PeriodControl
             editStart.TabIndex = 8;
             editStart.Value = new DateTime(2026, 1, 1, 0, 0, 0, 0);
             editStart.TextChanged += editStart_TextChanged;
+            editStart.Enter += control_Enter;
             // 
             // editEnd
             // 
@@ -227,7 +233,7 @@ namespace GrpcWinForms.Controls.PeriodControl
             editEnd.Size = new Size(116, 23);
             editEnd.TabIndex = 9;
             editEnd.Value = new DateTime(2026, 12, 31, 0, 0, 0, 0);
-            editEnd.TextChanged += editEnd_TextChanged;
+            editEnd.TextChanged += control_Enter;
             // 
             // rbFree
             // 
@@ -240,10 +246,32 @@ namespace GrpcWinForms.Controls.PeriodControl
             rbFree.UseVisualStyleBackColor = true;
             rbFree.CheckedChanged += rb_CheckedChanged;
             // 
+            // btnCancel
+            // 
+            btnCancel.Location = new Point(172, 179);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new Size(75, 23);
+            btnCancel.TabIndex = 10;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnOk
+            // 
+            btnOk.Location = new Point(91, 179);
+            btnOk.Name = "btnOk";
+            btnOk.Size = new Size(75, 23);
+            btnOk.TabIndex = 11;
+            btnOk.Text = "Ok";
+            btnOk.UseVisualStyleBackColor = true;
+            btnOk.Click += btnOk_Click;
+            // 
             // PeriodDropDownForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(btnOk);
+            Controls.Add(btnCancel);
             Controls.Add(rbFree);
             Controls.Add(editEnd);
             Controls.Add(editStart);
@@ -260,7 +288,7 @@ namespace GrpcWinForms.Controls.PeriodControl
             Controls.Add(labelQuarter);
             Controls.Add(labelYear);
             Name = "PeriodDropDownForm";
-            Size = new Size(250, 180);
+            Size = new Size(250, 207);
             ((System.ComponentModel.ISupportInitialize)editYear).EndInit();
             ((System.ComponentModel.ISupportInitialize)editQuarter).EndInit();
             ((System.ComponentModel.ISupportInitialize)editMonth).EndInit();
@@ -288,5 +316,7 @@ namespace GrpcWinForms.Controls.PeriodControl
         private C1.Win.Calendar.C1DateEdit editStart;
         private C1.Win.Calendar.C1DateEdit editEnd;
         private RadioButton rbFree;
+        private Button btnCancel;
+        private Button btnOk;
     }
 }

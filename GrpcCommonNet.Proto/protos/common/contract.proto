@@ -12,6 +12,7 @@ import "protos/common/unit.proto";
 import "protos/common/department.proto";
 import "protos/common/currency.proto";
 import "protos/common/product.proto";
+import "protos/common/documenttype.proto";
 
 
 
@@ -60,7 +61,7 @@ message Contract {
   int32 direct = 2;										// Направление сделки относительно нашей компании: 0 - реализация (Seller = наша орг), 1 - приобретение.
   int32 root_id = 3;									// Ссылка на Первичный контракт (основной) 
   int32 parent_id = 4;									// Ссылка на Родительскую запись, из которой "порождена" данная (цепочка допсоглашений)
-  TypeContract type_contract = 5;						// Тип контракта
+  Common.DocumentType type_contract = 5;						// Тип контракта
   int32 state = 6;										// Статус контракта (новый, выдан клиенту, заключен, в работе, завершен)
 
   // Контрагенты по контракту

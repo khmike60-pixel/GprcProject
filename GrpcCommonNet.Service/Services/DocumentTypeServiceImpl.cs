@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using GrpcCommonNet.Library.Application;
 using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Library.Department;
 using GrpcCommonNet.Library.DocumentType;
 using GrpcCommonNet.Service.Models;
@@ -153,6 +154,48 @@ public class DocumentTypeServiceImpl : DocumentTypeServices.DocumentTypeServices
         {
             _logger.LogError(ex, ex.Message);
             return new DocumentTypeResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+        }
+    }
+
+    public override async Task<DeleteDocumentTypeResponse> DeleteDocumentType(DeleteDocumentTypeRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"DeleteCurrency called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            DeleteDocumentTypeResponse resp = new DeleteDocumentTypeResponse();
+
+            var ok = await _repo.DeleteByIdAsync(request.Id);
+            resp = new DeleteDocumentTypeResponse
+            {
+                Result = ok ? new Result { Status = Status.Ok } : new Result { Status = Status.NotFound }
+            };
+            return resp;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return new DeleteDocumentTypeResponse { Result = new Result { Status = Status.BadRequest } };
+        }
+    }
+
+    public override async Task<UndeletedIdsDocumentTypeResponse> DeleteIdsDocumentType(DeleteIdsDocumentTypeRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"UndeletedIdsDocumentType called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        try
+        {
+            UndeletedIdsDocumentTypeResponse resp = new UndeletedIdsDocumentTypeResponse();
+            var ids = await _repo.DeleteIdsAsync(request.Ids);
+            resp.UndeletedIds.AddRange(ids);
+            resp.Result = new Result { Status = Status.Ok };
+            return resp;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return new UndeletedIdsDocumentTypeResponse { Result = new Result { Status = Status.BadRequest } };
         }
     }
 }
