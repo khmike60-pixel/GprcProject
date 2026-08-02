@@ -2,7 +2,7 @@
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Proto.Utils;
-using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
+using GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts;
 using GrpcWinForms.Objects.Contracts.Models;
 using System;
 using System.Collections.Generic;
@@ -16,9 +16,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static C1.Util.Win.Win32;
 
-namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
-{
-    public partial class ContractStandartForm : ContractFormClass
+namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
+{ 
+    public partial class ContractSaleStandartForm : ContractFormClass
     {        
         private int contractId = 0;
         public int ContractId
@@ -27,7 +27,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
             set { contractId = value; }
         }
 
-        public ContractStandartForm()
+        public ContractSaleStandartForm()
         {
             InitializeComponent();
 
@@ -40,7 +40,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
 
         }
 
-        public ContractStandartForm(int id)
+        public ContractSaleStandartForm(int id)
         {
             InitializeComponent();
             ContractId = id;

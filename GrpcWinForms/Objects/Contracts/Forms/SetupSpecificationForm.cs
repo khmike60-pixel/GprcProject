@@ -1,5 +1,5 @@
 ﻿using GrpcCommonNet.Library.Common;
-using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
+using GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts;
 using Microsoft.VisualBasic.ApplicationServices;
 using Newtonsoft.Json;
 using System;

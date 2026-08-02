@@ -7,7 +7,7 @@ using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Forms;
 using GrpcWinForms.Models;
-using GrpcWinForms.Objects.Contracts.Forms.SaleStandart;
+using GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts;
 using GrpcWinForms.Objects.Contracts.Models;
 using SmartGrid;
 using System;
@@ -57,9 +57,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         {
             foreach (Form child in MdiParent.MdiChildren)
             {
-                if (child is ContractStandartForm && ((ContractStandartForm)child).ContractId == 0) { child.Activate(); return; }
+                if (child is ContractSaleStandartForm && ((ContractSaleStandartForm)child).ContractId == 0) { child.Activate(); return; }
             }
-            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent };
+            var f = new ContractSaleStandartForm(0) { MdiParent = this.MdiParent };
             f.Show();
 
         }
@@ -195,11 +195,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         {
             foreach (Form child in MdiParent.MdiChildren)
             {
-                if (child is ContractStandartForm &&
-                    ((ContractStandartForm)child).ContractId == ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id)
+                if (child is ContractSaleStandartForm &&
+                    ((ContractSaleStandartForm)child).ContractId == ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id)
                 { child.Activate(); return; }
             }
-            var f = new ContractStandartForm(0) { MdiParent = this.MdiParent };
+            var f = new ContractSaleStandartForm(0) { MdiParent = this.MdiParent };
             f.ContractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
             f.Show();
         }
@@ -253,6 +253,37 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             toolStripButtonEdit_Click(sender, e);
         }
 
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int contractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
+                string contractType = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Name ?? "";
+
+                // Проверяем, не открыт ли уже экземпляр с таким ContractId
+                foreach (Form child in MdiParent.MdiChildren)
+                {
+                    if (child is ContractFormClass contractForm && contractForm.ContractId == contractId)
+                    {
+                        child.Activate();
+                        return;
+                    }
+                }
+
+                string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts";
+                string nameForm = "ContractSaleStandartForm";
+                string fullname = $"{nameSpace}.{nameForm}";
+                var form = (ContractFormClass)Utils.CreateForm(fullname);
+                form.MdiParent = this.MdiParent;
+                form.ContractId = contractId;
+                form.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
 
         #region Методы для companyDropDown
         private BindingList<Company> CompanyFilterLoad(string filter)
@@ -283,36 +314,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         #endregion
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                int contractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
-                string contractType = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Name ?? "";
 
-                // Проверяем, не открыт ли уже экземпляр с таким ContractId
-                foreach (Form child in MdiParent.MdiChildren)
-                {
-                    if (child is ContractFormClass contractForm && contractForm.ContractId == contractId)
-                    {
-                        child.Activate();
-                        return;
-                    }
-                }
-
-                // НЕ использовать using для форм, показываемых модельно (Show)
-                string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.SaleStandart";
-                string nameForm = "ContractStandartForm";
-                var form = (ContractFormClass)Utils.CreateForm($"{nameSpace}.{nameForm}");
-                form.MdiParent = this.MdiParent;
-                form.ContractId = contractId;
-                form.Show();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-        }
     }
 }

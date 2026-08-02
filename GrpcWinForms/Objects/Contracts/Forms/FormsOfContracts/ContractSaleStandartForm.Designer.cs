@@ -1,9 +1,9 @@
 ﻿using GrpcWinForms.Objects.Contracts.Forms.Controls;
 using GrpcWinForms.Objects.Contracts.Models;
 
-namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
+namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
 {
-    partial class ContractStandartForm 
+    partial class ContractSaleStandartForm 
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContractStandartForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContractSaleStandartForm));
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();

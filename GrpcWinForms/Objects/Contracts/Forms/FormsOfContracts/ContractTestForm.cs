@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Contracts.Forms.SaleStandart
+namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
 {
     public partial class ContractTestForm : ContractFormClass
     {
