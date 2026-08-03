@@ -163,6 +163,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         DocumentTypeToNode(response.DocumentType, treeNode);
                         smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node.Data = response.DocumentType.Name;
                         smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["ParentNames"] = response.DocumentType.Parents;
+                        smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Code"] = response.DocumentType.Code;
+
                     }
                     else
                     {

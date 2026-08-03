@@ -2,7 +2,7 @@
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Proto.Utils;
-using GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts;
+using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
 using System;
 using System.Collections.Generic;
@@ -16,16 +16,16 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static C1.Util.Win.Win32;
 
-namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
+namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 { 
     public partial class ContractSaleStandartForm : ContractFormClass
     {        
-        private int contractId = 0;
-        public int ContractId
-        {
-            get { return contractId; }
-            set { contractId = value; }
-        }
+        //private int contractId = 0;
+        //public int ContractId
+        //{
+        //    get { return contractId; }
+        //    set { contractId = value; }
+        //}
 
         public ContractSaleStandartForm()
         {
@@ -60,11 +60,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
 
         private void ContractStandartForm_Load(object sender, EventArgs e)
         {
-            if (contractId == 0)
+            if (this.ContractId == 0)
             {
                 return;
             }
-            GetContractRequest requestContract = new GetContractRequest { ContractId = contractId };
+            GetContractRequest requestContract = new GetContractRequest { ContractId = this.ContractId };
             ContractResponse responseContract = GrpcClients.GrpcClients.Contract.GetContract(requestContract);
             headContractControl.SetControls(responseContract.Contract);
             sumContractControl1.SetControls(responseContract.Contract);
@@ -110,6 +110,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
 
             historyContractControl.smartGridHistory.GetUnboundValue += smartGridHistory_GetUnboundValue;
             historyContractControl.smartGridHistory.DataSource = responseChain.Contracts;
+
+            this.Text = $"Контракт № {responseContract.Contract.Number} от {responseContract.Contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
         }
 
         private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)

@@ -1,7 +1,7 @@
 ﻿using GrpcWinForms.Objects.Contracts.Forms.Controls;
 using GrpcWinForms.Objects.Contracts.Models;
 
-namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
+namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 {
     partial class ContractSaleStandartForm 
     {
@@ -143,7 +143,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
             // sumContractControl1
             // 
             sumContractControl1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            sumContractControl1.Location = new Point(574, 34);
+            sumContractControl1.Location = new Point(581, 34);
             sumContractControl1.MinimumSize = new Size(277, 136);
             sumContractControl1.Name = "sumContractControl1";
             sumContractControl1.Size = new Size(277, 136);
@@ -452,7 +452,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
             panel1.Size = new Size(864, 622);
             panel1.TabIndex = 3;
             // 
-            // ContractStandartForm
+            // ContractSaleStandartForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -460,7 +460,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
             Controls.Add(panel1);
             Controls.Add(panelOk);
             MinimumSize = new Size(880, 633);
-            Name = "ContractStandartForm";
+            Name = "ContractSaleStandartForm";
             Text = "Контракт (обычная купля-продажа)";
             Load += ContractStandartForm_Load;
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();

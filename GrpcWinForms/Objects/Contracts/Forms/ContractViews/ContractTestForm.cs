@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
+namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 {
     public partial class ContractTestForm : ContractFormClass
     {
@@ -18,5 +18,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
             InitializeComponent();
 
         }
+
+        public ContractTestForm(int contractId)
+        {
+            InitializeComponent();
+            ContractId = contractId;
+
+        }
+
     }
 }

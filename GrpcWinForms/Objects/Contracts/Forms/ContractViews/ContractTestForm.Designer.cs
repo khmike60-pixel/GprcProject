@@ -1,4 +1,4 @@
-﻿namespace GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts
+﻿namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 {
     partial class ContractTestForm
     {

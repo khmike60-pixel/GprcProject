@@ -65,7 +65,6 @@
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripButtonHistory = new ToolStripButton();
             toolStripButton1 = new ToolStripButton();
-            toolStripButton2 = new ToolStripButton();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)period).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
@@ -331,7 +330,7 @@
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(24, 24);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1, toolStripButtonHistory, toolStripButton1, toolStripButton2 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1, toolStripButtonHistory, toolStripButton1 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(1085, 31);
@@ -412,16 +411,6 @@
             toolStripButton1.Size = new Size(28, 28);
             toolStripButton1.Text = "toolStripButton1";
             // 
-            // toolStripButton2
-            // 
-            toolStripButton2.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            toolStripButton2.Image = (Image)resources.GetObject("toolStripButton2.Image");
-            toolStripButton2.ImageTransparentColor = Color.Magenta;
-            toolStripButton2.Name = "toolStripButton2";
-            toolStripButton2.Size = new Size(31, 28);
-            toolStripButton2.Text = "Test";
-            toolStripButton2.Click += toolStripButton2_Click;
-            // 
             // ContractsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -480,6 +469,5 @@
         private Contragents.Components.CompanyDropDown companySeller;
         private Contragents.Components.CompanyDropDown companyBuyer;
         private GrpcWinForms.Controls.PeriodControl.PeriodComponent period;
-        private ToolStripButton toolStripButton2;
     }
 }

@@ -7,7 +7,7 @@ using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Forms;
 using GrpcWinForms.Models;
-using GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts;
+using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
 using SmartGrid;
 using System;
@@ -76,7 +76,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 };
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
-                    Paths = { "id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data", "sum" }
+                    Paths = { "id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data", "sum", "type_contract" }
                 };
                 ListContractsResponse response = await GrpcClients.GrpcClients.Contract.GetListContractsAsync(request);
 
@@ -250,17 +250,20 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void smartGridContracts_DoubleClick(object sender, EventArgs e)
         {
-            toolStripButtonEdit_Click(sender, e);
+            ViewContract(sender, e);
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void ViewContract(object sender, EventArgs e)
         {
-            string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts";
+            string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.ContractViews";
             string nameForm = "ContractSaleStandartForm";
             string fullTypeContract = $"{nameSpace}.{nameForm}";
             try
             {
                 int contractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
+                var contractType_Name = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Name;
+                var contractType_Code = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Code;
+                fullTypeContract = $"{nameSpace}.{contractType_Code}";
                 string contractType = fullTypeContract;
 
                 // Попытка получить Type по строке имени
