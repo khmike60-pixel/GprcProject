@@ -3,6 +3,7 @@ using GrpcWinForms.Objects.Contracts.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,7 +53,7 @@ namespace GrpcWinForms.Models
         /// <param name="contractId">Идентификатор контракта.</param>
         /// <param name="contractType">Полное имя класса формы (включая Namespace).</param>
         /// <returns>Экземпляр созданной формы или null в случае ошибки.</returns>
-        public static ContractFormClass CreateForm(string contractType = "GrpcWinForms.Objects.Contracts.Forms.SaleStandart.ContractStandartForm")
+        public static ContractFormClass CreateForm(string contractType = "GrpcWinForms.Objects.Contracts.Forms.SaleStandart.ContractStandartForm", int contractId = 0)
         {
             try
             {
@@ -62,20 +63,39 @@ namespace GrpcWinForms.Models
                 // Проверяем, существует ли тип и является ли он формой
                 if (formType != null && typeof(ContractFormClass).IsAssignableFrom(formType))
                 {
-                    // Создаем экземпляр формы и возвращаем его
-                    ContractFormClass form = (ContractFormClass)Activator.CreateInstance(formType);
-                    return form;
+                    ContractFormClass form = null;
+
+                    // Попробуем найти конструктор с одним параметром int
+                    ConstructorInfo ctorWithInt = formType.GetConstructor(new Type[] { typeof(int) });
+                    if (ctorWithInt != null)
+                    {
+                        form = (ContractFormClass)ctorWithInt.Invoke(new object[] { contractId });
+                        return form;
+                    }
+
+                    // Попробуем стандартный конструктор
+                    ConstructorInfo parameterlessCtor = formType.GetConstructor(Type.EmptyTypes);
+                    if (parameterlessCtor != null)
+                    {
+                        form = (ContractFormClass)parameterlessCtor.Invoke(null);
+
+                        // Если есть свойство ContractId, попробуем установить его
+                        PropertyInfo prop = formType.GetProperty("ContractId", BindingFlags.Public | BindingFlags.Instance);
+                        if (prop != null && prop.CanWrite && prop.PropertyType == typeof(int))
+                        {
+                            prop.SetValue(form, contractId);
+                        }
+
+                        return form;
+                    }
+                    MessageBox.Show($"Ошибка: Для типа формы '{contractType}' не найден подходящий конструктор.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
                 }
                 else
-                { 
+                {
                     MessageBox.Show($"Ошибка: Тип формы '{contractType}' не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
-            }
-            catch (MissingMethodException)
-            {
-                MessageBox.Show($"Ошибка: У формы '{contractType}' нет конструктора, принимающего int.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return null;
             }
             catch (Exception ex)
             {

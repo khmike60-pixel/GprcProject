@@ -255,27 +255,75 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
+            string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts";
+            string nameForm = "ContractSaleStandartForm";
+            string fullTypeContract = $"{nameSpace}.{nameForm}";
             try
             {
                 int contractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
-                string contractType = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Name ?? "";
+                string contractType = fullTypeContract;
 
-                // Проверяем, не открыт ли уже экземпляр с таким ContractId
+                // Попытка получить Type по строке имени
+                System.Type formType = System.Type.GetType(contractType);
+
+                // Локальная функция: читать ContractId с РЕАЛЬНОГО типа через рефлексию, fallback на базовое свойство
+                int? GetContractIdFrom(Form f)
+                {
+                    var prop = f.GetType().GetProperty("ContractId", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    if (prop != null && prop.PropertyType == typeof(int))
+                    {
+                        try
+                        {
+                            return (int)prop.GetValue(f);
+                        }
+                        catch
+                        {
+                            return null;
+                        }
+                    }
+
+                    if (f is ContractFormClass baseForm)
+                        return baseForm.ContractId;
+
+                    return null;
+                }
+
+                // Если Type найден — проверим, есть ли уже открыт экземпляр того же типа с таким ContractId,
+                // читая значение ContractId именно с реального типа экземпляра.
+                if (formType != null)
+                {
+                    foreach (Form child in MdiParent.MdiChildren)
+                    {
+                        if (child.GetType() != formType) continue;
+
+                        int? existingId = GetContractIdFrom(child);
+                        if (existingId.HasValue && existingId.Value == contractId)
+                        {
+                            child.Activate();
+                            return;
+                        }
+                    }
+                }
+
+                // Создаём форму и передаём contractId фабрике
+                var form = Utils.CreateForm(contractType, contractId);
+                if (form == null) return;
+
+                // Ещё одна проверка — на случай, если Type не резолвился ранее; читаем ContractId с реального типа
                 foreach (Form child in MdiParent.MdiChildren)
                 {
-                    if (child is ContractFormClass contractForm && contractForm.ContractId == contractId)
+                    if (child.GetType() != form.GetType()) continue;
+
+                    int? existingId = GetContractIdFrom(child);
+                    if (existingId.HasValue && existingId.Value == contractId)
                     {
                         child.Activate();
+                        form.Dispose();
                         return;
                     }
                 }
 
-                string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.FormsOfContracts";
-                string nameForm = "ContractSaleStandartForm";
-                string fullname = $"{nameSpace}.{nameForm}";
-                var form = (ContractFormClass)Utils.CreateForm(fullname);
                 form.MdiParent = this.MdiParent;
-                form.ContractId = contractId;
                 form.Show();
             }
             catch (Exception ex)
