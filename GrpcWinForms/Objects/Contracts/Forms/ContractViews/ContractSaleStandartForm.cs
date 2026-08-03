@@ -1,5 +1,6 @@
 ﻿using C1.Framework;
 using Google.Protobuf.WellKnownTypes;
+using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Dynamic;
 using System.Linq;
@@ -15,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static C1.Util.Win.Win32;
+using Contract = GrpcCommonNet.Library.Contract.Contract;
 
 namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 { 
@@ -209,6 +212,22 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
+            // Сделать отдельный метод по обновлению контракта !!!!!
+
+
+            if (headContractControl.companyBuyer.SelectedItem.Id != 0)
+                contract.Buyer = headContractControl.companyBuyer.SelectedCompany;    // Получаем выбранного покупателя из headContractControl
+            if (headContractControl.companySeller.SelectedItem.Id != 0)
+                contract.Seller = headContractControl.companySeller.SelectedCompany;  // Получаем выбранного продавца из headContractControl
+            //if (headContractControl.comboBoxCurrency.SelectedIndex != 0)
+            //    contract.Currency = headContractControl.comboBoxCurrency.SelectedItem.Id;    // Получаем выбранную валюту из headContractControl
+            contract.Number = headContractControl.textBoxNumber.Text;                 // Получаем номер контракта из headContractControl
+            contract.Date = 
+                Timestamp.FromDateTime(headContractControl.dateTimePickerStart.Value.ToUniversalTime()); // Получаем дату контракта из headContractControl
+            contract.ExpirationDate = 
+                Timestamp.FromDateTime(headContractControl.dateTimePickerStop.Value.ToUniversalTime());                     // Получаем наименование контракта из headContractControl
+
+
             // Вызываем событие, если кто-то на него подписан
             OnContractChanged(contract);
             //MessageBox.Show("Данные будут записаны");

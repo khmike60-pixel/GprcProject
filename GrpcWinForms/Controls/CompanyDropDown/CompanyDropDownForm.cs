@@ -21,10 +21,11 @@ namespace GrpcWinForms.Objects.Contragents.Components
         private BindingList<Company> _contragents = new BindingList<Company>();
         public BindingList<Company> Contragents { get => _contragents; set => _contragents = value; }
         private Company contragentSelected = null;
+        public Company ContragentSelected { get => contragentSelected; set => contragentSelected = value; }
 
         // public event EventHandler NeedRefreshDataSource;
 
-        public Company ContragentSelected { get => contragentSelected; set => contragentSelected = value; }
+        //public Company ContragentSelected { get => contragentSelected; set => contragentSelected = value; }
 
         public CompanyDropDownForm()
         {
@@ -44,6 +45,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
                 C1DropDownControl parent = (C1DropDownControl)((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner;
 
                 parent.Text = contragentSelected.Name;
+
                 CloseForm();
             }
             catch { }

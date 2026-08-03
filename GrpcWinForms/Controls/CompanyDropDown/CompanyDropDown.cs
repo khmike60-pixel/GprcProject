@@ -17,6 +17,27 @@ namespace GrpcWinForms.Objects.Contragents.Components
         private Company selectedItem = new Company();
         public Company SelectedItem {  get { return selectedItem; } }
 
+        public Contragent SelectedCompany {
+            get { return new Contragent()
+            {
+                Id = selectedItem.Id,
+                Name = selectedItem.Name,
+                Taxno = selectedItem.TaxNo
+            }; }
+            set
+            {
+                selectedItem =  new Company(){ Id = value.Id, TaxNo = value.Taxno, Name = value.Name };
+                if (selectedItem != null)
+                {
+                    Text = selectedItem.Name;
+                }
+                else
+                {
+                    Text = string.Empty;
+                }
+            }
+        }
+
         // Делегат: принимает string (вход), возвращает BindingList<Company> (выход)
         private Func<string, BindingList<Company>>? _getDataSourceFunc;
         public Func<string, BindingList<Company>>? GetDataSourceFunc
@@ -48,6 +69,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
             BindingList<Company> result = new BindingList<Company>();
             SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
             CompanyDropDownForm userControl = ((CompanyDropDownForm)Control);
+
 
             if (GetDataSourceFunc != null)
             {

@@ -30,7 +30,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
         public void SetControls(Contract contract)
         {
-            textBoxNumber.Text = contract.Number ?? "1";                           // Номер договора
+            textBoxNumber.Text = contract.Number ?? "1";                    // Номер договора
             
             if (contract.Date != null)                                      // Дата начала договора
                 dateTimePickerStart.Value = contract.Date.ToDateTime();
@@ -43,10 +43,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             
             textBoxTaxnoBuyer.Text = contract.Buyer.Taxno;                  // ИНН покупателя
             companyBuyer.Text = contract.Buyer.Name;                        // Контрагент покупатель
-//            lookupContragentBuyer.Value = contract.Buyer.Name;            // Контрагент покупатель
+            companyBuyer.Value = contract.Buyer.Id;                         // Идентификатор контрагента покупателя
+
             textBoxTaxnoSeller.Text = contract.Seller.Taxno;                // ИНН продавца
             companySeller.Text = contract.Seller.Name;                      // Контрагент продавец
-//            lookupContragentSeller.Value = contract.Seller.Name;            // Контрагент продавец
+            companySeller.Value = contract.Seller.Id;                       // Идентификатор контрагента продавца
+
             comboBoxContractType.Text = contract.TypeContract.ToString();   // Тип договора
             comboBoxCurrency.Text = contract.Currency.Abbrev;               // Валюта договора
 
