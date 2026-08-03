@@ -73,7 +73,7 @@ namespace GrpcCommonNet.Service.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in GetIeararAsync: " + ex.Message);
+                _logger.LogError(ex, "Error in GetBranchAsync: " + ex.Message);
                 throw;
             }
 
@@ -92,6 +92,7 @@ namespace GrpcCommonNet.Service.Repository
                         DocumentType_Name,
                         ParentId,
                         DocumentType_Code, 
+                        DocumentType_Form, 
                         KindId,  
                         ContractCurrencyType_Id,
                         rfr_countryCurr_Id,
@@ -104,6 +105,7 @@ namespace GrpcCommonNet.Service.Repository
                         @DocumentType_Name,
                         @ParentId,
                         @DocumentType_Code, 
+                        @DocumentType_Form, 
                         @KindId,  
                         @ContractCurrencyType_Id,
                         @rfr_countryCurr_Id,
@@ -122,6 +124,7 @@ namespace GrpcCommonNet.Service.Repository
                 cmd.Parameters.AddWithValue("DocumentType_Name", documentType.Name);
                 cmd.Parameters.AddWithValue("ParentId", documentType.Parent.Id );
                 cmd.Parameters.AddWithValue("DocumentType_Code", documentType.Code);
+                cmd.Parameters.AddWithValue("DocumentType_Form", documentType.Form);
                 cmd.Parameters.AddWithValue("KindId", documentType.KindId == 0? null: documentType.KindId);
                 cmd.Parameters.AddWithValue("ContractCurrencyType_Id", documentType.CurrencyType);
                 cmd.Parameters.AddWithValue("DocumentType_Data", documentType.Data);
@@ -163,6 +166,7 @@ namespace GrpcCommonNet.Service.Repository
                         t.DocumentType_Name = @DocumentType_Name,
                         t.ParentId = @ParentId,
                         t.DocumentType_Code = @DocumentType_Code, 
+                        t.DocumentType_Form = @DocumentType_Form, 
                         t.KindId = @KindId,  
                         t.ContractCurrencyType_Id = @ContractCurrencyType_Id,
                         t.rfr_countryCurr_Id = @rfr_countryCurr_Id,
@@ -182,6 +186,7 @@ namespace GrpcCommonNet.Service.Repository
                 cmd.Parameters.AddWithValue("DocumentType_Name", documentType.Name);
                 cmd.Parameters.AddWithValue("ParentId", documentType.Parent.Id);
                 cmd.Parameters.AddWithValue("DocumentType_Code", documentType.Code);
+                cmd.Parameters.AddWithValue("DocumentType_Form", documentType.Form);
                 cmd.Parameters.AddWithValue("KindId", documentType.KindId == 0? null : documentType.KindId);
                 cmd.Parameters.AddWithValue("ContractCurrencyType_Id", documentType.CurrencyType == 0 ? null : documentType.CurrencyType);
                 cmd.Parameters.AddWithValue("DocumentType_Data", documentType.Data);
@@ -320,6 +325,7 @@ namespace GrpcCommonNet.Service.Repository
             docType.Parents = rdr["Parents"] == DBNull.Value ? "" : rdr["Parents"].ToString() ?? "";
             docType.Name = rdr["DocumentType_Name"] == DBNull.Value ? "" : rdr["DocumentType_Name"].ToString() ?? "";
             docType.Code = rdr["DocumentType_Code"] == DBNull.Value ? "" : rdr["DocumentType_Code"].ToString() ?? "";
+            docType.Form = rdr["DocumentType_Form"] == DBNull.Value ? "" : rdr["DocumentType_Form"].ToString() ?? "";
             docType.CurrencyType = rdr["ContractCurrencyType_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["ContractCurrencyType_id"]);
             docType.CountryCurrencyId = rdr["rfr_countryCurr_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["rfr_countryCurr_Id"]);
             docType.ViewMaster = rdr["ViewMaster"] == DBNull.Value ? "" : rdr["ViewMaster"].ToString() ?? "";

@@ -101,7 +101,7 @@
             smartGridDocumentTypes.Footers.Fixed = true;
             smartGridDocumentTypes.Headers = new string[]
     {
-    "...\tНаименование\tКод\tВышестояшие\tId"
+    "...\tНаименование\tКод\tВышестояшие\tКод формы\tId"
     };
             smartGridDocumentTypes.IdName = null;
             smartGridDocumentTypes.IsEditing = false;

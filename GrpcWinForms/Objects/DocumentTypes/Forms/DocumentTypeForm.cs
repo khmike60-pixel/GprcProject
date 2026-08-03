@@ -46,6 +46,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             // Установка значений полей формы на основе объекта documentType
             tbName.Text = DocumentType.Name.ToString();
             tbCode.Text = DocumentType.Code.ToString();
+            tbForm.Text = DocumentType.Form.ToString();
             tbViewDetail.Text = DocumentType.ViewDetail.ToString();
             tbViewMaster.Text = DocumentType.ViewMaster.ToString();
             tbParent.Text = DocumentType.Parent.Name.ToString();
@@ -55,7 +56,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
             if (!EditMode)
             {
-                tbName.ReadOnly = tbCode.ReadOnly = tbViewDetail.ReadOnly = tbViewMaster.ReadOnly = true;
+                tbName.ReadOnly = tbCode.ReadOnly = tbForm.ReadOnly = tbViewDetail.ReadOnly = tbViewMaster.ReadOnly = true;
                 cbCurrency.ReadOnly = cbCountryCurrency.ReadOnly = true;
                 chkDefault.Enabled = false;
                 btnOk.Enabled = false;
@@ -74,6 +75,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         {
             DocumentType.Name = tbName.Text;
             DocumentType.Code = tbCode.Text;
+            DocumentType.Form = tbForm.Text;
             DocumentType.ViewDetail = tbViewDetail.Text;
             DocumentType.ViewMaster = tbViewMaster.Text;
             DocumentType.CurrencyType = Convert.ToInt32(cbCurrency.SelectedItem.Value);

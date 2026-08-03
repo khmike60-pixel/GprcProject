@@ -47,6 +47,8 @@
             btnOk = new Button();
             tbParent = new TextBox();
             cbCountryCurrency = new C1.Win.Input.C1ComboBox();
+            lForm = new Label();
+            tbForm = new TextBox();
             ((System.ComponentModel.ISupportInitialize)cbCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chkDefault).BeginInit();
             ((System.ComponentModel.ISupportInitialize)btnAdditionalParameters).BeginInit();
@@ -65,7 +67,7 @@
             // lParent
             // 
             lParent.AutoSize = true;
-            lParent.Location = new Point(14, 98);
+            lParent.Location = new Point(14, 142);
             lParent.Name = "lParent";
             lParent.Size = new Size(109, 15);
             lParent.TabIndex = 1;
@@ -74,7 +76,7 @@
             // lCurrencyType
             // 
             lCurrencyType.AutoSize = true;
-            lCurrencyType.Location = new Point(14, 186);
+            lCurrencyType.Location = new Point(14, 230);
             lCurrencyType.Name = "lCurrencyType";
             lCurrencyType.Size = new Size(79, 15);
             lCurrencyType.TabIndex = 2;
@@ -83,7 +85,7 @@
             // lCountryCurrency
             // 
             lCountryCurrency.AutoSize = true;
-            lCountryCurrency.Location = new Point(14, 142);
+            lCountryCurrency.Location = new Point(14, 186);
             lCountryCurrency.Name = "lCountryCurrency";
             lCountryCurrency.Size = new Size(82, 15);
             lCountryCurrency.TabIndex = 3;
@@ -92,7 +94,7 @@
             // lViewMaster
             // 
             lViewMaster.AutoSize = true;
-            lViewMaster.Location = new Point(14, 230);
+            lViewMaster.Location = new Point(14, 274);
             lViewMaster.Name = "lViewMaster";
             lViewMaster.Size = new Size(236, 15);
             lViewMaster.TabIndex = 5;
@@ -101,7 +103,7 @@
             // lViewDetail
             // 
             lViewDetail.AutoSize = true;
-            lViewDetail.Location = new Point(14, 274);
+            lViewDetail.Location = new Point(14, 318);
             lViewDetail.Name = "lViewDetail";
             lViewDetail.Size = new Size(229, 15);
             lViewDetail.TabIndex = 5;
@@ -112,18 +114,18 @@
             tbName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbName.Location = new Point(14, 28);
             tbName.Name = "tbName";
-            tbName.Size = new Size(318, 23);
+            tbName.Size = new Size(320, 23);
             tbName.TabIndex = 1;
             // 
             // cbCurrency
             // 
             cbCurrency.DropDownStyle = C1.Win.Input.DropDownStyle.DropDownList;
             cbCurrency.InitialSelection = C1.Win.Input.InitialSelection.CaretAtStart;
-            cbCurrency.Location = new Point(14, 204);
+            cbCurrency.Location = new Point(14, 248);
             cbCurrency.Name = "cbCurrency";
             cbCurrency.ReadOnly = true;
             cbCurrency.Size = new Size(78, 23);
-            cbCurrency.TabIndex = 5;
+            cbCurrency.TabIndex = 6;
             cbCurrency.Value = "";
             cbCurrency.SelectedItemChanged += cbCurrency_SelectedItemChanged;
             // 
@@ -132,10 +134,10 @@
             chkDefault.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             chkDefault.AutoSize = true;
             chkDefault.CheckAlign = ContentAlignment.MiddleRight;
-            chkDefault.Location = new Point(245, 206);
+            chkDefault.Location = new Point(247, 250);
             chkDefault.Name = "chkDefault";
             chkDefault.Size = new Size(87, 19);
-            chkDefault.TabIndex = 6;
+            chkDefault.TabIndex = 7;
             chkDefault.Text = "Основной:";
             // 
             // btnAdditionalParameters
@@ -144,11 +146,11 @@
             btnAdditionalParameters.AutoSize = true;
             btnAdditionalParameters.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_json_50);
             btnAdditionalParameters.ImageAlign = ContentAlignment.MiddleLeft;
-            btnAdditionalParameters.Location = new Point(14, 321);
+            btnAdditionalParameters.Location = new Point(14, 365);
             btnAdditionalParameters.Name = "btnAdditionalParameters";
-            btnAdditionalParameters.Size = new Size(318, 32);
+            btnAdditionalParameters.Size = new Size(320, 32);
             btnAdditionalParameters.Styles.Padding = new C1.Framework.Thickness(0, 0, 0, 0);
-            btnAdditionalParameters.TabIndex = 9;
+            btnAdditionalParameters.TabIndex = 10;
             btnAdditionalParameters.Text = "Посмотреть дополнительные параметры ";
             btnAdditionalParameters.TextAlign = ContentAlignment.MiddleLeft;
             btnAdditionalParameters.TextImageRelation = TextImageRelation.ImageBeforeText;
@@ -167,32 +169,32 @@
             tbCode.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbCode.Location = new Point(14, 72);
             tbCode.Name = "tbCode";
-            tbCode.Size = new Size(318, 23);
+            tbCode.Size = new Size(320, 23);
             tbCode.TabIndex = 2;
             // 
             // tbViewMaster
             // 
             tbViewMaster.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            tbViewMaster.Location = new Point(14, 248);
+            tbViewMaster.Location = new Point(14, 292);
             tbViewMaster.Name = "tbViewMaster";
-            tbViewMaster.Size = new Size(318, 23);
-            tbViewMaster.TabIndex = 7;
+            tbViewMaster.Size = new Size(320, 23);
+            tbViewMaster.TabIndex = 8;
             // 
             // tbViewDetail
             // 
             tbViewDetail.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            tbViewDetail.Location = new Point(14, 292);
+            tbViewDetail.Location = new Point(14, 336);
             tbViewDetail.Name = "tbViewDetail";
-            tbViewDetail.Size = new Size(318, 23);
-            tbViewDetail.TabIndex = 8;
+            tbViewDetail.Size = new Size(320, 23);
+            tbViewDetail.TabIndex = 9;
             // 
             // btnCancel
             // 
             btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnCancel.Location = new Point(257, 362);
+            btnCancel.Location = new Point(259, 406);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(75, 23);
-            btnCancel.TabIndex = 11;
+            btnCancel.TabIndex = 12;
             btnCancel.Text = "Cancel";
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
@@ -200,21 +202,21 @@
             // btnOk
             // 
             btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnOk.Location = new Point(176, 362);
+            btnOk.Location = new Point(178, 406);
             btnOk.Name = "btnOk";
             btnOk.Size = new Size(75, 23);
-            btnOk.TabIndex = 10;
+            btnOk.TabIndex = 11;
             btnOk.Text = "Ok";
             btnOk.UseVisualStyleBackColor = true;
             btnOk.Click += btnOk_Click;
             // 
             // tbParent
             // 
-            tbParent.Location = new Point(14, 116);
+            tbParent.Location = new Point(14, 160);
             tbParent.Name = "tbParent";
             tbParent.ReadOnly = true;
             tbParent.Size = new Size(316, 23);
-            tbParent.TabIndex = 3;
+            tbParent.TabIndex = 4;
             // 
             // cbCountryCurrency
             // 
@@ -226,18 +228,37 @@
             comboBoxItem1.DisplayText = "Продажа в DDP (Узбекистан)";
             comboBoxItem1.Value = "1";
             cbCountryCurrency.Items.Add(comboBoxItem1);
-            cbCountryCurrency.Location = new Point(14, 160);
+            cbCountryCurrency.Location = new Point(14, 204);
             cbCountryCurrency.Name = "cbCountryCurrency";
             cbCountryCurrency.ReadOnly = true;
-            cbCountryCurrency.Size = new Size(318, 23);
-            cbCountryCurrency.TabIndex = 4;
+            cbCountryCurrency.Size = new Size(320, 23);
+            cbCountryCurrency.TabIndex = 5;
             cbCountryCurrency.Value = "";
+            // 
+            // lForm
+            // 
+            lForm.AutoSize = true;
+            lForm.Location = new Point(14, 98);
+            lForm.Name = "lForm";
+            lForm.Size = new Size(71, 15);
+            lForm.TabIndex = 14;
+            lForm.Text = "Код формы";
+            // 
+            // tbForm
+            // 
+            tbForm.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbForm.Location = new Point(14, 116);
+            tbForm.Name = "tbForm";
+            tbForm.Size = new Size(318, 23);
+            tbForm.TabIndex = 3;
             // 
             // DocumentTypeForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(342, 397);
+            ClientSize = new Size(344, 441);
+            Controls.Add(tbForm);
+            Controls.Add(lForm);
             Controls.Add(tbParent);
             Controls.Add(btnOk);
             Controls.Add(btnCancel);
@@ -256,7 +277,7 @@
             Controls.Add(lCurrencyType);
             Controls.Add(lParent);
             Controls.Add(lName);
-            MinimumSize = new Size(358, 436);
+            MinimumSize = new Size(360, 480);
             Name = "DocumentTypeForm";
             Text = "Тип документа";
             Load += DocumentTypeForm_Load;
@@ -288,5 +309,7 @@
         private Button btnOk;
         private TextBox tbParent;
         private C1.Win.Input.C1ComboBox cbCountryCurrency;
+        private Label lForm;
+        private TextBox tbForm;
     }
 }

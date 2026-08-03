@@ -31,7 +31,8 @@ public class ContractRepository
                         SELECT 
                             c.* , l.*, 
                             u.Short,
-                            cu.Abbrev, t.DocumentType_Name, t.DocumentType_Code as DocumentType_Code
+                            cu.Abbrev, t.DocumentType_Name, t.DocumentType_Code as DocumentType_Code,
+                            t.DocumentType_Form as DocumentType_Form
                         FROM cwatis.contracts c 
                             LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
                             left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
@@ -81,6 +82,7 @@ public class ContractRepository
                 SELECT 
                     cnt.*,
                     c.DocumentType_Name as DocumentType_Name, c.DocumentType_Code as DocumentType_Code,
+                    c.DocumentType_Form as DocumentType_Form,
                     cu.Abbrev as Abbrev
                 from cnt
                     left join cwatis.documenttypes c on c.DocumentType_Id = cnt.DocumentType_Id
@@ -155,7 +157,7 @@ public class ContractRepository
                 SELECT 
                     c.* ,
                     cu.Abbrev, t.DocumentType_Name, t.DocumentType_Code as DocumentType_Code,
-                    1
+                    t.DocumentType_Form as DocumentType_Form
                 FROM cwatis.contracts c 
                     LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
                     LEFT JOIN cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
@@ -226,7 +228,8 @@ public class ContractRepository
         {
             Id = rdr["DocumentType_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["DocumentType_Id"]),
             Name = rdr["DocumentType_Name"] == DBNull.Value ? "" : rdr["DocumentType_Name"].ToString() ?? "",
-            Code = rdr["DocumentType_Code"] == DBNull.Value ? "" : rdr["DocumentType_Code"].ToString() ?? ""
+            Code = rdr["DocumentType_Code"] == DBNull.Value ? "" : rdr["DocumentType_Code"].ToString() ?? "",
+            Form = rdr["DocumentType_Form"] == DBNull.Value ? "" : rdr["DocumentType_Form"].ToString() ?? ""
         };
         // Исправление: преобразование строки JSON в Struct
         if (rdr["contract_data"] == DBNull.Value || string.IsNullOrWhiteSpace(rdr["contract_data"].ToString()))

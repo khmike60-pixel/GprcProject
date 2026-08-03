@@ -30,6 +30,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         private Loader loaderLines = new Loader();
         private BindingList<Contract> contracts;
 
+
         public ContractsForm()
         {
             InitializeComponent();
@@ -193,15 +194,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
-            foreach (Form child in MdiParent.MdiChildren)
-            {
-                if (child is ContractSaleStandartForm &&
-                    ((ContractSaleStandartForm)child).ContractId == ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id)
-                { child.Activate(); return; }
-            }
-            var f = new ContractSaleStandartForm(0) { MdiParent = this.MdiParent };
-            f.ContractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
-            f.Show();
+            smartGridContracts_DoubleClick(sender, e);
+
         }
 
         private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
@@ -250,10 +244,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void smartGridContracts_DoubleClick(object sender, EventArgs e)
         {
-            ViewContract(sender, e);
+            var row = smartGridContracts.Rows[smartGridContracts.Row].DataSource;
+            Contract _contract = row as Contract;
+            ViewContract(sender, _contract);
         }
 
-        private void ViewContract(object sender, EventArgs e)
+        private void ViewContract(object sender, Contract contract)
         {
             string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.ContractViews";
             string nameForm = "ContractSaleStandartForm";
@@ -263,7 +259,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 int contractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
                 var contractType_Name = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Name;
                 var contractType_Code = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Code;
-                fullTypeContract = $"{nameSpace}.{contractType_Code}";
+                var contractType_Form = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Form;
+                fullTypeContract = $"{nameSpace}.{contractType_Form}";
                 string contractType = fullTypeContract;
 
                 // Попытка получить Type по строке имени
@@ -327,12 +324,26 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 }
 
                 form.MdiParent = this.MdiParent;
+                form.ContractChanged += UpdateContract;
                 form.Show();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
+            }
+        }
+
+        private void UpdateContract(object sender, Contract contract)
+        {
+            if (contract == null) return;
+            // Найти контракт в списке по Id
+            var existingContract = contracts.FirstOrDefault(c => c.Id == contract.Id);
+            if (existingContract != null)
+            {
+                // Обновить существующий контракт
+                int index = contracts.IndexOf(existingContract);
+                contracts[index] = contract;
             }
         }
 

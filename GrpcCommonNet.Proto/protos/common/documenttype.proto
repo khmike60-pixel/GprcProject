@@ -23,12 +23,13 @@ message DocumentType {
 	string parents = 4;
 	string name = 5;
 	string code = 6;
-	int32 currency_type = 7;
-	google.protobuf.Struct data = 8;
-	int32 country_currency_id = 9;
-	string view_master = 10;
-	string view_detail = 11;
-	bool is_default = 12;
-	Checked approved = 13;
-	int32 kind_id = 14;
+	string form = 7;
+	int32 currency_type = 8;
+	google.protobuf.Struct data = 9;
+	int32 country_currency_id = 10;
+	string view_master = 11;
+	string view_detail = 12;
+	bool is_default = 13;
+	Checked approved = 14;
+	int32 kind_id = 15;
 }

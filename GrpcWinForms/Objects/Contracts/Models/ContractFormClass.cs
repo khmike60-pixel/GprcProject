@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GrpcCommonNet.Library.Contract;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,6 +15,10 @@ namespace GrpcWinForms.Objects.Contracts.Models
     public partial class ContractFormClass : Form
     {
         private int _contractId;
+
+        // Событие для передачи изменённого контракта
+        public event EventHandler<Contract> ContractChanged;
+
         public int ContractId
         {
             get => _contractId;
@@ -23,9 +28,12 @@ namespace GrpcWinForms.Objects.Contracts.Models
         public ContractFormClass()
         {
             InitializeComponent();
-
         }
 
+        // Шаблон для безопасного поднятия события в производных классах
+        protected virtual void OnContractChanged(Contract contract)
+        {
+            ContractChanged?.Invoke(this, contract);
+        }
     }
-
 }

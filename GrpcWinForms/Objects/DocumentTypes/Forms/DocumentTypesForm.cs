@@ -49,7 +49,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     Head = HeadCode, // Получить весь список
                     FieldMask = new FieldMask()
                     {
-                        Paths = { "id", "parent", "ids", "parents", "name", "code", "currency_type", "data", "country_currency_id", "view_master", "view_detail", "is_default", "approved", "kind_id" }
+                        Paths = { "id", "parent", "ids", "parents", "name", "code", "form", "currency_type", "data", "country_currency_id", "view_master", "view_detail", "is_default", "approved", "kind_id" }
                     }
                 };
                 ListDocumentTypeResponse response = new ListDocumentTypeResponse();
@@ -64,6 +64,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         Id = Convert.ToInt32(item.Id),
                         Name = item.Name,
                         Code = item.Code,
+                        Form = item.Form,
                         ParentId = Convert.ToInt32(item.Parent.Id),
                         Parent = item.Parent,
                         ParentIds = item.Ids,
@@ -164,6 +165,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node.Data = response.DocumentType.Name;
                         smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["ParentNames"] = response.DocumentType.Parents;
                         smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Code"] = response.DocumentType.Code;
+                        smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Form"] = response.DocumentType.Form;
 
                     }
                     else
@@ -229,6 +231,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         Id = response.DocumentType.Id,
                         Name = response.DocumentType.Name,
                         Code = response.DocumentType.Code,
+                        Form = response.DocumentType.Form,
                         Parent = response.DocumentType.Parent,
                         ParentId = response.DocumentType.Parent.Id,
                         ParentIds = response.DocumentType.Ids,
@@ -250,6 +253,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["ParentNames"] = response.DocumentType.Parents;
                     smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Id"] = response.DocumentType.Id;
                     smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Code"] = response.DocumentType.Code;
+                    smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Form"] = response.DocumentType.Form;
 
 
                 }
@@ -277,7 +281,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 {
                     DeleteDocumentTypeRequest request = new DeleteDocumentTypeRequest()
                     {
-                        Id = (int)smartGridDocumentTypes.Rows[smartGridDocumentTypes.RowSel]["Id"]
+                        Id = (int)smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Id"]
                     };
                     DeleteDocumentTypeResponse response = await GrpcClients.GrpcClients.DocumentType.DeleteDocumentTypeAsync(request);
                     int i = smartGridDocumentTypes.RowSel - smartGridDocumentTypes.Rows.Fixed;
@@ -365,6 +369,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 tree.Id = Convert.ToInt32(documentType.Id);
                 tree.Name = documentType.Name;
                 tree.Code = documentType.Code;
+                tree.Form = documentType.Form;
                 tree.ParentId = Convert.ToInt32(documentType.Parent.Id);
                 tree.Parent = documentType.Parent;
                 tree.ParentIds = documentType.Ids;
@@ -446,6 +451,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         public int Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
+        public string Form { get; set; }
         public int ParentId { get; set; }
         public Tree Parent { get; set; }
         public string ParentIds { get; set; }

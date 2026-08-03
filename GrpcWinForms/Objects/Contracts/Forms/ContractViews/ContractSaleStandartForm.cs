@@ -26,6 +26,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
         //    get { return contractId; }
         //    set { contractId = value; }
         //}
+        private Contract contract;
+
+
 
         public ContractSaleStandartForm()
         {
@@ -66,11 +69,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             }
             GetContractRequest requestContract = new GetContractRequest { ContractId = this.ContractId };
             ContractResponse responseContract = GrpcClients.GrpcClients.Contract.GetContract(requestContract);
-            headContractControl.SetControls(responseContract.Contract);
-            sumContractControl1.SetControls(responseContract.Contract);
+            contract = responseContract.Contract;
+            headContractControl.SetControls(contract);
+            sumContractControl1.SetControls(contract);
             try
             {
-                var properties = responseContract.Contract.Data;
+                var properties = contract.Data;
                 if (properties != null)
                 {
                     var _root = properties.Fields;
@@ -111,7 +115,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             historyContractControl.smartGridHistory.GetUnboundValue += smartGridHistory_GetUnboundValue;
             historyContractControl.smartGridHistory.DataSource = responseChain.Contracts;
 
-            this.Text = $"Контракт № {responseContract.Contract.Number} от {responseContract.Contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
+            this.Text = $"Контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
         }
 
         private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
@@ -159,37 +163,37 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 
         private void smartGridHistory_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            Contract contract = (Contract)historyContractControl.smartGridHistory.Rows[e.Row].DataSource;
+            Contract _contract = (Contract)historyContractControl.smartGridHistory.Rows[e.Row].DataSource;
             switch (historyContractControl.smartGridHistory.Cols[e.Col].Name)
             {
                 case "colDate":
                     {
-                        e.Value = contract.Date == null ? "" : contract.Date.ToDateTime();
+                        e.Value = _contract.Date == null ? "" : _contract.Date.ToDateTime();
                         break;
                     }
                 case "colAbbrev":
                     {
-                        e.Value = contract.Currency == null ? "" : contract.Currency.Abbrev;
+                        e.Value = _contract.Currency == null ? "" : _contract.Currency.Abbrev;
                         break;
                     }
                 case "colSum":
                     {
-                        e.Value = contract.Sum == null || contract.Sum.Units == 0 ? "" : MyConvert.ToDecimal(contract.Sum);
+                        e.Value = _contract.Sum == null || _contract.Sum.Units == 0 ? "" : MyConvert.ToDecimal(_contract.Sum);
                         break;
                     }
                 case "colAmount":
                     {
-                        e.Value = contract.Amount == null || contract.Amount.Units == 0 ? "" : MyConvert.ToDecimal(contract.Amount);
+                        e.Value = _contract.Amount == null || _contract.Amount.Units == 0 ? "" : MyConvert.ToDecimal(_contract.Amount);
                         break;
                     }
                 case "colSumVat":
                     {
-                        e.Value = contract.SumVat == null || contract.SumVat.Units == 0 ? "" : MyConvert.ToDecimal(contract.SumVat);
+                        e.Value = _contract.SumVat == null || _contract.SumVat.Units == 0 ? "" : MyConvert.ToDecimal(_contract.SumVat);
                         break;
                     }
                 case "colType":
                     {
-                        if (contract.RootId == 0)
+                        if (_contract.RootId == 0)
                             e.Value = "Основной контракт";
                         else
                             e.Value = "Дополнительное соглашение";
@@ -205,7 +209,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Данные будут записаны");
+            // Вызываем событие, если кто-то на него подписан
+            OnContractChanged(contract);
+            //MessageBox.Show("Данные будут записаны");
             Close();
         }
     }
