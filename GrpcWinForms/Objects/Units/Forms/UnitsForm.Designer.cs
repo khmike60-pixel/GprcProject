@@ -103,7 +103,7 @@
             // 
             // smartGrid
             // 
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid.AllowNodeMove = false;
             smartGrid.AutoGenerateColumns = false;
             smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
@@ -116,7 +116,10 @@
             footerDescription1.Aggregates.Add(aggregateDefinition1);
             smartGrid.Footers.Descriptions.Add(footerDescription1);
             smartGrid.Footers.Fixed = true;
-            smartGrid.Headers = null;
+            smartGrid.Headers = new string[]
+    {
+    "...\tId\tКод\tКратко\tНаименование\tКод RWS\tАрхив"
+    };
             smartGrid.IdName = null;
             smartGrid.IsEditing = false;
             smartGrid.Location = new Point(0, 31);

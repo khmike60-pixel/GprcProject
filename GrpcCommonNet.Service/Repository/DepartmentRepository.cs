@@ -63,7 +63,7 @@ namespace GrpcCommonNet.Service.Repository
                                             or @name = '' 
                                             or d.Name like CONCAT('%',@name,'%')
                                             or d.MCode like CONCAT('%',@name,'%'))
-                                    order by d.Name";
+                                    order by d.Code";
                 cmd.Parameters.AddWithValue("@name", name);
 
                 using var rdr = await cmd.ExecuteReaderAsync();

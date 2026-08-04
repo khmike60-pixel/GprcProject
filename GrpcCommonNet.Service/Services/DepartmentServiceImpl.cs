@@ -44,13 +44,8 @@ public class DepartmentServiceImpl :  DepartmentServices.DepartmentServicesBase
         _logger.LogDebug($"GetListDepartment called. UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
         try
         {
-            string filterInfo = string.Empty;
-            if (request.FilterCase == ListDepartmentRequest.FilterOneofCase.Symbol) 
-                filterInfo =  request.Symbol;
-            else if (request.FilterCase == ListDepartmentRequest.FilterOneofCase.DepartmentShort) 
-                filterInfo = request.DepartmentShort;
-            else 
-                filterInfo = string.Empty;
+
+            string filterInfo = request.DepartmentShort;
 
             List<Department> departments = await _repo.GetListAsync(filterInfo);
 
@@ -76,11 +71,14 @@ public class DepartmentServiceImpl :  DepartmentServices.DepartmentServicesBase
         {
             DepartmentResponse response = new DepartmentResponse();
 
-            response.Department = await _repo.CreatetAsync(request.Department);  
-            if (response.Department == null) 
+            response.Department = await _repo.CreatetAsync(request.Department);
+            if (response.Department == null)
                 return new DepartmentResponse { Result = new Result { Status = Status.BadRequest } };
-            else 
+            else
+            {
+                response.Result = new Result { Status = Status.Ok };
                 return response;
+            }
         }
         catch (Exception ex)
         {

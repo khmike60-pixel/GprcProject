@@ -344,7 +344,7 @@
             // 
             // smartGrid
             // 
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid.AllowNodeMove = false;
             smartGrid.AutoGenerateColumns = false;
             smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
@@ -356,7 +356,10 @@
             footerDescription1.Aggregates.Add(aggregateDefinition1);
             smartGrid.Footers.Descriptions.Add(footerDescription1);
             smartGrid.Footers.Fixed = true;
-            smartGrid.Headers = null;
+            smartGrid.Headers = new string[]
+    {
+    "...\tId\tНаименование\tИНН / ПИНФЛ\tТип\t?\tСтрана"
+    };
             smartGrid.IdName = null;
             smartGrid.IsEditing = false;
             smartGrid.Location = new Point(0, 0);
@@ -368,6 +371,8 @@
             smartGrid.SortingType = SmartGrid.SortingType.Descending;
             smartGrid.StyleInfo = resources.GetString("smartGrid.StyleInfo");
             smartGrid.TabIndex = 5;
+            smartGrid.AfterSelChange += smartGrid_AfterSelChange;
+            smartGrid.GetUnboundValue += smartGrid_GetUnboundValue;
             // 
             // OurCompaniesForm
             // 

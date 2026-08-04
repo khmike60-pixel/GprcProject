@@ -14,6 +14,7 @@ using GrpcWinForms.Objects.Test;
 using GrpcWinForms.Objects.Users.Forms;
 using System;
 using System.Windows.Forms;
+using GrpcWinForms.Objects.Departaments;
 
 namespace GrpcWinForms.Forms
 {
@@ -137,27 +138,6 @@ namespace GrpcWinForms.Forms
             f.Show();
         }
 
-        private void нашиОрганизацииToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (Form child in MdiChildren)
-            {
-                if (child is OurCompaniesForm) { child.Activate(); return; }
-            }
-            var f = new OurCompaniesForm { MdiParent = this };
-            f.Show();
-
-        }
-
-        private void типыКонтрактовToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            foreach (Form child in MdiChildren)
-            {
-                if (child is DocumentTypesForm) { child.Activate(); return; }
-            }
-            var f = new DocumentTypesForm { MdiParent = this };
-            f.Show();
-        }
-
         private void DocumentTypesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             foreach (Form child in MdiChildren)
@@ -176,6 +156,27 @@ namespace GrpcWinForms.Forms
             }
             var f = new DocumentTypesForm { MdiParent = this };
             f.HeadCode = "Contracts";
+            f.Show();
+
+        }
+
+        private void DepartmentsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is DepartamentsForm) { child.Activate(); return; }
+            }
+            var f = new DepartamentsForm { MdiParent = this };
+            f.Show();
+        }
+
+        private void OurCompanyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is OurCompaniesForm) { child.Activate(); return; }
+            }
+            var f = new OurCompaniesForm { MdiParent = this };
             f.Show();
 
         }

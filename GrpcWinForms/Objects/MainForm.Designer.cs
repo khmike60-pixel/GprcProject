@@ -19,11 +19,11 @@ namespace GrpcWinForms.Forms
             контрагентыToolStripMenuItem = new ToolStripMenuItem();
             ContragentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripSeparator();
-            нашиОрганизацииToolStripMenuItem1 = new ToolStripMenuItem();
+            OurCompanyToolStripMenuItem1 = new ToolStripMenuItem();
             банкиToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
-            нашиОрганизацииToolStripMenuItem = new ToolStripMenuItem();
-            подразделенияToolStripMenuItem = new ToolStripMenuItem();
+            OurCompanyToolStripMenuItem = new ToolStripMenuItem();
+            DepartmentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator3 = new ToolStripSeparator();
             CatalogToolStripMenuItem = new ToolStripMenuItem();
             ProductsToolStripMenuItem = new ToolStripMenuItem();
@@ -71,27 +71,27 @@ namespace GrpcWinForms.Forms
             // ToolStripMenuItemContrtacts
             // 
             ToolStripMenuItemContrtacts.Name = "ToolStripMenuItemContrtacts";
-            ToolStripMenuItemContrtacts.Size = new Size(180, 22);
+            ToolStripMenuItemContrtacts.Size = new Size(168, 22);
             ToolStripMenuItemContrtacts.Text = "Контракты";
             ToolStripMenuItemContrtacts.Click += ToolStripMenuItemContrtacts_Click;
             // 
             // ContractTypesToolStripMenuItem
             // 
             ContractTypesToolStripMenuItem.Name = "ContractTypesToolStripMenuItem";
-            ContractTypesToolStripMenuItem.Size = new Size(180, 22);
+            ContractTypesToolStripMenuItem.Size = new Size(168, 22);
             ContractTypesToolStripMenuItem.Text = "Типы контрактов";
             ContractTypesToolStripMenuItem.Click += ContractTypesToolStripMenuItem_Click;
             // 
             // MainDictionariesToolStripMenuItem
             // 
-            MainDictionariesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { контрагентыToolStripMenuItem, toolStripSeparator4, нашиОрганизацииToolStripMenuItem, подразделенияToolStripMenuItem, toolStripSeparator3, CatalogToolStripMenuItem, toolStripSeparator1, CurrenciesAndRatesToolStripMenuItem, toolStripSeparator2, GeographAndPlacesToolStripMenuItem, toolStripSeparator5, DocumentTypesToolStripMenuItem });
+            MainDictionariesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { контрагентыToolStripMenuItem, toolStripSeparator4, OurCompanyToolStripMenuItem, DepartmentsToolStripMenuItem, toolStripSeparator3, CatalogToolStripMenuItem, toolStripSeparator1, CurrenciesAndRatesToolStripMenuItem, toolStripSeparator2, GeographAndPlacesToolStripMenuItem, toolStripSeparator5, DocumentTypesToolStripMenuItem });
             MainDictionariesToolStripMenuItem.Name = "MainDictionariesToolStripMenuItem";
             MainDictionariesToolStripMenuItem.Size = new Size(135, 20);
             MainDictionariesToolStripMenuItem.Text = "Общие справочники";
             // 
             // контрагентыToolStripMenuItem
             // 
-            контрагентыToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ContragentsToolStripMenuItem, toolStripMenuItem2, нашиОрганизацииToolStripMenuItem1, банкиToolStripMenuItem });
+            контрагентыToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ContragentsToolStripMenuItem, toolStripMenuItem2, OurCompanyToolStripMenuItem1, банкиToolStripMenuItem });
             контрагентыToolStripMenuItem.Name = "контрагентыToolStripMenuItem";
             контрагентыToolStripMenuItem.Size = new Size(228, 22);
             контрагентыToolStripMenuItem.Text = "Контрагенты";
@@ -108,11 +108,12 @@ namespace GrpcWinForms.Forms
             toolStripMenuItem2.Name = "toolStripMenuItem2";
             toolStripMenuItem2.Size = new Size(178, 6);
             // 
-            // нашиОрганизацииToolStripMenuItem1
+            // OurCompanyToolStripMenuItem1
             // 
-            нашиОрганизацииToolStripMenuItem1.Name = "нашиОрганизацииToolStripMenuItem1";
-            нашиОрганизацииToolStripMenuItem1.Size = new Size(181, 22);
-            нашиОрганизацииToolStripMenuItem1.Text = "Наши организации";
+            OurCompanyToolStripMenuItem1.Name = "OurCompanyToolStripMenuItem1";
+            OurCompanyToolStripMenuItem1.Size = new Size(181, 22);
+            OurCompanyToolStripMenuItem1.Text = "Наши организации";
+            OurCompanyToolStripMenuItem1.Click += OurCompanyToolStripMenuItem_Click;
             // 
             // банкиToolStripMenuItem
             // 
@@ -125,18 +126,19 @@ namespace GrpcWinForms.Forms
             toolStripSeparator4.Name = "toolStripSeparator4";
             toolStripSeparator4.Size = new Size(225, 6);
             // 
-            // нашиОрганизацииToolStripMenuItem
+            // OurCompanyToolStripMenuItem
             // 
-            нашиОрганизацииToolStripMenuItem.Name = "нашиОрганизацииToolStripMenuItem";
-            нашиОрганизацииToolStripMenuItem.Size = new Size(228, 22);
-            нашиОрганизацииToolStripMenuItem.Text = "Наши организации";
-            нашиОрганизацииToolStripMenuItem.Click += нашиОрганизацииToolStripMenuItem_Click;
+            OurCompanyToolStripMenuItem.Name = "OurCompanyToolStripMenuItem";
+            OurCompanyToolStripMenuItem.Size = new Size(228, 22);
+            OurCompanyToolStripMenuItem.Text = "Наши организации";
+            OurCompanyToolStripMenuItem.Click += OurCompanyToolStripMenuItem_Click;
             // 
-            // подразделенияToolStripMenuItem
+            // DepartmentsToolStripMenuItem
             // 
-            подразделенияToolStripMenuItem.Name = "подразделенияToolStripMenuItem";
-            подразделенияToolStripMenuItem.Size = new Size(228, 22);
-            подразделенияToolStripMenuItem.Text = "Подразделения";
+            DepartmentsToolStripMenuItem.Name = "DepartmentsToolStripMenuItem";
+            DepartmentsToolStripMenuItem.Size = new Size(228, 22);
+            DepartmentsToolStripMenuItem.Text = "Подразделения";
+            DepartmentsToolStripMenuItem.Click += DepartmentsToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
@@ -331,8 +333,8 @@ namespace GrpcWinForms.Forms
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem RolesRightsToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem2;
-        private ToolStripMenuItem нашиОрганизацииToolStripMenuItem1;
-        private ToolStripMenuItem подразделенияToolStripMenuItem;
+        private ToolStripMenuItem OurCompanyToolStripMenuItem1;
+        private ToolStripMenuItem DepartmentsToolStripMenuItem;
         private ToolStripMenuItem ObjectsRightsToolStripMenuItem;
         private ToolStripMenuItem ApplicationsAndUsersToolStripMenuItem;
         private ToolStripMenuItem UsersOfAppToolStripMenuItem;
@@ -341,7 +343,7 @@ namespace GrpcWinForms.Forms
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripSeparator toolStripSeparator4;
-        private ToolStripMenuItem нашиОрганизацииToolStripMenuItem;
+        private ToolStripMenuItem OurCompanyToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem ToolStripMenuItemContrtacts;
         private ToolStripMenuItem тестоваяФормаToolStripMenuItem;

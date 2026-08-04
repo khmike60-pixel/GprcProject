@@ -19,6 +19,7 @@ namespace GrpcWinForms.Objects.Contragents.Forms
     {
         private static ContragentServices.ContragentServicesClient _service;
         private Loader loaderContragent = new Loader();
+        int row = 0;
 
         public ContragentsForm()
         {
@@ -84,6 +85,8 @@ namespace GrpcWinForms.Objects.Contragents.Forms
         private void smartGrid_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
             if (smartGrid.RowSel <= smartGrid.Rows.Fixed - 1) return;
+            if (row == smartGrid.Row) return;
+            else row = smartGrid.Row;
 
             Contragent contragent = (Contragent)smartGrid.Rows[smartGrid.RowSel].DataSource;
 
@@ -118,8 +121,6 @@ namespace GrpcWinForms.Objects.Contragents.Forms
 
             }
             return;
-
-
 
             /*
             entityControlMain.textBoxTaxno.Text = smartGrid[smartGrid.Row, "Taxno"].ToString();
@@ -192,6 +193,7 @@ namespace GrpcWinForms.Objects.Contragents.Forms
             unknowControl.textBoxName.Text = contragent.Name;
             unknowControl.textBoxId.Text = contragent.Id.ToString();
         }
+
         private void smartGrid_AfterResizeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
             smartGrid.Cols["Name"].StarWidth = "*";

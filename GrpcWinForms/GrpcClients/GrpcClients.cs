@@ -11,6 +11,7 @@ using GrpcCommonNet.Library.Geolocation;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.ApplicationUser;
 using GrpcCommonNet.Library.DocumentType;
+using GrpcCommonNet.Library.Department;
 
 
 namespace GrpcWinForms.GrpcClients
@@ -28,6 +29,7 @@ namespace GrpcWinForms.GrpcClients
         private static UnitServices.UnitServicesClient _unit;
         private static UserServices.UserServicesClient _user;
         private static DocumentTypeServices.DocumentTypeServicesClient _documenttype;
+        private static DepartmentServices.DepartmentServicesClient _department;
 
         public static ApplicationServices.ApplicationServicesClient Application =>
             _application ??= new ApplicationServices.ApplicationServicesClient(MainClass.Invoker);
@@ -49,6 +51,8 @@ namespace GrpcWinForms.GrpcClients
             _user ??= new UserServices.UserServicesClient(MainClass.Invoker);
         public static DocumentTypeServices.DocumentTypeServicesClient DocumentType =>
             _documenttype ??= new DocumentTypeServices.DocumentTypeServicesClient(MainClass.Invoker);
+        public static DepartmentServices.DepartmentServicesClient Department =>
+            _department ??= new DepartmentServices.DepartmentServicesClient(MainClass.Invoker);
 
 
         public static AuthServices.AuthServicesClient Auth =>
