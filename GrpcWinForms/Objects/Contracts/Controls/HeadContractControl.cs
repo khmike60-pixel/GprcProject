@@ -25,13 +25,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             InitializeComponent();
             companyBuyer.GetDataSourceFunc = Load;
             companySeller.GetDataSourceFunc = Load;
-           
+
         }
 
         public void SetControls(Contract contract)
         {
             textBoxNumber.Text = contract.Number ?? "1";                    // Номер договора
-            
+
             if (contract.Date != null)                                      // Дата начала договора
                 dateTimePickerStart.Value = contract.Date.ToDateTime();
             else
@@ -40,7 +40,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
                 dateTimePickerStop.Value = contract.ExpirationDate.ToDateTime();
             else
                 dateTimePickerStop.Text = string.Empty;
-            
+
             textBoxTaxnoBuyer.Text = contract.Buyer.Taxno;                  // ИНН покупателя
             companyBuyer.Text = contract.Buyer.Name;                        // Контрагент покупатель
             companyBuyer.Value = contract.Buyer.Id;                         // Идентификатор контрагента покупателя
@@ -84,7 +84,14 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             return _contragents;
         }
 
-
         #endregion
+
+        private BindingList<Currency> LoadCurrency(string filter)
+        {
+            BindingList<Currency> _currencies = new BindingList<Currency>();
+
+
+            return _currencies;
+        }
     }
 }

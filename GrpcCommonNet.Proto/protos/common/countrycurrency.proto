@@ -1,0 +1,16 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "protos/common/currency.proto";
+
+package Common;
+
+
+// Модель валюта
+message CountryCurrency {
+    int32 id = 1;
+    string name = 2;
+    Currency base_country = 3;
+    repeated Currency currencies = 4; 
+}

@@ -1,0 +1,76 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.CountryCurrency";
+
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "protos/common/general.proto";
+import "protos/common/currency.proto";
+import "protos/common/countrycurrency.proto";
+
+package currency;
+
+
+// Сервисы
+service CountryCurrencyServices {
+    // *** методы работы
+    
+    rpc GetCountryCurrency(CountryCurrencyRequest) returns (CountryCurrencyResponse);                       // Получить по id
+    rpc GetListCountryCurrency(ListCountryCurrencyRequest) returns (ListCountryCurrencyResponse);           // Получить список по фильтру
+    rpc CreateCountryCurrency(CreateCountryCurrencyRequest) returns (CountryCurrencyResponse);              // Создать 
+    rpc UpdateCountryCurrency(UpdateCountryCurrencyRequest) returns (CountryCurrencyResponse);              // Редактировать 
+    rpc DeleteCountryCurrency(DeleteCountryCurrencyRequest) returns (DeleteCountryCurrencyResponse);        // Удалить по id
+    rpc DeleteIdsCountryCurrency(DeleteIdsCountryCurrencyRequest) returns (UndeletedIdsCountryCurrencyResponse); // Удалить по списку id 
+}
+
+message CountryCurrencyRequest {
+    int32 id = 1;
+    optional google.protobuf.FieldMask field_mask = 2; // Маска полей {"paths": ["id","name", "base_country", "currencies"]}
+}
+
+message CountryCurrencyResponse {
+    Common.Result result = 1;
+    Common.CountryCurrency country_currency = 2;
+}
+
+message ListCountryCurrencyRequest {
+    oneof filter {
+        string name = 1;    // фильтр или по названию
+        string base_country = 2;  // фильтр или по базовой стране
+    };
+    optional bool include_invisible = 3;             // true - все, false - только видимые 
+    optional string order_by = 4;                    // Порядок сортировки, например "name asc, base_country asc"
+    optional google.protobuf.FieldMask field_mask = 5; // Маска полей {"paths": ["id","name", "base_country", "currencies"]}
+}
+
+message ListCountryCurrencyResponse {
+    Common.Result result = 1;
+    repeated Common.CountryCurrency country_currencies = 2;
+}
+
+message CreateCountryCurrencyRequest {
+    Common.CountryCurrency country_currency = 1;
+    optional google.protobuf.FieldMask field_mask = 2; // Маска полей {"paths": ["id","name", "base_country", "currencies"]}
+}
+
+message UpdateCountryCurrencyRequest {
+    Common.CountryCurrency country_currency = 1;
+    optional google.protobuf.FieldMask field_mask = 2; // Маска полей {"paths": ["id","name", "base_country", "currencies"]}
+}
+
+message DeleteCountryCurrencyRequest {
+    int32 id = 1;
+}
+
+message DeleteCountryCurrencyResponse {
+    Common.Result result = 1;
+}
+
+message DeleteIdsCountryCurrencyRequest {
+    repeated int32 ids = 1;
+}
+
+message UndeletedIdsCountryCurrencyResponse {
+    Common.Result result = 1;    
+    repeated int32 undeleted_ids = 2;
+}
