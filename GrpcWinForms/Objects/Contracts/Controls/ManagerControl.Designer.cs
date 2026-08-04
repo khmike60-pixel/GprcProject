@@ -28,42 +28,61 @@
         /// </summary>
         private void InitializeComponent()
         {
+            C1.Win.Input.ComboBoxItem comboBoxItem4 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem5 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem6 = new C1.Win.Input.ComboBoxItem();
             groupBox1 = new GroupBox();
+            cbProjectType = new C1.Win.Input.C1ComboBox();
             label1 = new Label();
             labelExecutor = new Label();
             labelInitiator = new Label();
             c1DropDownControl2 = new C1.Win.Input.C1DropDownControl();
-            textBox1 = new TextBox();
+            tbComment = new TextBox();
             labelManagerType = new Label();
-            lookupInittiator = new C1.Win.Input.C1DropDownControl();
-            c1DropDownControl1 = new C1.Win.Input.C1DropDownControl();
+            empInittiator = new C1.Win.Input.C1DropDownControl();
             labelDescription = new Label();
-            lookupExecutor = new C1.Win.Input.C1DropDownControl();
+            empExecutor = new C1.Win.Input.C1DropDownControl();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)cbProjectType).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1DropDownControl2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)lookupInittiator).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)c1DropDownControl1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)lookupExecutor).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)empInittiator).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)empExecutor).BeginInit();
             SuspendLayout();
             // 
             // groupBox1
             // 
             groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox1.Controls.Add(cbProjectType);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(labelExecutor);
             groupBox1.Controls.Add(labelInitiator);
             groupBox1.Controls.Add(c1DropDownControl2);
-            groupBox1.Controls.Add(textBox1);
+            groupBox1.Controls.Add(tbComment);
             groupBox1.Controls.Add(labelManagerType);
-            groupBox1.Controls.Add(lookupInittiator);
-            groupBox1.Controls.Add(c1DropDownControl1);
+            groupBox1.Controls.Add(empInittiator);
             groupBox1.Controls.Add(labelDescription);
-            groupBox1.Controls.Add(lookupExecutor);
+            groupBox1.Controls.Add(empExecutor);
             groupBox1.Location = new Point(3, 0);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(569, 73);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
+            // 
+            // cbProjectType
+            // 
+            cbProjectType.AutoCompleteCustomSource.AddRange(new string[] { "стандарт", "проект", "распродажа" });
+            cbProjectType.AutoCompleteSource = AutoCompleteSource.ListItems;
+            comboBoxItem4.DisplayText = "стандарт";
+            comboBoxItem5.DisplayText = "проект";
+            comboBoxItem6.DisplayText = "распродажа";
+            cbProjectType.Items.Add(comboBoxItem4);
+            cbProjectType.Items.Add(comboBoxItem5);
+            cbProjectType.Items.Add(comboBoxItem6);
+            cbProjectType.Location = new Point(463, 15);
+            cbProjectType.Name = "cbProjectType";
+            cbProjectType.Size = new Size(94, 23);
+            cbProjectType.TabIndex = 5;
+            cbProjectType.Value = "";
             // 
             // label1
             // 
@@ -104,13 +123,13 @@
             c1DropDownControl2.Size = new Size(54, 23);
             c1DropDownControl2.TabIndex = 9;
             // 
-            // textBox1
+            // tbComment
             // 
-            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textBox1.Location = new Point(121, 44);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(296, 23);
-            textBox1.TabIndex = 7;
+            tbComment.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbComment.Location = new Point(121, 44);
+            tbComment.Name = "tbComment";
+            tbComment.Size = new Size(296, 23);
+            tbComment.TabIndex = 7;
             // 
             // labelManagerType
             // 
@@ -123,20 +142,12 @@
             labelManagerType.Text = "Менедж. тип:";
             labelManagerType.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // lookupInittiator
+            // empInittiator
             // 
-            lookupInittiator.Location = new Point(259, 15);
-            lookupInittiator.Name = "lookupInittiator";
-            lookupInittiator.Size = new Size(54, 23);
-            lookupInittiator.TabIndex = 3;
-            // 
-            // c1DropDownControl1
-            // 
-            c1DropDownControl1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            c1DropDownControl1.Location = new Point(463, 15);
-            c1DropDownControl1.Name = "c1DropDownControl1";
-            c1DropDownControl1.Size = new Size(94, 23);
-            c1DropDownControl1.TabIndex = 5;
+            empInittiator.Location = new Point(259, 15);
+            empInittiator.Name = "empInittiator";
+            empInittiator.Size = new Size(54, 23);
+            empInittiator.TabIndex = 3;
             // 
             // labelDescription
             // 
@@ -148,12 +159,12 @@
             labelDescription.Text = "Описание:";
             labelDescription.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // lookupExecutor
+            // empExecutor
             // 
-            lookupExecutor.Location = new Point(121, 15);
-            lookupExecutor.Name = "lookupExecutor";
-            lookupExecutor.Size = new Size(54, 23);
-            lookupExecutor.TabIndex = 1;
+            empExecutor.Location = new Point(121, 15);
+            empExecutor.Name = "empExecutor";
+            empExecutor.Size = new Size(54, 23);
+            empExecutor.TabIndex = 1;
             // 
             // ManagerControl
             // 
@@ -165,10 +176,10 @@
             Size = new Size(575, 76);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)cbProjectType).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1DropDownControl2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)lookupInittiator).EndInit();
-            ((System.ComponentModel.ISupportInitialize)c1DropDownControl1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)lookupExecutor).EndInit();
+            ((System.ComponentModel.ISupportInitialize)empInittiator).EndInit();
+            ((System.ComponentModel.ISupportInitialize)empExecutor).EndInit();
             ResumeLayout(false);
         }
 
@@ -180,10 +191,10 @@
         private Label labelDescription;
         private Label labelManagerType;
         private Label label1;
-        public C1.Win.Input.C1DropDownControl lookupExecutor;
-        public C1.Win.Input.C1DropDownControl lookupInittiator;
-        public C1.Win.Input.C1DropDownControl c1DropDownControl1;
-        public TextBox textBox1;
+        public C1.Win.Input.C1DropDownControl empExecutor;
+        public C1.Win.Input.C1DropDownControl empInittiator;
+        public TextBox tbComment;
         public C1.Win.Input.C1DropDownControl c1DropDownControl2;
+        private C1.Win.Input.C1ComboBox cbProjectType;
     }
 }

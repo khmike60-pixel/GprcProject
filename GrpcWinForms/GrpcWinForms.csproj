@@ -8,6 +8,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Controls\CurrencyType\**" />
+    <EmbeddedResource Remove="Controls\CurrencyType\**" />
+    <None Remove="Controls\CurrencyType\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Objects\Contracts\Forms\ContractsForm.resx~RF3ff13d93.TMP" />
   </ItemGroup>
   <ItemGroup>
@@ -45,7 +50,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\CurrencyType\" />
     <Folder Include="Objects\Geolocations\Places\" />
   </ItemGroup>
   <ItemGroup>

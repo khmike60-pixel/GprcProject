@@ -32,6 +32,13 @@ message Nomenclature {
 	Common.Unit unit = 3;
 }
 
+
+message Manager {
+  int32 id = 1;								// Идентификатор менеджера
+  string name = 2;							// ФИО менеджера
+  Common.Department department = 3;					// Подразделение менеджера
+}
+
 // Строка контракта
 message Line {
   int32 id = 1;								// Идентификатор строки контракта
@@ -87,9 +94,14 @@ message Contract {
 
   // Дополнительные поля
   Common.Department department = 20;					// Идентификатор подразделение
+  Manager initiator = 21;								// Инициатор 
+  Manager executor = 22;								// Исполнитель
+  string manager_type = 23;
+
   int64 templdoc_id = 24;								// Идентификатор шаблона
   string comment = 25;									// Комментарий к контракту
   Metadata metadata = 26;								// Метаданные аудита
   
   repeated Line lines = 27;
 }
+

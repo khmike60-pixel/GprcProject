@@ -75,6 +75,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             contract = responseContract.Contract;
             headContractControl.SetControls(contract);
             sumContractControl1.SetControls(contract);
+            managerControl1.SetControl(contract);
             try
             {
                 var properties = contract.Data;
@@ -214,7 +215,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
         {
             // Сделать отдельный метод по обновлению контракта !!!!!
 
-
+            // Обновление даыннх контракта на основе данных из headContractControl
             if (headContractControl.companyBuyer.SelectedItem.Id != 0)
                 contract.Buyer = headContractControl.companyBuyer.SelectedCompany;    // Получаем выбранного покупателя из headContractControl
             if (headContractControl.companySeller.SelectedItem.Id != 0)
@@ -227,6 +228,14 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             contract.ExpirationDate = 
                 Timestamp.FromDateTime(headContractControl.dateTimePickerStop.Value.ToUniversalTime());                     // Получаем наименование контракта из headContractControl
 
+            // Обновление данных контракта на основе данных из sumContractControl1
+
+            // Обновление данных контракта на основе данных из propertiesControl1
+
+            // Обновление данных контракта на основе данных из smartGridLines
+
+            // Обновление данных контракта на основе данных из managerControl
+            //contract.Manager = managerControl1.SelectedManager; // Получаем выбранного менеджера из managerControl
 
             // Вызываем событие, если кто-то на него подписан
             OnContractChanged(contract);
