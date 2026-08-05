@@ -9,8 +9,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Controls\CurrencyType\**" />
+    <Compile Remove="Objects\Geolocations\Places\**" />
     <EmbeddedResource Remove="Controls\CurrencyType\**" />
+    <EmbeddedResource Remove="Objects\Geolocations\Places\**" />
     <None Remove="Controls\CurrencyType\**" />
+    <None Remove="Objects\Geolocations\Places\**" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Objects\Contracts\Forms\ContractsForm.resx~RF3ff13d93.TMP" />
@@ -48,9 +51,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Objects\Geolocations\Places\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GrpcCommonNet.Proto\GrpcCommonNet.Proto.csproj" />

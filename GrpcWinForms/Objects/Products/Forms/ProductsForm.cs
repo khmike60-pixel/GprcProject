@@ -55,14 +55,18 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
                 TreeCatalogResponse response = await GrpcClients.GrpcClients.Product.TreeCatalogAsync(request);
 
                 List<TreeCatalog> treeCatalogs = new List<TreeCatalog>();
+                
+                // Добавляет root - строку
+                TreeCatalog root = new TreeCatalog() { Id = -1, Name = "Все" };
+                treeCatalogs.Add(root);
 
                 foreach (var item in response.Catalog)
                 {
                     treeCatalogs.Add(new TreeCatalog()
                     {
-                        Id = Convert.ToInt32(item.Id),
+                        Id = item.Id,
                         Name = item.Name,
-                        ParentId = Convert.ToInt32(item.ParentId),
+                        ParentId = item.ParentId == 0 ? -1 : Convert.ToInt32(item.ParentId),
                         ParentIds = item.ParentIds,
                         ParentNames = item.ParentNames,
                         //IsProductKind = item.IsProductKind,
@@ -90,6 +94,8 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
                     };
                     toolStripButtonLevels.DropDownItems.Add(levelItem);
                 }
+
+                //smartGrid.Footers.Descriptions[0].Aggregates[0].Expression = "Count([Id])";
                 smartGrid.EndUpdate();
             }
             catch (Exception ex)
