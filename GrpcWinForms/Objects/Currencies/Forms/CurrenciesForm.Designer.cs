@@ -86,7 +86,7 @@ namespace GrpcWinForms.Forms
             // 
             // smartGrid
             // 
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid.AllowNodeMove = false;
             smartGrid.AutoGenerateColumns = false;
             smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
@@ -99,7 +99,10 @@ namespace GrpcWinForms.Forms
             footerDescription1.Aggregates.Add(aggregateDefinition1);
             smartGrid.Footers.Descriptions.Add(footerDescription1);
             smartGrid.Footers.Fixed = true;
-            smartGrid.Headers = null;
+            smartGrid.Headers = new string[]
+    {
+    "...\tId\tКод\tКод числ.\tНаименование\tПорядок\tЧасто исп."
+    };
             smartGrid.IdName = null;
             smartGrid.IsEditing = false;
             smartGrid.Location = new Point(0, 31);

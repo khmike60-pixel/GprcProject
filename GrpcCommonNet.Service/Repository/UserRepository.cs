@@ -53,13 +53,13 @@ namespace GrpcCommonNet.Service.Repository
                 await conn.OpenAsync();
                 string query = $@"
                     SELECT distinct  u.UserId UserId, u.UserAbbrev UserSymbol, u.UserName UserLogin, u.IsBlockUser UserIsBlocked,
-                        ifnull(vc.type,2) type, vc.ContragentId, vc.ShortName, vc.Name
+                        ifnull(vc.type,2) type, vc.ContragentId, vc.Short, vc.Name
                     FROM refers.m_user u 
                         left JOIN global_db.v_contragents vc ON vc.ContragentId = u.ID_M_SUBJ 
                         left join refers.m_user_system us on us.UserId = u.UserId      
                         left join refers.m_system s on us.MSysId = s.MSysId      
                     WHERE 1 = 1
-                        and (ifnull(@login,'') = '' or u.UserName Like CONCAT('%',@login,'%') or vc.ShortName Like CONCAT('%',@login,'%'))
+                        and (ifnull(@login,'') = '' or u.UserName Like CONCAT('%',@login,'%') or vc.Short Like CONCAT('%',@login,'%'))
                         and (ifnull(@ApplicationName,'') = '' or s.MSysName Like CONCAT('%',@ApplicationName,'%') or s.BaseName Like CONCAT('%',@ApplicationName,'%') or s.ProductName Like CONCAT('%',@ApplicationName,'%'))
                         and (ifnull(@isBlocked,'') = '' OR u.IsBlockUser = @isBlocked);
                     ";
@@ -230,7 +230,7 @@ namespace GrpcCommonNet.Service.Repository
             user.UserSymbol = rdr["UserSymbol"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["UserSymbol"]);
             user.UserLogin = rdr["UserLogin"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["UserLogin"]);
             user.UserIsBlocked = rdr["UserIsBlocked"] == DBNull.Value ? false : Convert.ToBoolean(rdr["UserIsBlocked"]);
-            user.UserName = rdr["ShortName"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["ShortName"]);
+            user.UserName = rdr["Short"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["Short"]);
             user.Contragent = new Contragent()
             {
                 Id = rdr["ContragentId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["ContragentId"]),

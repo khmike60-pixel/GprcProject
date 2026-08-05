@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="smartGridApps.ColumnInfo" xml:space="preserve">
-    <value>5,1,0,0,0,-1,Columns:0{Width:32;MinWidth:50;MaxWidth:50;Caption:"...";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	1{Width:50;MinWidth:50;MaxWidth:50;Name:"colAppId";Caption:"Id";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	2{Width:211;StarWidth:"2*";MinWidth:50;Name:"colAppName";Caption:"Приложение";AllowMerging:True;AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	3{Width:105;StarWidth:"*";Name:"colAppDb";Caption:"База данных";AllowMerging:True;AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	4{Width:105;StarWidth:"*";Name:"colAppProduct";Caption:"Код";AllowMerging:True;AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	</value>
+    <value>5,1,0,0,0,-1,Columns:0{Width:32;MinWidth:50;MaxWidth:50;Caption:"...";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	1{Width:50;MinWidth:50;MaxWidth:50;Name:"colAppId";Caption:"Id";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	2{Width:211;StarWidth:"2*";MinWidth:50;Name:"colAppName";Caption:"Наименование приложения";AllowMerging:True;AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	3{Width:105;StarWidth:"*";Name:"colAppDb";Caption:"База данных";AllowMerging:True;AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	4{Width:105;StarWidth:"*";Name:"colAppProduct";Caption:"Код приложения";AllowMerging:True;AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	</value>
   </data>
   <metadata name="applicationBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>297, 17</value>
@@ -128,7 +128,7 @@
         AAEAAAD/////AQAAAAAAAAAEAQAAAH5TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW1N5
         c3RlbS5JbnQzMiwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJs
         aWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgcAAAgI
-        CAkCAAAAAAAAACYAAAAPAgAAAAAAAAAICw==
+        CAkCAAAAAAAAACgAAAAPAgAAAAAAAAAICw==
 </value>
   </data>
   <data name="smartGridApps.StyleInfo" xml:space="preserve">
@@ -138,7 +138,7 @@
     <value>17, 17</value>
   </metadata>
   <data name="smartGridUsers.ColumnInfo" xml:space="preserve">
-    <value>7,1,0,0,0,-1,Columns:0{Width:23;MinWidth:50;MaxWidth:50;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	1{Width:49;MinWidth:50;MaxWidth:50;Name:"UserId";Caption:"Id";Style:"DataType:System.Int32;TextAlign:GeneralCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	2{Width:35;MinWidth:50;MaxWidth:50;Name:"colUserIsBlocked";Caption:"Блок.";Style:"DataType:System.Boolean;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	3{Width:100;Name:"UserLogin";Caption:"Login";Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	4{Width:100;Name:"colShortName";Caption:"Краткое имя";AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	5{Width:227;StarWidth:"*";Name:"colContragentName";Caption:"Контрагент";AllowEditing:False;Style:"DataType:System.Int32;TextAlign:GeneralCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	6{Width:60;StarWidth:"2*";MinWidth:60;MaxWidth:60;Name:"UserSymbol";Caption:"Символы";AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	</value>
+    <value>7,1,0,0,0,-1,Columns:0{Width:23;MinWidth:50;MaxWidth:50;Caption:"...";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	1{Width:49;MinWidth:50;MaxWidth:50;Name:"UserId";Caption:"Id";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	2{Width:35;MinWidth:50;MaxWidth:50;Name:"colUserIsBlocked";Caption:"Блок.";AllowMerging:True;Style:"DataType:System.Boolean;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	3{Width:60;StarWidth:"2*";MinWidth:60;MaxWidth:60;Name:"UserSymbol";Caption:"Код";AllowMerging:True;AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	4{Width:100;Name:"UserLogin";Caption:"Логин";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	5{Width:100;Name:"colShortName";Caption:"Кр. имя";AllowMerging:True;AllowEditing:False;Style:"DataType:System.String;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	6{Width:227;StarWidth:"*";Name:"colContragentName";Caption:"Фамилия";AllowMerging:True;AllowEditing:False;Style:"DataType:System.Int32;TextAlign:GeneralCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	</value>
   </data>
   <metadata name="userBindingSource.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>144, 17</value>
@@ -148,7 +148,7 @@
         AAEAAAD/////AQAAAAAAAAAEAQAAAH5TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW1N5
         c3RlbS5JbnQzMiwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJs
         aWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgcAAAgI
-        CAkCAAAAAAAAACcAAAAPAgAAAAAAAAAICw==
+        CAkCAAAAAAAAACkAAAAPAgAAAAAAAAAICw==
 </value>
   </data>
   <data name="smartGridUsers.StyleInfo" xml:space="preserve">

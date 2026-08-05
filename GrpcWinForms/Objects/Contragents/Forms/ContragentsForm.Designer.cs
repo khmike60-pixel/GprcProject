@@ -277,6 +277,7 @@
             smartGrid.AfterResizeColumn += smartGrid_AfterResizeColumn;
             smartGrid.AfterSelChange += smartGrid_AfterSelChange;
             smartGrid.GetUnboundValue += smartGrid_GetUnboundValue;
+            smartGrid.DoubleClick += smartGrid_DoubleClick;
             // 
             // c1SplitContainer1
             // 

@@ -36,7 +36,6 @@ message Nomenclature {
 message Manager {
   int32 id = 1;								// Идентификатор менеджера
   string name = 2;							// ФИО менеджера
-  Common.Department department = 3;					// Подразделение менеджера
 }
 
 // Строка контракта

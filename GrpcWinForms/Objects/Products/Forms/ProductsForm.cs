@@ -55,7 +55,7 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
                 TreeCatalogResponse response = await GrpcClients.GrpcClients.Product.TreeCatalogAsync(request);
 
                 List<TreeCatalog> treeCatalogs = new List<TreeCatalog>();
-                
+
                 // Добавляет root - строку
                 TreeCatalog root = new TreeCatalog() { Id = -1, Name = "Все" };
                 treeCatalogs.Add(root);
@@ -79,8 +79,9 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
                 smartGrid.BuildTree(catalog);
 
                 // Находим максимальный уровень среди всех строк, которые являются узлами
+                toolStripButtonLevels.DropDownItems.Clear();
                 int maxLevel = smartGrid.GetDepth();
-                
+
                 for (int i = 1; i <= maxLevel; i++)
                 {
                     var levelItem = new ToolStripMenuItem($"Уровень {i}");
@@ -94,6 +95,12 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
                     };
                     toolStripButtonLevels.DropDownItems.Add(levelItem);
                 }
+                toolStripButtonLevels.Click += (s, e) =>
+                {
+                    smartGrid.BeginUpdate();
+                    smartGrid.ExpandByLevel(1);
+                    smartGrid.EndUpdate();
+                };
 
                 //smartGrid.Footers.Descriptions[0].Aggregates[0].Expression = "Count([Id])";
                 smartGrid.EndUpdate();
@@ -121,12 +128,12 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
             {
                 smartGrid.BeginUpdate();
                 foreach (var row in smartGrid.Rows.Cast<Row>())
-                    if (row.IsNode) row.Visible =true;
+                    if (row.IsNode) row.Visible = true;
                 smartGrid.EndUpdate();
             }
             else
             {
-                 IsolateCurrentBranch(smartGrid);
+                IsolateCurrentBranch(smartGrid);
             }
 
         }

@@ -71,7 +71,7 @@
             smartGrid.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 4;
+            aggregateDefinition1.Column = 3;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
             smartGrid.Footers.Descriptions.Add(footerDescription1);
             smartGrid.Footers.Fixed = true;

@@ -195,7 +195,10 @@
             footerDescription1.Aggregates.Add(aggregateDefinition1);
             smartGridApps.Footers.Descriptions.Add(footerDescription1);
             smartGridApps.Footers.Fixed = true;
-            smartGridApps.Headers = null;
+            smartGridApps.Headers = new string[]
+    {
+    "...\tId\tНаименование приложения\tБаза данных\tКод приложения"
+    };
             smartGridApps.IdName = null;
             smartGridApps.IsEditing = false;
             smartGridApps.Location = new Point(0, 31);
@@ -304,7 +307,10 @@
             footerDescription2.Aggregates.Add(aggregateDefinition2);
             smartGridUsers.Footers.Descriptions.Add(footerDescription2);
             smartGridUsers.Footers.Fixed = true;
-            smartGridUsers.Headers = null;
+            smartGridUsers.Headers = new string[]
+    {
+    "...\tId\tБлок.\tКод\tЛогин\tКр. имя\tФамилия"
+    };
             smartGridUsers.IdName = null;
             smartGridUsers.IsEditing = false;
             smartGridUsers.Location = new Point(0, 31);

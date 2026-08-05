@@ -230,10 +230,12 @@
             companySeller.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             companySeller.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companySeller.ButtonsSettings.CustomButton.Icon"));
             companySeller.ButtonsSettings.CustomButton.Visible = true;
+            companySeller.ButtonsSettings.ModalButton.Visible = true;
+            companySeller.DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            companySeller.DropDownWidth = 300;
             companySeller.GetDataSourceFunc = null;
             companySeller.Location = new Point(125, 42);
             companySeller.Name = "companySeller";
-            companySeller.ReadOnly = true;
             companySeller.Size = new Size(235, 23);
             companySeller.TabIndex = 18;
             companySeller.Value = "";
@@ -243,12 +245,16 @@
             companyBuyer.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             companyBuyer.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companyBuyer.ButtonsSettings.CustomButton.Icon"));
             companyBuyer.ButtonsSettings.CustomButton.Visible = true;
+            companyBuyer.ButtonsSettings.ModalButton.Visible = true;
+            companyBuyer.DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            companyBuyer.DropDownWidth = 300;
             companyBuyer.GetDataSourceFunc = null;
             companyBuyer.Location = new Point(125, 13);
             companyBuyer.Name = "companyBuyer";
             companyBuyer.Size = new Size(235, 23);
             companyBuyer.TabIndex = 17;
             companyBuyer.Value = "";
+            companyBuyer.ModalButtonClick += companyBuyer_ModalButtonClick;
             // 
             // labelCurrency
             // 

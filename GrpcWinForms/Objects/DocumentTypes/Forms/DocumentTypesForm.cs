@@ -57,6 +57,9 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
                 List<TreeDocumentType> treeDocumentTypes = new List<TreeDocumentType>();
 
+                TreeDocumentType root = new TreeDocumentType() { Id = -1, Name = "Все", ParentId = 0 };
+                treeDocumentTypes.Add(root);
+
                 foreach (DocumentType item in response.DocumentTypes)
                 {
                     treeDocumentTypes.Add(new TreeDocumentType()
@@ -65,7 +68,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         Name = item.Name,
                         Code = item.Code,
                         Form = item.Form,
-                        ParentId = Convert.ToInt32(item.Parent.Id),
+                        ParentId = item.Parent.Id == 0 ? -1 : Convert.ToInt32(item.Parent.Id),
                         Parent = item.Parent,
                         ParentIds = item.Ids,
                         ParentNames = item.Parents,

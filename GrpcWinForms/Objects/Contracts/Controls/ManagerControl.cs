@@ -17,6 +17,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         private Contract _contract;
         public Contract Contract { get => _contract; set => _contract = value; }
 
+        private string[] projectTypes = new string[] { "стандартный", "проект", "распродажа" };
+
         public ManagerControl()
         {
             InitializeComponent();
@@ -32,20 +34,19 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             _contract = cntr;
 
             // Исполнитель
-            empExecutor.Text = _contract.Executor == null? "" : _contract.Executor.Name;
-            empExecutor.Value = _contract.Executor == null? 0 : _contract.Executor.Id;
+            empExecutor.Text = _contract.Executor == null ? "" : _contract.Executor.Name;
+            empExecutor.Value = _contract.Executor == null ? 0 : _contract.Executor.Id;
 
             // Инициатор
-            empInittiator.Text = _contract.Initiator == null? "" : _contract.Initiator.Name;
-            empInittiator.Value = _contract.Initiator == null? 0 : _contract.Initiator.Id;
+            empInittiator.Text = _contract.Initiator == null ? "" : _contract.Initiator.Name;
+            empInittiator.Value = _contract.Initiator == null ? 0 : _contract.Initiator.Id;
 
             // Менеджерский тип
-            string[] projectTypes = new string[] { "стандарт", "проект", "распродажа" };
             cbProjectType.Items.Clear();
             cbProjectType.Items.AddRange(projectTypes);
             for (int i = 0; i < projectTypes.Length; i++)
             {
-                if (projectTypes[i] == Contract.ManagerType)
+                if (projectTypes[i] == _contract.ManagerType)
                 {
                     cbProjectType.SelectedIndex = i; break;
                 }
@@ -53,9 +54,16 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
             // Описание
             tbComment.Text = Contract.Comment;
+        }
 
-
-
+        private void tbComment_TextChanged(object sender, EventArgs e)
+        {
+            _contract.Comment = tbComment.Text;
+            _contract.ManagerType = projectTypes[cbProjectType.SelectedIndex];
+            _contract.Executor.Id = empExecutor.Value == null ? 0 : Convert.ToInt32(empExecutor.Value);
+            _contract.Executor.Name = empExecutor.Text;
+            _contract.Initiator.Id = empInittiator.Value == null ? 0 : Convert.ToInt32(empInittiator.Value);
+            _contract.Initiator.Name = empInittiator.Text;
         }
     }
 }

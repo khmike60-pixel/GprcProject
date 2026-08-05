@@ -2,6 +2,7 @@
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
 using GrpcWinForms.Controls.CompanyDropDown;
+using GrpcWinForms.Objects.Contragents.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -92,6 +93,20 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
 
             return _currencies;
+        }
+
+        private void companyBuyer_ModalButtonClick(object sender, EventArgs e)
+        {
+            ContragentsForm form = new ContragentsForm();
+            form.ModeEdit = true;
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                Contragent contragent = form.SelectedContragent;
+                companyBuyer.Text = contragent.Name;
+                companyBuyer.Value = contragent.Id;
+                textBoxTaxnoBuyer.Text = contragent.Taxno;
+            }
+
         }
     }
 }

@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            C1.Win.Input.ComboBoxItem comboBoxItem4 = new C1.Win.Input.ComboBoxItem();
-            C1.Win.Input.ComboBoxItem comboBoxItem5 = new C1.Win.Input.ComboBoxItem();
-            C1.Win.Input.ComboBoxItem comboBoxItem6 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem1 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem2 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem3 = new C1.Win.Input.ComboBoxItem();
             groupBox1 = new GroupBox();
             cbProjectType = new C1.Win.Input.C1ComboBox();
             label1 = new Label();
@@ -63,6 +63,7 @@
             groupBox1.Controls.Add(labelDescription);
             groupBox1.Controls.Add(empExecutor);
             groupBox1.Location = new Point(3, 0);
+            groupBox1.MinimumSize = new Size(569, 73);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(569, 73);
             groupBox1.TabIndex = 0;
@@ -70,17 +71,18 @@
             // 
             // cbProjectType
             // 
+            cbProjectType.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cbProjectType.AutoCompleteCustomSource.AddRange(new string[] { "стандарт", "проект", "распродажа" });
             cbProjectType.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxItem4.DisplayText = "стандарт";
-            comboBoxItem5.DisplayText = "проект";
-            comboBoxItem6.DisplayText = "распродажа";
-            cbProjectType.Items.Add(comboBoxItem4);
-            cbProjectType.Items.Add(comboBoxItem5);
-            cbProjectType.Items.Add(comboBoxItem6);
-            cbProjectType.Location = new Point(463, 15);
+            comboBoxItem1.DisplayText = "стандарт";
+            comboBoxItem2.DisplayText = "проект";
+            comboBoxItem3.DisplayText = "распродажа";
+            cbProjectType.Items.Add(comboBoxItem1);
+            cbProjectType.Items.Add(comboBoxItem2);
+            cbProjectType.Items.Add(comboBoxItem3);
+            cbProjectType.Location = new Point(435, 15);
             cbProjectType.Name = "cbProjectType";
-            cbProjectType.Size = new Size(94, 23);
+            cbProjectType.Size = new Size(122, 23);
             cbProjectType.TabIndex = 5;
             cbProjectType.Value = "";
             // 
@@ -130,12 +132,13 @@
             tbComment.Name = "tbComment";
             tbComment.Size = new Size(296, 23);
             tbComment.TabIndex = 7;
+            tbComment.TextChanged += tbComment_TextChanged;
             // 
             // labelManagerType
             // 
             labelManagerType.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelManagerType.AutoSize = true;
-            labelManagerType.Location = new Point(377, 19);
+            labelManagerType.Location = new Point(349, 19);
             labelManagerType.Name = "labelManagerType";
             labelManagerType.Size = new Size(80, 15);
             labelManagerType.TabIndex = 10;

@@ -63,7 +63,7 @@
             // 
             // smartGrid
             // 
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid.AllowNodeMove = false;
             smartGrid.AllowSorting = C1.Win.FlexGrid.AllowSortingEnum.SingleColumn;
             smartGrid.AutoGenerateColumns = false;
@@ -72,7 +72,10 @@
             smartGrid.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             smartGrid.Footers.Descriptions.Add(footerDescription1);
             smartGrid.Footers.Fixed = true;
-            smartGrid.Headers = null;
+            smartGrid.Headers = new string[]
+    {
+    "..\tНаименование\tId\tParentId\tКод 2\tJsonCode\tКод 3"
+    };
             smartGrid.IdName = null;
             smartGrid.IsEditing = false;
             smartGrid.Location = new Point(0, 31);

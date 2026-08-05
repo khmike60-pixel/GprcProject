@@ -29,15 +29,16 @@ public class ContractRepository
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
                         SELECT 
-                            c.* , l.*, 
-                            u.Short,
+                            c.* , 
+                            -- l.*, 
+                            -- u.Short,
                             cu.Abbrev, t.DocumentType_Name, t.DocumentType_Code as DocumentType_Code,
                             t.DocumentType_Form as DocumentType_Form
                         FROM cwatis.contracts c 
                             LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
                             left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
-                            LEFT JOIN cwatis.contractlines l ON c.contract_id = l.contract_Id
-                            LEFT JOIN global_db.rfr_units u ON l.UnitId = u.UnitId
+                            -- LEFT JOIN cwatis.contractlines l ON c.contract_id = l.contract_Id
+                            -- LEFT JOIN global_db.rfr_units u ON l.UnitId = u.UnitId
                         WHERE 1=1
                             and c.contract_id = {id}";
             using var rdr = await cmd.ExecuteReaderAsync();
@@ -240,6 +241,8 @@ public class ContractRepository
         {
             contract.Data = Google.Protobuf.WellKnownTypes.Struct.Parser.ParseJson(rdr["contract_data"].ToString() ?? "");
         }
+
+        contract.ManagerType = rdr["ProjectTypes"] == DBNull.Value ? "" : rdr["ProjectTypes"].ToString();
 
         return contract;
     }

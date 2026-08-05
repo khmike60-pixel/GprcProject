@@ -20,6 +20,8 @@ namespace GrpcWinForms.Objects.Contragents.Forms
         private static ContragentServices.ContragentServicesClient _service;
         private Loader loaderContragent = new Loader();
         int row = 0;
+        public bool ModeEdit { get; set; } = false;
+        public Contragent SelectedContragent { get; set; } = null;
 
         public ContragentsForm()
         {
@@ -225,6 +227,12 @@ namespace GrpcWinForms.Objects.Contragents.Forms
             }
         }
 
-
+        private void smartGrid_DoubleClick(object sender, EventArgs e)
+        {
+            if (!ModeEdit) return;
+            SelectedContragent = smartGrid.Rows[smartGrid.Row].DataSource as Contragent;
+            DialogResult dialogResult = DialogResult.OK;
+            Close();
+        }
     }
 }

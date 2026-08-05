@@ -134,6 +134,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             // managerControl1
             // 
             managerControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            managerControl1.Contract = null;
             managerControl1.Location = new Point(3, 176);
             managerControl1.MinimumSize = new Size(575, 84);
             managerControl1.Name = "managerControl1";

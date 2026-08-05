@@ -45,12 +45,17 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                 TreeGeoResponse response = await GrpcClients.GrpcClients.Geolocation.GetTreeGeoAsync(request);
                 geo = new BindingList<Geolocation>(response.Geolocations);
                 List<GeoTree> geoTree = new List<GeoTree>();
+                
+                // Добавляем головной нод
+                GeoTree root = new GeoTree() { Id = -1, Name = "Все" };
+                geoTree.Add(root);
+
                 foreach (var item in response.Geolocations)
                     geoTree.Add(new GeoTree()
                     {
                         Id = Convert.ToInt32(item.Id),
                         Name = item.Name,
-                        ParentId = Convert.ToInt32(item.ParentId),
+                        ParentId = item.ParentId == 0 ? -1 : Convert.ToInt32(item.ParentId),
                         Code2 = item.Code2,
                         JsonCode = item.JsonCodes,
                         Lock = item.Lock == 0 ? false : true,
@@ -76,6 +81,13 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                     };
                     toolStripSplitButtonLevels.DropDownItems.Add(levelItem);
                 }
+
+                toolStripSplitButtonLevels.Click += (s, e) =>
+                {
+                    smartGrid.BeginUpdate();
+                    smartGrid.ExpandByLevel(1);
+                    smartGrid.EndUpdate();
+                };
 
                 smartGrid.EndUpdate();
                 loader.HideLoader();

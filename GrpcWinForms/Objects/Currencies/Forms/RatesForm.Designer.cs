@@ -91,6 +91,7 @@
             // 
             c1SplitContainer1.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
             c1SplitContainer1.Dock = DockStyle.Fill;
+            c1SplitContainer1.HeaderButtonBackColor = Color.Transparent;
             c1SplitContainer1.Location = new Point(0, 0);
             c1SplitContainer1.Name = "c1SplitContainer1";
             c1SplitContainer1.Panels.Add(c1SplitterPanelRates);
@@ -114,7 +115,7 @@
             // smartGridRates
             // 
             smartGridRates.AllowEditing = false;
-            smartGridRates.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGridRates.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridRates.AllowNodeMove = false;
             smartGridRates.AutoGenerateColumns = false;
             smartGridRates.ColumnInfo = resources.GetString("smartGridRates.ColumnInfo");
@@ -127,7 +128,10 @@
             footerDescription1.Aggregates.Add(aggregateDefinition1);
             smartGridRates.Footers.Descriptions.Add(footerDescription1);
             smartGridRates.Footers.Fixed = true;
-            smartGridRates.Headers = null;
+            smartGridRates.Headers = new string[]
+    {
+    "...\tId\tДата\tКурс"
+    };
             smartGridRates.IdName = null;
             smartGridRates.IsEditing = false;
             smartGridRates.Location = new Point(0, 31);
@@ -221,7 +225,7 @@
             // smartGrid
             // 
             smartGrid.AllowEditing = false;
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid.AllowNodeMove = false;
             smartGrid.AutoGenerateColumns = false;
             smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
@@ -234,7 +238,10 @@
             footerDescription2.Aggregates.Add(aggregateDefinition2);
             smartGrid.Footers.Descriptions.Add(footerDescription2);
             smartGrid.Footers.Fixed = true;
-            smartGrid.Headers = null;
+            smartGrid.Headers = new string[]
+    {
+    "...\tId\tКод\tНаименование\tКурс\tДата"
+    };
             smartGrid.IdName = null;
             smartGrid.IsEditing = false;
             smartGrid.Location = new Point(0, 31);
