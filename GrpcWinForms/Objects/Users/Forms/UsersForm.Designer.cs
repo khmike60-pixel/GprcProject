@@ -182,7 +182,7 @@
             // smartGridApps
             // 
             smartGridApps.AllowEditing = false;
-            smartGridApps.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGridApps.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridApps.AllowNodeMove = false;
             smartGridApps.AutoGenerateColumns = false;
             smartGridApps.ColumnInfo = resources.GetString("smartGridApps.ColumnInfo");
@@ -195,7 +195,10 @@
             footerDescription1.Aggregates.Add(aggregateDefinition1);
             smartGridApps.Footers.Descriptions.Add(footerDescription1);
             smartGridApps.Footers.Fixed = true;
-            smartGridApps.Headers = null;
+            smartGridApps.Headers = new string[]
+    {
+    "...\tId\tОписание приложения\tБаза данных\tКод приложения"
+    };
             smartGridApps.IdName = null;
             smartGridApps.IsEditing = false;
             smartGridApps.Location = new Point(0, 31);
@@ -291,7 +294,7 @@
             // smartGridUsers
             // 
             smartGridUsers.AllowEditing = false;
-            smartGridUsers.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
+            smartGridUsers.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridUsers.AllowNodeMove = false;
             smartGridUsers.AutoGenerateColumns = false;
             smartGridUsers.ColumnInfo = resources.GetString("smartGridUsers.ColumnInfo");
@@ -304,7 +307,10 @@
             footerDescription2.Aggregates.Add(aggregateDefinition2);
             smartGridUsers.Footers.Descriptions.Add(footerDescription2);
             smartGridUsers.Footers.Fixed = true;
-            smartGridUsers.Headers = null;
+            smartGridUsers.Headers = new string[]
+    {
+    "...\tId\tБлок\tЛогин\tКр.имя\tНаименование\tКод"
+    };
             smartGridUsers.IdName = null;
             smartGridUsers.IsEditing = false;
             smartGridUsers.Location = new Point(0, 31);
@@ -318,6 +324,7 @@
             smartGridUsers.TabIndex = 4;
             smartGridUsers.AfterSelChange += smartGridUsers_AfterSelChange;
             smartGridUsers.GetUnboundValue += smartGridUsers_GetUnboundValue;
+            smartGridUsers.Resize += smartGridUsers_Resize;
             // 
             // userBindingSource
             // 

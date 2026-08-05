@@ -30,6 +30,9 @@ namespace GrpcWinForms.Objects.Users.Forms
         private BindingList<ApplicationUser> applications;
         private Loader loaderUsers = new Loader();
         private Loader loaderApps = new Loader();
+        private int rowUser = 0;
+        private int rowApp = 0;
+
 
         public UsersForm()
         {
@@ -69,6 +72,7 @@ namespace GrpcWinForms.Objects.Users.Forms
 
         private void UsersForm_Load(object sender, EventArgs e)
         {
+
             loaderUsers.ShowLoader();
             RefreshUsers();
             c1ComboBoxIsBlocked.SelectedText = "Все";
@@ -77,6 +81,9 @@ namespace GrpcWinForms.Objects.Users.Forms
 
         private void smartGridUsers_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
+            if (rowUser == smartGridUsers.Row) return;
+            else rowUser = smartGridUsers.Row;
+
             loaderApps.ShowLoader();
             RefreshApps();
             loaderApps.HideLoader();
@@ -85,6 +92,7 @@ namespace GrpcWinForms.Objects.Users.Forms
         private async void RefreshApps()
         {
             if (smartGridUsers.Row < smartGridUsers.Rows.Fixed) return;
+
             User user = (User)(smartGridUsers.Rows[smartGridUsers.Row].DataSource);
             ApplicationUserFilterRequest request = new ApplicationUserFilterRequest()
             {
@@ -102,7 +110,8 @@ namespace GrpcWinForms.Objects.Users.Forms
 
         private void smartGridUsers_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            User user = (User)(smartGridUsers.Rows[e.Row].DataSource);
+
+            User user = smartGridUsers.Rows[e.Row].DataSource as User;
 
             switch (smartGridUsers.Cols[e.Col].Name)
             {
@@ -314,6 +323,7 @@ namespace GrpcWinForms.Objects.Users.Forms
                 }
             }
         }
+
         private void toolStripButtonAppDelete_Click(object sender, EventArgs e)
         {
 
@@ -321,10 +331,11 @@ namespace GrpcWinForms.Objects.Users.Forms
 
         private void smartGridApps_GetUnboundValue(object sender, UnboundValueEventArgs e)
         {
+
             ApplicationUser relApp = (ApplicationUser)(smartGridApps.Rows[e.Row].DataSource);
 
             Application app = relApp.Application;
-                
+
             switch (smartGridApps.Cols[e.Col].Name)
             {
                 case "colAppId":
@@ -340,6 +351,11 @@ namespace GrpcWinForms.Objects.Users.Forms
                     e.Value = app.Product;
                     break;
             }
+
+        }
+
+        private void smartGridUsers_Resize(object sender, EventArgs e)
+        {
 
         }
     }
