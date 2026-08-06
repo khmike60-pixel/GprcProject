@@ -58,6 +58,64 @@ public class ContractRepository
 
     }
 
+    public async Task<Contract> GetContractFullAsync(int id)
+    {
+        try
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $@"
+                SELECT 
+                    c.* ,
+                    if(cd.ContractDoc_Id is not null, true, false) as haveDoc,
+                    cu.Abbrev, 
+                    t.DocumentType_Name as DocumentType_Name, 
+                    t.DocumentType_Code as DocumentType_Code,
+                    t.DocumentType_Form as DocumentType_Form
+                FROM cwatis.contracts c 
+                    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+                    left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
+                    left join cwatis.contractdocs cd on cd.contract_id = c.contract_id  
+                WHERE 1=1
+                    and c.contract_id = {id};
+                SELECT
+                    l.contractline_id line_id, l.contractline_order line_order, 
+                    l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
+                    l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, 
+                    l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
+                    u.Short
+                FROM cwatis.contractlines l
+                    left join global_db.rfr_units u on l.UnitId = u.UnitId
+                where l.contract_id = {id};
+                ";
+            using var rdr = await cmd.ExecuteReaderAsync();
+            Contract contract = new Contract();
+
+            if (await rdr.ReadAsync())
+            {
+                contract = FillContract(rdr);
+            }
+            if (await rdr.NextResultAsync())
+            {
+                while (await rdr.ReadAsync())
+                {
+                    contract.Lines.Add(FillLine(rdr));
+                }
+
+            }
+
+            return contract;
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetByIdAsync: " + ex.Message);
+            throw;
+        }
+
+    }
+
     public async Task<List<Contract>> GetListAsync(ListContractsRequest request)
     {
         try

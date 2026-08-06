@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using GrapeCity.Documents.Common;
+using Grpc.Core;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
@@ -86,6 +87,16 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 loaderContracts.HideLoader();
                 return;
             }
+            catch (RpcException ex)
+            {
+                if (ex.StatusCode == StatusCode.Unauthenticated)
+                {
+                    LoginForm loginForm = new LoginForm();
+                    if(loginForm.ShowDialog() && DialogResult == DialogResult.OK )
+                    { }
+                }
+
+            }
             catch (Exception ex)
             {
                 loaderContracts.HideLoader();
@@ -97,10 +108,16 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void ContractsForm_Load(object sender, EventArgs e)
         {
-            period.StartDate = new DateTime(DateTime.Now.Year, 1, 1);
-            period.EndDate = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
+            try
+            {
+                period.StartDate = new DateTime(DateTime.Now.Year, 1, 1);
+                period.EndDate = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
 
-            RefreshContract();
+                RefreshContract();
+            } catch (RpcException ex) 
+            {
+                MessageBox.Show("Ошибка gRPC. \n" + ex.Message);
+            }
         }
 
 

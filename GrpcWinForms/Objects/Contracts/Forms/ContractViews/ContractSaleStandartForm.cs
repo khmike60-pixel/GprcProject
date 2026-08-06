@@ -64,7 +64,71 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             }
         }
 
-        private void ContractStandartForm_Load(object sender, EventArgs e)
+        private async void ContractStandartForm_Load(object sender, EventArgs e)
+        {
+            // await RefreshContract();
+            await RefreshContractFull();
+            /*
+            if (this.ContractId == 0)
+            {
+                return;
+            }
+            GetContractRequest requestContract = new GetContractRequest { ContractId = this.ContractId };
+            ContractResponse responseContract = GrpcClients.GrpcClients.Contract.GetContract(requestContract);
+            contract = responseContract.Contract;
+            headContractControl.SetControls(contract);
+            sumContractControl1.SetControls(contract);
+            managerControl1.SetControl(contract);
+            try
+            {
+                var properties = contract.Data;
+                if (properties != null)
+                {
+                    var _root = properties.Fields;
+                    var firstName = properties.Fields.Keys.First();
+
+                    var root = properties.Fields[firstName];
+
+                    DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, firstName);
+                    propertiesControl1.SetTreeNodes(nodes);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка в дополнительных параметрах");
+            }
+            ContractLineRequest requestLines = new ContractLineRequest()
+            {
+                Id = responseContract.Contract.Id,
+                FieldMask = new FieldMask
+                {
+                    Paths = { "id", "contract_id", "root_id", "previous_id", "unit.short", "order", "name", "qty", "price", "amount", "vat_prc", "sum_vat", "sum" }
+                }
+            };
+            ListContractLinesResponse responseLines = GrpcClients.GrpcClients.Contract.GetListContractLines(requestLines);
+            smartGridLines.DataSource = responseLines.Lines;
+
+
+            GetContractByRootRequest requestRoot = new GetContractByRootRequest()
+            {
+                RootId = responseContract.Contract.RootId,
+                FieldMask = new FieldMask
+                {
+                    Paths = { "id", "root_id", "type_contract", "date", "number", "name", "sum", "amount", "sum_vat", "currency.abbrev" }
+                }
+            };
+            ContractIerarchResponse responseChain = GrpcClients.GrpcClients.Contract.GetContractIerarch(requestRoot);
+
+            historyContractControl.smartGridHistory.GetUnboundValue += smartGridHistory_GetUnboundValue;
+            historyContractControl.smartGridHistory.DataSource = responseChain.Contracts;
+
+            this.Text = $"Контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
+            */
+        }
+
+        // Обновление контракта делается одним запросом - быстрее.
+        /* 
+        private async Task RefreshContract()
         {
             if (this.ContractId == 0)
             {
@@ -118,6 +182,42 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 
             historyContractControl.smartGridHistory.GetUnboundValue += smartGridHistory_GetUnboundValue;
             historyContractControl.smartGridHistory.DataSource = responseChain.Contracts;
+
+            this.Text = $"Контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
+        }
+        */
+
+        private async Task RefreshContractFull()
+        {
+            if (this.ContractId == 0)
+            {
+                return;
+            }
+            GetContractRequest requestContract = new GetContractRequest { ContractId = this.ContractId };
+            ContractResponse responseContract = GrpcClients.GrpcClients.Contract.GetContractFull(requestContract);
+            contract = responseContract.Contract;
+            headContractControl.SetControls(contract);
+            sumContractControl1.SetControls(contract);
+            managerControl1.SetControl(contract);
+            try
+            {
+                var properties = contract.Data;
+                if (properties != null)
+                {
+                    var _root = properties.Fields;
+                    var firstName = properties.Fields.Keys.First();
+
+                    var root = properties.Fields[firstName];
+
+                    DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, firstName);
+                    propertiesControl1.SetTreeNodes(nodes);
+                }
+                smartGridLines.DataSource = contract.Lines;
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка в дополнительных параметрах");
+            }
 
             this.Text = $"Контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
         }

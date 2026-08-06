@@ -20,6 +20,7 @@ service ContractServices {
   rpc UpdateContract(UpdateContractRequest) returns (ContractResponse);                   // Обновить контракт без строк контракта (поддержка partial update через FieldMask)
   rpc DeleteContract(DeleteContractRequest) returns (DeleteContractResponse);             // Удалить контракт по id
   rpc DeleteIdsContract(DeleteIdsContractRequest) returns (UndeleteIdsContractResponse);        // Удалить контракты по массиву ids
+  rpc GetContractFull(GetContractRequest) returns (ContractResponse);						// Получить полный контракт по id (одним запросом)
 
 // Дополнительные специфические запросы по контрактам
   rpc GetContractIerarch(GetContractByRootRequest) returns (ContractIerarchResponse);                 // Выдает массив ids, по которому строиться "цепочка" контрактов-допсоглашений-заказов (сверху вниз) 

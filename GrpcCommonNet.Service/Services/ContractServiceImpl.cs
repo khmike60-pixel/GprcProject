@@ -47,6 +47,32 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
         }
     }
 
+    public override async Task<ContractResponse> GetContractFull(GetContractRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetCurrency called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            Contract contract = await _repo.GetContractFullAsync(request.ContractId);
+            if (contract == null || contract.Id == 0)
+            {
+                return new ContractResponse() { Result = { Status = Status.NotFound } };
+            }
+            return new ContractResponse()
+            {
+                Contract = contract,
+                Result = new Result { Status = Status.Ok }
+            };
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetContractFullAsync: " + ex.Message);
+            throw;
+        }
+    }
+
     public override async Task<ListContractsResponse> GetListContracts(ListContractsRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
