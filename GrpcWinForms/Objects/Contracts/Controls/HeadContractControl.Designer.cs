@@ -41,10 +41,10 @@
             labelNumber = new Label();
             textBoxNumber = new TextBox();
             labelDateStart = new Label();
-            dateTimePickerStart = new DateTimePicker();
             labelDateStop = new Label();
-            dateTimePickerStop = new DateTimePicker();
             groupBoxMain = new GroupBox();
+            dateEditStart = new C1.Win.Calendar.C1DateEdit();
+            dateEditStop = new C1.Win.Calendar.C1DateEdit();
             companySeller = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             companyBuyer = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             labelCurrency = new Label();
@@ -54,6 +54,8 @@
             control2 = new Control();
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).BeginInit();
             groupBoxMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dateEditStart).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dateEditStop).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companyBuyer).BeginInit();
             ((System.ComponentModel.ISupportInitialize)comboBoxCurrency).BeginInit();
@@ -169,15 +171,6 @@
             labelDateStart.Text = "от:";
             labelDateStart.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // dateTimePickerStart
-            // 
-            dateTimePickerStart.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            dateTimePickerStart.Format = DateTimePickerFormat.Short;
-            dateTimePickerStart.Location = new Point(266, 100);
-            dateTimePickerStart.Name = "dateTimePickerStart";
-            dateTimePickerStart.Size = new Size(94, 23);
-            dateTimePickerStart.TabIndex = 15;
-            // 
             // labelDateStop
             // 
             labelDateStop.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -189,23 +182,14 @@
             labelDateStop.Text = "Срок действия:";
             labelDateStop.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // dateTimePickerStop
-            // 
-            dateTimePickerStop.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            dateTimePickerStop.Format = DateTimePickerFormat.Short;
-            dateTimePickerStop.Location = new Point(467, 100);
-            dateTimePickerStop.Name = "dateTimePickerStop";
-            dateTimePickerStop.Size = new Size(94, 23);
-            dateTimePickerStop.TabIndex = 16;
-            // 
             // groupBoxMain
             // 
             groupBoxMain.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBoxMain.Controls.Add(dateEditStart);
+            groupBoxMain.Controls.Add(dateEditStop);
             groupBoxMain.Controls.Add(companySeller);
             groupBoxMain.Controls.Add(companyBuyer);
-            groupBoxMain.Controls.Add(dateTimePickerStop);
             groupBoxMain.Controls.Add(labelDateStop);
-            groupBoxMain.Controls.Add(dateTimePickerStart);
             groupBoxMain.Controls.Add(labelDateStart);
             groupBoxMain.Controls.Add(textBoxNumber);
             groupBoxMain.Controls.Add(comboBoxContractType);
@@ -224,6 +208,28 @@
             groupBoxMain.Size = new Size(569, 133);
             groupBoxMain.TabIndex = 16;
             groupBoxMain.TabStop = false;
+            // 
+            // dateEditStart
+            // 
+            dateEditStart.ButtonsSettings.UpDownButton.Visible = false;
+            dateEditStart.EmptyAsNull = true;
+            dateEditStart.FormatType = C1.Win.Input.FormatType.ShortDate;
+            dateEditStart.Location = new Point(266, 100);
+            dateEditStart.Name = "dateEditStart";
+            dateEditStart.Size = new Size(94, 23);
+            dateEditStart.TabIndex = 20;
+            dateEditStart.Value = new DateTime(2026, 1, 1, 0, 0, 0, 0);
+            // 
+            // dateEditStop
+            // 
+            dateEditStop.ButtonsSettings.UpDownButton.Visible = false;
+            dateEditStop.EmptyAsNull = true;
+            dateEditStop.FormatType = C1.Win.Input.FormatType.ShortDate;
+            dateEditStop.Location = new Point(467, 100);
+            dateEditStop.Name = "dateEditStop";
+            dateEditStop.Size = new Size(94, 23);
+            dateEditStop.TabIndex = 19;
+            dateEditStop.Value = new DateTime(2026, 8, 31, 0, 0, 0, 0);
             // 
             // companySeller
             // 
@@ -311,6 +317,8 @@
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).EndInit();
             groupBoxMain.ResumeLayout(false);
             groupBoxMain.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dateEditStart).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dateEditStop).EndInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).EndInit();
             ((System.ComponentModel.ISupportInitialize)companyBuyer).EndInit();
             ((System.ComponentModel.ISupportInitialize)comboBoxCurrency).EndInit();
@@ -337,10 +345,10 @@
         private Label labelCurrency;
         public C1.Win.Input.C1ComboBox comboBoxContractType;
         public TextBox textBoxNumber;
-        public DateTimePicker dateTimePickerStart;
-        public DateTimePicker dateTimePickerStop;
         public C1.Win.Input.C1ComboBox comboBoxCurrency;
         public Contragents.Components.CompanyDropDown companySeller;
         public Contragents.Components.CompanyDropDown companyBuyer;
+        public C1.Win.Calendar.C1DateEdit dateEditStop;
+        public C1.Win.Calendar.C1DateEdit dateEditStart;
     }
 }

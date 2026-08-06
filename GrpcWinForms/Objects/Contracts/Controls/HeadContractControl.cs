@@ -34,13 +34,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             textBoxNumber.Text = contract.Number ?? "1";                    // Номер договора
 
             if (contract.Date != null)                                      // Дата начала договора
-                dateTimePickerStart.Value = contract.Date.ToDateTime();
+                dateEditStart.Value = contract.Date.ToDateTime();
             else
-                dateTimePickerStart.Value = DateTime.Now;
+                dateEditStart.Value = DateTime.Now;
             if (contract.ExpirationDate != null)                            // Дата окончания договора
-                dateTimePickerStop.Value = contract.ExpirationDate.ToDateTime();
+                dateEditStop.Value = contract.ExpirationDate.ToDateTime();
             else
-                dateTimePickerStop.Text = string.Empty;
+                dateEditStop.Value = string.Empty;
 
             textBoxTaxnoBuyer.Text = contract.Buyer.Taxno;                  // ИНН покупателя
             companyBuyer.Text = contract.Buyer.Name;                        // Контрагент покупатель
@@ -103,7 +103,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             {
                 _selectedBuyer = form.SelectedContragent;
                 companyBuyer.Text = _selectedBuyer.Name;
-                companyBuyer.Value = _selectedBuyer.Id;
+                //companyBuyer.Value = _selectedBuyer.Id;
                 textBoxTaxnoBuyer.Text = _selectedBuyer.Taxno;
 
             }
@@ -118,8 +118,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             {
                 _selectedSeller = form.SelectedContragent;
                 companySeller.Text = _selectedSeller.Name;
-                companySeller.Value = _selectedSeller.Id;
+                //companySeller.Value = _selectedSeller.Id;
                 textBoxTaxnoSeller.Text = _selectedSeller.Taxno;
             }
+        }
     }
 }

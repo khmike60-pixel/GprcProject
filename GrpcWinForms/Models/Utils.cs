@@ -1,4 +1,6 @@
 ﻿using C1.Win.FlexGrid;
+using Grpc.Core;
+using GrpcWinForms.Forms;
 using GrpcWinForms.Objects.Contracts.Models;
 using System;
 using System.Collections.Generic;
@@ -102,6 +104,21 @@ namespace GrpcWinForms.Models
                 MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
+        }
+
+        public static bool Authorization()
+        {
+            bool exit = false;
+            LoginForm loginForm = new LoginForm();
+            while (!exit)
+            {
+                if (MessageBox.Show("Вы долго не работали в приложении и Вам необходимо авторизоваться! Готовы?\n" +
+                    "Если Вы ответит Cancel, то приложение будет закрыто", "Необходима авторизация",
+                    MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    System.Windows.Forms.Application.Exit();
+                if (loginForm.ShowDialog() == DialogResult.OK) exit = true;
+            }
+            return exit;
         }
     }
 }

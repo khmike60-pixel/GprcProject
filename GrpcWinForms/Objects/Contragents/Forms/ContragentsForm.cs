@@ -231,8 +231,8 @@ namespace GrpcWinForms.Objects.Contragents.Forms
         {
             if (!ModeEdit) return;
             SelectedContragent = smartGrid.Rows[smartGrid.Row].DataSource as Contragent;
-            DialogResult dialogResult = DialogResult.OK;
-            Close();
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

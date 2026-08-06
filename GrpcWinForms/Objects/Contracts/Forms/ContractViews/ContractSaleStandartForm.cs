@@ -1,8 +1,10 @@
 ﻿using C1.Framework;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Proto.Utils;
+using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
 using System;
@@ -18,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static C1.Util.Win.Win32;
 using Contract = GrpcCommonNet.Library.Contract.Contract;
+using Status = GrpcCommonNet.Library.Common.Status;
 
 namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 { 
@@ -66,127 +69,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 
         private async void ContractStandartForm_Load(object sender, EventArgs e)
         {
-            // await RefreshContract();
             await RefreshContractFull();
-            /*
-            if (this.ContractId == 0)
-            {
-                return;
-            }
-            GetContractRequest requestContract = new GetContractRequest { ContractId = this.ContractId };
-            ContractResponse responseContract = GrpcClients.GrpcClients.Contract.GetContract(requestContract);
-            contract = responseContract.Contract;
-            headContractControl.SetControls(contract);
-            sumContractControl1.SetControls(contract);
-            managerControl1.SetControl(contract);
-            try
-            {
-                var properties = contract.Data;
-                if (properties != null)
-                {
-                    var _root = properties.Fields;
-                    var firstName = properties.Fields.Keys.First();
-
-                    var root = properties.Fields[firstName];
-
-                    DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, firstName);
-                    propertiesControl1.SetTreeNodes(nodes);
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Ошибка в дополнительных параметрах");
-            }
-            ContractLineRequest requestLines = new ContractLineRequest()
-            {
-                Id = responseContract.Contract.Id,
-                FieldMask = new FieldMask
-                {
-                    Paths = { "id", "contract_id", "root_id", "previous_id", "unit.short", "order", "name", "qty", "price", "amount", "vat_prc", "sum_vat", "sum" }
-                }
-            };
-            ListContractLinesResponse responseLines = GrpcClients.GrpcClients.Contract.GetListContractLines(requestLines);
-            smartGridLines.DataSource = responseLines.Lines;
-
-
-            GetContractByRootRequest requestRoot = new GetContractByRootRequest()
-            {
-                RootId = responseContract.Contract.RootId,
-                FieldMask = new FieldMask
-                {
-                    Paths = { "id", "root_id", "type_contract", "date", "number", "name", "sum", "amount", "sum_vat", "currency.abbrev" }
-                }
-            };
-            ContractIerarchResponse responseChain = GrpcClients.GrpcClients.Contract.GetContractIerarch(requestRoot);
-
-            historyContractControl.smartGridHistory.GetUnboundValue += smartGridHistory_GetUnboundValue;
-            historyContractControl.smartGridHistory.DataSource = responseChain.Contracts;
-
-            this.Text = $"Контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
-            */
         }
 
         // Обновление контракта делается одним запросом - быстрее.
-        /* 
-        private async Task RefreshContract()
-        {
-            if (this.ContractId == 0)
-            {
-                return;
-            }
-            GetContractRequest requestContract = new GetContractRequest { ContractId = this.ContractId };
-            ContractResponse responseContract = GrpcClients.GrpcClients.Contract.GetContract(requestContract);
-            contract = responseContract.Contract;
-            headContractControl.SetControls(contract);
-            sumContractControl1.SetControls(contract);
-            managerControl1.SetControl(contract);
-            try
-            {
-                var properties = contract.Data;
-                if (properties != null)
-                {
-                    var _root = properties.Fields;
-                    var firstName = properties.Fields.Keys.First();
-
-                    var root = properties.Fields[firstName];
-
-                    DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, firstName);
-                    propertiesControl1.SetTreeNodes(nodes);
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Ошибка в дополнительных параметрах");
-            }
-            ContractLineRequest requestLines = new ContractLineRequest()
-            {
-                Id = responseContract.Contract.Id,
-                FieldMask = new FieldMask
-                {
-                    Paths = { "id", "contract_id", "root_id", "previous_id", "unit.short", "order", "name", "qty", "price", "amount", "vat_prc", "sum_vat", "sum" }
-                }
-            };
-            ListContractLinesResponse responseLines = GrpcClients.GrpcClients.Contract.GetListContractLines(requestLines);
-            smartGridLines.DataSource = responseLines.Lines;
-
-
-            GetContractByRootRequest requestRoot = new GetContractByRootRequest()
-            {
-                RootId = responseContract.Contract.RootId,
-                FieldMask = new FieldMask
-                {
-                    Paths = { "id", "root_id", "type_contract", "date", "number", "name", "sum", "amount", "sum_vat", "currency.abbrev" }
-                }
-            };
-            ContractIerarchResponse responseChain = GrpcClients.GrpcClients.Contract.GetContractIerarch(requestRoot);
-
-            historyContractControl.smartGridHistory.GetUnboundValue += smartGridHistory_GetUnboundValue;
-            historyContractControl.smartGridHistory.DataSource = responseChain.Contracts;
-
-            this.Text = $"Контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
-        }
-        */
-
         private async Task RefreshContractFull()
         {
             if (this.ContractId == 0)
@@ -311,32 +197,71 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             Close();
         }
 
-        private void buttonOk_Click(object sender, EventArgs e)
+        private async void buttonOk_Click(object sender, EventArgs e)
         {
-            // Сделать отдельный метод по обновлению контракта !!!!!
+            try
+            {
+                Contract oldContract = contract;
+                // Сделать отдельный метод по обновлению контракта !!!!!
 
-            // Обновление даыннх контракта на основе данных из headContractControl
-            if (headContractControl.companyBuyer.SelectedItem.Id != 0)
-                contract.Buyer = headContractControl.companyBuyer.SelectedCompany;    // Получаем выбранного покупателя из headContractControl
-            if (headContractControl.companySeller.SelectedItem.Id != 0)
-                contract.Seller = headContractControl.companySeller.SelectedCompany;  // Получаем выбранного продавца из headContractControl
-            //if (headContractControl.comboBoxCurrency.SelectedIndex != 0)
-            //    contract.Currency = headContractControl.comboBoxCurrency.SelectedItem.Id;    // Получаем выбранную валюту из headContractControl
-            contract.Number = headContractControl.textBoxNumber.Text;                 // Получаем номер контракта из headContractControl
-            contract.Date = 
-                Timestamp.FromDateTime(Convert.ToDateTime(headContractControl.dateEditStart.Value).ToUniversalTime()); // Получаем дату контракта из headContractControl
-            contract.ExpirationDate = 
-                Timestamp.FromDateTime(Convert.ToDateTime(headContractControl.dateEditStop.Value).ToUniversalTime());                     // Получаем наименование контракта из headContractControl
+                // Обновление данных контракта на основе данных из headContractControl
+                // Получаем выбранного покупателя из headContractControl
+                if (headContractControl.companyBuyer.SelectedItem.Id != 0)
+                    contract.Buyer = headContractControl.companyBuyer.SelectedCompany;
 
-            // Обновление данных контракта на основе данных из sumContractControl1
+                // Получаем выбранного продавца из headContractControl
+                if (headContractControl.companySeller.SelectedItem.Id != 0)
+                    contract.Seller = headContractControl.companySeller.SelectedCompany;
 
-            // Обновление данных контракта на основе данных из propertiesControl1
+                //if (headContractControl.comboBoxCurrency.SelectedIndex != 0)
+                //    contract.Currency = headContractControl.comboBoxCurrency.SelectedItem.Id;    // Получаем выбранную валюту из headContractControl
 
-            // Обновление данных контракта на основе данных из smartGridLines
+                // Получаем номер контракта из headContractControl
+                contract.Number = headContractControl.textBoxNumber.Text;
 
-            // Обновление данных контракта на основе данных из managerControl
-            //contract.Manager = managerControl1.SelectedManager; // Получаем выбранного менеджера из managerControl
+                // Получаем дату контракта из headContractControl
+                contract.Date = headContractControl.dateEditStart.Value == DBNull.Value ?
+                    DateTime.MinValue.ToTimestamp() :
+                    Convert.ToDateTime(headContractControl.dateEditStart.Value).ToTimestamp();
 
+                // Получаем дату окончания контракта из headContractControl
+                contract.ExpirationDate = headContractControl.dateEditStop.Value == DBNull.Value ?
+                    DateTime.MinValue.ToUniversalTime().ToTimestamp() :
+                    Convert.ToDateTime(headContractControl.dateEditStop.Value).ToUniversalTime().ToTimestamp();
+
+                // Получаем наименование контракта из headContractControl
+
+                // Обновление данных контракта на основе данных из sumContractControl1
+
+                // Обновление данных контракта на основе данных из propertiesControl1
+
+                // Обновление данных контракта на основе данных из smartGridLines
+
+                // Обновление данных контракта на основе данных из managerControl
+                //contract.Manager = managerControl1.SelectedManager; // Получаем выбранного менеджера из managerControl
+
+                UpdateContractRequest request = new UpdateContractRequest()
+                {
+                    Contract = contract
+                };
+                ContractResponse response = new ContractResponse();
+                response = await GrpcClients.GrpcClients.Contract.UpdateContractAsync(request);
+                if (response.Result.Status != Status.Ok)
+                {
+                    contract = oldContract;
+                    throw new InvalidOperationException($"Ошибка обновления контракта: {response.Result.Message}");
+                }
+                contract = response.Contract;
+            }
+            catch (RpcException ex)
+            {
+                if (ex.StatusCode == StatusCode.Unauthenticated) Utils.Authorization();
+                else MessageBox.Show(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             // Вызываем событие, если кто-то на него подписан
             OnContractChanged(contract);
             //MessageBox.Show("Данные будут записаны");

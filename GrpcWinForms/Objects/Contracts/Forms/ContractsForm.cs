@@ -87,18 +87,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             }
             catch (RpcException ex)
             {
-                if (ex.StatusCode == StatusCode.Unauthenticated)
-                {
-                    LoginForm loginForm = new LoginForm();
-                    bool exit = false;
-                    while (!exit) {
-                        if (MessageBox.Show("Вы долго не работали в приложении и Вам необходимо авторизоваться! Готовы?\n" +
-                            "Если Вы ответит Cancel, то приложение будет закрыто", "Необходима авторизация",
-                            MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                            System.Windows.Forms.Application.Exit();
-                        if(loginForm.ShowDialog() == DialogResult.OK ) exit = true;
-                    }
-                }
+                if (ex.StatusCode == StatusCode.Unauthenticated) Utils.Authorization();
 
             }
             catch (Exception ex)
