@@ -324,9 +324,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             //    contract.Currency = headContractControl.comboBoxCurrency.SelectedItem.Id;    // Получаем выбранную валюту из headContractControl
             contract.Number = headContractControl.textBoxNumber.Text;                 // Получаем номер контракта из headContractControl
             contract.Date = 
-                Timestamp.FromDateTime(headContractControl.dateTimePickerStart.Value.ToUniversalTime()); // Получаем дату контракта из headContractControl
+                Timestamp.FromDateTime(Convert.ToDateTime(headContractControl.dateEditStart.Value).ToUniversalTime()); // Получаем дату контракта из headContractControl
             contract.ExpirationDate = 
-                Timestamp.FromDateTime(headContractControl.dateTimePickerStop.Value.ToUniversalTime());                     // Получаем наименование контракта из headContractControl
+                Timestamp.FromDateTime(Convert.ToDateTime(headContractControl.dateEditStop.Value).ToUniversalTime());                     // Получаем наименование контракта из headContractControl
 
             // Обновление данных контракта на основе данных из sumContractControl1
 

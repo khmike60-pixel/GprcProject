@@ -84,16 +84,20 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
                 contracts = new BindingList<Contract>(response.Contracts);
                 smartGridContracts.DataSource = contracts;
-                loaderContracts.HideLoader();
-                return;
             }
             catch (RpcException ex)
             {
                 if (ex.StatusCode == StatusCode.Unauthenticated)
                 {
                     LoginForm loginForm = new LoginForm();
-                    if(loginForm.ShowDialog() && DialogResult == DialogResult.OK )
-                    { }
+                    bool exit = false;
+                    while (!exit) {
+                        if (MessageBox.Show("Вы долго не работали в приложении и Вам необходимо авторизоваться! Готовы?\n" +
+                            "Если Вы ответит Cancel, то приложение будет закрыто", "Необходима авторизация",
+                            MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                            System.Windows.Forms.Application.Exit();
+                        if(loginForm.ShowDialog() == DialogResult.OK ) exit = true;
+                    }
                 }
 
             }
@@ -101,9 +105,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 loaderContracts.HideLoader();
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-
             }
+            loaderContracts.HideLoader();
+            return;
+
         }
 
         private void ContractsForm_Load(object sender, EventArgs e)
