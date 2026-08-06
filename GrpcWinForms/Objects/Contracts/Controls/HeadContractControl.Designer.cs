@@ -239,6 +239,7 @@
             companySeller.Size = new Size(235, 23);
             companySeller.TabIndex = 18;
             companySeller.Value = "";
+            companySeller.ModalButtonClick += companySeller_ModalButtonClick;
             // 
             // companyBuyer
             // 

@@ -18,8 +18,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
     public partial class HeadContractControl : UserControl
     {
-        private Company SelectedSeller;
-        private Company SelectedBuyer;
+        private Contragent _selectedSeller;
+        private Contragent _selectedBuyer;
 
         public HeadContractControl()
         {
@@ -101,12 +101,25 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             form.ModeEdit = true;
             if (form.ShowDialog() == DialogResult.OK)
             {
-                Contragent contragent = form.SelectedContragent;
-                companyBuyer.Text = contragent.Name;
-                companyBuyer.Value = contragent.Id;
-                textBoxTaxnoBuyer.Text = contragent.Taxno;
+                _selectedBuyer = form.SelectedContragent;
+                companyBuyer.Text = _selectedBuyer.Name;
+                companyBuyer.Value = _selectedBuyer.Id;
+                textBoxTaxnoBuyer.Text = _selectedBuyer.Taxno;
+
             }
 
         }
+
+        private void companySeller_ModalButtonClick(object sender, EventArgs e)
+        {
+            ContragentsForm form = new ContragentsForm();
+            form.ModeEdit = true;
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                _selectedSeller = form.SelectedContragent;
+                companySeller.Text = _selectedSeller.Name;
+                companySeller.Value = _selectedSeller.Id;
+                textBoxTaxnoSeller.Text = _selectedSeller.Taxno;
+            }
     }
 }
