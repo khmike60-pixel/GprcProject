@@ -38,7 +38,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition3 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition4 = new C1.Win.FlexGrid.AggregateDefinition();
-            c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
+            splitContainerAll = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanelMain = new C1.Win.SplitContainer.C1SplitterPanel();
             headContractControl = new HeadContractControl();
             managerControl1 = new ManagerControl();
@@ -68,12 +68,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             propertiesControl1 = new GrpcWinForms.Objects.Contracts.Controls.PropertiesControl();
             c1DockingTabPageHistory = new C1.Win.Command.C1DockingTabPage();
             historyContractControl = new GrpcWinForms.Objects.Contracts.Controls.HistoryContractControl();
-            panelOk = new Panel();
             buttonOk = new Button();
             buttonCancel = new Button();
             panel1 = new Panel();
-            ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
-            c1SplitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)splitContainerAll).BeginInit();
+            splitContainerAll.SuspendLayout();
             c1SplitterPanelMain.SuspendLayout();
             toolStripHead.SuspendLayout();
             c1SplitterPanelSpecification.SuspendLayout();
@@ -87,26 +86,27 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             c1DockingTabPageMain.SuspendLayout();
             c1DockingTabPageProperties.SuspendLayout();
             c1DockingTabPageHistory.SuspendLayout();
-            panelOk.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
-            // c1SplitContainer1
+            // splitContainerAll
             // 
-            c1SplitContainer1.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
-            c1SplitContainer1.Dock = DockStyle.Fill;
-            c1SplitContainer1.HeaderButtonBackColor = Color.Transparent;
-            c1SplitContainer1.Location = new Point(0, 0);
-            c1SplitContainer1.Name = "c1SplitContainer1";
-            c1SplitContainer1.Panels.Add(c1SplitterPanelMain);
-            c1SplitContainer1.Panels.Add(c1SplitterPanelSpecification);
-            c1SplitContainer1.Size = new Size(862, 594);
-            c1SplitContainer1.TabIndex = 2;
+            splitContainerAll.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
+            splitContainerAll.Dock = DockStyle.Fill;
+            splitContainerAll.HeaderButtonBackColor = Color.Transparent;
+            splitContainerAll.Location = new Point(0, 0);
+            splitContainerAll.Name = "splitContainerAll";
+            splitContainerAll.Panels.Add(c1SplitterPanelMain);
+            splitContainerAll.Panels.Add(c1SplitterPanelSpecification);
+            splitContainerAll.Size = new Size(862, 626);
+            splitContainerAll.TabIndex = 2;
             // 
             // c1SplitterPanelMain
             // 
             c1SplitterPanelMain.Collapsible = true;
+            c1SplitterPanelMain.Controls.Add(buttonOk);
             c1SplitterPanelMain.Controls.Add(headContractControl);
+            c1SplitterPanelMain.Controls.Add(buttonCancel);
             c1SplitterPanelMain.Controls.Add(managerControl1);
             c1SplitterPanelMain.Controls.Add(sumContractControl1);
             c1SplitterPanelMain.Controls.Add(toolStripHead);
@@ -218,10 +218,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             c1SplitterPanelSpecification.Collapsible = true;
             c1SplitterPanelSpecification.Controls.Add(c1DockingTab1);
             c1SplitterPanelSpecification.Dock = C1.Win.SplitContainer.PanelDockStyle.Bottom;
-            c1SplitterPanelSpecification.Height = 270;
+            c1SplitterPanelSpecification.Height = 302;
             c1SplitterPanelSpecification.Location = new Point(0, 345);
             c1SplitterPanelSpecification.Name = "c1SplitterPanelSpecification";
-            c1SplitterPanelSpecification.Size = new Size(862, 249);
+            c1SplitterPanelSpecification.Size = new Size(862, 281);
             c1SplitterPanelSpecification.TabIndex = 0;
             c1SplitterPanelSpecification.Text = "Спецификации";
             // 
@@ -231,7 +231,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             c1DockingTab1.Dock = DockStyle.Fill;
             c1DockingTab1.Location = new Point(0, 0);
             c1DockingTab1.Name = "c1DockingTab1";
-            c1DockingTab1.Size = new Size(862, 249);
+            c1DockingTab1.Size = new Size(862, 281);
             c1DockingTab1.TabIndex = 7;
             // 
             // c1DockingTabPageSpecification
@@ -240,7 +240,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             c1DockingTabPageSpecification.Controls.Add(toolStripLines);
             c1DockingTabPageSpecification.Location = new Point(1, 27);
             c1DockingTabPageSpecification.Name = "c1DockingTabPageSpecification";
-            c1DockingTabPageSpecification.Size = new Size(860, 221);
+            c1DockingTabPageSpecification.Size = new Size(860, 253);
             c1DockingTabPageSpecification.TabIndex = 0;
             c1DockingTabPageSpecification.Text = "Спецификация";
             // 
@@ -281,7 +281,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             smartGridLines.Rows.Fixed = 3;
             smartGridLines.SelectedRows = (List<int>)resources.GetObject("smartGridLines.SelectedRows");
             smartGridLines.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridLines.Size = new Size(860, 190);
+            smartGridLines.Size = new Size(860, 222);
             smartGridLines.SortingType = SmartGrid.SortingType.Descending;
             smartGridLines.StyleInfo = resources.GetString("smartGridLines.StyleInfo");
             smartGridLines.TabIndex = 6;
@@ -365,15 +365,15 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             c1DockingTab2.Dock = DockStyle.Fill;
             c1DockingTab2.Location = new Point(0, 0);
             c1DockingTab2.Name = "c1DockingTab2";
-            c1DockingTab2.Size = new Size(864, 622);
+            c1DockingTab2.Size = new Size(864, 654);
             c1DockingTab2.TabIndex = 7;
             // 
             // c1DockingTabPageMain
             // 
-            c1DockingTabPageMain.Controls.Add(c1SplitContainer1);
+            c1DockingTabPageMain.Controls.Add(splitContainerAll);
             c1DockingTabPageMain.Location = new Point(1, 27);
             c1DockingTabPageMain.Name = "c1DockingTabPageMain";
-            c1DockingTabPageMain.Size = new Size(862, 594);
+            c1DockingTabPageMain.Size = new Size(862, 626);
             c1DockingTabPageMain.TabIndex = 0;
             c1DockingTabPageMain.Text = "Основное";
             // 
@@ -382,7 +382,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             c1DockingTabPageProperties.Controls.Add(propertiesControl1);
             c1DockingTabPageProperties.Location = new Point(1, 27);
             c1DockingTabPageProperties.Name = "c1DockingTabPageProperties";
-            c1DockingTabPageProperties.Size = new Size(862, 594);
+            c1DockingTabPageProperties.Size = new Size(862, 626);
             c1DockingTabPageProperties.TabIndex = 1;
             c1DockingTabPageProperties.Text = "Дополнительные параметры";
             // 
@@ -391,7 +391,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             propertiesControl1.Dock = DockStyle.Fill;
             propertiesControl1.Location = new Point(0, 0);
             propertiesControl1.Name = "propertiesControl1";
-            propertiesControl1.Size = new Size(862, 594);
+            propertiesControl1.Size = new Size(862, 626);
             propertiesControl1.TabIndex = 0;
             // 
             // c1DockingTabPageHistory
@@ -399,7 +399,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             c1DockingTabPageHistory.Controls.Add(historyContractControl);
             c1DockingTabPageHistory.Location = new Point(1, 27);
             c1DockingTabPageHistory.Name = "c1DockingTabPageHistory";
-            c1DockingTabPageHistory.Size = new Size(862, 594);
+            c1DockingTabPageHistory.Size = new Size(862, 626);
             c1DockingTabPageHistory.TabIndex = 2;
             c1DockingTabPageHistory.Text = "История";
             // 
@@ -408,24 +408,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             historyContractControl.Dock = DockStyle.Fill;
             historyContractControl.Location = new Point(0, 0);
             historyContractControl.Name = "historyContractControl";
-            historyContractControl.Size = new Size(862, 594);
+            historyContractControl.Size = new Size(862, 626);
             historyContractControl.TabIndex = 0;
-            // 
-            // panelOk
-            // 
-            panelOk.BorderStyle = BorderStyle.FixedSingle;
-            panelOk.Controls.Add(buttonOk);
-            panelOk.Controls.Add(buttonCancel);
-            panelOk.Dock = DockStyle.Bottom;
-            panelOk.Location = new Point(0, 622);
-            panelOk.Name = "panelOk";
-            panelOk.Size = new Size(864, 32);
-            panelOk.TabIndex = 0;
             // 
             // buttonOk
             // 
             buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonOk.Location = new Point(784, 4);
+            buttonOk.Location = new Point(776, 266);
             buttonOk.Name = "buttonOk";
             buttonOk.Size = new Size(75, 23);
             buttonOk.TabIndex = 0;
@@ -436,7 +425,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             // buttonCancel
             // 
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonCancel.Location = new Point(703, 4);
+            buttonCancel.Location = new Point(695, 266);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 23);
             buttonCancel.TabIndex = 1;
@@ -450,7 +439,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(864, 622);
+            panel1.Size = new Size(864, 654);
             panel1.TabIndex = 3;
             // 
             // ContractSaleStandartForm
@@ -459,13 +448,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(864, 654);
             Controls.Add(panel1);
-            Controls.Add(panelOk);
             MinimumSize = new Size(880, 633);
             Name = "ContractSaleStandartForm";
             Text = "Контракт (обычная купля-продажа)";
             Load += ContractStandartForm_Load;
-            ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
-            c1SplitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainerAll).EndInit();
+            splitContainerAll.ResumeLayout(false);
             c1SplitterPanelMain.ResumeLayout(false);
             c1SplitterPanelMain.PerformLayout();
             toolStripHead.ResumeLayout(false);
@@ -483,7 +471,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             c1DockingTabPageMain.ResumeLayout(false);
             c1DockingTabPageProperties.ResumeLayout(false);
             c1DockingTabPageHistory.ResumeLayout(false);
-            panelOk.ResumeLayout(false);
             panel1.ResumeLayout(false);
             ResumeLayout(false);
 
@@ -491,7 +478,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 
         #endregion
 
-        private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
+        private C1.Win.SplitContainer.C1SplitContainer splitContainerAll;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanelMain;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanelSpecification;
         private HeadContractControl headContractControl;
@@ -504,7 +491,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator1;
         private ManagerControl managerControl1;
-        private Panel panelOk;
         private Button buttonCancel;
         private Button buttonOk;
         private ToolStrip toolStripLines;

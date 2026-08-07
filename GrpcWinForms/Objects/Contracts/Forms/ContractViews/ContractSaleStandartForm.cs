@@ -4,6 +4,7 @@ using Grpc.Core;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Proto.Utils;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
@@ -67,26 +68,28 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             }
         }
 
-        private async void ContractStandartForm_Load(object sender, EventArgs e)
+        private void ContractStandartForm_Load(object sender, EventArgs e)
         {
-            await RefreshContractFull();
+            RefreshContractFull();
         }
 
         // Обновление контракта делается одним запросом - быстрее.
-        private async Task RefreshContractFull()
+        private async void RefreshContractFull()
         {
-            if (this.ContractId == 0)
-            {
-                return;
-            }
-            GetContractRequest requestContract = new GetContractRequest { ContractId = this.ContractId };
-            ContractResponse responseContract = GrpcClients.GrpcClients.Contract.GetContractFull(requestContract);
-            contract = responseContract.Contract;
-            headContractControl.SetControls(contract);
-            sumContractControl1.SetControls(contract);
-            managerControl1.SetControl(contract);
             try
             {
+                if (this.ContractId == 0)
+                {
+                    return;
+                }
+                GetContractRequest requestContract = new GetContractRequest { ContractId = this.ContractId };
+                ContractResponse responseContract = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Contract.GetContractFullAsync(requestContract).ResponseAsync
+                );
+                contract = responseContract.Contract;
+                headContractControl.SetControls(contract);
+                sumContractControl1.SetControls(contract);
+                managerControl1.SetControl(contract);
                 var properties = contract.Data;
                 if (properties != null)
                 {
@@ -245,18 +248,15 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                     Contract = contract
                 };
                 ContractResponse response = new ContractResponse();
-                response = await GrpcClients.GrpcClients.Contract.UpdateContractAsync(request);
+                response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Contract.UpdateContractAsync(request).ResponseAsync
+                );
                 if (response.Result.Status != Status.Ok)
                 {
                     contract = oldContract;
                     throw new InvalidOperationException($"Ошибка обновления контракта: {response.Result.Message}");
                 }
                 contract = response.Contract;
-            }
-            catch (RpcException ex)
-            {
-                if (ex.StatusCode == StatusCode.Unauthenticated) Utils.Authorization();
-                else MessageBox.Show(ex.Message);
             }
             catch (Exception ex)
             {

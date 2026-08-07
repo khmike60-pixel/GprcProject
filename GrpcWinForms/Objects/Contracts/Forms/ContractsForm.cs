@@ -10,6 +10,7 @@ using GrpcWinForms.Forms;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
+using GrpcWinForms.GrpcUtils;
 using SmartGrid;
 using System;
 using System.Collections.Generic;
@@ -80,15 +81,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 {
                     Paths = { "id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data", "sum", "type_contract" }
                 };
-                ListContractsResponse response = await GrpcClients.GrpcClients.Contract.GetListContractsAsync(request);
+                // Вызов через обёртку, которая сама обрабатывает RpcException(Unathenticated) и повторную авторизацию
+                ListContractsResponse response = await GrpcRetry.CallAsync(() => 
+                    GrpcClients.GrpcClients.Contract.GetListContractsAsync(request).ResponseAsync
+                );
 
                 contracts = new BindingList<Contract>(response.Contracts);
                 smartGridContracts.DataSource = contracts;
-            }
-            catch (RpcException ex)
-            {
-                if (ex.StatusCode == StatusCode.Unauthenticated) Utils.Authorization();
-
             }
             catch (Exception ex)
             {
@@ -173,7 +172,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             RefreshContract();
         }
 
-        private void smartGridContracts_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
+        private async void smartGridContracts_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
             // Считать строки контракта
             BindingList<Line> lines = new BindingList<Line>();
@@ -188,7 +187,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     {
                         Id = contract.Id
                     };
-                    ListContractLinesResponse response = GrpcClients.GrpcClients.Contract.GetListContractLines(request);
+                    ListContractLinesResponse response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
+                    );
+
+                    //ListContractLinesResponse response = GrpcClients.GrpcClients.Contract.GetListContractLines(request);
                     lines = new BindingList<Line>(response.Lines);
                 }
                 smartGridLines.DataSource = lines;
