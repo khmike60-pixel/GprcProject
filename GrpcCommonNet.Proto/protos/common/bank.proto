@@ -7,14 +7,17 @@ import "protos/common/geolocation.proto";
 package Common;
 
 message Bank {
-	int32 id = 1;											// `ID_M_BANK` 'Идентификатор банка',
-	optional string name = 2;										// `NameBank` 'Наименование банка',
-	string short = 3;										// `MCode` 'Мнемокод банка',
-	string mfo = 4;											// `MFO` 'NCS номер',
-	optional string swift = 5;								// `SWIFT` 'Международный код банка',
-	optional string super_short = 6;						// `SuperShort` 'Супер короткое имя (для мнемокода)',
-	optional string micros_code = 7;						// `MicrosCode` 'Код для идентификации в Микросе',
-	optional bool micros_code_confirm = 8;					// `MicrosCodeConfirm` 'Код для идентификации в Микросе утвержден',
-	optional Common.Geolocation geolocation = 9;			// Страна регистрации (new, global_db.geolocations)
-	optional string comment = 10;							// `Comment` 'Комментарий',
+	int32 id = 1;											// ID_M_BANK 'Идентификатор банка',
+	optional string name = 2;								// NameBank 'Наименование банка',
+	string short = 3;										// MCode 'Мнемокод банка',
+	string bank_code = 4;									// MFO 'NCS номер',
+	optional string bank_swift = 5;							// SWIFT 'Международный код банка',
+	optional Common.Geolocation geolocation = 6;			// ID_M_GEO Страна регистрации (new, global_db.geolocations)
+	optional string address = 7;							// Address Адрес банка
+	optional string comment = 8;							// Comment 'Комментарий',
+															// ------------- Далее поля непонятны (не обрабатываем) -------------
+	optional string super_short = 9;						// SuperShort 'Супер короткое имя (для мнемокода)',
+	optional string micros_code = 10;						// MicrosCode 'Код для идентификации в Микросе', ?????
+	optional bool micros_code_confirm = 11;					// MicrosCodeConfirm 'Код для идентификации в Микросе утвержден' ?????,
+
 }

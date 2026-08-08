@@ -6,6 +6,7 @@ using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Library.DocumentType;
 using GrpcCommonNet.Library.Product;
 using GrpcCommonNet.Proto.Utils;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Products.ProductsForm;
 using SmartGrid;
@@ -53,7 +54,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     }
                 };
                 ListDocumentTypeResponse response = new ListDocumentTypeResponse();
-                response = await GrpcClients.GrpcClients.DocumentType.GetBranchDocumentTypesAsync(request);
+                response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.DocumentType.GetBranchDocumentTypesAsync(request).ResponseAsync);
 
                 List<TreeDocumentType> treeDocumentTypes = new List<TreeDocumentType>();
 
@@ -129,7 +131,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 TreeDocumentType treeNodeKey = (TreeDocumentType)treeNode.Key;
                 DocumentTypeRequest requestById = new DocumentTypeRequest() { Id = treeNodeKey.Id };
 
-                DocumentTypeResponse responseById = await GrpcClients.GrpcClients.DocumentType.GetDocumentTypeAsync(requestById);
+                DocumentTypeResponse responseById = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.DocumentType.GetDocumentTypeAsync(requestById).ResponseAsync);
                 using DocumentTypeForm form = new DocumentTypeForm();
                 form.EditMode = false;
                 form.DocumentType = responseById.DocumentType;
@@ -149,7 +152,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 TreeDocumentType treeNodeKey = (TreeDocumentType)treeNode.Key;
                 DocumentTypeRequest requestById = new DocumentTypeRequest() { Id = treeNodeKey.Id };
 
-                DocumentTypeResponse responseById = await GrpcClients.GrpcClients.DocumentType.GetDocumentTypeAsync(requestById);
+                DocumentTypeResponse responseById = await GrpcRetry.CallAsync(() => 
+                    GrpcClients.GrpcClients.DocumentType.GetDocumentTypeAsync(requestById).ResponseAsync);
                 using DocumentTypeForm form = new DocumentTypeForm();
                 form.EditMode = true;
                 form.DocumentType = responseById.DocumentType;
@@ -161,7 +165,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         DocumentType = form.DocumentType
                     };
 
-                    DocumentTypeResponse response = await GrpcClients.GrpcClients.DocumentType.UpdateDocumentTypeAsync(request);
+                    DocumentTypeResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.DocumentType.UpdateDocumentTypeAsync(request).ResponseAsync);
                     if (response.Result.Status == Status.Ok)
                     {
                         DocumentTypeToNode(response.DocumentType, treeNode);
@@ -193,7 +198,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 NewParentId = ((TreeDocumentType)parentNode.Key).Id
             };
 
-            DocumentTypeResponse response = GrpcClients.GrpcClients.DocumentType.MoveDocumentType(request);
+            DocumentTypeResponse response = GrpcRetry.CallAsync(() => 
+                GrpcClients.GrpcClients.DocumentType.MoveDocumentTypeAsync(request).ResponseAsync).GetAwaiter().GetResult();
             if (response.Result.Status != Status.Ok)
             {
                 MessageBox.Show("Ошибка: \n" + response.Result.Message, "Оишбка");
@@ -226,7 +232,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
                 CreateDocumentTypeRequest request = new CreateDocumentTypeRequest() { DocumentType = form.DocumentType };
 
-                DocumentTypeResponse response = await GrpcClients.GrpcClients.DocumentType.CreateDocumentTypeAsync(request);
+                DocumentTypeResponse response = await GrpcRetry.CallAsync(() => 
+                    GrpcClients.GrpcClients.DocumentType.CreateDocumentTypeAsync(request).ResponseAsync);
                 if (response.Result.Status == Status.Ok)
                 {
                     TreeDocumentType newTree = new TreeDocumentType()
@@ -286,7 +293,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     {
                         Id = (int)smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Id"]
                     };
-                    DeleteDocumentTypeResponse response = await GrpcClients.GrpcClients.DocumentType.DeleteDocumentTypeAsync(request);
+                    DeleteDocumentTypeResponse response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.DocumentType.DeleteDocumentTypeAsync(request).ResponseAsync);
                     int i = smartGridDocumentTypes.RowSel - smartGridDocumentTypes.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
@@ -318,7 +326,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     request.Ids.AddRange(ids);
 
                     UndeletedIdsDocumentTypeResponse response = new UndeletedIdsDocumentTypeResponse();
-                    response = await GrpcClients.GrpcClients.DocumentType.DeleteIdsDocumentTypeAsync(request);
+                    response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.DocumentType.DeleteIdsDocumentTypeAsync(request).ResponseAsync);
                     if (response.Result.Status != Status.Ok)
                     {
                         MessageBox.Show("Ошибка при удалении: " + response.Result.Message);

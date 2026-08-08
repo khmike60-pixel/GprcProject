@@ -47,8 +47,12 @@ namespace GrpcWinForms.Controls.PeriodControl
 
         private void PeriodComponent_TextChanged(object sender, EventArgs e)
         {
-            StartDate = form.StartDate;
-            EndDate   = form.EndDate;
+            _startDate = form.StartDate;
+            _endDate = form.EndDate;
+        }
+
+        private void PeriodComponent_DropDownButtonClick(object sender, EventArgs e)
+        {
         }
     }
 }

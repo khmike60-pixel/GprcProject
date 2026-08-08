@@ -4,6 +4,7 @@ using C1.Win.Themes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contragent;
 using GrpcWinForms.Controls.CompanyDropDown;
+using GrpcWinForms.GrpcUtils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,7 +31,7 @@ namespace GrpcWinForms.Objects.Test
             smart.DataSource = GetData("");
         }
 
-        public BindingList<Company> GetData(string filter)
+        public async Task<BindingList<Company>> GetData(string filter)
         {
             SearchRequest searchRequest = new SearchRequest()
             {
@@ -41,7 +42,8 @@ namespace GrpcWinForms.Objects.Test
             searchRequest.FieldMask =
                 new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "taxno" } };
 
-            ListContragentResponse searchResponse = GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
+            ListContragentResponse searchResponse = await GrpcRetry.CallAsync(() => 
+                GrpcClients.GrpcClients.Contragent.SearchListContragentAsync(searchRequest).ResponseAsync);
 
             _contragents.Clear();
             foreach (Contragent item in searchResponse.Contragents)

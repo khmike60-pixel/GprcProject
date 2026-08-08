@@ -132,7 +132,6 @@ namespace GrpcWinForms.Controls.PeriodControl
             editQuarter.Value = "";
             editQuarter.SelectedIndexChanged += editQuarter_SelectedIndexChanged;
             editQuarter.Enter += control_Enter;
-            editQuarter.Leave += editQuarter_Leave;
             // 
             // editMonth
             // 

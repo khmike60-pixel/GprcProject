@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Currency;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,9 @@ namespace GrpcWinForms.Objects.Currencies.Forms
                 Date = dateTimePickerDateRates.Value.ToLocalTime().ToUniversalTime().ToTimestamp()
             };
 
-            GetListCurrencyRateDateResponse response = await GrpcClients.GrpcClients.Currency.GetListCurrencyRateDateAsync(request);
+            GetListCurrencyRateDateResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Currency.GetListCurrencyRateDateAsync(request).ResponseAsync
+            );
 
             currencyRates = new BindingList<CurrencyRate>(response.CurrencyRates);
             smartGrid.DataSource = currencyRates;
@@ -58,7 +61,9 @@ namespace GrpcWinForms.Objects.Currencies.Forms
                 EndDate = dateTimePickerDateRates.Value.ToLocalTime().ToUniversalTime().ToTimestamp()
             };
 
-            ListCurrencyRateResponse response = await GrpcClients.GrpcClients.Currency.GetListCurrencyRateAsync(request);
+            ListCurrencyRateResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Currency.GetListCurrencyRateAsync(request).ResponseAsync
+            );
             rates = new BindingList<Rate>(response.Rates);
             smartGridRates.DataSource = rates;
             loaderRates.HideLoader();

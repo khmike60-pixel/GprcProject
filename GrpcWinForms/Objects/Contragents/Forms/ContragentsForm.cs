@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contragent;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using SmartGrid;
 using System;
@@ -59,10 +60,13 @@ namespace GrpcWinForms.Objects.Contragents.Forms
                 {
                     Paths = { "id", "name", "taxno", "type", "country_symbol" }
                 };
-                CountListContragentResponse responseCount = await GrpcClients.GrpcClients.Contragent.CountListContragentAsync(request);
+                CountListContragentResponse responseCount = await GrpcRetry.CallAsync(()=>
+                    GrpcClients.GrpcClients.Contragent.CountListContragentAsync(request).ResponseAsync
+                );
 
-                //ListContragentResponse response = await GrpcClients.GrpcClients.Contragent.GetListContragentAsync(request);
-                ListContragentResponse response = await GrpcClients.GrpcClients.Contragent.ShortListContragentAsync(request);
+                ListContragentResponse response = await GrpcRetry.CallAsync(()=>
+                    GrpcClients.GrpcClients.Contragent.ShortListContragentAsync(request).ResponseAsync
+                );
 
 
                 BindingList<Contragent> contragents = new BindingList<Contragent>(response.Contragents);
@@ -84,7 +88,7 @@ namespace GrpcWinForms.Objects.Contragents.Forms
             Refresh(sender, e);
         }
 
-        private void smartGrid_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
+        private async void smartGrid_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
             if (smartGrid.RowSel <= smartGrid.Rows.Fixed - 1) return;
             if (row == smartGrid.Row) return;
@@ -92,7 +96,7 @@ namespace GrpcWinForms.Objects.Contragents.Forms
 
             Contragent contragent = (Contragent)smartGrid.Rows[smartGrid.RowSel].DataSource;
 
-            contragent = GetContragent(contragent.Id);
+            contragent = await GetContragent(contragent.Id);
             try
             {
                 if (contragent.Type == ContragentType.Entity)
@@ -135,7 +139,7 @@ namespace GrpcWinForms.Objects.Contragents.Forms
             */
         }
 
-        private Contragent GetContragent(int id)
+        private async Task<Contragent> GetContragent(int id)
         {
 
             ContragentRequest request = new ContragentRequest()
@@ -143,7 +147,9 @@ namespace GrpcWinForms.Objects.Contragents.Forms
                 Id = id
                 //FieldMask = new FieldMask() { Paths = { "id", "name", "taxno", "type", "country_symbol", "enity" } }
             };
-            ContragentResponse response = GrpcClients.GrpcClients.Contragent.GetContragent(request);
+            ContragentResponse response = await GrpcRetry.CallAsync(()=>
+                GrpcClients.GrpcClients.Contragent.GetContragentAsync(request).ResponseAsync
+            );
 
             return response.Contragent;
         }

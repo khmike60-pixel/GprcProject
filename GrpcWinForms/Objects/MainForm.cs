@@ -15,6 +15,7 @@ using GrpcWinForms.Objects.Users.Forms;
 using System;
 using System.Windows.Forms;
 using GrpcWinForms.Objects.Departaments;
+using GrpcWinForms.Objects.Banks.Forms;
 
 namespace GrpcWinForms.Forms
 {
@@ -177,6 +178,17 @@ namespace GrpcWinForms.Forms
                 if (child is OurCompaniesForm) { child.Activate(); return; }
             }
             var f = new OurCompaniesForm { MdiParent = this };
+            f.Show();
+
+        }
+
+        private void BanksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is BanksForm) { child.Activate(); return; }
+            }
+            var f = new BanksForm { MdiParent = this };
             f.Show();
 
         }

@@ -1,6 +1,7 @@
 ﻿using C1.Win.FlexGrid;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Geolocation;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Geolocations.Models;
 using System;
@@ -42,7 +43,8 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                     Name = textBoxGeoName.Text
                 };
 
-                TreeGeoResponse response = await GrpcClients.GrpcClients.Geolocation.GetTreeGeoAsync(request);
+                TreeGeoResponse response = await GrpcRetry.CallAsync(() => 
+                    GrpcClients.GrpcClients.Geolocation.GetTreeGeoAsync(request).ResponseAsync);
                 geo = new BindingList<Geolocation>(response.Geolocations);
                 List<GeoTree> geoTree = new List<GeoTree>();
                 

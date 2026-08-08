@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using GrpcWinForms.Forms;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -117,12 +118,29 @@ namespace GrpcWinForms.GrpcUtils
             while (!exit)
             {
                 if (MessageBox.Show("Вы долго не работали в приложении и Вам необходимо авторизоваться! Готовы?\n" +
-                    "Если Вы ответит Cancel, то приложение будет закрыто", "Необходима авторизация",
-                    MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    "Если Вы ответите Отмена, то приложение будет закрыто", "Ошибка авторизации", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)
                     Application.Exit();
                 if (loginForm.ShowDialog() == DialogResult.OK) exit = true;
             }
             return exit;
+        }
+
+        // Вызывается из формы или временной кнопки
+        public static async Task<int> SimulateUnauthThenSuccessAsync()
+        {
+            int counter = 0;
+            int result = await GrpcRetry.CallAsync<int>(async () =>
+            {
+                await Task.Delay(10); // имитация работы
+                if (counter++ == 0)
+                {
+                    Debug.WriteLine("Simulate: throwing Unauthenticated");
+                    throw new RpcException(new Status(StatusCode.Unauthenticated, "simulated"));
+                }
+                Debug.WriteLine("Simulate: returning success");
+                return 123;
+            });
+            return result;
         }
     }
 }

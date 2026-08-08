@@ -2,6 +2,7 @@
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
 using GrpcWinForms.Controls.CompanyDropDown;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Contragents.Forms;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             searchRequest.FieldMask =
                 new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "taxno" } };
 
-            ListContragentResponse searchResponse = GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
+            ListContragentResponse searchResponse = GrpcRetry.CallAsync(()=>
+                GrpcClients.GrpcClients.Contragent.SearchListContragentAsync(searchRequest).ResponseAsync).GetAwaiter().GetResult();
 
             BindingList<Company> _contragents = new BindingList<Company>();
             foreach (Contragent item in searchResponse.Contragents)

@@ -7,6 +7,7 @@ using GrpcCommonNet.Library.ApplicationUser;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Library.User;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Applications;
 //using Microsoft.VisualBasic.ApplicationServices;
@@ -63,7 +64,8 @@ namespace GrpcWinForms.Objects.Users.Forms
             if (c1ComboBoxIsBlocked.SelectedText == "Блокированы") request.UserIsBlocked = true;
             else if (c1ComboBoxIsBlocked.SelectedText == "Активные") request.UserIsBlocked = false;
 
-            ListUserResponse response = await GrpcClients.GrpcClients.User.GetListUserAsync(request);
+            ListUserResponse response = await GrpcRetry.CallAsync(() => 
+                GrpcClients.GrpcClients.User.GetListUserAsync(request).ResponseAsync);
 
             users = new BindingList<User>(response.Users.ToList());
             smartGridUsers.DataSource = users;
@@ -102,7 +104,8 @@ namespace GrpcWinForms.Objects.Users.Forms
             };
 
             loaderApps.ShowLoader();
-            ListApplicationUserResponse response = await GrpcClients.GrpcClients.ApplicationUser.GetListApplicationUserAsync(request);
+            ListApplicationUserResponse response = await GrpcRetry.CallAsync(() => 
+                GrpcClients.GrpcClients.ApplicationUser.GetListApplicationUserAsync(request).ResponseAsync);
             applications = new BindingList<ApplicationUser>(response.ApplicationUsers.ToList());
             smartGridApps.DataSource = applications;
             loaderApps.HideLoader();
@@ -150,7 +153,8 @@ namespace GrpcWinForms.Objects.Users.Forms
                         UserIsBlocked = userForm.User.UserIsBlocked
                     };
 
-                    UserResponse response = await GrpcClients.GrpcClients.User.CreateUserAsync(request);
+                    UserResponse response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.User.CreateUserAsync(request).ResponseAsync);
                     if (response.Result.Status != Status.Ok || response.User == null)
                     {
                         MessageBox.Show("Добавить данные не удалось.");
@@ -185,7 +189,8 @@ namespace GrpcWinForms.Objects.Users.Forms
                     };
                     if (userForm.User.Contragent?.CalculateSize() > 0) request.ContragentId = userForm.User.Contragent.Id;
 
-                    UserResponse response = await GrpcClients.GrpcClients.User.UpdateUserAsync(request);
+                    UserResponse response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.User.UpdateUserAsync(request).ResponseAsync);
                     if (response.Result.Status != Status.Ok || response.User == null)
                     {
                         MessageBox.Show("Добавить данные не удалось.");
@@ -220,7 +225,8 @@ namespace GrpcWinForms.Objects.Users.Forms
                     {
                         UserId = (int)smartGridUsers.Rows[smartGridUsers.RowSel]["UserId"]
                     };
-                    DeleteUserResponse response = await GrpcClients.GrpcClients.User.DeleteUserAsync(request);
+                    DeleteUserResponse response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.User.DeleteUserAsync(request).ResponseAsync);
                     int i = smartGridUsers.RowSel - smartGridUsers.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
@@ -251,7 +257,8 @@ namespace GrpcWinForms.Objects.Users.Forms
                     request.Ids.AddRange(ids);
 
                     UndeleteIdsUserResponse response = new UndeleteIdsUserResponse();
-                    response = await GrpcClients.GrpcClients.User.DeleteIdsUserAsync(request);
+                    response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.User.DeleteIdsUserAsync(request).ResponseAsync);
 
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
@@ -285,7 +292,8 @@ namespace GrpcWinForms.Objects.Users.Forms
                         AddApplicationUserRequest request = new AddApplicationUserRequest();
                         request.UserId = ((User)(smartGridUsers.Rows[smartGridUsers.Row].DataSource)).UserId;
                         request.ApplicationId = app.Id;
-                        AddApplicationUserResponse response = await GrpcClients.GrpcClients.ApplicationUser.AddApplicationUserAsync(request);
+                        AddApplicationUserResponse response = await GrpcRetry.CallAsync(() => 
+                            GrpcClients.GrpcClients.ApplicationUser.AddApplicationUserAsync(request).ResponseAsync);
                         if (response.Result.Status != Status.Ok || response.ApplicationUser == null)
                         {
                             MessageBox.Show("Добавить приложение пользователю не удалось.");
@@ -309,7 +317,8 @@ namespace GrpcWinForms.Objects.Users.Forms
                         User user = (User)smartGridUsers.Rows[smartGridUsers.Row].DataSource;
                         request.UserId = user.UserId;
 
-                        response = await GrpcClients.GrpcClients.ApplicationUser.AddIdsApplicationUserAsync(request);
+                        response = await GrpcRetry.CallAsync(() => 
+                            GrpcClients.GrpcClients.ApplicationUser.AddIdsApplicationUserAsync(request).ResponseAsync);
 
                         foreach (ApplicationUser app_user in response.ApplicationUsers)
                         {

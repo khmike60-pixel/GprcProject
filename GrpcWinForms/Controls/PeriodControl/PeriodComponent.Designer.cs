@@ -35,6 +35,7 @@
             // 
             DropDownAlign = C1.Framework.DropDownAlignment.Left;
             DropDownWidth = 250;
+            DropDownButtonClick += PeriodComponent_DropDownButtonClick;
             TextChanged += PeriodComponent_TextChanged;
             Layout += PeriodComponent_Layout;
             ((System.ComponentModel.ISupportInitialize)this).EndInit();

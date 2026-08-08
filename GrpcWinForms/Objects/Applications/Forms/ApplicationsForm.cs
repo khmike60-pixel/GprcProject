@@ -3,6 +3,7 @@ using GrpcCommonNet.Library.Application;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Forms;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Applications.Forms;
 using System;
@@ -92,7 +93,9 @@ namespace GrpcWinForms.Objects.Applications
                 Db = textBoxAppName.Text
             };
 
-            ListApplicationResponse response = await GrpcClients.GrpcClients.Application.GetListApplicationAsync(request);
+            ListApplicationResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Application.GetListApplicationAsync(request).ResponseAsync
+            );
             applications = new BindingList<Application>(response.Applications);
             smartGrid.DataSource = applications;
         }
@@ -102,7 +105,7 @@ namespace GrpcWinForms.Objects.Applications
             RefreshApplication();
         }
 
-        private void toolStripButtonNew_Click(object sender, EventArgs e)
+        private async void toolStripButtonNew_Click(object sender, EventArgs e)
         {
             using (var form = new ApplicationForm())
             {
@@ -117,7 +120,9 @@ namespace GrpcWinForms.Objects.Applications
                         Product = form.Application.Product
                     };
 
-                    ApplicationResponse response = GrpcClients.GrpcClients.Application.CreateApplication(request);
+                    ApplicationResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Application.CreateApplicationAsync(request).ResponseAsync
+                    );
                     if (response.Result.Status != Status.Ok || response.Application == null)
                     {
                         MessageBox.Show("Добавить данные не удалось.");
@@ -161,7 +166,9 @@ namespace GrpcWinForms.Objects.Applications
                         Id = form.Application.Id
                     };
 
-                    ApplicationResponse response = await GrpcClients.GrpcClients.Application.UpdateApplicationAsync(request);
+                    ApplicationResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Application.UpdateApplicationAsync(request).ResponseAsync
+                    );
                     if (response.Application != null)
                     {
                         applications[smartGrid.RowSel - smartGrid.Rows.Fixed] = response.Application;
@@ -189,7 +196,9 @@ namespace GrpcWinForms.Objects.Applications
                     {
                         Id = (int)smartGrid.Rows[smartGrid.RowSel]["Id"]
                     };
-                    DeleteApplicationResponse response = await GrpcClients.GrpcClients.Application.DeleteApplicationAsync(request);
+                    DeleteApplicationResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Application.DeleteApplicationAsync(request).ResponseAsync
+                    );
                     int i = smartGrid.RowSel - smartGrid.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
@@ -218,7 +227,9 @@ namespace GrpcWinForms.Objects.Applications
                     request.Ids.AddRange(ids);
 
                     UndeleteIdsApplicationResponse response = new UndeleteIdsApplicationResponse();
-                    response = await GrpcClients.GrpcClients.Application.DeleteIdsApplicationAsync(request);
+                    response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.Application.DeleteIdsApplicationAsync(request).ResponseAsync
+                    );
 
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));

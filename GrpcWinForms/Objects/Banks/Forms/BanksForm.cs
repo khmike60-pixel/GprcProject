@@ -1,10 +1,10 @@
 ﻿using C1.Win.FlexGrid;
+using GrpcCommonNet.Library.Bank;
 using GrpcCommonNet.Library.Common;
-using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Library.Department;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
-using GrpcWinForms.Objects.Currencies.Forms;
+using GrpcWinForms.Objects.Departaments;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,60 +15,55 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Departaments
+namespace GrpcWinForms.Objects.Banks.Forms
 {
-    public partial class DepartamentsForm : Form
+    public partial class BanksForm : Form
     {
-        private BindingList<Department> departments;
-        public DepartamentsForm()
+        private BindingList<Bank> banks = new BindingList<Bank>();
+        public BanksForm()
         {
             InitializeComponent();
         }
 
-        private async Task RefreshDepartments(object sender, EventArgs e)
+        public async void RefreshBanks()
         {
-            ListDepartmentRequest request = new ListDepartmentRequest()
+            BankFilterRequest request = new BankFilterRequest()
             {
-                DepartmentShort = tShort.Text,
-                Symbol = "",
-                FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "short", "symbol" } }
+                Name = tShort.Text,
+                FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "geolocation", "short", "bank_code" } }
 
             };
 
-            ListDepartmentResponse response = new ListDepartmentResponse();
+            ListBankResponse response = new ListBankResponse();
             response = await GrpcRetry.CallAsync(() =>
-                GrpcClients.GrpcClients.Department.GetListDepartmentAsync(request).ResponseAsync);
+                GrpcClients.GrpcClients.Bank.GetListBankAsync(request).ResponseAsync);
 
-            departments = new BindingList<Department>(response.Departments);
-            smartGrid.DataSource = departments;
+            banks = new BindingList<Bank>(response.Banks);
+
+            smartGrid.DataSource = banks;
         }
 
-        private void DepartamentsForm_Load(object sender, EventArgs e)
+        private void BanksForm_Load(object sender, EventArgs e)
         {
-            RefreshDepartments(sender, e);
-        }
-
-        private void toolStripButtonRefresh_Click(object sender, EventArgs e)
-        {
-            RefreshDepartments(sender, e);
+            RefreshBanks();
         }
 
         private async void toolStripButtonNew_Click(object sender, EventArgs e)
         {
             try
             {
-                using (var form = new DepartmentForm())
+                using (BankForm form = new BankForm())
                 {
                     if (form.ShowDialog() == DialogResult.OK)
                     {
-                        CreateDepartmentRequest request = new CreateDepartmentRequest
-                        {
-                            Department = form.Department
-                        };
 
-                        DepartmentResponse response = await GrpcRetry.CallAsync(() =>
-                            GrpcClients.GrpcClients.Department.CreateDepartmentAsync(request).ResponseAsync);
-                        if (response.Result.Status != Status.Ok || response.Department == null)
+                        CreateBankRequest request = new CreateBankRequest()
+                        {
+                            Bank = form.Bank
+                        };
+                        BankResponse response = await GrpcRetry.CallAsync(() =>
+                            GrpcClients.GrpcClients.Bank.CreateBankAsync(request));
+                        if (response.Result.Status != Status.Ok || response.Bank == null)
                         {
                             MessageBox.Show("Добавить данные не удалось.");
                             return;
@@ -76,32 +71,33 @@ namespace GrpcWinForms.Objects.Departaments
                         else
                         {
                             int rowsel = smartGrid.RowSel;
-                            departments.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Department);
+                            banks.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Bank);
                             smartGrid.Row = rowsel;
                         }
-
                     }
                 }
             }
-            catch (Exception ex) { }
-
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private async void toolStripButtonDouble_Click(object sender, EventArgs e)
         {
-            Department department = new Department();
-            department = smartGrid.Rows[smartGrid.Row].DataSource as Department;
-            CreateDepartmentRequest request = new CreateDepartmentRequest()
+            Bank bank = new Bank();
+            bank = smartGrid.Rows[smartGrid.Row].DataSource as Bank;
+            CreateBankRequest request = new CreateBankRequest()
             {
-                Department = department
+                Bank = bank
             };
-            department.Name += " 1";
+            bank.Name += " 1";
 
-            DepartmentResponse response = new DepartmentResponse();
+            BankResponse response = new BankResponse();
             response = await GrpcRetry.CallAsync(() =>
-                GrpcClients.GrpcClients.Department.CreateDepartmentAsync(request).ResponseAsync);
+                GrpcClients.GrpcClients.Bank.CreateBankAsync(request).ResponseAsync);
 
-            if (response.Result.Status != Status.Ok || response.Department == null)
+            if (response.Result.Status != Status.Ok || response.Bank == null)
             {
                 MessageBox.Show("Добавить данные не удалось.");
                 return;
@@ -109,27 +105,27 @@ namespace GrpcWinForms.Objects.Departaments
             else
             {
                 int rowsel = smartGrid.RowSel;
-                departments.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Department);
+                banks.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Bank);
                 smartGrid.Row = rowsel;
             }
         }
 
         private async void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
-            using (var form = new DepartmentForm())
+            using (var form = new BankForm())
             {
-                form.Department = departments[smartGrid.RowSel - smartGrid.Rows.Fixed];
+                form.Bank = banks[smartGrid.RowSel - smartGrid.Rows.Fixed];
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    UpdateDepartmentRequest request = new UpdateDepartmentRequest
+                    UpdateBankRequest request = new UpdateBankRequest
                     {
-                        Department = form.Department
+                        Bank = form.Bank
                     };
 
-                    DepartmentResponse response = await GrpcRetry.CallAsync(() => 
-                        GrpcClients.GrpcClients.Department.UpdateDepartmentAsync(request).ResponseAsync);
-                    if (response.Result.Status != Status.Ok || response.Department == null)
+                    BankResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Bank.UpdateBankAsync(request).ResponseAsync);
+                    if (response.Result.Status != Status.Ok || response.Bank == null)
                     {
                         MessageBox.Show("Изменить данные не удалось.");
                         return;
@@ -137,7 +133,7 @@ namespace GrpcWinForms.Objects.Departaments
                     else
                     {
                         int rowsel = smartGrid.RowSel;
-                        departments[rowsel - smartGrid.Rows.Fixed] = response.Department;
+                        banks[rowsel - smartGrid.Rows.Fixed] = response.Bank;
                     }
 
                 }
@@ -154,17 +150,17 @@ namespace GrpcWinForms.Objects.Departaments
                 DialogResult result = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
-                    DeleteDepartmentRequest request = new DeleteDepartmentRequest()
+                    DeleteBankRequest request = new DeleteBankRequest()
                     {
                         Id = (int)smartGrid.Rows[smartGrid.RowSel]["Id"]
                     };
-                    DeleteDepartmentResponse response = await GrpcRetry.CallAsync(() => 
-                        GrpcClients.GrpcClients.Department.DeleteDepartmentAsync(request).ResponseAsync);
+                    DeleteBankResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Bank.DeleteBankAsync(request).ResponseAsync);
                     int i = smartGrid.RowSel - smartGrid.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
                         smartGrid.BeginUpdate();
-                        departments.RemoveAt(i);
+                        banks.RemoveAt(i);
                         smartGrid.EndUpdate();
                     }
                     else
@@ -184,18 +180,18 @@ namespace GrpcWinForms.Objects.Departaments
 
                     foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid.Rows[index]["Id"]));
 
-                    DeleteIdsDepartmentRequest request = new DeleteIdsDepartmentRequest();
+                    DeleteIdsBankRequest request = new DeleteIdsBankRequest();
                     request.Ids.AddRange(ids);
 
-                    UndeletedIdsDepartmentResponse response = new UndeletedIdsDepartmentResponse();
-                    response = await GrpcRetry.CallAsync(() => 
-                        GrpcClients.GrpcClients.Department.DeleteIdsDepartmentAsync(request).ResponseAsync);
+                    UndeleteIdsBankResponse response = new UndeleteIdsBankResponse();
+                    response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Bank.DeleteIdsBankAsync(request).ResponseAsync);
 
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
 
                     smartGrid.BeginUpdate();
-                    List<int> testList = Utils.UndeleteList<Department>((C1FlexGrid)smartGrid, departments, undelIds, smartGrid.SelectedRows, "Id");
+                    List<int> testList = Utils.UndeleteList<Bank>((C1FlexGrid)smartGrid, banks, undelIds, smartGrid.SelectedRows, "Id");
                     smartGrid.SelectedRows = testList;
                     smartGrid.EndUpdate();
 
@@ -208,9 +204,22 @@ namespace GrpcWinForms.Objects.Departaments
             return;
         }
 
-        private void smartGrid_DoubleClick(object sender, EventArgs e)
+        private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
-            toolStripButtonEdit_Click(sender, e);
+            RefreshBanks();
+        }
+
+        private void smartGrid_GetUnboundValue(object sender, UnboundValueEventArgs e)
+        {
+            Bank _bank = smartGrid.Rows[e.Row].DataSource as Bank;
+            if (e.Row < smartGrid.Rows.Fixed || e.Row >= smartGrid.Rows.Count || _bank == null)
+                return;
+            switch (smartGrid.Cols[e.Col].Name)
+            {
+                case "colCode2":
+                    e.Value = _bank.Geolocation.Code2;
+                    break;
+            }
         }
     }
 }

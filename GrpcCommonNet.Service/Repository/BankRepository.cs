@@ -24,7 +24,9 @@ public class BankRepository
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-                SELECT b.*, g.GeoLocation_Code2, g.GeoLocation_Name
+                SELECT 
+                    b.*, 
+                    g.GeoLocation_Code2, g.GeoLocation_Name
                     FROM global_db.m_bank b 
                     LEFT JOIN global_db.geolocations g ON b.ID_M_GEOCOUNTRY_REG = g.GEOLOCATION_Id
                     where b.ID_M_BANK = {id}";
@@ -51,15 +53,16 @@ public class BankRepository
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-                SELECT b.*, g.GeoLocation_Code2, g.GeoLocation_Name
-                    FROM global_db.m_bank b 
-                    LEFT JOIN global_db.geolocations g ON b.ID_M_GEOCOUNTRY_REG = g.GEOLOCATION_Id
-                WHERE (@Name IS NULL OR b.NameBank LIKE CONCAT('%', @Name, '%'))
-                  AND (@Mfo IS NULL OR b.MFO = @Mfo);
-                ORDER BY b.NameBank;
-                ";
+SELECT b.*, g.GeoLocation_Code2, g.GeoLocation_Name
+    FROM global_db.m_bank b 
+        LEFT JOIN global_db.geolocations g ON b.ID_M_GEOCOUNTRY_REG = g.GEOLOCATION_Id
+where 1 = 1 
+    and (@Name IS NULL OR b.NameBank LIKE CONCAT('%', @Name, '%'))
+      AND (IFNULL(@Mfo,'') = '' OR b.Mfo LIKE CONCAT('%', @Mfo, '%'))
+ORDER BY b.NameBank;
+";
             cmd.Parameters.AddWithValue("@Name", request.Name);
-            cmd.Parameters.AddWithValue("@Mfo", request.Mfo);
+            cmd.Parameters.AddWithValue("@Mfo", request.BankCode);
 
             using var rdr = await cmd.ExecuteReaderAsync();
             while (await rdr.ReadAsync())
@@ -97,7 +100,7 @@ public class BankRepository
                     LIMIT {request.Paging.PageSize * (request.Paging.PageNumber - 1)}, {request.Paging.PageSize};
                 ";
                 cmd.Parameters.AddWithValue("@name", request.Name);
-                cmd.Parameters.AddWithValue("@mfo", request.Mfo);
+                cmd.Parameters.AddWithValue("@mfo", request.BankCode);
                 using var rdr = await cmd.ExecuteReaderAsync();
                 while (await rdr.ReadAsync())
                 {
@@ -117,7 +120,7 @@ public class BankRepository
                         AND (IFNULL(@mfo,'') = '' OR b.MFO = @mfo)
             ";
                 cmd.Parameters.AddWithValue("@name", request.Name);
-                cmd.Parameters.AddWithValue("@mfo", request.Mfo);
+                cmd.Parameters.AddWithValue("@mfo", request.BankCode);
 
                 pagedResult.TotalCount = Convert.ToInt32(await cmd.ExecuteScalarAsync());
                 pagedResult.PageNumber = request.Paging.PageNumber;
@@ -169,8 +172,8 @@ public class BankRepository
 
             cmd.Parameters.AddWithValue("@name", request.Bank.Name ?? String.Empty);
             cmd.Parameters.AddWithValue("@short", request.Bank.Short ?? String.Empty);
-            cmd.Parameters.AddWithValue("@mfo", request.Bank.Mfo ?? String.Empty);
-            cmd.Parameters.AddWithValue("@swift", request.Bank.Swift ?? String.Empty);
+            cmd.Parameters.AddWithValue("@mfo", request.Bank.BankCode ?? String.Empty);
+            cmd.Parameters.AddWithValue("@swift", request.Bank.BankSwift ?? String.Empty);
             cmd.Parameters.AddWithValue("@super_short", request.Bank.SuperShort ?? String.Empty);
             cmd.Parameters.AddWithValue("@micros_code", request.Bank.MicrosCode ?? String.Empty);
             cmd.Parameters.AddWithValue("@micros_code_confirm", request.Bank.MicrosCodeConfirm);
@@ -220,8 +223,8 @@ public class BankRepository
             cmd.Parameters.AddWithValue("@id",  request.Bank.Id);
             cmd.Parameters.AddWithValue("@name", !request.Bank.HasName ? null : request.Bank.Name);
             cmd.Parameters.AddWithValue("@short", request.Bank.Short);
-            cmd.Parameters.AddWithValue("@mfo", request.Bank.Mfo);
-            cmd.Parameters.AddWithValue("@swift", !request.Bank.HasSwift ? null : request.Bank.Swift);
+            cmd.Parameters.AddWithValue("@mfo", request.Bank.BankCode);
+            cmd.Parameters.AddWithValue("@swift", request.Bank.BankSwift == null ? "" : request.Bank.BankSwift);
             cmd.Parameters.AddWithValue("@super_short", !request.Bank.HasSuperShort ? null : request.Bank.SuperShort);
             cmd.Parameters.AddWithValue("@micros_code", !request.Bank.HasMicrosCode ? null : request.Bank.MicrosCode);
             cmd.Parameters.AddWithValue("@micros_code_confirm", !request.Bank.HasMicrosCodeConfirm ? null : request.Bank.MicrosCodeConfirm);
@@ -317,8 +320,8 @@ public class BankRepository
         bank.Id = rdr["ID_M_BANK"] ==  DBNull.Value ? 0 : Convert.ToInt32(rdr["ID_M_BANK"]);
         bank.Name = rdr["NameBank"] == DBNull.Value ? String.Empty : Convert.ToString(rdr["NameBank"]);
         bank.Short = rdr["MCode"] == DBNull.Value ? String.Empty : Convert.ToString(rdr["MCode"]);
-        bank.Mfo = rdr["MFO"] == DBNull.Value ? String.Empty : Convert.ToString(rdr["MFO"]);
-        bank.Swift = rdr["SWIFT"] == DBNull.Value ? String.Empty : Convert.ToString(rdr["SWIFT"]);
+        bank.BankCode = rdr["MFO"] == DBNull.Value ? String.Empty : Convert.ToString(rdr["MFO"]);
+        bank.BankSwift = rdr["SWIFT"] == DBNull.Value ? String.Empty : Convert.ToString(rdr["SWIFT"]);
         bank.SuperShort = rdr["SuperShort"] == DBNull.Value ? String.Empty : Convert.ToString(rdr["SuperShort"]);
         bank.MicrosCode = rdr["MicrosCode"] == DBNull.Value ? String.Empty : Convert.ToString(rdr["MicrosCode"]);
         bank.MicrosCodeConfirm = rdr["MicrosCodeConfirm"] == DBNull.Value ? false : Convert.ToBoolean(rdr["MicrosCodeConfirm"]);
