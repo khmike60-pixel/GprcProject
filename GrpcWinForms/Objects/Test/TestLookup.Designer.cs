@@ -34,7 +34,9 @@
             buttonUpdateExit = new Button();
             periodComponent1 = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
             textBox1 = new TextBox();
+            tbPeriod = new C1.Win.Input.C1TextBox();
             ((System.ComponentModel.ISupportInitialize)periodComponent1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)tbPeriod).BeginInit();
             SuspendLayout();
             // 
             // buttonCancel
@@ -85,11 +87,24 @@
             textBox1.Size = new Size(100, 23);
             textBox1.TabIndex = 1;
             // 
+            // tbPeriod
+            // 
+            tbPeriod.ButtonsSettings.CustomButton.Visible = true;
+            tbPeriod.ButtonsSettings.DropDownButton.Visible = true;
+            tbPeriod.Location = new Point(110, 162);
+            tbPeriod.Name = "tbPeriod";
+            tbPeriod.Size = new Size(179, 23);
+            tbPeriod.TabIndex = 24;
+            tbPeriod.Value = "";
+            tbPeriod.CustomButtonClick += tbPeriod_CustomButtonClick;
+            tbPeriod.DropDownButtonClick += tbPeriod_DropDownButtonClick;
+            // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(627, 450);
+            Controls.Add(tbPeriod);
             Controls.Add(textBox1);
             Controls.Add(periodComponent1);
             Controls.Add(buttonUpdateExit);
@@ -98,6 +113,7 @@
             Name = "TestLookup";
             Text = "TestLoolkup";
             ((System.ComponentModel.ISupportInitialize)periodComponent1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)tbPeriod).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -108,5 +124,6 @@
         private Button buttonUpdateExit;
         private Controls.PeriodControl.PeriodComponent periodComponent1;
         private TextBox textBox1;
+        private C1.Win.Input.C1TextBox tbPeriod;
     }
 }
