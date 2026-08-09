@@ -3,6 +3,7 @@ using C1.Win.Input.MultiColumnCombo;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contragent;
 using GrpcWinForms.Controls.CompanyDropDown;
+using GrpcWinForms.Controls.PeriodControl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace GrpcWinForms.Objects.Test
 {
@@ -27,7 +29,9 @@ namespace GrpcWinForms.Objects.Test
         public TestLookup()
         {
             InitializeComponent();
-            tbPeriod.Text = startDate.ToShortDateString() + " - " + endDate.ToShortDateString();
+            periodComponent1.StartDate = DateTime.Now.AddDays(-90);
+            periodComponent1.EndDate = DateTime.Now;
+
         }
 
         #region Методы c1DropDownControl1 не контрол
@@ -39,23 +43,22 @@ namespace GrpcWinForms.Objects.Test
             this.Close();
         }
 
-        private void tbPeriod_CustomButtonClick(object sender, EventArgs e)
+        private void ShowPeriod()
         {
-            PeriodForm periodForm = new PeriodForm();
-            periodForm.TextBoxOwner = tbPeriod;
-            periodForm.StartDate = startDate;
-            periodForm.EndDate = endDate;
-            if (DialogResult.OK == periodForm.ShowDialog())
-            {
-                startDate = periodForm.GetStartPeriod();
-                endDate = periodForm.GetEndPeriod();
-                tbPeriod.Text = startDate.ToShortDateString() + " - " + endDate.ToShortDateString();
-            }
+            MessageBox.Show(
+                $"StartDate = {period1.StartDate.ToShortDateString()} \n" +
+                $"  EndDate = {period1.EndDate.ToShortDateString()}");
         }
 
-        private void tbPeriod_DropDownButtonClick(object sender, EventArgs e)
+        private void buttonSaveExit_Click(object sender, EventArgs e)
         {
-            
+            ShowPeriod();
+            Close();
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            ShowPeriod();
         }
     }
 }

@@ -127,7 +127,7 @@
             companySeller.DropDownAlign = C1.Framework.DropDownAlignment.Left;
             companySeller.DropDownWidth = 300;
             companySeller.GetDataSourceFunc = null;
-            companySeller.Location = new Point(99, 35);
+            companySeller.Location = new Point(99, 34);
             companySeller.Name = "companySeller";
             companySeller.Size = new Size(207, 23);
             companySeller.TabIndex = 17;
@@ -148,7 +148,7 @@
             // 
             // c1ComboBox2
             // 
-            c1ComboBox2.Location = new Point(406, 35);
+            c1ComboBox2.Location = new Point(406, 34);
             c1ComboBox2.Name = "c1ComboBox2";
             c1ComboBox2.Size = new Size(71, 23);
             c1ComboBox2.TabIndex = 15;
@@ -156,7 +156,7 @@
             // labelCurrency
             // 
             labelCurrency.AutoSize = true;
-            labelCurrency.Location = new Point(349, 39);
+            labelCurrency.Location = new Point(349, 38);
             labelCurrency.Name = "labelCurrency";
             labelCurrency.Size = new Size(51, 15);
             labelCurrency.TabIndex = 14;
@@ -181,7 +181,7 @@
             // checkBoxAll
             // 
             checkBoxAll.AutoSize = true;
-            checkBoxAll.Location = new Point(260, 66);
+            checkBoxAll.Location = new Point(260, 64);
             checkBoxAll.Name = "checkBoxAll";
             checkBoxAll.Size = new Size(45, 19);
             checkBoxAll.TabIndex = 7;
@@ -191,7 +191,7 @@
             // labelPeriod
             // 
             labelPeriod.AutoSize = true;
-            labelPeriod.Location = new Point(41, 68);
+            labelPeriod.Location = new Point(41, 66);
             labelPeriod.Name = "labelPeriod";
             labelPeriod.Size = new Size(52, 15);
             labelPeriod.TabIndex = 5;
@@ -200,7 +200,7 @@
             // labelSeller
             // 
             labelSeller.AutoSize = true;
-            labelSeller.Location = new Point(29, 39);
+            labelSeller.Location = new Point(29, 38);
             labelSeller.Name = "labelSeller";
             labelSeller.Size = new Size(64, 15);
             labelSeller.TabIndex = 3;

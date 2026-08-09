@@ -30,13 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             buttonCancel = new Button();
-            buttonUpdate = new Button();
-            buttonUpdateExit = new Button();
-            periodComponent1 = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
+            buttonSave = new Button();
+            buttonSaveExit = new Button();
             textBox1 = new TextBox();
-            tbPeriod = new C1.Win.Input.C1TextBox();
+            period1 = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
+            periodComponent1 = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
+            ((System.ComponentModel.ISupportInitialize)period1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)periodComponent1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)tbPeriod).BeginInit();
             SuspendLayout();
             // 
             // buttonCancel
@@ -50,35 +50,25 @@
             buttonCancel.UseVisualStyleBackColor = true;
             buttonCancel.Click += buttonCancel_Click;
             // 
-            // buttonUpdate
+            // buttonSave
             // 
-            buttonUpdate.Location = new Point(465, 417);
-            buttonUpdate.Name = "buttonUpdate";
-            buttonUpdate.Size = new Size(75, 23);
-            buttonUpdate.TabIndex = 22;
-            buttonUpdate.Text = "Записать";
-            buttonUpdate.UseVisualStyleBackColor = true;
+            buttonSave.Location = new Point(465, 417);
+            buttonSave.Name = "buttonSave";
+            buttonSave.Size = new Size(75, 23);
+            buttonSave.TabIndex = 22;
+            buttonSave.Text = "Записать";
+            buttonSave.UseVisualStyleBackColor = true;
+            buttonSave.Click += buttonSave_Click;
             // 
-            // buttonUpdateExit
+            // buttonSaveExit
             // 
-            buttonUpdateExit.Location = new Point(337, 417);
-            buttonUpdateExit.Name = "buttonUpdateExit";
-            buttonUpdateExit.Size = new Size(122, 23);
-            buttonUpdateExit.TabIndex = 21;
-            buttonUpdateExit.Text = "Записать и выйти";
-            buttonUpdateExit.UseVisualStyleBackColor = true;
-            // 
-            // periodComponent1
-            // 
-            periodComponent1.DropDownAlign = C1.Framework.DropDownAlignment.Left;
-            periodComponent1.DropDownWidth = 250;
-            periodComponent1.EndDate = new DateTime(2026, 3, 31, 23, 59, 59, 0);
-            periodComponent1.Location = new Point(102, 92);
-            periodComponent1.Name = "periodComponent1";
-            periodComponent1.Size = new Size(179, 23);
-            periodComponent1.StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0);
-            periodComponent1.TabIndex = 2;
-            periodComponent1.Value = "01.01.2026 - 31.12.2026";
+            buttonSaveExit.Location = new Point(337, 417);
+            buttonSaveExit.Name = "buttonSaveExit";
+            buttonSaveExit.Size = new Size(122, 23);
+            buttonSaveExit.TabIndex = 21;
+            buttonSaveExit.Text = "Записать и выйти";
+            buttonSaveExit.UseVisualStyleBackColor = true;
+            buttonSaveExit.Click += buttonSaveExit_Click;
             // 
             // textBox1
             // 
@@ -87,43 +77,57 @@
             textBox1.Size = new Size(100, 23);
             textBox1.TabIndex = 1;
             // 
-            // tbPeriod
+            // period1
             // 
-            tbPeriod.ButtonsSettings.CustomButton.Visible = true;
-            tbPeriod.ButtonsSettings.DropDownButton.Visible = true;
-            tbPeriod.Location = new Point(110, 162);
-            tbPeriod.Name = "tbPeriod";
-            tbPeriod.Size = new Size(179, 23);
-            tbPeriod.TabIndex = 24;
-            tbPeriod.Value = "";
-            tbPeriod.CustomButtonClick += tbPeriod_CustomButtonClick;
-            tbPeriod.DropDownButtonClick += tbPeriod_DropDownButtonClick;
+            period1.DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            period1.DropDownWidth = 250;
+            period1.EndDate = new DateTime(2026, 8, 9, 13, 31, 29, 635);
+            period1.Location = new Point(108, 129);
+            period1.Name = "period1";
+            period1.Size = new Size(153, 23);
+            period1.StartDate = new DateTime(2026, 5, 11, 13, 31, 29, 635);
+            period1.Styles.Default.BackColor = SystemColors.Control;
+            period1.TabIndex = 2;
+            period1.Value = "11.05.2026 - 09.08.2026";
+            // 
+            // periodComponent1
+            // 
+            periodComponent1.DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            periodComponent1.DropDownWidth = 250;
+            periodComponent1.EndDate = new DateTime(0L);
+            periodComponent1.Location = new Point(108, 193);
+            periodComponent1.Name = "periodComponent1";
+            periodComponent1.Size = new Size(153, 23);
+            periodComponent1.StartDate = new DateTime(0L);
+            periodComponent1.Styles.Default.BackColor = SystemColors.Control;
+            periodComponent1.TabIndex = 24;
+            periodComponent1.Value = "";
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(627, 450);
-            Controls.Add(tbPeriod);
-            Controls.Add(textBox1);
             Controls.Add(periodComponent1);
-            Controls.Add(buttonUpdateExit);
-            Controls.Add(buttonUpdate);
+            Controls.Add(period1);
+            Controls.Add(textBox1);
+            Controls.Add(buttonSaveExit);
+            Controls.Add(buttonSave);
             Controls.Add(buttonCancel);
             Name = "TestLookup";
             Text = "TestLoolkup";
+            ((System.ComponentModel.ISupportInitialize)period1).EndInit();
             ((System.ComponentModel.ISupportInitialize)periodComponent1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)tbPeriod).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
         private Button buttonCancel;
-        private Button buttonUpdate;
-        private Button buttonUpdateExit;
-        private Controls.PeriodControl.PeriodComponent periodComponent1;
+        private Button buttonSave;
+        private Button buttonSaveExit;
         private TextBox textBox1;
-        private C1.Win.Input.C1TextBox tbPeriod;
+        private Controls.PeriodControl.PeriodComponent period1;
+        private Controls.PeriodControl.PeriodComponent periodComponent1;
     }
 }
