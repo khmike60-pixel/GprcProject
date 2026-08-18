@@ -69,6 +69,7 @@
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripButtonHistory = new ToolStripButton();
             toolStripButton1 = new ToolStripButton();
+            period1 = new SmartLib.PeriodBox(components);
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)period).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
@@ -82,10 +83,12 @@
             c1SplitterPanelContractList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)smartGridContracts1).BeginInit();
             toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)period1).BeginInit();
             SuspendLayout();
             // 
             // panel1
             // 
+            panel1.Controls.Add(period1);
             panel1.Controls.Add(period);
             panel1.Controls.Add(labelBuyer);
             panel1.Controls.Add(companySeller);
@@ -108,7 +111,7 @@
             period.DropDownAlign = C1.Framework.DropDownAlignment.Left;
             period.DropDownWidth = 250;
             period.EndDate = new DateTime(2026, 3, 31, 23, 59, 59, 0);
-            period.Location = new Point(99, 62);
+            period.Location = new Point(616, 58);
             period.Name = "period";
             period.Size = new Size(150, 23);
             period.StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0);
@@ -185,7 +188,7 @@
             // checkBoxAll
             // 
             checkBoxAll.AutoSize = true;
-            checkBoxAll.Location = new Point(260, 64);
+            checkBoxAll.Location = new Point(265, 66);
             checkBoxAll.Name = "checkBoxAll";
             checkBoxAll.Size = new Size(45, 19);
             checkBoxAll.TabIndex = 7;
@@ -413,6 +416,13 @@
             toolStripButton1.Size = new Size(28, 28);
             toolStripButton1.Text = "toolStripButton1";
             // 
+            // period1
+            // 
+            period1.Location = new Point(99, 63);
+            period1.Name = "period1";
+            period1.Period.From = new DateTime(2026, 5, 21, 0, 0, 0, 0);
+            period1.Period.To = new DateTime(2026, 8, 19, 1, 9, 34, 529);
+            // 
             // ContractsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -440,6 +450,7 @@
             ((System.ComponentModel.ISupportInitialize)smartGridContracts1).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)period1).EndInit();
             ResumeLayout(false);
         }
 
@@ -471,5 +482,6 @@
         private GrpcWinForms.Controls.PeriodControl.PeriodComponent period;
         private SmartLib.SmartGrid smartGridContracts1;
         private SmartLib.SmartGrid smartGridLines1;
+        private SmartLib.PeriodBox period1;
     }
 }

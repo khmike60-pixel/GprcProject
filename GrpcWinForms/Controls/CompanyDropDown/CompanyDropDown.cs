@@ -51,7 +51,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
                 {
                     try
                     {
-                        SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
+                        SmartLib.SmartGrid grid = ((CompanyDropDownForm)Control).smart1;
 
                         grid.DataSource = UpdateGridData(this.Text ?? string.Empty);
                     }
@@ -67,7 +67,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
         private BindingList<Company> UpdateGridData(string filterText)
         {
             BindingList<Company> result = new BindingList<Company>();
-            SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
+            SmartLib.SmartGrid grid = ((CompanyDropDownForm)Control).smart1;
             CompanyDropDownForm userControl = ((CompanyDropDownForm)Control);
 
 
@@ -99,7 +99,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
 
         private void CompanyDropDown_TextChanged(object sender, EventArgs e)
         {
-            SmartGrid.SmartGrid grid = ((CompanyDropDownForm)Control).smart;
+            SmartLib.SmartGrid grid = ((CompanyDropDownForm)Control).smart1;
             grid.DataSource = UpdateGridData(Text);
         }
 

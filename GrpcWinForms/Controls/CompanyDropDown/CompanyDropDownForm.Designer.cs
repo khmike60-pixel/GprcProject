@@ -37,9 +37,9 @@ namespace GrpcWinForms.Objects.Contragents.Components
             panelButton = new Panel();
             buttonOk = new Button();
             buttonCancel = new Button();
-            smart = new SmartGrid.SmartGrid();
+            smart1 = new SmartLib.SmartGrid(components);
             panelButton.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smart).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smart1).BeginInit();
             SuspendLayout();
             // 
             // panelButton
@@ -74,45 +74,43 @@ namespace GrpcWinForms.Objects.Contragents.Components
             buttonCancel.UseVisualStyleBackColor = true;
             buttonCancel.Click += buttonCancel_Click;
             // 
-            // smart
+            // smart1
             // 
-            smart.AllowEditing = false;
-            smart.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
-            smart.AllowNodeMove = false;
-            smart.AutoGenerateColumns = false;
-            smart.ColumnInfo = resources.GetString("smart.ColumnInfo");
-            smart.Dock = DockStyle.Fill;
-            smart.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            smart1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smart1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smart1.AllowNodeMove = false;
+            smart1.AutoGenerateColumns = false;
+            smart1.ColumnInfo = resources.GetString("smart1.ColumnInfo");
+            smart1.Dock = DockStyle.Fill;
+            smart1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
             aggregateDefinition1.Caption = "Всего: ";
             aggregateDefinition1.Column = 2;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smart.Footers.Descriptions.Add(footerDescription1);
-            smart.Footers.Fixed = true;
-            smart.Headers = null;
-            smart.IdName = null;
-            smart.IsEditing = false;
-            smart.Location = new Point(0, 0);
-            smart.Name = "smart";
-            smart.Rows.Count = 12;
-            smart.SelectedRows = (List<int>)resources.GetObject("smart.SelectedRows");
-            smart.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smart.Size = new Size(380, 270);
-            smart.SortingType = SmartGrid.SortingType.Descending;
-            smart.StyleInfo = resources.GetString("smart.StyleInfo");
-            smart.TabIndex = 1;
-            smart.DoubleClick += smart_DoubleClick;
+            smart1.Footers.Descriptions.Add(footerDescription1);
+            smart1.Footers.Fixed = true;
+            smart1.IdName = null;
+            smart1.Location = new Point(0, 0);
+            smart1.Name = "smart1";
+            smart1.Rows.Count = 51;
+            smart1.SelectedRows = (List<int>)resources.GetObject("smart1.SelectedRows");
+            smart1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smart1.Size = new Size(380, 270);
+            smart1.SortingType = SmartLib.SortingType.Descending;
+            smart1.StyleInfo = resources.GetString("smart1.StyleInfo");
+            smart1.TabIndex = 2;
+            smart1.DoubleClick += smart_DoubleClick;
             // 
             // CompanyDropDownForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(smart);
+            Controls.Add(smart1);
             Controls.Add(panelButton);
             Name = "CompanyDropDownForm";
             Size = new Size(380, 300);
             panelButton.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)smart).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smart1).EndInit();
             ResumeLayout(false);
 
         }
@@ -122,7 +120,6 @@ namespace GrpcWinForms.Objects.Contragents.Components
         private Panel panelButton;
         private Button buttonOk;
         private Button buttonCancel;
-        public SmartGrid.SmartGrid smart;
-
+        public SmartLib.SmartGrid smart1;
     }
 }

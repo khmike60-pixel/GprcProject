@@ -38,8 +38,8 @@ namespace GrpcWinForms.Objects.Contragents.Components
             {
 
 
-                int rowIndex = smart.Row;
-                int bindingIndex = smart.Row - smart.Rows.Fixed;
+                int rowIndex = smart1.Row;
+                int bindingIndex = smart1.Row - smart1.Rows.Fixed;
                 contragentSelected = _contragents[bindingIndex];
 
                 C1DropDownControl parent = (C1DropDownControl)((C1.Win.Input.DropDownForm)this.Parent).DropDownOwner;

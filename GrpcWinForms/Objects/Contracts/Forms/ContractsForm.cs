@@ -62,8 +62,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 ListContractsRequest request = new ListContractsRequest()
                 {
-                    StartDate = period.StartDate.ToUniversalTime().ToTimestamp(),
-                    EndDate = period.EndDate.ToUniversalTime().ToTimestamp()
+                    StartDate = period1.Period.From.ToUniversalTime().ToTimestamp(),
+                    EndDate = period1.Period.To.ToUniversalTime().ToTimestamp()
                 };
                 if (companySeller.SelectedItem.Id != 0)
                     request.Seller = new Contragent() { Id = companySeller.SelectedCompany.Id };
@@ -96,8 +96,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         {
             try
             {
-                period.StartDate = new DateTime(DateTime.Now.Year, 1, 1);
-                period.EndDate = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
+                period1.Period.From = new DateTime(DateTime.Now.Year, 1, 1);
+                period1.Period.To    = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
 
                 RefreshContract();
             }
