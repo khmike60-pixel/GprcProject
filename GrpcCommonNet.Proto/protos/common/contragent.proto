@@ -77,6 +77,7 @@ message Entity {
 	optional string entity_oked = 50;								// Код ОКЭД
 	optional bool entity_is_vendor = 51;							// Является ли организация вендором ???	
 	optional string entity_vat_number = 52;							// Регистрационный номер плательщика НДС
+	optional Signatory signatory = 53;
 }
 
 message Person {
@@ -121,4 +122,11 @@ message Person {
 	optional string person_comment = 39;								// Дополнительныесведения
 	optional string person_phone = 40;									// Телефон
 	optional string person_email = 41;										// EMail
+}
+
+message Signatory {
+	int32 id = 1;
+	string name = 2;
+	string position = 3;
+	string basic = 4;
 }

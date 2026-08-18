@@ -106,19 +106,19 @@ namespace GrpcWinForms.Models
             }
         }
 
-        public static bool Authorization()
-        {
-            bool exit = false;
-            LoginForm loginForm = new LoginForm();
-            while (!exit)
-            {
-                if (MessageBox.Show("Вы долго не работали в приложении и Вам необходимо авторизоваться! Готовы?\n" +
-                    "Если Вы ответит Cancel, то приложение будет закрыто", "Необходима авторизация",
-                    MessageBoxButtons.OKCancel) == DialogResult.Cancel)
-                    System.Windows.Forms.Application.Exit();
-                if (loginForm.ShowDialog() == DialogResult.OK) exit = true;
-            }
-            return exit;
-        }
+        //public static bool Authorization()
+        //{
+        //    bool exit = false;
+        //    LoginForm loginForm = new LoginForm();
+        //    while (!exit)
+        //    {
+        //        if (MessageBox.Show("Вы долго не работали в приложении и Вам необходимо авторизоваться! Готовы?\n" +
+        //            "Если Вы ответит Cancel, то приложение будет закрыто", "Необходима авторизация",
+        //            MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+        //            System.Windows.Forms.Application.Exit();
+        //        if (loginForm.ShowDialog() == DialogResult.OK) exit = true;
+        //    }
+        //    return exit;
+        //}
     }
 }

@@ -13,6 +13,7 @@ import "protos/common/department.proto";
 import "protos/common/currency.proto";
 import "protos/common/product.proto";
 import "protos/common/documenttype.proto";
+import "protos/common/geolocation.proto";
 
 
 
@@ -48,11 +49,21 @@ message Line {
   int32 order = 6;							// Порядковый номер строки
   string name = 7;							// Наименование в строке контракта
   Common.DecimalValue qty = 8;	            // Кол-во 
-  Common.DecimalValue price = 9;	        // Цена
-  Common.DecimalValue amount = 10;	        // Сумма без НДС
-  Common.DecimalValue vat_prc = 11;			// Процент НДС
-  Common.DecimalValue sum_vat = 12;	        // Сумма НДС
-  Common.DecimalValue sum = 13;				// Сумма с НДС
+  Common.DecimalValue base_price = 9;
+  Common.DecimalValue base_discount = 10;
+  Common.DecimalValue discount_additional = 11;
+  Common.DecimalValue price = 12;	        // Цена
+  Common.DecimalValue amount = 13;	        // Сумма без НДС
+  bool is_vat = 14;							// с НДС или без НДС
+  Common.DecimalValue vat_prc = 15;			// Процент НДС
+  Common.DecimalValue sum_vat = 16;	        // Сумма НДС
+  Common.DecimalValue sum = 17;				// Сумма с НДС
+  string comment = 18; 
+  Common.DecimalValue round_for_line = 19;
+  int32 specification = 20;
+  string added_from = 21;
+  Metadata metadata = 22;
+
 }
 
 message TypeContract {
@@ -66,8 +77,8 @@ message Contract {
   int32 id = 1;											// Идентификатор контракта
   int32 direct = 2;										// Направление сделки относительно нашей компании: 0 - реализация (Seller = наша орг), 1 - приобретение.
   int32 root_id = 3;									// Ссылка на Первичный контракт (основной) 
-  int32 parent_id = 4;									// Ссылка на Родительскую запись, из которой "порождена" данная (цепочка допсоглашений)
-  Common.DocumentType type_contract = 5;						// Тип контракта
+  int32 previous_id = 4;								// Ссылка на Предыдущую запись, из которой "порождена" данная (цепочка допсоглашений)
+  Common.DocumentType type_contract = 5;				// Тип контракта
   int32 state = 6;										// Статус контракта (новый, выдан клиенту, заключен, в работе, завершен)
 
   // Контрагенты по контракту
@@ -80,27 +91,32 @@ message Contract {
   google.protobuf.Timestamp date = 11;					// дата контракта (date -> Timestamp)
   google.protobuf.Timestamp expiration_date = 12;		// Дата окончания действия
   string number = 13;									// Номер контракта
-  string name = 14;										// Наименование контракта
+  string name = 14;										// Наименование контракта. Например, "продажа лицензий на ПО"
+  string doc_name = 15;									// Наименование документа. Например, "контракт" или "Договор"
+  Common.Geolocation place_signed = 16;
 
   // Валюта и суммы (decimal храним как string для точности)
-  Common.Currency currency = 15;                        // Валюта контракта (структура)
-  Common.DecimalValue sum = 16;                         // сумма с НДС (decimal -> string)
-  Common.DecimalValue amount = 17;                      // сумма без НДС
-  Common.DecimalValue sum_vat = 18;                     // сумма НДС
+  Common.Currency currency = 17;                        // Валюта контракта (структура)
+  Common.Currency currency_payment = 18;                        // Валюта контракта (структура)
+  Common.DecimalValue sum = 19;                         // сумма с НДС (decimal -> string)
+  Common.DecimalValue amount = 20;                      // сумма без НДС
+  bool is_vat = 21;                                     // С НДС или без НДС
+  Common.DecimalValue vat_prc = 22;                     // С НДС или без НДС
+  Common.DecimalValue sum_vat = 23;                     // сумма НДС
 
   // Свободные данные JSON
-  google.protobuf.Struct data = 19;
+  google.protobuf.Struct data = 24;
 
   // Дополнительные поля
-  Common.Department department = 20;					// Идентификатор подразделение
-  Manager initiator = 21;								// Инициатор 
-  Manager executor = 22;								// Исполнитель
-  string manager_type = 23;
+  Common.Department department = 25;					// Идентификатор подразделение
+  Manager initiator = 26;								// Инициатор 
+  Manager executor = 27;								// Исполнитель
+  string manager_type = 28;
 
-  int64 templdoc_id = 24;								// Идентификатор шаблона
-  string comment = 25;									// Комментарий к контракту
-  Metadata metadata = 26;								// Метаданные аудита
+  int64 templdoc_id = 29;								// Идентификатор шаблона
+  string comment = 30;									// Комментарий к контракту
+  Metadata metadata = 31;								// Метаданные аудита
   
-  repeated Line lines = 27;
+  repeated Line lines = 32;
 }
 

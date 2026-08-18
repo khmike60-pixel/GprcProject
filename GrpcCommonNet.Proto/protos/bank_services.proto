@@ -30,7 +30,7 @@ message BankResponse {
 
 message BankFilterRequest {
 	string name = 1;
-	string mfo = 2;
+	string bank_code = 2;
 	google.protobuf.FieldMask field_mask = 3;
 	Common.Paging paging = 4;
 }

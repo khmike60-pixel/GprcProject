@@ -1,6 +1,7 @@
 ﻿using C1.Win.FlexGrid;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Unit;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Units.Forms;
 using SmartGrid;
@@ -40,7 +41,8 @@ namespace GrpcWinForms.Forms
                     Short = textBoxName.Text,
                     IsArchive = checkBoxAll.Checked ? true : false
                 };
-                ListUnitResponse response = await GrpcClients.GrpcClients.Unit.GetListUnitAsync(request);
+                ListUnitResponse response = await GrpcRetry.CallAsync(() => 
+                    GrpcClients.GrpcClients.Unit.GetListUnitAsync(request).ResponseAsync);
                 units = new BindingList<Unit>(response.Units);
                 smartGrid.DataSource = units; 
                 //smartGrid1.DataSource = units;
@@ -81,7 +83,8 @@ namespace GrpcWinForms.Forms
                             RwsMcode = form.EditUnit.RwsMcode
                         }
                     };
-                    UnitResponse response = await GrpcClients.GrpcClients.Unit.CreateUnitAsync(request);
+                    UnitResponse response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.Unit.CreateUnitAsync(request).ResponseAsync);
                     if (response.Result.Status != Status.Ok || response.Unit == null)
                     {
                         MessageBox.Show("Добавить данные не удалось.");
@@ -128,7 +131,8 @@ namespace GrpcWinForms.Forms
                             RwsMcode = form.EditUnit.RwsMcode
                         }
                     };
-                    UnitResponse response = await GrpcClients.GrpcClients.Unit.UpdateUnitAsync(request);
+                    UnitResponse response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.Unit.UpdateUnitAsync(request).ResponseAsync);
                     if (response.Result.Status != Status.Ok || response.Unit == null)
                     {
                         MessageBox.Show("Добавить данные не удалось.");
@@ -164,7 +168,8 @@ namespace GrpcWinForms.Forms
                     {
                         Id = unit.Id
                     };
-                    DeleteUnitResponse response = await GrpcClients.GrpcClients.Unit.DeleteUnitAsync(request);
+                    DeleteUnitResponse response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.Unit.DeleteUnitAsync(request).ResponseAsync);
                     if (response.Result.Status != Status.Ok)
                     {
                         MessageBox.Show("Удалить данные не удалось.");
@@ -204,7 +209,8 @@ namespace GrpcWinForms.Forms
                     request.Ids.AddRange(ids);
 
                     UndeleteIdsUnitResponse response = new UndeleteIdsUnitResponse();
-                    response = await GrpcClients.GrpcClients.Unit.DeleteIdsUnitAsync(request);
+                    response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.Unit.DeleteIdsUnitAsync(request).ResponseAsync);
 
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));

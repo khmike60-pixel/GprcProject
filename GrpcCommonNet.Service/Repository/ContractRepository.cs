@@ -5,7 +5,10 @@ using GrpcCommonNet.Proto.Utils;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI.Common;
 using System.Data.Common;
+using System.Diagnostics.Contracts;
 using System.Reflection.Metadata;
+using System.Text;
+using Contract = GrpcCommonNet.Library.Contract.Contract;
 
 public class ContractRepository
 {
@@ -241,16 +244,82 @@ public class ContractRepository
         }
     }
 
-    public async Task<Contract> UpdateContractAsync(Contract contract)
+    public async Task<Contract> UpdateContractAsync(Contract _contract)
     {
+        Contract contract = new Contract();
         try
         {
-            using var conn = new MySqlConnection(_connectionString);
-            await conn.OpenAsync();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = $@"
-                UPDATE cwatis.contracts c 
-                    set c.Contract_BuyerId = @BuyerId,
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = @"
+                        UPDATE cwatis.contracts set 
+                            contract_RootId = @RootId, 
+                            contract_PreviousId = @PrevId, 
+                            contract_SellerId = @SellerId, contract_SellerName = @SellerName, contract_SellerSignId = @SellerSignId, contract_SellerBAccountId = @SellerBAcctId, 
+                            contract_BuyerId = @BuyerId, contract_BuyerName = @BuyerName, contract_BuyerSignId = @BuyerSignId, contract_BuyerBAccountId = @BuyerBAcctId, 
+                            contract_ShipperId = @ShipperId, contract_ShipperName = @ShipperName, 
+                            contract_ConsigneeId = @ConsigneeId, contract_ConsigneeName = @ConsigneeName,
+                            Initiator_Id = @InitId, Initiator_Name = @InitName, Executor_Id = @ExecId, Executor_Name = @ExecName, 
+                            contract_Date = @CDate, contract_ExpirationDate = @ExpDate,
+                            contract_Number = @CNumber, contract_Name = @CName, contract_DocName = @DocName, 
+                            CurrencyId = @CurrId, CurrencyPaymentId = @CurrPayId, 
+                            Sum = @Sum, Amount = @Amount, SumVat = @SumVat, IsVat = @IsVat, VatPrc = @VatPrc, 
+                            contract_State = @CState, contract_data = @CData, IsContract = @IsCont, IsOrder = @IsOrd, DocumentType_Id = @DocTypeId, 
+                            SDid = @SDid,
+                            ProjectTypes = @ProjTypes, TemplDoc_Id = @TemplDocId, Comment = @Comment, 
+                            create_at = @CreateAt, create_by = @CreateBy, create_userid = @CreateUid, 
+                            Contract_SignPlaceId = @SignPlaceId
+                        where contract_id = @Id;
+                        select * from cwatis.contracts where contract_id = @Id;
+                        ";
+                MySqlParameterCollection p = cmd.Parameters;
+                p.AddWithValue("@Id", _contract.Id);
+                p.AddWithValue("@RootId", _contract.RootId);
+                p.AddWithValue("@PrevId", _contract.PreviousId);
+                p.AddWithValue("@SellerId", _contract.Seller.Id);
+                p.AddWithValue("@SellerName", _contract.Seller.Name);
+                p.AddWithValue("@SellerSignId", _contract.Seller.Entity?.Signatory.Id);
+                p.AddWithValue("@SellerBAcctId", null);                         // _contract.SellerBAccountId 
+                p.AddWithValue("@BuyerId", _contract.Buyer.Id);
+                p.AddWithValue("@BuyerName", _contract.Buyer.Name);
+                p.AddWithValue("@BuyerSignId", _contract.Buyer.Entity?.Signatory.Id);
+                p.AddWithValue("@BuyerBAcctId", null);            // _contract.BuyerBAccountId
+                p.AddWithValue("@ShipperId", _contract.Shipper.Id);
+                p.AddWithValue("@ShipperName", _contract.Shipper.Name);
+                p.AddWithValue("@ConsigneeId", _contract.Consignee.Id);
+                p.AddWithValue("@ConsigneeName", _contract.Consignee.Name);
+                p.AddWithValue("@InitId", _contract.Initiator.Id);
+                p.AddWithValue("@InitName", _contract.Initiator.Name);
+                p.AddWithValue("@ExecId", _contract.Executor.Id);
+                p.AddWithValue("@ExecName", _contract.Executor.Name);
+                p.AddWithValue("@CDate", _contract.Data);
+                p.AddWithValue("@ExpDate", _contract.ExpirationDate);
+                p.AddWithValue("@CNumber", _contract.Number);
+                p.AddWithValue("@CName", _contract.Name);
+                p.AddWithValue("@DocName", _contract.DocName);
+                p.AddWithValue("@CurrId", _contract.Currency.Id);
+                p.AddWithValue("@CurrPayId", _contract.CurrencyPayment.Id);
+                p.AddWithValue("@Sum", _contract.Sum);
+                p.AddWithValue("@Amount", _contract.Amount);
+                p.AddWithValue("@SumVat", _contract.SumVat);
+                p.AddWithValue("@IsVat", _contract.IsVat);
+                p.AddWithValue("@VatPrc", _contract.VatPrc);
+                p.AddWithValue("@CState", _contract.State);
+                p.AddWithValue("@CData", _contract.Data); // JSON как строка
+                p.AddWithValue("@IsCont", null);                    // _contract.IsContract
+                p.AddWithValue("@IsOrd", null);        // _contract.IsOrder
+                p.AddWithValue("@DocTypeId", _contract.TypeContract.Id);
+                p.AddWithValue("@SDid", _contract.Department.Id);
+                p.AddWithValue("@ProjTypes", _contract.ManagerType.ToString()); // Enum в строку
+                p.AddWithValue("@TemplDocId", null);               // _contract.TemplDocId
+                p.AddWithValue("@Comment", _contract.Comment);
+                p.AddWithValue("@CreateAt", _contract.Metadata.CreateAt);
+                p.AddWithValue("@CreateBy", _contract.Metadata.CreateBy);
+                p.AddWithValue("@CreateUid", _contract.Metadata.CreateUserid);
+                p.AddWithValue("@SignPlaceId", _contract.PlaceSigned.Id);
 
                     if(cd.ContractDoc_Id is not null, true, false) as haveDoc,
                     cu.Abbrev, 
@@ -276,26 +345,83 @@ public class ContractRepository
             using var rdr = await cmd.ExecuteReaderAsync();
             Contract _contract = new Contract();
 
-            if (await rdr.ReadAsync())
-            {
-                _contract = FillContract(rdr);
+                if (await rdr.ReadAsync())
+                    contract = FillContract(rdr);
+                else contract = _contract;
             }
-            if (await rdr.NextResultAsync())
-            {
-                while (await rdr.ReadAsync())
-                {
-                    _contract.Lines.Add(FillLine(rdr));
-                }
-
-            }
-            return _contract;
-        } catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error in UpdateContractAsync: " + ex.Message);
-            throw;
-
         }
-        return null;
+        catch (Exception ex)
+        {
+            throw new Exception("Ошибка при обновлении контракта.", ex);
+        }
+        return contract; 
+    }
+
+    public async Task<Line> UpdateLineAsync(Line _line)
+    {
+        Line line = new Line();
+        try
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = @"
+                        UPDATE cwatis.contractlines set 
+                            contractline_RootId = @RootId, contract_id = @contract_id, 
+                            rfr_MGoodGroupId = @rfr_MGoodGroupId, UnitId = @UnitId, SupplierId = @SupplierId, contractline_Name = @contractline_Name, 
+                            Added_From = @Added_From, contractline_order = @contractline_order, 
+                            Specification = @Specification, RoundForLine = @RoundForLine, 
+                            contractline_qty = @contractline_qty, 
+                            contractline_baseDiscount = @contractline_baseDiscount, DiscountAdditional = @DiscountAdditional, 
+                            contractline_baseprice = @contractline_baseprice, 
+                            contractline_price = @contractline_price, contractline_amount = @contractline_amount, 
+                            IsVat = @IsVat, contractline_vat_prc = @contractline_vat_prc, contractline_sumvat = @contractline_sumvat, 
+                            contractline_sum = @contractline_sum, Comment = @Comment, 
+                            create_at = @create_at, create_by = @create_by, create_userid = @create_userid
+                        where contractline_id = @Id;
+                        select * from cwatis.contractlines where contractline_id = @Id;
+                        ";
+                MySqlParameterCollection p = cmd.Parameters;
+                p.AddWithValue("@Id", _line.Id);
+                p.AddWithValue("@RootId", _line.PreviousId);
+                p.AddWithValue("@contract_id", _line.ContractId);
+                p.AddWithValue("@rfr_MGoodGroupId", _line.Product.Id);
+                p.AddWithValue("@UnitId", _line.Product.UnitId);
+                p.AddWithValue("@SupplierId", _line.Product.Supplier.Id);
+                p.AddWithValue("@contractline_Name", _line.Name);
+                p.AddWithValue("@Added_From", _line.AddedFrom);
+                p.AddWithValue("@contractline_order", _line.Order);
+                p.AddWithValue("@Specification", _line.Specification);
+                p.AddWithValue("@RoundForLine", _line.RoundForLine);
+                p.AddWithValue("@contractline_qty", _line);
+                p.AddWithValue("@contractline_baseDiscount", _line.BaseDiscount);
+                p.AddWithValue("@DiscountAdditional", _line.DiscountAdditional);
+                p.AddWithValue("@contractline_baseprice", _line.BasePrice);
+                p.AddWithValue("@contractline_price", _line.Price);
+                p.AddWithValue("@contractline_amount", _line.Amount);
+                p.AddWithValue("@IsVat", _line.IsVat);
+                p.AddWithValue("@contractline_vat_prc", _line.VatPrc);
+                p.AddWithValue("@contractline_sumvat", _line.SumVat);
+                p.AddWithValue("@contractline_sum", _line.Sum);
+                p.AddWithValue("@Comment", _line.Comment);
+                p.AddWithValue("@create_at", _line.Metadata.CreateAt);
+                p.AddWithValue("@create_by", _line.Metadata.CreateBy);
+                p.AddWithValue("@create_userid", _line.Metadata.UpdateUserid);
+
+                using var rdr = await cmd.ExecuteReaderAsync();
+
+                if (await rdr.ReadAsync())
+                    line = FillLine(rdr);
+                else line = _line;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Ошибка при обновлении строки контракта.", ex);
+        }
+        return line; 
     }
 
     #endregion

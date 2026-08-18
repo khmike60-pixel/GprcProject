@@ -10,6 +10,7 @@ using GrpcWinForms.Forms;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
+using GrpcWinForms.GrpcUtils;
 using SmartGrid;
 using System;
 using System.Collections.Generic;
@@ -38,18 +39,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             loaderContracts.Parent = smartGridContracts;
             loaderLines.Parent = smartGridLines;
 
-            //smartGridContracts.Headers = new string[]
-            //{
-            //    "...\tId\tКонтракт\tКонтракт\tКонтракт\tКонтракт\tКонтрагенты\tКонтрагенты\tТип\tОперации\tОперации\tДействует до",
-            //    "...\tId\tДата\tНомер\tСумма\tСумма\tПокупатель\tПродавец\tТип\tОплачено\tОтгружено\tДействует до"
-            //};
-
-            //smartGridLines.Headers = new string[]
-            //{
-            //    "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
-            //    "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС"
-            //};
-
             companyBuyer.GetDataSourceFunc = CompanyFilterLoad;
             companySeller.GetDataSourceFunc = CompanyFilterLoad;
 
@@ -76,19 +65,22 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     StartDate = period.StartDate.ToUniversalTime().ToTimestamp(),
                     EndDate = period.EndDate.ToUniversalTime().ToTimestamp()
                 };
+                if (companySeller.SelectedItem.Id != 0)
+                    request.Seller = new Contragent() { Id = companySeller.SelectedCompany.Id };
+                if (companyBuyer.SelectedItem.Id != 0)
+                    request.Buyer = new Contragent() { Id = companyBuyer.SelectedCompany.Id };
+
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
                     Paths = { "id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data", "sum", "type_contract" }
                 };
-                ListContractsResponse response = await GrpcClients.GrpcClients.Contract.GetListContractsAsync(request);
+                // Вызов через обёртку, которая сама обрабатывает RpcException(Unathenticated) и повторную авторизацию
+                ListContractsResponse response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Contract.GetListContractsAsync(request).ResponseAsync
+                );
 
                 contracts = new BindingList<Contract>(response.Contracts);
                 smartGridContracts.DataSource = contracts;
-            }
-            catch (RpcException ex)
-            {
-                if (ex.StatusCode == StatusCode.Unauthenticated) Utils.Authorization();
-
             }
             catch (Exception ex)
             {
@@ -108,7 +100,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 period.EndDate = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
 
                 RefreshContract();
-            } catch (RpcException ex) 
+            }
+            catch (RpcException ex)
             {
                 MessageBox.Show("Ошибка gRPC. \n" + ex.Message);
             }
@@ -173,7 +166,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             RefreshContract();
         }
 
-        private void smartGridContracts_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
+        private async void smartGridContracts_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
             // Считать строки контракта
             BindingList<Line> lines = new BindingList<Line>();
@@ -188,7 +181,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     {
                         Id = contract.Id
                     };
-                    ListContractLinesResponse response = GrpcClients.GrpcClients.Contract.GetListContractLines(request);
+                    ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
+                    );
+
                     lines = new BindingList<Line>(response.Lines);
                 }
                 smartGridLines.DataSource = lines;
@@ -370,7 +366,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             searchRequest.FieldMask =
                 new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "taxno" } };
 
-            ListContragentResponse searchResponse = GrpcClients.GrpcClients.Contragent.SearchListContragent(searchRequest);
+            ListContragentResponse searchResponse = GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Contragent.SearchListContragentAsync(searchRequest).ResponseAsync
+            ).GetAwaiter().GetResult();
 
             BindingList<Company> _contragents = new BindingList<Company>();
             foreach (Contragent item in searchResponse.Contragents)
@@ -386,7 +384,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         }
 
         #endregion
-
 
     }
 }

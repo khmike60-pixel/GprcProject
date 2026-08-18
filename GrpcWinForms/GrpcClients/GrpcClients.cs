@@ -12,6 +12,7 @@ using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.ApplicationUser;
 using GrpcCommonNet.Library.DocumentType;
 using GrpcCommonNet.Library.Department;
+using GrpcCommonNet.Library.Bank;
 
 
 namespace GrpcWinForms.GrpcClients
@@ -30,6 +31,7 @@ namespace GrpcWinForms.GrpcClients
         private static UserServices.UserServicesClient _user;
         private static DocumentTypeServices.DocumentTypeServicesClient _documenttype;
         private static DepartmentServices.DepartmentServicesClient _department;
+        private static BankServices.BankServicesClient _bank;
 
         public static ApplicationServices.ApplicationServicesClient Application =>
             _application ??= new ApplicationServices.ApplicationServicesClient(MainClass.Invoker);
@@ -53,6 +55,8 @@ namespace GrpcWinForms.GrpcClients
             _documenttype ??= new DocumentTypeServices.DocumentTypeServicesClient(MainClass.Invoker);
         public static DepartmentServices.DepartmentServicesClient Department =>
             _department ??= new DepartmentServices.DepartmentServicesClient(MainClass.Invoker);
+        public static BankServices.BankServicesClient Bank =>
+            _bank ??= new BankServices.BankServicesClient(MainClass.Invoker);
 
 
         public static AuthServices.AuthServicesClient Auth =>

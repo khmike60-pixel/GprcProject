@@ -29,7 +29,7 @@ service ContractServices {
   rpc GetContractLine(ContractLineRequest) returns (ContractLineResponse);                // Получить строку контракта по id
   rpc GetListContractLines(ContractLineRequest) returns (ListContractLinesResponse);         // Список строк контракт без пагинацией
   rpc CreateContractLine(CreateContractLineRequest) returns (ContractLineResponse);       // Создать строку контракт ((запрос без id или с id = 0, возвращает созданную строку контракта с заполненным id)
-  rpc UpdateContractLine(UpdateContractLineRequest) returns (ContractResponse);           // Обновить строку контракта (поддержка partial update через FieldMask)
+  rpc UpdateContractLine(UpdateContractLineRequest) returns (ContractLineResponse);           // Обновить строку контракта (поддержка partial update через FieldMask)
   rpc DeleteContractLine(ContractLineRequest) returns (DeleteContractLineResponse);       // Удалить строку контракта по id
   rpc DeleteIdsContractLine(DeleteIdsContractLineRequest) returns (UndeleteIdsContractLineResponse); // Удалить строки контракты по массиву ids
 

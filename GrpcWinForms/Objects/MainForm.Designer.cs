@@ -20,7 +20,7 @@ namespace GrpcWinForms.Forms
             ContragentsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripSeparator();
             OurCompanyToolStripMenuItem1 = new ToolStripMenuItem();
-            áàíêèToolStripMenuItem = new ToolStripMenuItem();
+            BanksToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             OurCompanyToolStripMenuItem = new ToolStripMenuItem();
             DepartmentsToolStripMenuItem = new ToolStripMenuItem();
@@ -91,7 +91,7 @@ namespace GrpcWinForms.Forms
             // 
             // êîíòğàãåíòûToolStripMenuItem
             // 
-            êîíòğàãåíòûToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ContragentsToolStripMenuItem, toolStripMenuItem2, OurCompanyToolStripMenuItem1, áàíêèToolStripMenuItem });
+            êîíòğàãåíòûToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ContragentsToolStripMenuItem, toolStripMenuItem2, OurCompanyToolStripMenuItem1, BanksToolStripMenuItem });
             êîíòğàãåíòûToolStripMenuItem.Name = "êîíòğàãåíòûToolStripMenuItem";
             êîíòğàãåíòûToolStripMenuItem.Size = new Size(228, 22);
             êîíòğàãåíòûToolStripMenuItem.Text = "Êîíòğàãåíòû";
@@ -115,11 +115,12 @@ namespace GrpcWinForms.Forms
             OurCompanyToolStripMenuItem1.Text = "Íàøè îğãàíèçàöèè";
             OurCompanyToolStripMenuItem1.Click += OurCompanyToolStripMenuItem_Click;
             // 
-            // áàíêèToolStripMenuItem
+            // BanksToolStripMenuItem
             // 
-            áàíêèToolStripMenuItem.Name = "áàíêèToolStripMenuItem";
-            áàíêèToolStripMenuItem.Size = new Size(181, 22);
-            áàíêèToolStripMenuItem.Text = "Áàíêè";
+            BanksToolStripMenuItem.Name = "BanksToolStripMenuItem";
+            BanksToolStripMenuItem.Size = new Size(181, 22);
+            BanksToolStripMenuItem.Text = "Áàíêè";
+            BanksToolStripMenuItem.Click += BanksToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
@@ -326,7 +327,7 @@ namespace GrpcWinForms.Forms
         private ToolStripMenuItem PlacesToolStripMenuItem;
         private ToolStripMenuItem êîíòğàãåíòûToolStripMenuItem;
         private ToolStripMenuItem ContragentsToolStripMenuItem;
-        private ToolStripMenuItem áàíêèToolStripMenuItem;
+        private ToolStripMenuItem BanksToolStripMenuItem;
         private ToolStripMenuItem ñåğâèñToolStripMenuItem;
         private ToolStripMenuItem GlobalRightsToolStripMenuItem;
         private ToolStripMenuItem SubjectsRightsToolStripMenuItem;

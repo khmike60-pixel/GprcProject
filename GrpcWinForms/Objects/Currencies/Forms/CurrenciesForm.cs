@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
+using GrpcWinForms.GrpcUtils;
 
 namespace GrpcWinForms.Forms
 {
@@ -50,7 +51,9 @@ namespace GrpcWinForms.Forms
             request.FieldMask.Paths.Add("order_number");
             request.FieldMask.Paths.Add("is_visible");
 
-            ListCurrencyResponse response = await GrpcClients.GrpcClients.Currency.GetListCurrencyAsync(request);
+            ListCurrencyResponse response = await GrpcRetry.CallAsync(()=>
+                GrpcClients.GrpcClients.Currency.GetListCurrencyAsync(request).ResponseAsync
+            );
             currencies = new BindingList<Currency>(response.Currencies);
             smartGrid.DataSource = currencies;
 
@@ -70,7 +73,9 @@ namespace GrpcWinForms.Forms
                         Currency = form.Currency
                     };
 
-                    CurrencyResponse response = await GrpcClients.GrpcClients.Currency.CreateCurrencyAsync(request);
+                    CurrencyResponse response = await GrpcRetry.CallAsync(()=>
+                        GrpcClients.GrpcClients.Currency.CreateCurrencyAsync(request).ResponseAsync
+                    );
                     if (response.Result.Status != Status.Ok || response.Currency == null)
                     {
                         MessageBox.Show("Добавить данные не удалось.");
@@ -101,7 +106,9 @@ namespace GrpcWinForms.Forms
                         Currency = form.Currency
                     };
 
-                    CurrencyResponse response = await GrpcClients.GrpcClients.Currency.UpdateCurrencyAsync(request);
+                    CurrencyResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Currency.UpdateCurrencyAsync(request).ResponseAsync
+                    );
                     if (response.Result.Status != Status.Ok || response.Currency == null)
                     {
                         MessageBox.Show("Изменить данные не удалось.");
@@ -132,7 +139,9 @@ namespace GrpcWinForms.Forms
                     {
                         Id = (int)smartGrid.Rows[smartGrid.RowSel]["Id"]
                     };
-                    DeleteCurrencyResponse response = await GrpcClients.GrpcClients.Currency.DeleteCurrencyAsync(request);
+                    DeleteCurrencyResponse response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.Currency.DeleteCurrencyAsync(request).ResponseAsync
+                    );
                     int i = smartGrid.RowSel - smartGrid.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
@@ -161,7 +170,9 @@ namespace GrpcWinForms.Forms
                     request.Ids.AddRange(ids);
 
                     UndeletedIdsCurrencyResponse response = new UndeletedIdsCurrencyResponse();
-                    response = await GrpcClients.GrpcClients.Currency.DeleteIdsCurrencyAsync(request);
+                    response = await GrpcRetry.CallAsync(() => 
+                        GrpcClients.GrpcClients.Currency.DeleteIdsCurrencyAsync(request).ResponseAsync
+                    );
 
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));

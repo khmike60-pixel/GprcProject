@@ -2,6 +2,7 @@
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Product;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using SmartGrid;
 using System;
@@ -54,7 +55,8 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
                 request.FieldMask.Paths.Add("is_product_kind");
                 request.FieldMask.Paths.Add("is_list");
 
-                TreeCatalogResponse response = await GrpcClients.GrpcClients.Product.TreeCatalogAsync(request);
+                TreeCatalogResponse response = await GrpcRetry.CallAsync(() => 
+                    GrpcClients.GrpcClients.Product.TreeCatalogAsync(request).ResponseAsync);
 
                 BindingList<TreeCatalog> treeCatalogs = new BindingList<TreeCatalog>();
 
