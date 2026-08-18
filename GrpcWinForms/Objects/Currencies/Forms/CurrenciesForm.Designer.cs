@@ -20,8 +20,7 @@ namespace GrpcWinForms.Forms
             labelAbbrev = new Label();
             textAbbrev = new TextBox();
             panel2 = new Panel();
-            smartGrid = new SmartGrid.SmartGrid();
-            currencyBindingSource = new BindingSource(components);
+            smartGrid1 = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -29,11 +28,12 @@ namespace GrpcWinForms.Forms
             toolStripButtonDelete = new ToolStripButton();
             toolStripButtonRefresh = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
+            currencyBindingSource = new BindingSource(components);
             panel1.SuspendLayout();
             panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)currencyBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)currencyBindingSource).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -76,7 +76,7 @@ namespace GrpcWinForms.Forms
             // 
             // panel2
             // 
-            panel2.Controls.Add(smartGrid);
+            panel2.Controls.Add(smartGrid1);
             panel2.Controls.Add(toolStrip1);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 34);
@@ -84,41 +84,32 @@ namespace GrpcWinForms.Forms
             panel2.Size = new Size(558, 420);
             panel2.TabIndex = 1;
             // 
-            // smartGrid
+            // smartGrid1
             // 
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid.AllowNodeMove = false;
-            smartGrid.AutoGenerateColumns = false;
-            smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
-            smartGrid.DataSource = currencyBindingSource;
-            smartGrid.Dock = DockStyle.Fill;
-            smartGrid.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowNodeMove = false;
+            smartGrid1.AutoGenerateColumns = false;
+            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
+            smartGrid1.Dock = DockStyle.Fill;
+            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
             aggregateDefinition1.Column = 4;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid.Footers.Descriptions.Add(footerDescription1);
-            smartGrid.Footers.Fixed = true;
-            smartGrid.Headers = new string[]
-    {
-    "...\tId\tКод\tКод числ.\tНаименование\tПорядок\tЧасто исп."
-    };
-            smartGrid.IdName = null;
-            smartGrid.IsEditing = false;
-            smartGrid.Location = new Point(0, 31);
-            smartGrid.Name = "smartGrid";
-            smartGrid.Rows.Count = 2;
-            smartGrid.SelectedRows = (List<int>)resources.GetObject("smartGrid.SelectedRows");
-            smartGrid.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid.Size = new Size(558, 389);
-            smartGrid.SortingType = SmartGrid.SortingType.Descending;
-            smartGrid.StyleInfo = resources.GetString("smartGrid.StyleInfo");
-            smartGrid.TabIndex = 2;
-            smartGrid.AfterResizeColumn += smartGrid_AfterResizeColumn;
-            // 
-            // currencyBindingSource
-            // 
-            currencyBindingSource.DataSource = typeof(GrpcCommonNet.Library.Common.Currency);
+            smartGrid1.Footers.Descriptions.Add(footerDescription1);
+            smartGrid1.Footers.Fixed = true;
+            smartGrid1.IdName = null;
+            smartGrid1.Location = new Point(0, 31);
+            smartGrid1.Name = "smartGrid1";
+            smartGrid1.Rows.Count = 51;
+            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
+            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGrid1.Size = new Size(558, 389);
+            smartGrid1.SortingType = SmartLib.SortingType.Descending;
+            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
+            smartGrid1.TabIndex = 3;
+            smartGrid1.AfterResizeColumn += smartGrid_AfterResizeColumn;
             // 
             // toolStrip1
             // 
@@ -185,6 +176,10 @@ namespace GrpcWinForms.Forms
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(6, 31);
             // 
+            // currencyBindingSource
+            // 
+            currencyBindingSource.DataSource = typeof(GrpcCommonNet.Library.Common.Currency);
+            // 
             // CurrenciesForm
             // 
             ClientSize = new Size(558, 454);
@@ -197,10 +192,10 @@ namespace GrpcWinForms.Forms
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid).EndInit();
-            ((System.ComponentModel.ISupportInitialize)currencyBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)currencyBindingSource).EndInit();
             ResumeLayout(false);
         }
         private Panel panel1;
@@ -215,7 +210,7 @@ namespace GrpcWinForms.Forms
         private ToolStripButton toolStripButtonEdit;
         private ToolStripButton toolStripButtonDelete;
         private ToolStripButton toolStripButtonRefresh;
-        private SmartGrid.SmartGrid smartGrid;
         private ToolStripSeparator toolStripSeparator1;
+        private SmartLib.SmartGrid smartGrid1;
     }
 }

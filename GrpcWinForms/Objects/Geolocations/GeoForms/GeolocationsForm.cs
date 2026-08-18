@@ -26,8 +26,8 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
         {
             InitializeComponent();
 
-            loader.Parent = smartGrid;
-            loader.Size = smartGrid.Size;
+            loader.Parent = smartGrid1;
+            loader.Size = smartGrid1.Size;
 
         }
 
@@ -48,16 +48,16 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                 geo = new BindingList<Geolocation>(response.Geolocations);
                 List<GeoTree> geoTree = new List<GeoTree>();
                 
-                // Добавляем головной нод
-                GeoTree root = new GeoTree() { Id = -1, Name = "Все" };
-                geoTree.Add(root);
+                //// Добавляем головной нод
+                //GeoTree root = new GeoTree() { Id = -1, Name = "Все" };
+                //geoTree.Add(root);
 
                 foreach (var item in response.Geolocations)
                     geoTree.Add(new GeoTree()
                     {
                         Id = Convert.ToInt32(item.Id),
                         Name = item.Name,
-                        ParentId = item.ParentId == 0 ? -1 : Convert.ToInt32(item.ParentId),
+                        ParentId = item.ParentId,
                         Code2 = item.Code2,
                         JsonCode = item.JsonCodes,
                         Lock = item.Lock == 0 ? false : true,
@@ -65,11 +65,11 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                     });
 
                 var g = geoTree.AsEnumerable();
-                smartGrid.BeginUpdate();
-                smartGrid.BuildTree(g);
+                smartGrid1.BeginUpdate();
+                smartGrid1.BuildTree(g);
 
                 // Находим максимальный уровень среди всех строк, которые являются узлами
-                int maxLevel = smartGrid.GetDepth();
+                int maxLevel = smartGrid1.GetDepth();
 
                 for (int i = 1; i <= maxLevel; i++)
                 {
@@ -77,27 +77,27 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                     int level = i; // Локальная копия для замыкания
                     levelItem.Click += (s, e) =>
                     {
-                        smartGrid.BeginUpdate();
-                        smartGrid.ExpandByLevel(level);
-                        smartGrid.EndUpdate();
+                        smartGrid1.BeginUpdate();
+                        smartGrid1.ExpandByLevel(level);
+                        smartGrid1.EndUpdate();
                     };
                     toolStripSplitButtonLevels.DropDownItems.Add(levelItem);
                 }
 
                 toolStripSplitButtonLevels.Click += (s, e) =>
                 {
-                    smartGrid.BeginUpdate();
-                    smartGrid.ExpandByLevel(1);
-                    smartGrid.EndUpdate();
+                    smartGrid1.BeginUpdate();
+                    smartGrid1.ExpandByLevel(1);
+                    smartGrid1.EndUpdate();
                 };
 
-                smartGrid.EndUpdate();
+                smartGrid1.EndUpdate();
                 loader.HideLoader();
 
             }
             catch (Exception ex)
             {
-                smartGrid.EndUpdate();
+                smartGrid1.EndUpdate();
                 loader.HideLoader();
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -117,26 +117,26 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         private void smartGrid_AfterResizeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
-            smartGrid.Cols["Name"].StarWidth = "*";
+            smartGrid1.Cols["Name"].StarWidth = "*";
         }
 
         private void toolStripButtonPath_Click(object sender, EventArgs e)
         {
             if (!toolStripButtonPath.Checked)
             {
-                smartGrid.BeginUpdate();
-                foreach (var row in smartGrid.Rows.Cast<Row>())
+                smartGrid1.BeginUpdate();
+                foreach (var row in smartGrid1.Rows.Cast<Row>())
                     if (row.IsNode) row.Visible = true;
-                smartGrid.EndUpdate();
+                smartGrid1.EndUpdate();
             }
             else
             {
-                IsolateCurrentBranch(smartGrid);
+                IsolateCurrentBranch(smartGrid1);
             }
 
         }
 
-        private void IsolateCurrentBranch(SmartGrid.SmartGrid grid)
+        private void IsolateCurrentBranch(SmartLib.SmartGrid grid)
         {
             if (grid.Row < grid.Rows.Fixed) return;
 

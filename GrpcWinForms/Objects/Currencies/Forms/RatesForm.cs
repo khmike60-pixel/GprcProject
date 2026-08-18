@@ -20,14 +20,15 @@ namespace GrpcWinForms.Objects.Currencies.Forms
         private BindingList<CurrencyRate> currencyRates;
         private BindingList<Rate> rates;
         private Loader loaderRates = new Loader();
+        private int currentRow = -1;
 
         public RatesForm()
         {
             InitializeComponent();
 
-            loaderRates.Parent = smartGridRates;
+            loaderRates.Parent = smartGridRates1;
             loaderRates.Location = new Point(0, 0);
-            loaderRates.Size = smartGridRates.Size;
+            loaderRates.Size = smartGridRates1.Size;
 
             dateTimePickerDateRates.Value = DateTime.Now;
         }
@@ -46,14 +47,16 @@ namespace GrpcWinForms.Objects.Currencies.Forms
             );
 
             currencyRates = new BindingList<CurrencyRate>(response.CurrencyRates);
-            smartGrid.DataSource = currencyRates;
+            smartGrid1.DataSource = currencyRates;
             return currencyRates;
         }
 
         private async Task<BindingList<Rate>> RefreshRates(object sender, EventArgs e)
         {
             loaderRates.ShowLoader();
-            CurrencyRate currencyRate = (CurrencyRate)(smartGrid.Rows[smartGrid.Row].DataSource);
+            rates = new BindingList<Rate>();
+            CurrencyRate currencyRate = (CurrencyRate)(smartGrid1.Rows[smartGrid1.Row].DataSource);
+            if (currencyRate == null) return rates;
             ListCurrencyRateRequest request = new ListCurrencyRateRequest()
             {
                 CurrencyId = currencyRate.Id,
@@ -65,7 +68,7 @@ namespace GrpcWinForms.Objects.Currencies.Forms
                 GrpcClients.GrpcClients.Currency.GetListCurrencyRateAsync(request).ResponseAsync
             );
             rates = new BindingList<Rate>(response.Rates);
-            smartGridRates.DataSource = rates;
+            smartGridRates1.DataSource = rates;
             loaderRates.HideLoader();
             return rates;
         }
@@ -84,8 +87,8 @@ namespace GrpcWinForms.Objects.Currencies.Forms
 
         private void smartGrid_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            CurrencyRate currencyRate = (CurrencyRate)(smartGrid.Rows[e.Row].DataSource);
-            switch (smartGrid.Cols[e.Col].Name)
+            CurrencyRate currencyRate = (CurrencyRate)(smartGrid1.Rows[e.Row].DataSource);
+            switch (smartGrid1.Cols[e.Col].Name)
             {
                 case "DecimalRate":
                     if (currencyRate.Rate == null) e.Value = null;
@@ -104,16 +107,17 @@ namespace GrpcWinForms.Objects.Currencies.Forms
 
         private async void smartGrid_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
-
-            if (smartGrid.RowSel <= smartGrid.Rows.Fixed - 1) return;
+            if (smartGrid1.RowSel == currentRow) return;
+            else currentRow = smartGrid1.RowSel;
+            if (smartGrid1.RowSel <= smartGrid1.Rows.Fixed - 1) return;
             await RefreshRates(sender, e);
 
         }
 
         private void smartGridRates_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            Rate rate = (Rate)(smartGridRates.Rows[e.Row].DataSource);
-            switch (smartGridRates.Cols[e.Col].Name)
+            Rate rate = (Rate)(smartGridRates1.Rows[e.Row].DataSource);
+            switch (smartGridRates1.Cols[e.Col].Name)
             {
                 case "Rate":
                     if (rate.Rate_ == null) e.Value = null;
@@ -128,13 +132,13 @@ namespace GrpcWinForms.Objects.Currencies.Forms
 
         private void smartGrid_AfterFreezeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
-            smartGrid.Cols["Name"].StarWidth = "*";
+            smartGrid1.Cols["Name"].StarWidth = "*";
         }
 
         private void smartGridRates_AfterFreezeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
-            smartGridRates.Cols["DateRate"].StarWidth = "*";
-            smartGridRates.Cols["Rate"].StarWidth = "*";
+            smartGridRates1.Cols["DateRate"].StarWidth = "*";
+            smartGridRates1.Cols["Rate"].StarWidth = "*";
         }
 
         //#region LoaderControl

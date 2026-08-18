@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GrpcWinForms.Objects.Geolocations.Models
 {
-    public class GeoTree : ITreeData
+    public class GeoTree : SmartLib.ITreeData
     {
         public int Id { get; set; } = 0;
         public string Name { get; set; } = string.Empty;

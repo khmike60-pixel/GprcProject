@@ -55,7 +55,7 @@ namespace GrpcWinForms.Forms
                 GrpcClients.GrpcClients.Currency.GetListCurrencyAsync(request).ResponseAsync
             );
             currencies = new BindingList<Currency>(response.Currencies);
-            smartGrid.DataSource = currencies;
+            smartGrid1.DataSource = currencies;
 
         }
 
@@ -83,9 +83,9 @@ namespace GrpcWinForms.Forms
                     }
                     else
                     {
-                        int rowsel = smartGrid.RowSel;
-                        currencies.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Currency);
-                        smartGrid.Row = rowsel;
+                        int rowsel = smartGrid1.RowSel;
+                        currencies.Insert(smartGrid1.RowSel - smartGrid1.Rows.Fixed, response.Currency);
+                        smartGrid1.Row = rowsel;
                     }
 
                 }
@@ -97,7 +97,7 @@ namespace GrpcWinForms.Forms
             using (var form = new CurrencyForm())
             {
                 form.IsNew = false;
-                form.Currency = currencies[smartGrid.RowSel - smartGrid.Rows.Fixed];
+                form.Currency = currencies[smartGrid1.RowSel - smartGrid1.Rows.Fixed];
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -116,8 +116,8 @@ namespace GrpcWinForms.Forms
                     }
                     else
                     {
-                        int rowsel = smartGrid.RowSel;
-                        currencies[rowsel - smartGrid.Rows.Fixed] = response.Currency;
+                        int rowsel = smartGrid1.RowSel;
+                        currencies[rowsel - smartGrid1.Rows.Fixed] = response.Currency;
                     }
 
                 }
@@ -130,24 +130,24 @@ namespace GrpcWinForms.Forms
             List<int> ids = new List<int>();
             List<int> oldList = new List<int>();
             List<int> newMarked = new List<int>();
-            if (smartGrid.SelectedRows.Count == 0)
+            if (smartGrid1.SelectedRows.Count == 0)
             { // Удаляется одна запись
                 DialogResult result = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
                     DeleteCurrencyRequest request = new DeleteCurrencyRequest()
                     {
-                        Id = (int)smartGrid.Rows[smartGrid.RowSel]["Id"]
+                        Id = (int)smartGrid1.Rows[smartGrid1.RowSel]["Id"]
                     };
                     DeleteCurrencyResponse response = await GrpcRetry.CallAsync(() => 
                         GrpcClients.GrpcClients.Currency.DeleteCurrencyAsync(request).ResponseAsync
                     );
-                    int i = smartGrid.RowSel - smartGrid.Rows.Fixed;
+                    int i = smartGrid1.RowSel - smartGrid1.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
-                        smartGrid.BeginUpdate();
+                        smartGrid1.BeginUpdate();
                         currencies.RemoveAt(i);
-                        smartGrid.EndUpdate();
+                        smartGrid1.EndUpdate();
                     }
                     else
                         MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
@@ -156,15 +156,15 @@ namespace GrpcWinForms.Forms
             else
             { // Был режим выделения
 
-                DialogResult result = MessageBox.Show($"Вы отметили {smartGrid.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
+                DialogResult result = MessageBox.Show($"Вы отметили {smartGrid1.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
 
                 if (result == DialogResult.OK)
                 {
 
-                    oldList.AddRange(smartGrid.SelectedRows);
-                    newMarked.AddRange(smartGrid.SelectedRows);
+                    oldList.AddRange(smartGrid1.SelectedRows);
+                    newMarked.AddRange(smartGrid1.SelectedRows);
 
-                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid.Rows[index]["Id"]));
+                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid1.Rows[index]["Id"]));
 
                     DeleteIdsCurrencyRequest request = new DeleteIdsCurrencyRequest();
                     request.Ids.AddRange(ids);
@@ -177,10 +177,10 @@ namespace GrpcWinForms.Forms
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
 
-                    smartGrid.BeginUpdate();
-                    List<int> testList = Utils.UndeleteList<Currency>((C1FlexGrid)smartGrid, currencies, undelIds, smartGrid.SelectedRows, "Id");
-                    smartGrid.SelectedRows = testList;
-                    smartGrid.EndUpdate();
+                    smartGrid1.BeginUpdate();
+                    List<int> testList = Utils.UndeleteList<Currency>((C1FlexGrid)smartGrid1, currencies, undelIds, smartGrid1.SelectedRows, "Id");
+                    smartGrid1.SelectedRows = testList;
+                    smartGrid1.EndUpdate();
 
                     if (response.Result.Status != Status.Ok)
                         MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
@@ -193,7 +193,7 @@ namespace GrpcWinForms.Forms
 
         private void smartGrid_AfterResizeColumn(object sender, RowColEventArgs e)
         {
-            smartGrid.Cols["Name"].StarWidth = "*";
+            smartGrid1.Cols["Name"].StarWidth = "*";
         }
 
     }

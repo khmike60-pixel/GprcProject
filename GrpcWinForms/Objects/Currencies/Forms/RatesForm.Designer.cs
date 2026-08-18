@@ -37,8 +37,7 @@
             panel2 = new Panel();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanelRates = new C1.Win.SplitContainer.C1SplitterPanel();
-            smartGridRates = new SmartGrid.SmartGrid();
-            rateBindingSource = new BindingSource(components);
+            smartGridRates1 = new SmartLib.SmartGrid(components);
             toolStripRates = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -47,8 +46,7 @@
             toolStripButtonRefreshRates = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
             c1SplitterPanelCurrencies = new C1.Win.SplitContainer.C1SplitterPanel();
-            smartGrid = new SmartGrid.SmartGrid();
-            currencyRateBindingSource = new BindingSource(components);
+            smartGrid1 = new SmartLib.SmartGrid(components);
             toolStripCurrencies = new ToolStrip();
             toolStripButton1 = new ToolStripButton();
             toolStripButton2 = new ToolStripButton();
@@ -62,20 +60,16 @@
             checkIncludeInvisible = new CheckBox();
             labelAbbrev = new Label();
             textAbbrev = new TextBox();
-            bindingSource1 = new BindingSource(components);
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanelRates.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridRates).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)rateBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smartGridRates1).BeginInit();
             toolStripRates.SuspendLayout();
             c1SplitterPanelCurrencies.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)currencyRateBindingSource).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             toolStripCurrencies.SuspendLayout();
             panelFilter.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             SuspendLayout();
             // 
             // panel2
@@ -84,7 +78,7 @@
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 34);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1032, 524);
+            panel2.Size = new Size(714, 524);
             panel2.TabIndex = 3;
             // 
             // c1SplitContainer1
@@ -96,59 +90,49 @@
             c1SplitContainer1.Name = "c1SplitContainer1";
             c1SplitContainer1.Panels.Add(c1SplitterPanelRates);
             c1SplitContainer1.Panels.Add(c1SplitterPanelCurrencies);
-            c1SplitContainer1.Size = new Size(1032, 524);
+            c1SplitContainer1.Size = new Size(714, 524);
             c1SplitContainer1.TabIndex = 3;
             // 
             // c1SplitterPanelRates
             // 
             c1SplitterPanelRates.Collapsible = true;
-            c1SplitterPanelRates.Controls.Add(smartGridRates);
+            c1SplitterPanelRates.Controls.Add(smartGridRates1);
             c1SplitterPanelRates.Controls.Add(toolStripRates);
             c1SplitterPanelRates.Dock = C1.Win.SplitContainer.PanelDockStyle.Right;
-            c1SplitterPanelRates.Location = new Point(639, 0);
+            c1SplitterPanelRates.Location = new Point(445, 0);
             c1SplitterPanelRates.Name = "c1SplitterPanelRates";
-            c1SplitterPanelRates.Size = new Size(393, 524);
+            c1SplitterPanelRates.Size = new Size(269, 524);
             c1SplitterPanelRates.SizeRatio = 38.911D;
             c1SplitterPanelRates.TabIndex = 0;
-            c1SplitterPanelRates.Width = 400;
+            c1SplitterPanelRates.Width = 276;
             // 
-            // smartGridRates
+            // smartGridRates1
             // 
-            smartGridRates.AllowEditing = false;
-            smartGridRates.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridRates.AllowNodeMove = false;
-            smartGridRates.AutoGenerateColumns = false;
-            smartGridRates.ColumnInfo = resources.GetString("smartGridRates.ColumnInfo");
-            smartGridRates.DataSource = rateBindingSource;
-            smartGridRates.Dock = DockStyle.Fill;
-            smartGridRates.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smartGridRates1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridRates1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridRates1.AllowNodeMove = false;
+            smartGridRates1.AutoGenerateColumns = false;
+            smartGridRates1.ColumnInfo = resources.GetString("smartGridRates1.ColumnInfo");
+            smartGridRates1.Dock = DockStyle.Fill;
+            smartGridRates1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
             aggregateDefinition1.Column = 2;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGridRates.Footers.Descriptions.Add(footerDescription1);
-            smartGridRates.Footers.Fixed = true;
-            smartGridRates.Headers = new string[]
-    {
-    "...\tId\tДата\tКурс"
-    };
-            smartGridRates.IdName = null;
-            smartGridRates.IsEditing = false;
-            smartGridRates.Location = new Point(0, 31);
-            smartGridRates.Name = "smartGridRates";
-            smartGridRates.Rows.Count = 2;
-            smartGridRates.SelectedRows = (List<int>)resources.GetObject("smartGridRates.SelectedRows");
-            smartGridRates.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridRates.Size = new Size(393, 493);
-            smartGridRates.SortingType = SmartGrid.SortingType.Descending;
-            smartGridRates.StyleInfo = resources.GetString("smartGridRates.StyleInfo");
-            smartGridRates.TabIndex = 1;
-            smartGridRates.AfterFreezeColumn += smartGridRates_AfterFreezeColumn;
-            smartGridRates.GetUnboundValue += smartGridRates_GetUnboundValue;
-            // 
-            // rateBindingSource
-            // 
-            rateBindingSource.DataSource = typeof(GrpcCommonNet.Library.Common.Rate);
+            smartGridRates1.Footers.Descriptions.Add(footerDescription1);
+            smartGridRates1.Footers.Fixed = true;
+            smartGridRates1.IdName = null;
+            smartGridRates1.Location = new Point(0, 31);
+            smartGridRates1.Name = "smartGridRates1";
+            smartGridRates1.Rows.Count = 51;
+            smartGridRates1.SelectedRows = (List<int>)resources.GetObject("smartGridRates1.SelectedRows");
+            smartGridRates1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGridRates1.Size = new Size(269, 493);
+            smartGridRates1.SortingType = SmartLib.SortingType.Descending;
+            smartGridRates1.StyleInfo = resources.GetString("smartGridRates1.StyleInfo");
+            smartGridRates1.TabIndex = 2;
+            smartGridRates1.AfterFreezeColumn += smartGridRates_AfterFreezeColumn;
+            smartGridRates1.GetUnboundValue += smartGridRates_GetUnboundValue;
             // 
             // toolStripRates
             // 
@@ -156,7 +140,7 @@
             toolStripRates.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefreshRates, toolStripSeparator1 });
             toolStripRates.Location = new Point(0, 0);
             toolStripRates.Name = "toolStripRates";
-            toolStripRates.Size = new Size(393, 31);
+            toolStripRates.Size = new Size(269, 31);
             toolStripRates.TabIndex = 0;
             toolStripRates.Text = "toolStrip1";
             // 
@@ -213,53 +197,43 @@
             // 
             // c1SplitterPanelCurrencies
             // 
-            c1SplitterPanelCurrencies.Controls.Add(smartGrid);
+            c1SplitterPanelCurrencies.Controls.Add(smartGrid1);
             c1SplitterPanelCurrencies.Controls.Add(toolStripCurrencies);
             c1SplitterPanelCurrencies.Dock = C1.Win.SplitContainer.PanelDockStyle.Left;
             c1SplitterPanelCurrencies.Location = new Point(0, 0);
             c1SplitterPanelCurrencies.Name = "c1SplitterPanelCurrencies";
-            c1SplitterPanelCurrencies.Size = new Size(628, 524);
+            c1SplitterPanelCurrencies.Size = new Size(434, 524);
             c1SplitterPanelCurrencies.TabIndex = 1;
-            c1SplitterPanelCurrencies.Width = 628;
+            c1SplitterPanelCurrencies.Width = 434;
             // 
-            // smartGrid
+            // smartGrid1
             // 
-            smartGrid.AllowEditing = false;
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid.AllowNodeMove = false;
-            smartGrid.AutoGenerateColumns = false;
-            smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
-            smartGrid.DataSource = currencyRateBindingSource;
-            smartGrid.Dock = DockStyle.Fill;
-            smartGrid.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowNodeMove = false;
+            smartGrid1.AutoGenerateColumns = false;
+            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
+            smartGrid1.Dock = DockStyle.Fill;
+            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition2.Caption = "Всего: ";
-            aggregateDefinition2.Column = 2;
+            aggregateDefinition2.Column = 3;
             footerDescription2.Aggregates.Add(aggregateDefinition2);
-            smartGrid.Footers.Descriptions.Add(footerDescription2);
-            smartGrid.Footers.Fixed = true;
-            smartGrid.Headers = new string[]
-    {
-    "...\tId\tКод\tНаименование\tКурс\tДата"
-    };
-            smartGrid.IdName = null;
-            smartGrid.IsEditing = false;
-            smartGrid.Location = new Point(0, 31);
-            smartGrid.Name = "smartGrid";
-            smartGrid.Rows.Count = 2;
-            smartGrid.SelectedRows = (List<int>)resources.GetObject("smartGrid.SelectedRows");
-            smartGrid.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid.Size = new Size(628, 493);
-            smartGrid.SortingType = SmartGrid.SortingType.Descending;
-            smartGrid.StyleInfo = resources.GetString("smartGrid.StyleInfo");
-            smartGrid.TabIndex = 3;
-            smartGrid.AfterFreezeColumn += smartGrid_AfterFreezeColumn;
-            smartGrid.AfterSelChange += smartGrid_AfterSelChange;
-            smartGrid.GetUnboundValue += smartGrid_GetUnboundValue;
-            // 
-            // currencyRateBindingSource
-            // 
-            currencyRateBindingSource.DataSource = typeof(GrpcCommonNet.Library.Common.CurrencyRate);
+            smartGrid1.Footers.Descriptions.Add(footerDescription2);
+            smartGrid1.Footers.Fixed = true;
+            smartGrid1.IdName = null;
+            smartGrid1.Location = new Point(0, 31);
+            smartGrid1.Name = "smartGrid1";
+            smartGrid1.Rows.Count = 51;
+            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
+            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGrid1.Size = new Size(434, 493);
+            smartGrid1.SortingType = SmartLib.SortingType.Descending;
+            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
+            smartGrid1.TabIndex = 4;
+            smartGrid1.AfterFreezeColumn += smartGrid_AfterFreezeColumn;
+            smartGrid1.AfterSelChange += smartGrid_AfterSelChange;
+            smartGrid1.GetUnboundValue += smartGrid_GetUnboundValue;
             // 
             // toolStripCurrencies
             // 
@@ -267,7 +241,7 @@
             toolStripCurrencies.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2, toolStripButton3, toolStripButton4, toolStripButtonCurrencies, toolStripSeparator2 });
             toolStripCurrencies.Location = new Point(0, 0);
             toolStripCurrencies.Name = "toolStripCurrencies";
-            toolStripCurrencies.Size = new Size(628, 31);
+            toolStripCurrencies.Size = new Size(434, 31);
             toolStripCurrencies.TabIndex = 2;
             toolStripCurrencies.Text = "toolStrip2";
             // 
@@ -336,7 +310,7 @@
             panelFilter.Dock = DockStyle.Top;
             panelFilter.Location = new Point(0, 0);
             panelFilter.Name = "panelFilter";
-            panelFilter.Size = new Size(1032, 34);
+            panelFilter.Size = new Size(714, 34);
             panelFilter.TabIndex = 2;
             // 
             // labelDateRates
@@ -387,7 +361,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1032, 558);
+            ClientSize = new Size(714, 558);
             Controls.Add(panel2);
             Controls.Add(panelFilter);
             Name = "RatesForm";
@@ -398,19 +372,16 @@
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanelRates.ResumeLayout(false);
             c1SplitterPanelRates.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridRates).EndInit();
-            ((System.ComponentModel.ISupportInitialize)rateBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartGridRates1).EndInit();
             toolStripRates.ResumeLayout(false);
             toolStripRates.PerformLayout();
             c1SplitterPanelCurrencies.ResumeLayout(false);
             c1SplitterPanelCurrencies.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid).EndInit();
-            ((System.ComponentModel.ISupportInitialize)currencyRateBindingSource).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
             toolStripCurrencies.ResumeLayout(false);
             toolStripCurrencies.PerformLayout();
             panelFilter.ResumeLayout(false);
             panelFilter.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();
             ResumeLayout(false);
         }
 
@@ -420,7 +391,6 @@
         private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanelRates;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanelCurrencies;
-        private SmartGrid.SmartGrid smartGrid;
         private ToolStrip toolStripRates;
         private ToolStripButton toolStripButtonNew;
         private ToolStripButton toolStripButtonDouble;
@@ -441,9 +411,7 @@
         private ToolStripButton toolStripButton4;
         private ToolStripButton toolStripButtonCurrencies;
         private ToolStripSeparator toolStripSeparator2;
-        private BindingSource currencyRateBindingSource;
-        private BindingSource bindingSource1;
-        private SmartGrid.SmartGrid smartGridRates;
-        private BindingSource rateBindingSource;
+        private SmartLib.SmartGrid smartGridRates1;
+        private SmartLib.SmartGrid smartGrid1;
     }
 }

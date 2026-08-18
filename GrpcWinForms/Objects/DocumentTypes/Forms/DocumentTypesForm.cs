@@ -33,8 +33,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         public DocumentTypesForm()
         {
             InitializeComponent();
-            loaderDocumentTypes.Parent = smartGridDocumentTypes;
-            loaderDocumentTypes.Size = smartGridDocumentTypes.Size;
+            loaderDocumentTypes.Parent = smartGridDocumentTypes1;
+            loaderDocumentTypes.Size = smartGridDocumentTypes1.Size;
         }
 
         public async void RefreshDocumentTypes()
@@ -42,7 +42,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             loaderDocumentTypes.ShowLoader();
             try
             {
-                smartGridDocumentTypes.BeginUpdate();
+                smartGridDocumentTypes1.BeginUpdate();
                 List<DocumentType> treeContractTypes = new List<DocumentType>();
 
                 DocumentTypeFilterRequest request = new DocumentTypeFilterRequest()
@@ -59,9 +59,6 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
                 List<TreeDocumentType> treeDocumentTypes = new List<TreeDocumentType>();
 
-                TreeDocumentType root = new TreeDocumentType() { Id = -1, Name = "Все", ParentId = 0 };
-                treeDocumentTypes.Add(root);
-
                 foreach (DocumentType item in response.DocumentTypes)
                 {
                     treeDocumentTypes.Add(new TreeDocumentType()
@@ -70,7 +67,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         Name = item.Name,
                         Code = item.Code,
                         Form = item.Form,
-                        ParentId = item.Parent.Id == 0 ? -1 : Convert.ToInt32(item.Parent.Id),
+                        ParentId = item.Parent.Id,
                         Parent = item.Parent,
                         ParentIds = item.Ids,
                         ParentNames = item.Parents,
@@ -86,10 +83,10 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
                 var tree = treeDocumentTypes.AsEnumerable();
 
-                smartGridDocumentTypes.BuildTree(tree);
+                smartGridDocumentTypes1.BuildTree(tree);
 
                 // Находим максимальный уровень среди всех строк, которые являются узлами
-                int maxLevel = smartGridDocumentTypes.GetDepth();
+                int maxLevel = smartGridDocumentTypes1.GetDepth();
 
                 for (int i = 1; i <= maxLevel; i++)
                 {
@@ -97,14 +94,14 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     int level = i; // Локальная копия для замыкания
                     levelItem.Click += (s, e) =>
                     {
-                        smartGridDocumentTypes.BeginUpdate();
-                        smartGridDocumentTypes.ExpandByLevel(level);
+                        smartGridDocumentTypes1.BeginUpdate();
+                        smartGridDocumentTypes1.ExpandByLevel(level);
                         if (toolStripButtonPath.Checked) toolStripButtonPath.Checked = false;
-                        smartGridDocumentTypes.EndUpdate();
+                        smartGridDocumentTypes1.EndUpdate();
                     };
                     toolStripButtonLevels.DropDownItems.Add(levelItem);
                 }
-                smartGridDocumentTypes.EndUpdate();
+                smartGridDocumentTypes1.EndUpdate();
             }
             catch (Exception ex)
             {
@@ -127,7 +124,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         {
             try
             {
-                Node treeNode = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
+                Node treeNode = smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node;
                 TreeDocumentType treeNodeKey = (TreeDocumentType)treeNode.Key;
                 DocumentTypeRequest requestById = new DocumentTypeRequest() { Id = treeNodeKey.Id };
 
@@ -148,7 +145,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         {
             try
             {
-                Node treeNode = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
+                Node treeNode = smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node;
                 TreeDocumentType treeNodeKey = (TreeDocumentType)treeNode.Key;
                 DocumentTypeRequest requestById = new DocumentTypeRequest() { Id = treeNodeKey.Id };
 
@@ -170,10 +167,10 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     if (response.Result.Status == Status.Ok)
                     {
                         DocumentTypeToNode(response.DocumentType, treeNode);
-                        smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node.Data = response.DocumentType.Name;
-                        smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["ParentNames"] = response.DocumentType.Parents;
-                        smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Code"] = response.DocumentType.Code;
-                        smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Form"] = response.DocumentType.Form;
+                        smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node.Data = response.DocumentType.Name;
+                        smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row]["ParentNames"] = response.DocumentType.Parents;
+                        smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row]["Code"] = response.DocumentType.Code;
+                        smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row]["Form"] = response.DocumentType.Form;
 
                     }
                     else
@@ -206,7 +203,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 allowMove = false;
                 return;
             }
-            //smartGridDocumentTypes.MoveNode(currentNode, parentNode);
+            //smartGridDocumentTypes1.MoveNode(currentNode, parentNode);
         }
 
         private void smartGridDocumentTypes_BeforeNodeMove(Node currentNode, Node parentNode, ref bool allowMove)
@@ -218,7 +215,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         {
             try
             {
-                Node ParentNode = smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node;
+                Node ParentNode = smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node;
                 TreeDocumentType currentNodeKey = (TreeDocumentType)ParentNode.Key;
                 using DocumentTypeForm form = new DocumentTypeForm();
                 form.EditMode = true;
@@ -257,13 +254,13 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     Node newNode = ParentNode.AddNode(NodeTypeEnum.FirstChild, response.DocumentType.Name);
 
                     newNode.Key = newTree;
-                    smartGridDocumentTypes.Row += 1;
+                    smartGridDocumentTypes1.Row += 1;
 
-                    smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node.Data = response.DocumentType.Name;
-                    smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["ParentNames"] = response.DocumentType.Parents;
-                    smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Id"] = response.DocumentType.Id;
-                    smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Code"] = response.DocumentType.Code;
-                    smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Form"] = response.DocumentType.Form;
+                    smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node.Data = response.DocumentType.Name;
+                    smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row]["ParentNames"] = response.DocumentType.Parents;
+                    smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row]["Id"] = response.DocumentType.Id;
+                    smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row]["Code"] = response.DocumentType.Code;
+                    smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row]["Form"] = response.DocumentType.Form;
 
 
                 }
@@ -284,23 +281,23 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             List<int> oldList = new List<int>();
             List<int> newMarked = new List<int>();
 
-            if (smartGridDocumentTypes.SelectedRows.Count == 0)
+            if (smartGridDocumentTypes1.SelectedRows.Count == 0)
             { // Удаляется одна запись
                 DialogResult result = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
                     DeleteDocumentTypeRequest request = new DeleteDocumentTypeRequest()
                     {
-                        Id = (int)smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row]["Id"]
+                        Id = (int)smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row]["Id"]
                     };
                     DeleteDocumentTypeResponse response = await GrpcRetry.CallAsync(() => 
                         GrpcClients.GrpcClients.DocumentType.DeleteDocumentTypeAsync(request).ResponseAsync);
-                    int i = smartGridDocumentTypes.RowSel - smartGridDocumentTypes.Rows.Fixed;
+                    int i = smartGridDocumentTypes1.RowSel - smartGridDocumentTypes1.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
-                        smartGridDocumentTypes.BeginUpdate();
-                        smartGridDocumentTypes.Rows[smartGridDocumentTypes.Row].Node.RemoveNode();
-                        smartGridDocumentTypes.EndUpdate();
+                        smartGridDocumentTypes1.BeginUpdate();
+                        smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node.RemoveNode();
+                        smartGridDocumentTypes1.EndUpdate();
                     }
                     else
                         MessageBox.Show("Ошибка при удалении: \nВероятно есть зависимые данные.\n" + response.Result.Message, "Ошибка");
@@ -308,19 +305,19 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             }
             else
             { // Был режим выделения
-                DialogResult result = MessageBox.Show($"Вы отметили {smartGridDocumentTypes.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
+                DialogResult result = MessageBox.Show($"Вы отметили {smartGridDocumentTypes1.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
                     List<Node> selectedNodes = new List<Node>();
-                    for (int i = 0; i < smartGridDocumentTypes.SelectedRows.Count; i++)
+                    for (int i = 0; i < smartGridDocumentTypes1.SelectedRows.Count; i++)
                     {
-                        Node selectNode = smartGridDocumentTypes.Rows[smartGridDocumentTypes.SelectedRows[i]].Node;
+                        Node selectNode = smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.SelectedRows[i]].Node;
                         selectedNodes.Add(selectNode);
                     }
-                    oldList.AddRange(smartGridDocumentTypes.SelectedRows);
-                    newMarked.AddRange(smartGridDocumentTypes.SelectedRows);
+                    oldList.AddRange(smartGridDocumentTypes1.SelectedRows);
+                    newMarked.AddRange(smartGridDocumentTypes1.SelectedRows);
 
-                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGridDocumentTypes.Rows[index]["Id"]));
+                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGridDocumentTypes1.Rows[index]["Id"]));
 
                     DeleteIdsDocumentTypeRequest request = new DeleteIdsDocumentTypeRequest();
                     request.Ids.AddRange(ids);
@@ -336,19 +333,19 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     else
                     {
                         List<int> undelIds = new List<int>();
-                        smartGridDocumentTypes.BeginUpdate();
+                        smartGridDocumentTypes1.BeginUpdate();
                         oldList.Sort(); oldList.Reverse();
 
                         for (int i = 0; i < oldList.Count; i++)
                         {
-                            Node selectNode = smartGridDocumentTypes.Rows[oldList[i]].Node;
+                            Node selectNode = smartGridDocumentTypes1.Rows[oldList[i]].Node;
                             if (!response.UndeletedIds.Contains(((TreeDocumentType)selectNode.Key).Id))
                             {
                                 selectNode.RemoveNode();
                             }
                         }
-                        smartGridDocumentTypes.SelectedRows = undelIds;
-                        smartGridDocumentTypes.EndUpdate();
+                        smartGridDocumentTypes1.SelectedRows = undelIds;
+                        smartGridDocumentTypes1.EndUpdate();
                         if (response.UndeletedIds.Count > 0)
                             MessageBox.Show("Данные, которые не удалось удалить.\n Неудвленные строки остались выделенными.", "Внимание");
                     }
@@ -360,14 +357,14 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         {
             if (!toolStripButtonPath.Checked)
             {
-                smartGridDocumentTypes.BeginUpdate();
-                foreach (var row in smartGridDocumentTypes.Rows.Cast<Row>())
+                smartGridDocumentTypes1.BeginUpdate();
+                foreach (var row in smartGridDocumentTypes1.Rows.Cast<Row>())
                     if (row.IsNode) row.Visible = true;
-                smartGridDocumentTypes.EndUpdate();
+                smartGridDocumentTypes1.EndUpdate();
             }
             else
             {
-                IsolateCurrentBranch(smartGridDocumentTypes);
+                IsolateCurrentBranch(smartGridDocumentTypes1);
             }
 
         }
@@ -400,7 +397,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
         }
 
-        private void IsolateCurrentBranch(SmartGrid.SmartGrid grid)
+        private void IsolateCurrentBranch(SmartLib.SmartGrid grid)
         {
             if (grid.Row < grid.Rows.Fixed) return;
 
@@ -458,7 +455,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
     }
 
-    public class TreeDocumentType : ITreeData
+    public class TreeDocumentType : SmartLib.ITreeData
     {
         public int Id { get; set; }
         public string Name { get; set; }
