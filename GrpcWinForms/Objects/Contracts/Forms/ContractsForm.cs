@@ -36,8 +36,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         public ContractsForm()
         {
             InitializeComponent();
-            loaderContracts.Parent = smartGridContracts;
-            loaderLines.Parent = smartGridLines;
+            loaderContracts.Parent = smartGridContracts1;
+            loaderLines.Parent = smartGridLines1;
 
             companyBuyer.GetDataSourceFunc = CompanyFilterLoad;
             companySeller.GetDataSourceFunc = CompanyFilterLoad;
@@ -80,7 +80,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 );
 
                 contracts = new BindingList<Contract>(response.Contracts);
-                smartGridContracts.DataSource = contracts;
+                smartGridContracts1.DataSource = contracts;
             }
             catch (Exception ex)
             {
@@ -115,8 +115,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         /// <param name="e"></param>
         private void smartGridContracts_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            Contract contract = (Contract)smartGridContracts.Rows[e.Row].DataSource;
-            switch (smartGridContracts.Cols[e.Col].Name)
+            Contract contract = (Contract)smartGridContracts1.Rows[e.Row].DataSource;
+            switch (smartGridContracts1.Cols[e.Col].Name)
             {
                 case "colSeller":
                     {
@@ -173,9 +173,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             try
             {
                 loaderLines.ShowLoader();
-                if (smartGridContracts.Row >= smartGridContracts.Rows.Fixed)
+                if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
                 {
-                    Contract contract = (Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource;
+                    Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
 
                     ContractLineRequest request = new ContractLineRequest()
                     {
@@ -187,7 +187,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
                     lines = new BindingList<Line>(response.Lines);
                 }
-                smartGridLines.DataSource = lines;
+                smartGridLines1.DataSource = lines;
                 loaderLines.HideLoader();
             }
             catch (Exception ex)
@@ -207,8 +207,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            Line line = (Line)smartGridLines.Rows[e.Row].DataSource;
-            switch (smartGridLines.Cols[e.Col].Name)
+            Line line = (Line)smartGridLines1.Rows[e.Row].DataSource;
+            switch (smartGridLines1.Cols[e.Col].Name)
             {
                 case "colUnitShort":
                     {
@@ -251,7 +251,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void smartGridContracts_DoubleClick(object sender, EventArgs e)
         {
-            var row = smartGridContracts.Rows[smartGridContracts.Row].DataSource;
+            var row = smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
             Contract _contract = row as Contract;
             ViewContract(sender, _contract);
         }
@@ -263,10 +263,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             string fullTypeContract = $"{nameSpace}.{nameForm}";
             try
             {
-                int contractId = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).Id;
-                var contractType_Name = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Name;
-                var contractType_Code = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Code;
-                var contractType_Form = ((Contract)smartGridContracts.Rows[smartGridContracts.Row].DataSource).TypeContract?.Form;
+                int contractId = ((Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource).Id;
+                var contractType_Name = ((Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource).TypeContract?.Name;
+                var contractType_Code = ((Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource).TypeContract?.Code;
+                var contractType_Form = ((Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource).TypeContract?.Form;
                 fullTypeContract = $"{nameSpace}.{contractType_Form}";
                 string contractType = fullTypeContract;
 

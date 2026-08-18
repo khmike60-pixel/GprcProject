@@ -20,7 +20,7 @@ namespace GrpcWinForms.Objects.Contragents.Forms
     {
         private static ContragentServices.ContragentServicesClient _service;
         private Loader loaderContragent = new Loader();
-        int row = 0;
+        int row = -1;
         public bool ModeEdit { get; set; } = false;
         public Contragent SelectedContragent { get; set; } = null;
 
@@ -28,8 +28,8 @@ namespace GrpcWinForms.Objects.Contragents.Forms
         {
             InitializeComponent();
 
-            loaderContragent.Parent = smartGrid;
-            loaderContragent.Size = smartGrid.Size;
+            loaderContragent.Parent = smartGrid1;
+            loaderContragent.Size = smartGrid1.Size;
 
             c1SplitterPanel2.Collapsed = true;
         }
@@ -60,17 +60,17 @@ namespace GrpcWinForms.Objects.Contragents.Forms
                 {
                     Paths = { "id", "name", "taxno", "type", "country_symbol" }
                 };
-                CountListContragentResponse responseCount = await GrpcRetry.CallAsync(()=>
+                CountListContragentResponse responseCount = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.Contragent.CountListContragentAsync(request).ResponseAsync
                 );
 
-                ListContragentResponse response = await GrpcRetry.CallAsync(()=>
+                ListContragentResponse response = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.Contragent.ShortListContragentAsync(request).ResponseAsync
                 );
 
 
                 BindingList<Contragent> contragents = new BindingList<Contragent>(response.Contragents);
-                smartGrid.DataSource = contragents;
+                smartGrid1.DataSource = contragents;
                 loaderContragent.HideLoader();
                 return true;
             }
@@ -90,11 +90,13 @@ namespace GrpcWinForms.Objects.Contragents.Forms
 
         private async void smartGrid_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
-            if (smartGrid.RowSel <= smartGrid.Rows.Fixed - 1) return;
-            if (row == smartGrid.Row) return;
-            else row = smartGrid.Row;
+            if (smartGrid1.RowSel <= smartGrid1.Rows.Fixed - 1) return;
+            
 
-            Contragent contragent = (Contragent)smartGrid.Rows[smartGrid.RowSel].DataSource;
+            Contragent contragent = (Contragent)smartGrid1.Rows[smartGrid1.RowSel].DataSource;
+            if(contragent == null) return;
+            if (row == smartGrid1.Row) return;
+            else row = smartGrid1.Row;
 
             contragent = await GetContragent(contragent.Id);
             try
@@ -147,7 +149,7 @@ namespace GrpcWinForms.Objects.Contragents.Forms
                 Id = id
                 //FieldMask = new FieldMask() { Paths = { "id", "name", "taxno", "type", "country_symbol", "enity" } }
             };
-            ContragentResponse response = await GrpcRetry.CallAsync(()=>
+            ContragentResponse response = await GrpcRetry.CallAsync(() =>
                 GrpcClients.GrpcClients.Contragent.GetContragentAsync(request).ResponseAsync
             );
 
@@ -204,15 +206,15 @@ namespace GrpcWinForms.Objects.Contragents.Forms
 
         private void smartGrid_AfterResizeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
-            smartGrid.Cols["Name"].StarWidth = "*";
+            smartGrid1.Cols["Name"].StarWidth = "*";
         }
 
         private void smartGrid_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            Contragent contragent = (Contragent)smartGrid.Rows[e.Row].DataSource;
-            if (e.Row < smartGrid.Rows.Fixed || e.Row >= smartGrid.Rows.Count || contragent == null)
+            Contragent contragent = (Contragent)smartGrid1.Rows[e.Row].DataSource;
+            if (e.Row < smartGrid1.Rows.Fixed || e.Row >= smartGrid1.Rows.Count || contragent == null)
                 return;
-            switch (smartGrid.Cols[e.Col].Name)
+            switch (smartGrid1.Cols[e.Col].Name)
             {
                 case "colType":
                     {
@@ -236,7 +238,7 @@ namespace GrpcWinForms.Objects.Contragents.Forms
         private void smartGrid_DoubleClick(object sender, EventArgs e)
         {
             if (!ModeEdit) return;
-            SelectedContragent = smartGrid.Rows[smartGrid.Row].DataSource as Contragent;
+            SelectedContragent = smartGrid1.Rows[smartGrid1.Row].DataSource as Contragent;
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

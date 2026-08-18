@@ -14,7 +14,7 @@ namespace GrpcWinForms.Models
         {
             loaderControl = new PictureBox()
             {
-                Image = Properties.Resources.icons8_loader, 
+                Image = Properties.Resources.icons8_loader,
                 SizeMode = PictureBoxSizeMode.CenterImage,
                 BackColor = Color.Transparent, 
                 Visible = false,

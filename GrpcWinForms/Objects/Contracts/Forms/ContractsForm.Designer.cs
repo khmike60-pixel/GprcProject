@@ -35,10 +35,14 @@
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition3 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition4 = new C1.Win.FlexGrid.AggregateDefinition();
+            SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem2 = new SmartLib.StringItem();
             C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition5 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition6 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition7 = new C1.Win.FlexGrid.AggregateDefinition();
+            SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
             panel1 = new Panel();
             period = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
             labelBuyer = new Label();
@@ -53,9 +57,9 @@
             labelSeller = new Label();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanelContractLinesList = new C1.Win.SplitContainer.C1SplitterPanel();
-            smartGridLines = new SmartGrid.SmartGrid();
+            smartGridLines1 = new SmartLib.SmartGrid(components);
             c1SplitterPanelContractList = new C1.Win.SplitContainer.C1SplitterPanel();
-            smartGridContracts = new SmartGrid.SmartGrid();
+            smartGridContracts1 = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -74,9 +78,9 @@
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanelContractLinesList.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridLines).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smartGridLines1).BeginInit();
             c1SplitterPanelContractList.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridContracts).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smartGridContracts1).BeginInit();
             toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -221,7 +225,7 @@
             // c1SplitterPanelContractLinesList
             // 
             c1SplitterPanelContractLinesList.Collapsible = true;
-            c1SplitterPanelContractLinesList.Controls.Add(smartGridLines);
+            c1SplitterPanelContractLinesList.Controls.Add(smartGridLines1);
             c1SplitterPanelContractLinesList.Dock = C1.Win.SplitContainer.PanelDockStyle.Bottom;
             c1SplitterPanelContractLinesList.Height = 168;
             c1SplitterPanelContractLinesList.Location = new Point(0, 282);
@@ -230,18 +234,18 @@
             c1SplitterPanelContractLinesList.SizeRatio = 38.363D;
             c1SplitterPanelContractLinesList.TabIndex = 0;
             // 
-            // smartGridLines
+            // smartGridLines1
             // 
-            smartGridLines.AllowEditing = false;
-            smartGridLines.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridLines.AllowNodeMove = false;
-            smartGridLines.AutoGenerateColumns = false;
-            smartGridLines.ColumnInfo = resources.GetString("smartGridLines.ColumnInfo");
-            smartGridLines.Dock = DockStyle.Fill;
-            smartGridLines.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smartGridLines1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridLines1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridLines1.AllowNodeMove = false;
+            smartGridLines1.AutoGenerateColumns = false;
+            smartGridLines1.ColumnInfo = resources.GetString("smartGridLines1.ColumnInfo");
+            smartGridLines1.Dock = DockStyle.Fill;
+            smartGridLines1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 2;
+            aggregateDefinition1.Column = 3;
             aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
             aggregateDefinition2.Column = 7;
             aggregateDefinition3.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
@@ -252,30 +256,30 @@
             footerDescription1.Aggregates.Add(aggregateDefinition2);
             footerDescription1.Aggregates.Add(aggregateDefinition3);
             footerDescription1.Aggregates.Add(aggregateDefinition4);
-            smartGridLines.Footers.Descriptions.Add(footerDescription1);
-            smartGridLines.Footers.Fixed = true;
-            smartGridLines.Headers = new string[]
-    {
-    "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
-    "...\t№\tНаименование\tИКПУ\tЕд.изм.\tКол-во\tЦена\tСумма\t%\tСумма\tСумма с НДС"
-    };
-            smartGridLines.IdName = null;
-            smartGridLines.IsEditing = false;
-            smartGridLines.Location = new Point(0, 0);
-            smartGridLines.Name = "smartGridLines";
-            smartGridLines.Rows.Count = 18;
-            smartGridLines.Rows.Fixed = 2;
-            smartGridLines.SelectedRows = (List<int>)resources.GetObject("smartGridLines.SelectedRows");
-            smartGridLines.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridLines.Size = new Size(1085, 161);
-            smartGridLines.SortingType = SmartGrid.SortingType.Descending;
-            smartGridLines.StyleInfo = resources.GetString("smartGridLines.StyleInfo");
-            smartGridLines.TabIndex = 0;
-            smartGridLines.GetUnboundValue += smartGridLines_GetUnboundValue;
+            smartGridLines1.Footers.Descriptions.Add(footerDescription1);
+            smartGridLines1.Footers.Fixed = true;
+            stringItem1.Name = "Заголовок 1";
+            stringItem1.Value = "...;№;Наименование;ИКПУ;Ед.изм.;Кол-во;Реализация;Реализация;НДС;НДС;Сумма с НДС";
+            stringItem2.Name = "Заголовок 2";
+            stringItem2.Value = "...;№;Наименование;ИКПУ;Ед.изм.;Кол-во;Цена;Сумма;%;Сумма;Сумма с НДС";
+            smartGridLines1.Headers.Add(stringItem1);
+            smartGridLines1.Headers.Add(stringItem2);
+            smartGridLines1.IdName = null;
+            smartGridLines1.Location = new Point(0, 0);
+            smartGridLines1.Name = "smartGridLines1";
+            smartGridLines1.Rows.Count = 51;
+            smartGridLines1.Rows.Fixed = 2;
+            smartGridLines1.SelectedRows = (List<int>)resources.GetObject("smartGridLines1.SelectedRows");
+            smartGridLines1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGridLines1.Size = new Size(1085, 161);
+            smartGridLines1.SortingType = SmartLib.SortingType.Descending;
+            smartGridLines1.StyleInfo = resources.GetString("smartGridLines1.StyleInfo");
+            smartGridLines1.TabIndex = 1;
+            smartGridLines1.GetUnboundValue += smartGridLines_GetUnboundValue;
             // 
             // c1SplitterPanelContractList
             // 
-            c1SplitterPanelContractList.Controls.Add(smartGridContracts);
+            c1SplitterPanelContractList.Controls.Add(smartGridContracts1);
             c1SplitterPanelContractList.Controls.Add(toolStrip1);
             c1SplitterPanelContractList.Height = 271;
             c1SplitterPanelContractList.Location = new Point(0, 0);
@@ -283,16 +287,15 @@
             c1SplitterPanelContractList.Size = new Size(1085, 271);
             c1SplitterPanelContractList.TabIndex = 1;
             // 
-            // smartGridContracts
+            // smartGridContracts1
             // 
-            smartGridContracts.AllowEditing = false;
-            smartGridContracts.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridContracts.AllowNodeMove = false;
-            smartGridContracts.AllowSorting = C1.Win.FlexGrid.AllowSortingEnum.SingleColumn;
-            smartGridContracts.AutoGenerateColumns = false;
-            smartGridContracts.ColumnInfo = resources.GetString("smartGridContracts.ColumnInfo");
-            smartGridContracts.Dock = DockStyle.Fill;
-            smartGridContracts.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smartGridContracts1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridContracts1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridContracts1.AllowNodeMove = false;
+            smartGridContracts1.AutoGenerateColumns = false;
+            smartGridContracts1.ColumnInfo = resources.GetString("smartGridContracts1.ColumnInfo");
+            smartGridContracts1.Dock = DockStyle.Fill;
+            smartGridContracts1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition5.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition5.Caption = "Всего: ";
             aggregateDefinition5.Column = 3;
@@ -303,29 +306,28 @@
             footerDescription2.Aggregates.Add(aggregateDefinition5);
             footerDescription2.Aggregates.Add(aggregateDefinition6);
             footerDescription2.Aggregates.Add(aggregateDefinition7);
-            smartGridContracts.Footers.Descriptions.Add(footerDescription2);
-            smartGridContracts.Footers.Fixed = true;
-            smartGridContracts.Headers = new string[]
-    {
-    "...\tId\tКонтракт\tКонтракт\tКонтракт\tКонтракт\tКонтрагенты\tКонтрагенты\tТип\tОперации\tОперации\tДействует до",
-    "...\tId\tДата\tНомер\tСумма\tСумма\tПокупатель\tПродавец\tТип\tОплачено\tОтгружено\tДействует до"
-    };
-            smartGridContracts.IdName = null;
-            smartGridContracts.IsEditing = false;
-            smartGridContracts.Location = new Point(0, 31);
-            smartGridContracts.Name = "smartGridContracts";
-            smartGridContracts.Rows.Count = 18;
-            smartGridContracts.Rows.Fixed = 2;
-            smartGridContracts.SelectedRows = (List<int>)resources.GetObject("smartGridContracts.SelectedRows");
-            smartGridContracts.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridContracts.Size = new Size(1085, 240);
-            smartGridContracts.SortingType = SmartGrid.SortingType.Descending;
-            smartGridContracts.StyleInfo = resources.GetString("smartGridContracts.StyleInfo");
-            smartGridContracts.TabIndex = 5;
-            smartGridContracts.UseCompatibleTextRendering = true;
-            smartGridContracts.AfterSelChange += smartGridContracts_AfterSelChange;
-            smartGridContracts.GetUnboundValue += smartGridContracts_GetUnboundValue;
-            smartGridContracts.DoubleClick += smartGridContracts_DoubleClick;
+            smartGridContracts1.Footers.Descriptions.Add(footerDescription2);
+            smartGridContracts1.Footers.Fixed = true;
+            stringItem3.Name = "Заголовок 1";
+            stringItem3.Value = "...;Id;Контракт;Контракт;Контракт;Контракт;Контрагенты;Контрагенты;Тип;Операции;Операции;Действует до";
+            stringItem4.Name = "Заголовок 2";
+            stringItem4.Value = "...;Id;Дата;Номер;Сумма;Сумма;Покупатель;Продавец;Тип;Оплачено;Отгружено;Действует до";
+            smartGridContracts1.Headers.Add(stringItem3);
+            smartGridContracts1.Headers.Add(stringItem4);
+            smartGridContracts1.IdName = null;
+            smartGridContracts1.Location = new Point(0, 31);
+            smartGridContracts1.Name = "smartGridContracts1";
+            smartGridContracts1.Rows.Count = 51;
+            smartGridContracts1.Rows.Fixed = 2;
+            smartGridContracts1.SelectedRows = (List<int>)resources.GetObject("smartGridContracts1.SelectedRows");
+            smartGridContracts1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGridContracts1.Size = new Size(1085, 240);
+            smartGridContracts1.SortingType = SmartLib.SortingType.Descending;
+            smartGridContracts1.StyleInfo = resources.GetString("smartGridContracts1.StyleInfo");
+            smartGridContracts1.TabIndex = 6;
+            smartGridContracts1.AfterSelChange += smartGridContracts_AfterSelChange;
+            smartGridContracts1.GetUnboundValue += smartGridContracts_GetUnboundValue;
+            smartGridContracts1.DoubleClick += smartGridContracts_DoubleClick;
             // 
             // toolStrip1
             // 
@@ -432,10 +434,10 @@
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanelContractLinesList.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)smartGridLines).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartGridLines1).EndInit();
             c1SplitterPanelContractList.ResumeLayout(false);
             c1SplitterPanelContractList.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridContracts).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartGridContracts1).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             ResumeLayout(false);
@@ -448,7 +450,6 @@
         private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanelContractLinesList;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanelContractList;
-        private SmartGrid.SmartGrid smartGridContracts;
         private ToolStrip toolStrip1;
         private ToolStripButton toolStripButtonNew;
         private ToolStripButton toolStripButtonDouble;
@@ -456,7 +457,6 @@
         private ToolStripButton toolStripButtonDelete;
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator1;
-        private SmartGrid.SmartGrid smartGridLines;
         private CheckBox checkBoxAll;
         private Label labelPeriod;
         private C1.Win.Input.C1ComboBox c1ComboBox1;
@@ -469,5 +469,7 @@
         private Contragents.Components.CompanyDropDown companySeller;
         private Contragents.Components.CompanyDropDown companyBuyer;
         private GrpcWinForms.Controls.PeriodControl.PeriodComponent period;
+        private SmartLib.SmartGrid smartGridContracts1;
+        private SmartLib.SmartGrid smartGridLines1;
     }
 }

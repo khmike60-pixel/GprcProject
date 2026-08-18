@@ -113,6 +113,16 @@ namespace GrpcWinForms.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_loader_new {
+            get {
+                object obj = ResourceManager.GetObject("icons8_loader_new", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_more_16 {
             get {
                 object obj = ResourceManager.GetObject("icons8-more-16", resourceCulture);
@@ -266,6 +276,16 @@ namespace GrpcWinForms.Properties {
         internal static System.Drawing.Bitmap icons8_удалить_файл_50 {
             get {
                 object obj = ResourceManager.GetObject("icons8-удалить-файл-50", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap loader_512 {
+            get {
+                object obj = ResourceManager.GetObject("loader_512", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

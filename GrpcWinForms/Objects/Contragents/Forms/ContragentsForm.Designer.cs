@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContragentsForm));
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
-            contragentBindingSource = new BindingSource(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -51,7 +50,6 @@
             labelTaxno = new C1.Win.Input.C1Label();
             labelName = new Label();
             textBoxName = new TextBox();
-            smartGrid = new SmartGrid.SmartGrid();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanel2 = new C1.Win.SplitContainer.C1SplitterPanel();
             c1DockingTab1 = new C1.Win.Command.C1DockingTab();
@@ -62,11 +60,10 @@
             c1DockingTabPageUnknow = new C1.Win.Command.C1DockingTabPage();
             unknowControl = new UnknowControl();
             c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
-            ((System.ComponentModel.ISupportInitialize)contragentBindingSource).BeginInit();
+            smartGrid1 = new SmartLib.SmartGrid(components);
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)labelTaxno).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)smartGrid).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanel2.SuspendLayout();
@@ -76,11 +73,8 @@
             c1DockingTabPagePerson.SuspendLayout();
             c1DockingTabPageUnknow.SuspendLayout();
             c1SplitterPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             SuspendLayout();
-            // 
-            // contragentBindingSource
-            // 
-            contragentBindingSource.DataSource = typeof(GrpcCommonNet.Library.Common.Contragent);
             // 
             // toolStrip1
             // 
@@ -244,41 +238,6 @@
             textBoxName.Size = new Size(100, 23);
             textBoxName.TabIndex = 2;
             // 
-            // smartGrid
-            // 
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid.AllowNodeMove = false;
-            smartGrid.AutoGenerateColumns = false;
-            smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
-            smartGrid.DataSource = contragentBindingSource;
-            smartGrid.Dock = DockStyle.Fill;
-            smartGrid.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 2;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid.Footers.Descriptions.Add(footerDescription1);
-            smartGrid.Footers.Fixed = true;
-            smartGrid.Headers = new string[]
-    {
-    "...\tId\tНаименование\tИНН / ПИНФЛ\tТип\t?\tСтрана"
-    };
-            smartGrid.IdName = null;
-            smartGrid.IsEditing = false;
-            smartGrid.Location = new Point(0, 0);
-            smartGrid.Name = "smartGrid";
-            smartGrid.Rows.Count = 2;
-            smartGrid.SelectedRows = (List<int>)resources.GetObject("smartGrid.SelectedRows");
-            smartGrid.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid.Size = new Size(525, 493);
-            smartGrid.SortingType = SmartGrid.SortingType.Descending;
-            smartGrid.StyleInfo = resources.GetString("smartGrid.StyleInfo");
-            smartGrid.TabIndex = 5;
-            smartGrid.AfterResizeColumn += smartGrid_AfterResizeColumn;
-            smartGrid.AfterSelChange += smartGrid_AfterSelChange;
-            smartGrid.GetUnboundValue += smartGrid_GetUnboundValue;
-            smartGrid.DoubleClick += smartGrid_DoubleClick;
-            // 
             // c1SplitContainer1
             // 
             c1SplitContainer1.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
@@ -376,13 +335,43 @@
             // c1SplitterPanel1
             // 
             c1SplitterPanel1.Collapsible = true;
-            c1SplitterPanel1.Controls.Add(smartGrid);
+            c1SplitterPanel1.Controls.Add(smartGrid1);
             c1SplitterPanel1.Dock = C1.Win.SplitContainer.PanelDockStyle.Left;
             c1SplitterPanel1.Location = new Point(0, 0);
             c1SplitterPanel1.Name = "c1SplitterPanel1";
             c1SplitterPanel1.Size = new Size(525, 493);
             c1SplitterPanel1.TabIndex = 0;
             c1SplitterPanel1.Width = 525;
+            // 
+            // smartGrid1
+            // 
+            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowNodeMove = false;
+            smartGrid1.AutoGenerateColumns = false;
+            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
+            smartGrid1.Dock = DockStyle.Fill;
+            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 2;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            smartGrid1.Footers.Descriptions.Add(footerDescription1);
+            smartGrid1.Footers.Fixed = true;
+            smartGrid1.IdName = null;
+            smartGrid1.Location = new Point(0, 0);
+            smartGrid1.Name = "smartGrid1";
+            smartGrid1.Rows.Count = 51;
+            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
+            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGrid1.Size = new Size(525, 493);
+            smartGrid1.SortingType = SmartLib.SortingType.Descending;
+            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
+            smartGrid1.TabIndex = 6;
+            smartGrid1.AfterResizeColumn += smartGrid_AfterResizeColumn;
+            smartGrid1.AfterSelChange += smartGrid_AfterSelChange;
+            smartGrid1.GetUnboundValue += smartGrid_GetUnboundValue;
+            smartGrid1.DoubleClick += smartGrid_DoubleClick;
             // 
             // ContragentsForm
             // 
@@ -395,13 +384,11 @@
             Name = "ContragentsForm";
             Text = "Контрагенты";
             Load += ContragentsForm_Load;
-            ((System.ComponentModel.ISupportInitialize)contragentBindingSource).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)labelTaxno).EndInit();
-            ((System.ComponentModel.ISupportInitialize)smartGrid).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanel2.ResumeLayout(false);
@@ -411,6 +398,7 @@
             c1DockingTabPagePerson.ResumeLayout(false);
             c1DockingTabPageUnknow.ResumeLayout(false);
             c1SplitterPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -434,8 +422,6 @@
         private Label labelPrefix;
         private ComboBox comboBoxCountry;
         private Label label1Country;
-        private BindingSource contragentBindingSource;
-        private SmartGrid.SmartGrid smartGrid;
         private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel2;
@@ -446,5 +432,6 @@
         private PersonControl personControlMain;
         private C1.Win.Command.C1DockingTabPage c1DockingTabPageUnknow;
         private UnknowControl unknowControl;
+        private SmartLib.SmartGrid smartGrid1;
     }
 }
