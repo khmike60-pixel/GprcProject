@@ -23,17 +23,17 @@ namespace GrpcWinForms.Objects.OurCompanies.Forms
         {
             InitializeComponent();
 
-            loaderContragent.Parent = smartGrid;
-            loaderContragent.Size = smartGrid.Size;
+            loaderContragent.Parent = smartGrid1;
+            loaderContragent.Size = smartGrid1.Size;
 
             c1SplitterPanel2.Collapsed = true;
         }
 
         private void OurCompanies_Load(object sender, EventArgs e)
         {
+
             comboBoxType.SelectedIndex = 0;
             Refresh(sender, e);
-
         }
 
         private async Task<bool> Refresh(object sender, EventArgs e)
@@ -63,7 +63,7 @@ namespace GrpcWinForms.Objects.OurCompanies.Forms
 
 
                 BindingList<Contragent> contragents = new BindingList<Contragent>(response.Contragents);
-                smartGrid.DataSource = contragents;
+                smartGrid1.DataSource = contragents;
                 loaderContragent.HideLoader();
                 return true;
             }
@@ -78,10 +78,10 @@ namespace GrpcWinForms.Objects.OurCompanies.Forms
 
         private void smartGrid_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            Contragent contragent = (Contragent)smartGrid.Rows[e.Row].DataSource;
-            if (e.Row < smartGrid.Rows.Fixed || e.Row >= smartGrid.Rows.Count || contragent == null)
+            Contragent contragent = (Contragent)smartGrid1.Rows[e.Row].DataSource;
+            if (e.Row < smartGrid1.Rows.Fixed || e.Row >= smartGrid1.Rows.Count || contragent == null)
                 return;
-            switch (smartGrid.Cols[e.Col].Name)
+            switch (smartGrid1.Cols[e.Col].Name)
             {
                 case "colType":
                     {
@@ -105,11 +105,11 @@ namespace GrpcWinForms.Objects.OurCompanies.Forms
         private void smartGrid_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
             
-            if (smartGrid.RowSel <= smartGrid.Rows.Fixed - 1) return;
-            if (row == smartGrid.Row) return;
-            else row = smartGrid.Row;
+            if (smartGrid1.RowSel <= smartGrid1.Rows.Fixed - 1) return;
+            if (row == smartGrid1.Row) return;
+            else row = smartGrid1.Row;
 
-                Contragent contragent = (Contragent)smartGrid.Rows[smartGrid.RowSel].DataSource;
+                Contragent contragent = (Contragent)smartGrid1.Rows[smartGrid1.RowSel].DataSource;
 
             contragent = GetContragent(contragent.Id);
             try

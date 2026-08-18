@@ -36,7 +36,7 @@
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanel2 = new C1.Win.SplitContainer.C1SplitterPanel();
             c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
-            smartGrid = new SmartGrid.SmartGrid();
+            smartGrid1 = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -46,7 +46,6 @@
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripButtonLevels = new ToolStripSplitButton();
             toolStripButtonPath = new ToolStripButton();
-            catalogLineBindingSource = new BindingSource(components);
             panel1 = new Panel();
             checkIncludeInvisible = new CheckBox();
             labelAbbrev = new Label();
@@ -55,9 +54,8 @@
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)catalogLineBindingSource).BeginInit();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -99,7 +97,7 @@
             // c1SplitterPanel1
             // 
             c1SplitterPanel1.Collapsible = true;
-            c1SplitterPanel1.Controls.Add(smartGrid);
+            c1SplitterPanel1.Controls.Add(smartGrid1);
             c1SplitterPanel1.Dock = C1.Win.SplitContainer.PanelDockStyle.Left;
             c1SplitterPanel1.KeepRelativeSize = false;
             c1SplitterPanel1.Location = new Point(0, 0);
@@ -109,36 +107,31 @@
             c1SplitterPanel1.TabIndex = 0;
             c1SplitterPanel1.Width = 296;
             // 
-            // smartGrid
+            // smartGrid1
             // 
-            smartGrid.AllowEditing = false;
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid.AllowNodeMove = false;
-            smartGrid.AutoGenerateColumns = false;
-            smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
-            smartGrid.Dock = DockStyle.Fill;
-            smartGrid.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowNodeMove = false;
+            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
+            smartGrid1.Dock = DockStyle.Fill;
+            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 3;
+            aggregateDefinition1.Column = 2;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid.Footers.Descriptions.Add(footerDescription1);
-            smartGrid.Footers.Fixed = true;
-            smartGrid.Headers = new string[]
-    {
-    "...\tId\tКаталог\tПуть"
-    };
-            smartGrid.IdName = null;
-            smartGrid.IsEditing = false;
-            smartGrid.Location = new Point(0, 0);
-            smartGrid.Name = "smartGrid";
-            smartGrid.Rows.Count = 15;
-            smartGrid.SelectedRows = (List<int>)resources.GetObject("smartGrid.SelectedRows");
-            smartGrid.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid.Size = new Size(296, 351);
-            smartGrid.SortingType = SmartGrid.SortingType.Descending;
-            smartGrid.StyleInfo = resources.GetString("smartGrid.StyleInfo");
-            smartGrid.TabIndex = 2;
-            smartGrid.Tree.Column = 2;
+            smartGrid1.Footers.Descriptions.Add(footerDescription1);
+            smartGrid1.Footers.Fixed = true;
+            smartGrid1.IdName = null;
+            smartGrid1.Location = new Point(0, 0);
+            smartGrid1.Name = "smartGrid1";
+            smartGrid1.Rows.Count = 51;
+            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
+            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGrid1.Size = new Size(296, 351);
+            smartGrid1.SortingType = SmartLib.SortingType.Descending;
+            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
+            smartGrid1.TabIndex = 3;
+            smartGrid1.Tree.Column = 2;
             // 
             // toolStrip1
             // 
@@ -222,10 +215,6 @@
             toolStripButtonPath.Text = "Только текущая ветка";
             toolStripButtonPath.Click += toolStripButtonPath_Click;
             // 
-            // catalogLineBindingSource
-            // 
-            catalogLineBindingSource.DataSource = typeof(GrpcCommonNet.Library.Common.CatalogLine);
-            // 
             // panel1
             // 
             panel1.Controls.Add(checkIncludeInvisible);
@@ -279,10 +268,9 @@
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)smartGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)catalogLineBindingSource).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
@@ -291,7 +279,6 @@
         #endregion
 
         private Panel panel2;
-        private SmartGrid.SmartGrid smartGrid;
         private ToolStrip toolStrip1;
         private ToolStripButton toolStripButtonNew;
         private ToolStripButton toolStripButtonDouble;
@@ -303,11 +290,11 @@
         private CheckBox checkIncludeInvisible;
         private Label labelAbbrev;
         private TextBox textAbbrev;
-        private BindingSource catalogLineBindingSource;
         private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel2;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel1;
         private ToolStripSplitButton toolStripButtonLevels;
         private ToolStripButton toolStripButtonPath;
+        private SmartLib.SmartGrid smartGrid1;
     }
 }

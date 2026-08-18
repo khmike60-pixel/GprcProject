@@ -26,8 +26,10 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
         public ProductsForm()
         {
             InitializeComponent();
-            loaderCatalog.Parent = smartGrid;
-            loaderCatalog.Size = smartGrid.Size;
+            //loaderCatalog.Parent = smartGrid;
+            //loaderCatalog.Size = smartGrid.Size;
+            loaderCatalog.Parent = smartGrid1;
+            loaderCatalog.Size = smartGrid1.Size;
 
 
         }
@@ -37,7 +39,7 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
             loaderCatalog.ShowLoader();
             try
             {
-                smartGrid.BeginUpdate();
+                smartGrid1.BeginUpdate();
 
                 CatalogFilterRequest request = new CatalogFilterRequest()
                 {
@@ -54,33 +56,22 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
 
                 TreeCatalogResponse response = await GrpcClients.GrpcClients.Product.TreeCatalogAsync(request);
 
-                List<TreeCatalog> treeCatalogs = new List<TreeCatalog>();
-
-                // Добавляет root - строку
-                TreeCatalog root = new TreeCatalog() { Id = -1, Name = "Все" };
-                treeCatalogs.Add(root);
+                BindingList<TreeCatalog> treeCatalogs = new BindingList<TreeCatalog>();
 
                 foreach (var item in response.Catalog)
-                {
-                    treeCatalogs.Add(new TreeCatalog()
-                    {
+                    treeCatalogs.Add(new TreeCatalog() {
                         Id = item.Id,
                         Name = item.Name,
-                        ParentId = item.ParentId == 0 ? -1 : Convert.ToInt32(item.ParentId),
+                        ParentId = item.ParentId,
                         ParentIds = item.ParentIds,
-                        ParentNames = item.ParentNames,
-                        //IsProductKind = item.IsProductKind,
-                        //IsList = item.IsList
-                    });
-                }
+                        ParentNames = item.ParentNames
+                });
 
-                var catalog = treeCatalogs.AsEnumerable();
-
-                smartGrid.BuildTree(catalog);
+                smartGrid1.BuildTree(treeCatalogs);
 
                 // Находим максимальный уровень среди всех строк, которые являются узлами
                 toolStripButtonLevels.DropDownItems.Clear();
-                int maxLevel = smartGrid.GetDepth();
+                int maxLevel = smartGrid1.GetDepth();
 
                 for (int i = 1; i <= maxLevel; i++)
                 {
@@ -88,22 +79,22 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
                     int level = i; // Локальная копия для замыкания
                     levelItem.Click += (s, e) =>
                     {
-                        smartGrid.BeginUpdate();
-                        smartGrid.ExpandByLevel(level);
+                        smartGrid1.BeginUpdate();
+                        smartGrid1.ExpandByLevel(level);
                         //if (toolStripButtonPath.Checked) toolStripButtonPath.Checked = false;
-                        smartGrid.EndUpdate();
+                        smartGrid1.EndUpdate();
                     };
                     toolStripButtonLevels.DropDownItems.Add(levelItem);
                 }
                 toolStripButtonLevels.Click += (s, e) =>
                 {
-                    smartGrid.BeginUpdate();
-                    smartGrid.ExpandByLevel(1);
-                    smartGrid.EndUpdate();
+                    smartGrid1.BeginUpdate();
+                    smartGrid1.ExpandByLevel(1);
+                    smartGrid1.EndUpdate();
                 };
 
                 //smartGrid.Footers.Descriptions[0].Aggregates[0].Expression = "Count([Id])";
-                smartGrid.EndUpdate();
+                smartGrid1.EndUpdate();
             }
             catch (Exception ex)
             {
@@ -126,19 +117,19 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
         {
             if (!toolStripButtonPath.Checked)
             {
-                smartGrid.BeginUpdate();
-                foreach (var row in smartGrid.Rows.Cast<Row>())
-                    if (row.IsNode) row.Visible = true;
-                smartGrid.EndUpdate();
+                smartGrid1.BeginUpdate();
+                foreach (var row in smartGrid1.Rows.Cast<Row>())
+                        if (row.IsNode) row.Visible = true;
+                smartGrid1.EndUpdate();
             }
             else
             {
-                IsolateCurrentBranch(smartGrid);
+                IsolateCurrentBranch(smartGrid1);
             }
 
         }
 
-        private void IsolateCurrentBranch(SmartGrid.SmartGrid grid)
+        private void IsolateCurrentBranch(SmartLib.SmartGrid grid)
         {
             if (grid.Row < grid.Rows.Fixed) return;
 
@@ -192,7 +183,7 @@ namespace GrpcWinForms.Objects.Products.ProductsForm
 
     }
 
-    public class TreeCatalog : ITreeData
+    public class TreeCatalog : SmartLib.ITreeData
     {
         public int Id { get; set; }
         public string Name { get; set; }

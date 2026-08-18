@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OurCompaniesForm));
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
             panel1 = new Panel();
             textBox1 = new TextBox();
             labelPrefix = new Label();
@@ -60,6 +62,7 @@
             c1DockingTabPageUnknow = new C1.Win.Command.C1DockingTabPage();
             unknowControl = new GrpcWinForms.Objects.Contragents.Forms.UnknowControl();
             c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
+            smartGrid1 = new SmartLib.SmartGrid(components);
             smartGrid = new SmartGrid.SmartGrid();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)labelTaxno).BeginInit();
@@ -73,6 +76,7 @@
             c1DockingTabPagePerson.SuspendLayout();
             c1DockingTabPageUnknow.SuspendLayout();
             c1SplitterPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)smartGrid).BeginInit();
             SuspendLayout();
             // 
@@ -334,6 +338,7 @@
             // c1SplitterPanel1
             // 
             c1SplitterPanel1.Collapsible = true;
+            c1SplitterPanel1.Controls.Add(smartGrid1);
             c1SplitterPanel1.Controls.Add(smartGrid);
             c1SplitterPanel1.Dock = C1.Win.SplitContainer.PanelDockStyle.Left;
             c1SplitterPanel1.Location = new Point(0, 0);
@@ -342,19 +347,45 @@
             c1SplitterPanel1.TabIndex = 0;
             c1SplitterPanel1.Width = 519;
             // 
+            // smartGrid1
+            // 
+            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowNodeMove = false;
+            smartGrid1.AutoGenerateColumns = false;
+            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
+            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 2;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            smartGrid1.Footers.Descriptions.Add(footerDescription1);
+            smartGrid1.Footers.Fixed = true;
+            smartGrid1.IdName = null;
+            smartGrid1.Location = new Point(3, 84);
+            smartGrid1.Name = "smartGrid1";
+            smartGrid1.Rows.Count = 51;
+            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
+            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGrid1.Size = new Size(510, 255);
+            smartGrid1.SortingType = SmartLib.SortingType.Descending;
+            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
+            smartGrid1.TabIndex = 6;
+            smartGrid1.AfterSelChange += smartGrid_AfterSelChange;
+            smartGrid1.GetUnboundValue += smartGrid_GetUnboundValue;
+            // 
             // smartGrid
             // 
             smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid.AllowNodeMove = false;
             smartGrid.AutoGenerateColumns = false;
             smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
-            smartGrid.Dock = DockStyle.Fill;
             smartGrid.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 2;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid.Footers.Descriptions.Add(footerDescription1);
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition2.Caption = "Всего: ";
+            aggregateDefinition2.Column = 2;
+            footerDescription2.Aggregates.Add(aggregateDefinition2);
+            smartGrid.Footers.Descriptions.Add(footerDescription2);
             smartGrid.Footers.Fixed = true;
             smartGrid.Headers = new string[]
     {
@@ -362,17 +393,15 @@
     };
             smartGrid.IdName = null;
             smartGrid.IsEditing = false;
-            smartGrid.Location = new Point(0, 0);
+            smartGrid.Location = new Point(0, 3);
             smartGrid.Name = "smartGrid";
             smartGrid.Rows.Count = 2;
             smartGrid.SelectedRows = (List<int>)resources.GetObject("smartGrid.SelectedRows");
             smartGrid.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid.Size = new Size(519, 351);
+            smartGrid.Size = new Size(519, 75);
             smartGrid.SortingType = SmartGrid.SortingType.Descending;
             smartGrid.StyleInfo = resources.GetString("smartGrid.StyleInfo");
             smartGrid.TabIndex = 5;
-            smartGrid.AfterSelChange += smartGrid_AfterSelChange;
-            smartGrid.GetUnboundValue += smartGrid_GetUnboundValue;
             // 
             // OurCompaniesForm
             // 
@@ -399,6 +428,7 @@
             c1DockingTabPagePerson.ResumeLayout(false);
             c1DockingTabPageUnknow.ResumeLayout(false);
             c1SplitterPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
             ((System.ComponentModel.ISupportInitialize)smartGrid).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -435,5 +465,6 @@
         private Contragents.Forms.UnknowControl unknowControl;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel1;
         private SmartGrid.SmartGrid smartGrid;
+        private SmartLib.SmartGrid smartGrid1;
     }
 }

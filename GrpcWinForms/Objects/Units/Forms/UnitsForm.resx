@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="smartGrid1.ColumnInfo" xml:space="preserve">
-    <value>7,1,0,0,0,-1,Columns:0{Width:30;Caption:"...";AllowMerging:True;}	1{Width:70;MinWidth:70;MaxWidth:70;Name:"Id";Caption:"Id";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	2{Width:80;MinWidth:80;MaxWidth:80;Name:"Code";Caption:"Код";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";}	3{Name:"Short";Caption:"Кратко";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";}	4{Width:394;StarWidth:"*";Name:"Name";Caption:"Наименование";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";}	5{Width:70;MinWidth:70;MaxWidth:70;Name:"RwsCode";Caption:"Код RWS";AllowMerging:True;}	6{Width:44;MinWidth:44;MaxWidth:44;Name:"IsArchive";Caption:"Архив";AllowMerging:True;Style:"DataType:System.Boolean;TextAlign:LeftCenter;ImageAlign:CenterCenter;";}	</value>
+  <data name="smartGrid.ColumnInfo" xml:space="preserve">
+    <value>7,1,0,0,0,-1,Columns:0{AllowMerging:True;}	1{Width:70;MinWidth:70;MaxWidth:70;Name:"Id";Caption:"Id";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	2{Name:"Code";Caption:"Код";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";}	3{Name:"Short";Caption:"Кратко";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";}	4{Width:341;StarWidth:"*";Name:"Rem";Caption:"Наименование";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";}	5{Width:70;MinWidth:70;MaxWidth:70;Name:"RwsCode";Caption:"Код RWS";AllowMerging:True;}	6{Width:44;MinWidth:44;MaxWidth:44;Name:"IsArchive";Caption:"Архив";AllowMerging:True;Style:"DataType:System.Boolean;TextAlign:LeftCenter;ImageAlign:CenterCenter;";}	</value>
   </data>
-  <data name="smartGrid1.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
+  <data name="smartGrid.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAEAQAAAH5TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW1N5
         c3RlbS5JbnQzMiwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJs
@@ -128,7 +128,7 @@
         CAkCAAAAAAAAAAAAAAAPAgAAAAAAAAAICw==
 </value>
   </data>
-  <data name="smartGrid1.StyleInfo" xml:space="preserve">
+  <data name="smartGrid.StyleInfo" xml:space="preserve">
     <value>Normal{}	Alternate{}	Hover{}	Fixed{BackColor:Control;ForeColor:ControlText;TextAlign:CenterCenter;BackgroundImageLayout:Hide;}	Highlight{BackColor:Info;ForeColor:ControlText;SearchBackColor:Orange;}	Focus{BackColor:Info;ForeColor:ControlText;}	Editor{}	Search{BackColor:Highlight;ForeColor:HighlightText;}	Frozen{BackColor:Beige;}	FrozenAlternate{}	NewRow{ForeColor:GrayText;}	EmptyArea{BackColor:AppWorkspace;Border:None,1,Black,Both;BorderHorz:1,Black;BorderVert:1,Black;}	SelectedColumnHeader{}	SelectedRowHeader{}	GrandTotal{BackColor:Black;ForeColor:White;}	Subtotal0{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal1{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal2{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal3{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal4{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal5{BackColor:ControlDarkDark;ForeColor:White;}	FilterEditor{}	Footer{BackColor:Window;ForeColor:ControlText;BackgroundImageLayout:Hide;}	FirstCustomStyle{}	</value>
   </data>
   <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
