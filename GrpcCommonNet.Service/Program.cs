@@ -13,14 +13,23 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    // Обеспечим наличие папки логов
+    Directory.CreateDirectory("logs");
+
     // ----------------------------------------------------
     // Basic configuration & Serilog (early)
     // ----------------------------------------------------
+    // Serilog — включаем shared:true чтобы несколько процессов могли открывать файл
     Log.Logger = new LoggerConfiguration()
         .ReadFrom.Configuration(builder.Configuration)
         .Enrich.FromLogContext()
         .WriteTo.Console()
-        .WriteTo.File("logs/app.log", rollingInterval: Serilog.RollingInterval.Day)
+        .WriteTo.File(
+            path: "logs/app.log",
+            rollingInterval: Serilog.RollingInterval.Day,
+            shared: true,                     // важно для многопроцессного доступа
+            retainedFileCountLimit: 3         // опционально: хранить 3 файла
+        )
         .CreateLogger();
 
     builder.Host.UseSerilog();

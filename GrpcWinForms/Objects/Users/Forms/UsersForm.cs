@@ -9,7 +9,6 @@ using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Library.User;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Applications;
-//using Microsoft.VisualBasic.ApplicationServices;
 using SmartGrid;
 using System;
 using System.Collections.Generic;
@@ -38,14 +37,11 @@ namespace GrpcWinForms.Objects.Users.Forms
         {
             InitializeComponent();
 
-            //loaderUsers.Parent = smartGridUsers;
             loaderUsers.Parent = smartGridUsers1;
-            //loaderApps.Parent = smartGridApps;
-            loaderApps.Parent = smartGridApps;
+            loaderApps.Parent = smartGridApps1;
             loaderApps.Location = new Point(0, 0);
-            //loaderUsers.Size = smartGridUsers.Size;
             loaderUsers.Size = smartGridUsers1.Size;
-            loaderApps.Size = smartGridApps.Size;
+            loaderApps.Size = smartGridApps1.Size;
         }
 
         private async void RefreshUsers()
@@ -68,7 +64,6 @@ namespace GrpcWinForms.Objects.Users.Forms
             ListUserResponse response = await GrpcClients.GrpcClients.User.GetListUserAsync(request);
 
             users = new BindingList<User>(response.Users.ToList());
-            smartGridUsers.DataSource = users;
             smartGridUsers1.DataSource = users;
 
         }
@@ -84,8 +79,6 @@ namespace GrpcWinForms.Objects.Users.Forms
 
         private void smartGridUsers_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
-            //if (rowUser == smartGridUsers.Row) return;
-            //else rowUser = smartGridUsers.Row;
             if (rowUser == smartGridUsers1.Row) return;
             else rowUser = smartGridUsers1.Row;
 
@@ -96,10 +89,8 @@ namespace GrpcWinForms.Objects.Users.Forms
 
         private async void RefreshApps()
         {
-            //if (smartGridUsers.Row < smartGridUsers.Rows.Fixed) return;
             if (smartGridUsers1.Row < smartGridUsers1.Rows.Fixed) return;
 
-            //User user = (User)(smartGridUsers.Rows[smartGridUsers.Row].DataSource);
             User user = (User)(smartGridUsers1.Rows[smartGridUsers1.Row].DataSource);
             ApplicationUserFilterRequest request = new ApplicationUserFilterRequest()
             {
@@ -111,18 +102,15 @@ namespace GrpcWinForms.Objects.Users.Forms
             loaderApps.ShowLoader();
             ListApplicationUserResponse response = await GrpcClients.GrpcClients.ApplicationUser.GetListApplicationUserAsync(request);
             applications = new BindingList<ApplicationUser>(response.ApplicationUsers.ToList());
-            //smartGridApps.DataSource = applications;
-            smartGridApps.DataSource = applications;
+            smartGridApps1.DataSource = applications;
             loaderApps.HideLoader();
         }
 
         private void smartGridUsers_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
 
-            //User user = smartGridUsers.Rows[e.Row].DataSource as User;
             User user = smartGridUsers1.Rows[e.Row].DataSource as User;
 
-            //switch (smartGridUsers.Cols[e.Col].Name)
             switch (smartGridUsers1.Cols[e.Col].Name)
             {
                 case "colContragentName":
@@ -144,7 +132,7 @@ namespace GrpcWinForms.Objects.Users.Forms
         {
             using (UserForm userForm = new UserForm())
             {
-                //User user = smartGridUsers.Rows[smartGridUsers.Row].DataSource as User;
+                //User user = smartGridUsers1.Rows[smartGridUsers1.Row].DataSource as User;
                 userForm.User = new User();
                 userForm.Owner = this;
 
@@ -168,9 +156,6 @@ namespace GrpcWinForms.Objects.Users.Forms
                     }
                     else
                     {
-                        //int rowsel = smartGridUsers.RowSel;
-                        //users.Insert(smartGridUsers.RowSel - smartGridUsers.Rows.Fixed, response.User);
-                        //smartGridUsers.Row = rowsel;
                         int rowsel = smartGridUsers1.RowSel;
                         users.Insert(smartGridUsers1.RowSel - smartGridUsers1.Rows.Fixed, response.User);
                         smartGridUsers1.Row = rowsel;
@@ -183,7 +168,6 @@ namespace GrpcWinForms.Objects.Users.Forms
         {
             using (UserForm userForm = new UserForm())
             {
-                //userForm.User = smartGridUsers.Rows[smartGridUsers.Row].DataSource as User;
                 userForm.User = smartGridUsers1.Rows[smartGridUsers1.Row].DataSource as User;
 
                 if (userForm.ShowDialog() == DialogResult.OK)
@@ -207,8 +191,6 @@ namespace GrpcWinForms.Objects.Users.Forms
                     }
                     else
                     {
-                        //int rowsel = smartGridUsers.RowSel;
-                        //users[rowsel - smartGridUsers.Rows.Fixed] = response.User;
                         int rowsel = smartGridUsers1.RowSel;
                         users[rowsel - smartGridUsers1.Rows.Fixed] = response.User;
                     }
@@ -227,7 +209,6 @@ namespace GrpcWinForms.Objects.Users.Forms
             List<int> ids = new List<int>();
             List<int> oldList = new List<int>();
             List<int> newMarked = new List<int>();
-            //if (smartGridUsers.SelectedRows.Count == 0) // Удаляется одна запись
             if (smartGridUsers1.SelectedRows.Count == 0) // Удаляется одна запись
             {
                 DialogResult result = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
@@ -239,7 +220,6 @@ namespace GrpcWinForms.Objects.Users.Forms
                         UserId = (int)smartGridUsers1.Rows[smartGridUsers1.RowSel]["UserId"]
                     };
                     DeleteUserResponse response = await GrpcClients.GrpcClients.User.DeleteUserAsync(request);
-                    //int i = smartGridUsers.RowSel - smartGridUsers.Rows.Fixed;
                     int i = smartGridUsers1.RowSel - smartGridUsers1.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
@@ -252,18 +232,16 @@ namespace GrpcWinForms.Objects.Users.Forms
             else // Был режим выделения
             {
 
-                //DialogResult result = MessageBox.Show($"Вы отметили {smartGridUsers.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
                 DialogResult result = MessageBox.Show($"Вы отметили {smartGridUsers1.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
 
                 if (result == DialogResult.OK)
                 {
 
-                    oldList.AddRange(smartGridUsers.SelectedRows);
-                    newMarked.AddRange(smartGridUsers.SelectedRows);
+                    oldList.AddRange(smartGridUsers1.SelectedRows);
+                    newMarked.AddRange(smartGridUsers1.SelectedRows);
 
                     foreach (var index in oldList)
                     {
-                        //User user = (User)(smartGridUsers.Rows[index].DataSource);
                         User user = (User)(smartGridUsers1.Rows[index].DataSource);
                         ids.Add(user.UserId);
                     }
@@ -277,7 +255,7 @@ namespace GrpcWinForms.Objects.Users.Forms
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
 
-                    List<int> testList = Utils.UndeleteList<User>((C1FlexGrid)smartGridUsers, users, undelIds, smartGridUsers.SelectedRows, "Id");
+                    List<int> testList = Utils.UndeleteList<User>((C1FlexGrid)smartGridUsers1, users, undelIds, smartGridUsers1.SelectedRows, "Id");
                     //smartGridUsers.SelectedRows = testList;
                     smartGridUsers1.SelectedRows = testList;
 
@@ -316,12 +294,9 @@ namespace GrpcWinForms.Objects.Users.Forms
                         }
                         else
                         {
-                            //int rowsel = smartGridApps.RowSel;
-                            //applications.Insert(smartGridApps.RowSel - smartGridApps.Rows.Fixed, response.ApplicationUser);
-                            //smartGridApps.Row = rowsel;
-                            int rowsel = smartGridApps.RowSel;
-                            applications.Insert(smartGridApps.RowSel - smartGridApps.Rows.Fixed, response.ApplicationUser);
-                            smartGridApps.Row = rowsel;
+                            int rowsel = smartGridApps1.RowSel;
+                            applications.Insert(smartGridApps1.RowSel - smartGridApps1.Rows.Fixed, response.ApplicationUser);
+                            smartGridApps1.Row = rowsel;
                         }
                     }
                     else
@@ -340,12 +315,9 @@ namespace GrpcWinForms.Objects.Users.Forms
 
                         foreach (ApplicationUser app_user in response.ApplicationUsers)
                         {
-                            //int rowsel = smartGridApps.RowSel;
-                            //applications.Insert(smartGridApps.RowSel - smartGridApps.Rows.Fixed, app_user);
-                            //smartGridApps.Row = rowsel;
-                            int rowsel = smartGridApps.RowSel;
-                            applications.Insert(smartGridApps.RowSel - smartGridApps.Rows.Fixed, app_user);
-                            smartGridApps.Row = rowsel;
+                            int rowsel = smartGridApps1.RowSel;
+                            applications.Insert(smartGridApps1.RowSel - smartGridApps1.Rows.Fixed, app_user);
+                            smartGridApps1.Row = rowsel;
 
                         }
 
@@ -362,13 +334,11 @@ namespace GrpcWinForms.Objects.Users.Forms
         private void smartGridApps_GetUnboundValue(object sender, UnboundValueEventArgs e)
         {
 
-            //ApplicationUser relApp = (ApplicationUser)(smartGridApps.Rows[e.Row].DataSource);
-            ApplicationUser relApp = (ApplicationUser)(smartGridApps.Rows[e.Row].DataSource);
+            ApplicationUser relApp = (ApplicationUser)(smartGridApps1.Rows[e.Row].DataSource);
 
             Application app = relApp.Application;
 
-            //switch (smartGridApps.Cols[e.Col].Name)
-            switch (smartGridApps.Cols[e.Col].Name)
+            switch (smartGridApps1.Cols[e.Col].Name)
             {
                 case "colAppId":
                     e.Value = app.Id;
