@@ -35,8 +35,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UsersForm));
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.FooterDescription footerDescription3 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition3 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
+            SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
             panel1 = new Panel();
             c1ComboBoxIsBlocked = new C1.Win.Input.C1ComboBox();
             labelIsBlocked = new Label();
@@ -65,6 +68,7 @@
             toolStripButtonUserDelete = new ToolStripButton();
             toolStripButtonUserRefresh = new ToolStripButton();
             toolStripSeparator2 = new ToolStripSeparator();
+            smartGridUsers1 = new SmartLib.SmartGrid(components);
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)c1ComboBoxIsBlocked).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
@@ -77,6 +81,7 @@
             ((System.ComponentModel.ISupportInitialize)smartGridUsers).BeginInit();
             ((System.ComponentModel.ISupportInitialize)userBindingSource).BeginInit();
             toolStripCurrencies.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)smartGridUsers1).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -282,6 +287,7 @@
             // 
             // c1SplitterPanelUsers
             // 
+            c1SplitterPanelUsers.Controls.Add(smartGridUsers1);
             c1SplitterPanelUsers.Controls.Add(smartGridUsers);
             c1SplitterPanelUsers.Controls.Add(toolStripCurrencies);
             c1SplitterPanelUsers.Height = 414;
@@ -299,13 +305,12 @@
             smartGridUsers.AutoGenerateColumns = false;
             smartGridUsers.ColumnInfo = resources.GetString("smartGridUsers.ColumnInfo");
             smartGridUsers.DataSource = userBindingSource;
-            smartGridUsers.Dock = DockStyle.Fill;
             smartGridUsers.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition2.Caption = "Всего: ";
-            aggregateDefinition2.Column = 3;
-            footerDescription2.Aggregates.Add(aggregateDefinition2);
-            smartGridUsers.Footers.Descriptions.Add(footerDescription2);
+            aggregateDefinition3.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition3.Caption = "Всего: ";
+            aggregateDefinition3.Column = 3;
+            footerDescription3.Aggregates.Add(aggregateDefinition3);
+            smartGridUsers.Footers.Descriptions.Add(footerDescription3);
             smartGridUsers.Footers.Fixed = true;
             smartGridUsers.Headers = new string[]
     {
@@ -318,7 +323,7 @@
             smartGridUsers.Rows.Count = 2;
             smartGridUsers.SelectedRows = (List<int>)resources.GetObject("smartGridUsers.SelectedRows");
             smartGridUsers.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridUsers.Size = new Size(596, 362);
+            smartGridUsers.Size = new Size(596, 86);
             smartGridUsers.SortingType = SmartGrid.SortingType.Descending;
             smartGridUsers.StyleInfo = resources.GetString("smartGridUsers.StyleInfo");
             smartGridUsers.TabIndex = 4;
@@ -395,6 +400,35 @@
             toolStripSeparator2.Name = "toolStripSeparator2";
             toolStripSeparator2.Size = new Size(6, 31);
             // 
+            // smartGridUsers1
+            // 
+            smartGridUsers1.AllowEditing = false;
+            smartGridUsers1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridUsers1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridUsers1.AllowNodeMove = false;
+            smartGridUsers1.AutoGenerateColumns = false;
+            smartGridUsers1.ColumnInfo = resources.GetString("smartGridUsers1.ColumnInfo");
+            smartGridUsers1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition2.Caption = "Всего: ";
+            aggregateDefinition2.Column = 3;
+            footerDescription2.Aggregates.Add(aggregateDefinition2);
+            smartGridUsers1.Footers.Descriptions.Add(footerDescription2);
+            smartGridUsers1.Footers.Fixed = true;
+            stringItem1.Name = "Заголовок 1";
+            stringItem1.Value = "...;Id;Блок.;Код;Логин;Кр.имя;Фамилия";
+            smartGridUsers1.Headers.Add(stringItem1);
+            smartGridUsers1.IdName = null;
+            smartGridUsers1.Location = new Point(3, 169);
+            smartGridUsers1.Name = "smartGridUsers1";
+            smartGridUsers1.Rows.Count = 5;
+            smartGridUsers1.SelectedRows = (List<int>)resources.GetObject("smartGridUsers1.SelectedRows");
+            smartGridUsers1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGridUsers1.Size = new Size(590, 150);
+            smartGridUsers1.SortingType = SmartLib.SortingType.Descending;
+            smartGridUsers1.StyleInfo = resources.GetString("smartGridUsers1.StyleInfo");
+            smartGridUsers1.TabIndex = 5;
+            // 
             // UsersForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -422,6 +456,7 @@
             ((System.ComponentModel.ISupportInitialize)userBindingSource).EndInit();
             toolStripCurrencies.ResumeLayout(false);
             toolStripCurrencies.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)smartGridUsers1).EndInit();
             ResumeLayout(false);
         }
 
@@ -455,5 +490,6 @@
         private TextBox textBoxApp;
         private Label labelIsBlocked;
         private C1.Win.Input.C1ComboBox c1ComboBoxIsBlocked;
+        private SmartLib.SmartGrid smartGridUsers1;
     }
 }

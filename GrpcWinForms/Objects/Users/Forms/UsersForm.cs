@@ -38,11 +38,13 @@ namespace GrpcWinForms.Objects.Users.Forms
         {
             InitializeComponent();
 
-            loaderUsers.Parent = smartGridUsers;
+            //loaderUsers.Parent = smartGridUsers;
+            loaderUsers.Parent = smartGridUsers1;
+            //loaderApps.Parent = smartGridApps;
             loaderApps.Parent = smartGridApps;
-            loaderUsers.Location = new Point(0, 0);
             loaderApps.Location = new Point(0, 0);
-            loaderUsers.Size = smartGridUsers.Size;
+            //loaderUsers.Size = smartGridUsers.Size;
+            loaderUsers.Size = smartGridUsers1.Size;
             loaderApps.Size = smartGridApps.Size;
         }
 
@@ -67,6 +69,7 @@ namespace GrpcWinForms.Objects.Users.Forms
 
             users = new BindingList<User>(response.Users.ToList());
             smartGridUsers.DataSource = users;
+            smartGridUsers1.DataSource = users;
 
         }
 
@@ -81,8 +84,10 @@ namespace GrpcWinForms.Objects.Users.Forms
 
         private void smartGridUsers_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
-            if (rowUser == smartGridUsers.Row) return;
-            else rowUser = smartGridUsers.Row;
+            //if (rowUser == smartGridUsers.Row) return;
+            //else rowUser = smartGridUsers.Row;
+            if (rowUser == smartGridUsers1.Row) return;
+            else rowUser = smartGridUsers1.Row;
 
             loaderApps.ShowLoader();
             RefreshApps();
@@ -91,9 +96,11 @@ namespace GrpcWinForms.Objects.Users.Forms
 
         private async void RefreshApps()
         {
-            if (smartGridUsers.Row < smartGridUsers.Rows.Fixed) return;
+            //if (smartGridUsers.Row < smartGridUsers.Rows.Fixed) return;
+            if (smartGridUsers1.Row < smartGridUsers1.Rows.Fixed) return;
 
-            User user = (User)(smartGridUsers.Rows[smartGridUsers.Row].DataSource);
+            //User user = (User)(smartGridUsers.Rows[smartGridUsers.Row].DataSource);
+            User user = (User)(smartGridUsers1.Rows[smartGridUsers1.Row].DataSource);
             ApplicationUserFilterRequest request = new ApplicationUserFilterRequest()
             {
                 UserId = user.UserId,
@@ -104,6 +111,7 @@ namespace GrpcWinForms.Objects.Users.Forms
             loaderApps.ShowLoader();
             ListApplicationUserResponse response = await GrpcClients.GrpcClients.ApplicationUser.GetListApplicationUserAsync(request);
             applications = new BindingList<ApplicationUser>(response.ApplicationUsers.ToList());
+            //smartGridApps.DataSource = applications;
             smartGridApps.DataSource = applications;
             loaderApps.HideLoader();
         }
@@ -111,9 +119,11 @@ namespace GrpcWinForms.Objects.Users.Forms
         private void smartGridUsers_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
 
-            User user = smartGridUsers.Rows[e.Row].DataSource as User;
+            //User user = smartGridUsers.Rows[e.Row].DataSource as User;
+            User user = smartGridUsers1.Rows[e.Row].DataSource as User;
 
-            switch (smartGridUsers.Cols[e.Col].Name)
+            //switch (smartGridUsers.Cols[e.Col].Name)
+            switch (smartGridUsers1.Cols[e.Col].Name)
             {
                 case "colContragentName":
                     if (user.Contragent == null || user.Contragent.Id == 0)
@@ -158,9 +168,12 @@ namespace GrpcWinForms.Objects.Users.Forms
                     }
                     else
                     {
-                        int rowsel = smartGridUsers.RowSel;
-                        users.Insert(smartGridUsers.RowSel - smartGridUsers.Rows.Fixed, response.User);
-                        smartGridUsers.Row = rowsel;
+                        //int rowsel = smartGridUsers.RowSel;
+                        //users.Insert(smartGridUsers.RowSel - smartGridUsers.Rows.Fixed, response.User);
+                        //smartGridUsers.Row = rowsel;
+                        int rowsel = smartGridUsers1.RowSel;
+                        users.Insert(smartGridUsers1.RowSel - smartGridUsers1.Rows.Fixed, response.User);
+                        smartGridUsers1.Row = rowsel;
                     }
                 }
             }
@@ -170,7 +183,8 @@ namespace GrpcWinForms.Objects.Users.Forms
         {
             using (UserForm userForm = new UserForm())
             {
-                userForm.User = smartGridUsers.Rows[smartGridUsers.Row].DataSource as User;
+                //userForm.User = smartGridUsers.Rows[smartGridUsers.Row].DataSource as User;
+                userForm.User = smartGridUsers1.Rows[smartGridUsers1.Row].DataSource as User;
 
                 if (userForm.ShowDialog() == DialogResult.OK)
                 {
@@ -193,8 +207,10 @@ namespace GrpcWinForms.Objects.Users.Forms
                     }
                     else
                     {
-                        int rowsel = smartGridUsers.RowSel;
-                        users[rowsel - smartGridUsers.Rows.Fixed] = response.User;
+                        //int rowsel = smartGridUsers.RowSel;
+                        //users[rowsel - smartGridUsers.Rows.Fixed] = response.User;
+                        int rowsel = smartGridUsers1.RowSel;
+                        users[rowsel - smartGridUsers1.Rows.Fixed] = response.User;
                     }
                 }
             }
@@ -211,17 +227,20 @@ namespace GrpcWinForms.Objects.Users.Forms
             List<int> ids = new List<int>();
             List<int> oldList = new List<int>();
             List<int> newMarked = new List<int>();
-            if (smartGridUsers.SelectedRows.Count == 0) // Удаляется одна запись
+            //if (smartGridUsers.SelectedRows.Count == 0) // Удаляется одна запись
+            if (smartGridUsers1.SelectedRows.Count == 0) // Удаляется одна запись
             {
                 DialogResult result = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
                     DeleteUserRequest request = new DeleteUserRequest()
                     {
-                        UserId = (int)smartGridUsers.Rows[smartGridUsers.RowSel]["UserId"]
+                        //UserId = (int)smartGridUsers.Rows[smartGridUsers.RowSel]["UserId"]
+                        UserId = (int)smartGridUsers1.Rows[smartGridUsers1.RowSel]["UserId"]
                     };
                     DeleteUserResponse response = await GrpcClients.GrpcClients.User.DeleteUserAsync(request);
-                    int i = smartGridUsers.RowSel - smartGridUsers.Rows.Fixed;
+                    //int i = smartGridUsers.RowSel - smartGridUsers.Rows.Fixed;
+                    int i = smartGridUsers1.RowSel - smartGridUsers1.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
                         users.RemoveAt(i);
@@ -233,7 +252,8 @@ namespace GrpcWinForms.Objects.Users.Forms
             else // Был режим выделения
             {
 
-                DialogResult result = MessageBox.Show($"Вы отметили {smartGridUsers.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
+                //DialogResult result = MessageBox.Show($"Вы отметили {smartGridUsers.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
+                DialogResult result = MessageBox.Show($"Вы отметили {smartGridUsers1.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
 
                 if (result == DialogResult.OK)
                 {
@@ -243,7 +263,8 @@ namespace GrpcWinForms.Objects.Users.Forms
 
                     foreach (var index in oldList)
                     {
-                        User user = (User)(smartGridUsers.Rows[index].DataSource);
+                        //User user = (User)(smartGridUsers.Rows[index].DataSource);
+                        User user = (User)(smartGridUsers1.Rows[index].DataSource);
                         ids.Add(user.UserId);
                     }
 
@@ -257,7 +278,8 @@ namespace GrpcWinForms.Objects.Users.Forms
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
 
                     List<int> testList = Utils.UndeleteList<User>((C1FlexGrid)smartGridUsers, users, undelIds, smartGridUsers.SelectedRows, "Id");
-                    smartGridUsers.SelectedRows = testList;
+                    //smartGridUsers.SelectedRows = testList;
+                    smartGridUsers1.SelectedRows = testList;
 
                     if (response.Result.Status != Status.Ok)
                         MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
@@ -283,7 +305,8 @@ namespace GrpcWinForms.Objects.Users.Forms
                         Application app = appsForm.SelectedApplication;
 
                         AddApplicationUserRequest request = new AddApplicationUserRequest();
-                        request.UserId = ((User)(smartGridUsers.Rows[smartGridUsers.Row].DataSource)).UserId;
+                        //request.UserId = ((User)(smartGridUsers.Rows[smartGridUsers.Row].DataSource)).UserId;
+                        request.UserId = ((User)(smartGridUsers1.Rows[smartGridUsers1.Row].DataSource)).UserId;
                         request.ApplicationId = app.Id;
                         AddApplicationUserResponse response = await GrpcClients.GrpcClients.ApplicationUser.AddApplicationUserAsync(request);
                         if (response.Result.Status != Status.Ok || response.ApplicationUser == null)
@@ -293,6 +316,9 @@ namespace GrpcWinForms.Objects.Users.Forms
                         }
                         else
                         {
+                            //int rowsel = smartGridApps.RowSel;
+                            //applications.Insert(smartGridApps.RowSel - smartGridApps.Rows.Fixed, response.ApplicationUser);
+                            //smartGridApps.Row = rowsel;
                             int rowsel = smartGridApps.RowSel;
                             applications.Insert(smartGridApps.RowSel - smartGridApps.Rows.Fixed, response.ApplicationUser);
                             smartGridApps.Row = rowsel;
@@ -306,13 +332,17 @@ namespace GrpcWinForms.Objects.Users.Forms
 
                         foreach (var appId in appsForm.SelectedApps)
                             request.ApplicationIds.Add(appId.Id);
-                        User user = (User)smartGridUsers.Rows[smartGridUsers.Row].DataSource;
+                        //User user = (User)smartGridUsers.Rows[smartGridUsers.Row].DataSource;
+                        User user = (User)smartGridUsers1.Rows[smartGridUsers1.Row].DataSource;
                         request.UserId = user.UserId;
 
                         response = await GrpcClients.GrpcClients.ApplicationUser.AddIdsApplicationUserAsync(request);
 
                         foreach (ApplicationUser app_user in response.ApplicationUsers)
                         {
+                            //int rowsel = smartGridApps.RowSel;
+                            //applications.Insert(smartGridApps.RowSel - smartGridApps.Rows.Fixed, app_user);
+                            //smartGridApps.Row = rowsel;
                             int rowsel = smartGridApps.RowSel;
                             applications.Insert(smartGridApps.RowSel - smartGridApps.Rows.Fixed, app_user);
                             smartGridApps.Row = rowsel;
@@ -332,10 +362,12 @@ namespace GrpcWinForms.Objects.Users.Forms
         private void smartGridApps_GetUnboundValue(object sender, UnboundValueEventArgs e)
         {
 
+            //ApplicationUser relApp = (ApplicationUser)(smartGridApps.Rows[e.Row].DataSource);
             ApplicationUser relApp = (ApplicationUser)(smartGridApps.Rows[e.Row].DataSource);
 
             Application app = relApp.Application;
 
+            //switch (smartGridApps.Cols[e.Col].Name)
             switch (smartGridApps.Cols[e.Col].Name)
             {
                 case "colAppId":

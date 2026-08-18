@@ -19,7 +19,7 @@
     <None Remove="Objects\Contracts\Forms\ContractsForm.resx~RF3ff13d93.TMP" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="C1.Excel" Version="9.0.20251.144" />
+    <PackageReference Include="C1.Excel" Version="9.0.20251.173" />
     <PackageReference Include="C1.Win.Calendar" Version="8.0.20251.708" />
     <PackageReference Include="C1.Win.FlexGrid" Version="8.0.20251.708" />
     <PackageReference Include="C1.Win.Input" Version="8.0.20251.708" />
@@ -32,6 +32,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="SmartGrid" Version="8.0.0.3" />
+    <PackageReference Include="SmartLib" Version="1.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
   </ItemGroup>
   <ItemGroup>

@@ -262,7 +262,7 @@ public class ContractRepository
                     left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
                     left join cwatis.contractdocs cd on cd.contract_id = c.contract_id  
                 WHERE 1=1
-                    and c.contract_id = {id};
+                    and c.contract_id = {contract.Id};
                 SELECT
                     l.contractline_id line_id, l.contractline_order line_order, 
                     l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
@@ -271,29 +271,31 @@ public class ContractRepository
                     u.Short
                 FROM cwatis.contractlines l
                     left join global_db.rfr_units u on l.UnitId = u.UnitId
-                where l.contract_id = {id};
+                where l.contract_id = {contract.Id};
                 ";
             using var rdr = await cmd.ExecuteReaderAsync();
-            Contract contract = new Contract();
+            Contract _contract = new Contract();
 
             if (await rdr.ReadAsync())
             {
-                contract = FillContract(rdr);
+                _contract = FillContract(rdr);
             }
             if (await rdr.NextResultAsync())
             {
                 while (await rdr.ReadAsync())
                 {
-                    contract.Lines.Add(FillLine(rdr));
+                    _contract.Lines.Add(FillLine(rdr));
                 }
 
             }
+            return _contract;
         } catch (Exception ex)
         {
             _logger.LogError(ex, "Error in UpdateContractAsync: " + ex.Message);
             throw;
 
         }
+        return null;
     }
 
     #endregion

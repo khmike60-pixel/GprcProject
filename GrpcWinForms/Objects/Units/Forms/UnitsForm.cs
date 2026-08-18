@@ -42,7 +42,8 @@ namespace GrpcWinForms.Forms
                 };
                 ListUnitResponse response = await GrpcClients.GrpcClients.Unit.GetListUnitAsync(request);
                 units = new BindingList<Unit>(response.Units);
-                smartGrid.DataSource = units;
+                //smartGrid.DataSource = units; 
+                smartGrid1.DataSource = units;
                 return true;
             }
             catch (Exception ex)
@@ -88,9 +89,10 @@ namespace GrpcWinForms.Forms
                     }
                     else
                     {
-                        int rowsel = smartGrid.RowSel;
-                        units.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Unit);
-                        smartGrid.Row = rowsel;
+                        int rowsel = smartGrid1.RowSel;
+                        units.Insert(smartGrid1.RowSel - smartGrid1.Rows.Fixed, response.Unit);
+                        //smartGrid.Row = rowsel;
+                        smartGrid1.Row = rowsel;
                     }
                 }
                 else form.Close();
@@ -100,7 +102,8 @@ namespace GrpcWinForms.Forms
 
         private async void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
-            Unit unit = units[smartGrid.RowSel - smartGrid.Rows.Fixed];
+            //Unit unit = units[smartGrid.RowSel - smartGrid.Rows.Fixed];
+            Unit unit = units[smartGrid1.RowSel - smartGrid1.Rows.Fixed];
             using (var form = new UnitForm())
             {
                 form.IsTypeInsert = false;
@@ -131,7 +134,8 @@ namespace GrpcWinForms.Forms
                     }
                     else
                     {
-                        int rowsel = smartGrid.RowSel - smartGrid.Rows.Fixed;
+                        //int rowsel = smartGrid.RowSel - smartGrid.Rows.Fixed;
+                        int rowsel = smartGrid1.RowSel - smartGrid1.Rows.Fixed;
                         units[rowsel] = response.Unit;
                     }
                 }
@@ -141,13 +145,15 @@ namespace GrpcWinForms.Forms
 
         private async void toolStripButtonDelete_Click(object sender, EventArgs e)
         {
-            Unit unit = units[smartGrid.RowSel - smartGrid.Rows.Fixed];
+            //Unit unit = units[smartGrid.RowSel - smartGrid.Rows.Fixed];
+            Unit unit = units[smartGrid1.RowSel - smartGrid1.Rows.Fixed];
 
             List<int> ids = new List<int>();
             List<int> oldList = new List<int>();
             List<int> newMarked = new List<int>();
 
-            if (smartGrid.SelectedRows.Count == 0)
+            //if (smartGrid.SelectedRows.Count == 0)
+            if (smartGrid1.SelectedRows.Count == 0)
             {
                 var result = MessageBox.Show("Удалить запись?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
@@ -164,24 +170,30 @@ namespace GrpcWinForms.Forms
                     }
                     else
                     {
-                        int rowsel = smartGrid.RowSel;
-                        units.RemoveAt(smartGrid.RowSel - smartGrid.Rows.Fixed);
-                        if (smartGrid.Rows.Count - 1 - smartGrid.Footers.Descriptions.Count > rowsel)
-                            smartGrid.Row = rowsel;
+                        //int rowsel = smartGrid.RowSel;
+                        //units.RemoveAt(smartGrid.RowSel - smartGrid.Rows.Fixed);
+                        int rowsel = smartGrid1.RowSel;
+                        units.RemoveAt(smartGrid1.RowSel - smartGrid1.Rows.Fixed);
+                        //if (smartGrid.Rows.Count - 1 - smartGrid.Footers.Descriptions.Count > rowsel)
+                        //    smartGrid.Row = rowsel;
+                        //else
+                        //    smartGrid.Row = smartGrid.Rows.Count - 1 - smartGrid.Footers.Descriptions.Count;
+                        if (smartGrid1.Rows.Count - 1 - smartGrid1.Footers.Descriptions.Count > rowsel)
+                            smartGrid1.Row = rowsel;
                         else
-                            smartGrid.Row = smartGrid.Rows.Count - 1 - smartGrid.Footers.Descriptions.Count;
+                            smartGrid1.Row = smartGrid1.Rows.Count - 1 - smartGrid1.Footers.Descriptions.Count;
                     }
                 }
             }
             else
             { 
-                var result = MessageBox.Show($"Удалить все отмеченные записи ({smartGrid.SelectedRows.Count})?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var result = MessageBox.Show($"Удалить все отмеченные записи ({smartGrid1.SelectedRows.Count})?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
-                    oldList.AddRange(smartGrid.SelectedRows);
-                    newMarked.AddRange(smartGrid.SelectedRows);
+                    oldList.AddRange(smartGrid1.SelectedRows);
+                    newMarked.AddRange(smartGrid1.SelectedRows);
 
-                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid.Rows[index]["Id"]));
+                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid1.Rows[index]["Id"]));
 
                     DeleteIdsUnitRequest request = new DeleteIdsUnitRequest();
                     request.Ids.AddRange(ids);
@@ -192,10 +204,10 @@ namespace GrpcWinForms.Forms
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
 
-                    smartGrid.BeginUpdate();
-                    List<int> testList = Utils.UndeleteList<Unit>((C1FlexGrid)smartGrid, units, undelIds, smartGrid.SelectedRows, "Id");
-                    smartGrid.SelectedRows = testList;
-                    smartGrid.EndUpdate();
+                    smartGrid1.BeginUpdate();
+                    List<int> testList = Utils.UndeleteList<Unit>((C1FlexGrid)smartGrid1, units, undelIds, smartGrid1.SelectedRows, "Id");
+                    smartGrid1.SelectedRows = testList;
+                    smartGrid1.EndUpdate();
 
                     if (response.Result.Status != Status.Ok)
                         MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
