@@ -28,8 +28,8 @@ namespace GrpcWinForms.Objects.Applications
         {
             get
             {
-                if (smartGrid.RowSel >= smartGrid.Rows.Fixed)
-                    return (Application)smartGrid.Rows[smartGrid.Row].DataSource;
+                if (smartGrid1.RowSel >= smartGrid1.Rows.Fixed)
+                    return (Application)smartGrid1.Rows[smartGrid1.Row].DataSource;
                 else return null;
             }
         }
@@ -37,13 +37,13 @@ namespace GrpcWinForms.Objects.Applications
         {
             get
             {
-                if (smartGrid.SelectedRows.Count == 0) return null;
+                if (smartGrid1.SelectedRows.Count == 0) return null;
                 else
                 {
                     List<Application> applications = new List<Application>();
-                    foreach(int i in smartGrid.SelectedRows)
+                    foreach(int i in smartGrid1.SelectedRows)
                     {
-                        applications.Add((Application)smartGrid.Rows[i].DataSource);
+                        applications.Add((Application)smartGrid1.Rows[i].DataSource);
                     }
                     
                     return applications;
@@ -97,7 +97,7 @@ namespace GrpcWinForms.Objects.Applications
                 GrpcClients.GrpcClients.Application.GetListApplicationAsync(request).ResponseAsync
             );
             applications = new BindingList<Application>(response.Applications);
-            smartGrid.DataSource = applications;
+            smartGrid1.DataSource = applications;
         }
 
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
@@ -130,9 +130,9 @@ namespace GrpcWinForms.Objects.Applications
                     }
                     else
                     {
-                        int rowsel = smartGrid.RowSel;
-                        applications.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Application);
-                        smartGrid.Row = rowsel;
+                        int rowsel = smartGrid1.RowSel;
+                        applications.Insert(smartGrid1.RowSel - smartGrid1.Rows.Fixed, response.Application);
+                        smartGrid1.Row = rowsel;
                     }
 
                 }
@@ -147,7 +147,7 @@ namespace GrpcWinForms.Objects.Applications
 
                 form.IsTypeInsert = false;
 
-                var row = smartGrid.Rows[smartGrid.RowSel];
+                var row = smartGrid1.Rows[smartGrid1.RowSel];
                 Application app = new Application()
                 {
                     Id = (int)row["Id"],
@@ -171,11 +171,11 @@ namespace GrpcWinForms.Objects.Applications
                     );
                     if (response.Application != null)
                     {
-                        applications[smartGrid.RowSel - smartGrid.Rows.Fixed] = response.Application;
-                        //smartGrid.Rows[smartGrid.RowSel]["Id"] = response.Application.Id;
-                        //smartGrid.Rows[smartGrid.RowSel]["Name"] = response.Application.Name;
-                        //smartGrid.Rows[smartGrid.RowSel]["Db"] = response.Application.Db;
-                        //smartGrid.Rows[smartGrid.RowSel]["Product"] = response.Application.Product;
+                        applications[smartGrid1.RowSel - smartGrid1.Rows.Fixed] = response.Application;
+                        //smartGrid1.Rows[smartGrid1.RowSel]["Id"] = response.Application.Id;
+                        //smartGrid1.Rows[smartGrid1.RowSel]["Name"] = response.Application.Name;
+                        //smartGrid1.Rows[smartGrid1.RowSel]["Db"] = response.Application.Db;
+                        //smartGrid1.Rows[smartGrid1.RowSel]["Product"] = response.Application.Product;
                     }
 
                 }
@@ -187,24 +187,24 @@ namespace GrpcWinForms.Objects.Applications
             List<int> ids = new List<int>();
             List<int> oldList = new List<int>();
             List<int> newMarked = new List<int>();
-            if (smartGrid.SelectedRows.Count == 0)
+            if (smartGrid1.SelectedRows.Count == 0)
             { // Удаляется одна запись
                 DialogResult result = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
                     DeleteApplicationRequest request = new DeleteApplicationRequest()
                     {
-                        Id = (int)smartGrid.Rows[smartGrid.RowSel]["Id"]
+                        Id = (int)smartGrid1.Rows[smartGrid1.RowSel]["Id"]
                     };
                     DeleteApplicationResponse response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Application.DeleteApplicationAsync(request).ResponseAsync
                     );
-                    int i = smartGrid.RowSel - smartGrid.Rows.Fixed;
+                    int i = smartGrid1.RowSel - smartGrid1.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
-                        smartGrid.BeginUpdate();
+                        smartGrid1.BeginUpdate();
                         applications.RemoveAt(i);
-                        smartGrid.EndUpdate();
+                        smartGrid1.EndUpdate();
                     }
                     else
                         MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
@@ -213,15 +213,15 @@ namespace GrpcWinForms.Objects.Applications
             else
             { // Был режим выделения
 
-                DialogResult result = MessageBox.Show($"Вы отметили {smartGrid.SelectedRows} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
+                DialogResult result = MessageBox.Show($"Вы отметили {smartGrid1.SelectedRows} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
 
                 if (result == DialogResult.OK)
                 {
 
-                    oldList.AddRange(smartGrid.SelectedRows);
-                    newMarked.AddRange(smartGrid.SelectedRows);
+                    oldList.AddRange(smartGrid1.SelectedRows);
+                    newMarked.AddRange(smartGrid1.SelectedRows);
 
-                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid.Rows[index]["Id"]));
+                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid1.Rows[index]["Id"]));
 
                     DeleteIdsApplicationRequest request = new DeleteIdsApplicationRequest();
                     request.Ids.AddRange(ids);
@@ -234,10 +234,10 @@ namespace GrpcWinForms.Objects.Applications
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
 
-                    smartGrid.BeginUpdate();
-                    List<int> testList = Utils.UndeleteList<Application>((C1FlexGrid)smartGrid, applications, undelIds, smartGrid.SelectedRows, "Id");
-                    smartGrid.SelectedRows = testList;
-                    smartGrid.EndUpdate();
+                    smartGrid1.BeginUpdate();
+                    List<int> testList = Utils.UndeleteList<Application>((C1FlexGrid)smartGrid1, applications, undelIds, smartGrid1.SelectedRows, "Id");
+                    smartGrid1.SelectedRows = testList;
+                    smartGrid1.EndUpdate();
 
                     if (response.Result.Status != Status.Ok)
                         MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
@@ -250,7 +250,7 @@ namespace GrpcWinForms.Objects.Applications
 
         private void smartGrid_DoubleClick(object sender, EventArgs e)
         {
-            if (IsChoiceMode && smartGrid.Row >= smartGrid.Rows.Fixed)
+            if (IsChoiceMode && smartGrid1.Row >= smartGrid1.Rows.Fixed)
             {
 
                 this.DialogResult = DialogResult.OK;

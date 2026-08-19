@@ -29,8 +29,6 @@ namespace GrpcWinForms.Objects.Test
         public TestLookup()
         {
             InitializeComponent();
-            periodComponent1.StartDate = DateTime.Now.AddDays(-90);
-            periodComponent1.EndDate = DateTime.Now;
 
         }
 
@@ -45,9 +43,7 @@ namespace GrpcWinForms.Objects.Test
 
         private void ShowPeriod()
         {
-            MessageBox.Show(
-                $"StartDate = {period1.StartDate.ToShortDateString()} \n" +
-                $"  EndDate = {period1.EndDate.ToShortDateString()}");
+            MessageBox.Show("");
         }
 
         private void buttonSaveExit_Click(object sender, EventArgs e)
