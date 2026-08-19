@@ -103,6 +103,7 @@
             // 
             // smartGrid
             // 
+            smartGrid.AllowEditing = false;
             smartGrid.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid.AllowNodeMove = false;

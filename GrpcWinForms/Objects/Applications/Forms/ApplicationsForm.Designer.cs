@@ -37,7 +37,6 @@
             labelName = new Label();
             panel2 = new Panel();
             smartGrid1 = new SmartLib.SmartGrid(components);
-            applicationBindingSource = new BindingSource(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -45,11 +44,12 @@
             toolStripButtonDelete = new ToolStripButton();
             toolStripButtonRefresh = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
+            applicationBindingSource = new BindingSource(components);
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)applicationBindingSource).BeginInit();
             toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)applicationBindingSource).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -90,6 +90,7 @@
             // 
             // smartGrid1
             // 
+            smartGrid1.AllowEditing = false;
             smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGrid1.AllowNodeMove = false;
@@ -114,10 +115,6 @@
             smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
             smartGrid1.TabIndex = 3;
             smartGrid1.DoubleClick += smartGrid_DoubleClick;
-            // 
-            // applicationBindingSource
-            // 
-            applicationBindingSource.DataSource = typeof(GrpcCommonNet.Library.Common.Application);
             // 
             // toolStrip1
             // 
@@ -184,6 +181,10 @@
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(6, 31);
             // 
+            // applicationBindingSource
+            // 
+            applicationBindingSource.DataSource = typeof(GrpcCommonNet.Library.Common.Application);
+            // 
             // ApplicationsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -200,9 +201,9 @@
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)applicationBindingSource).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)applicationBindingSource).EndInit();
             ResumeLayout(false);
         }
 

@@ -38,6 +38,7 @@
             // 
             // smartGridHistory1
             // 
+            smartGridHistory1.AllowEditing = false;
             smartGridHistory1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridHistory1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridHistory1.AllowNodeMove = false;

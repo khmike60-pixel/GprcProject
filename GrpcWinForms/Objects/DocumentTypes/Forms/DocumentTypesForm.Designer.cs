@@ -90,6 +90,7 @@
             // 
             // smartGridDocumentTypes1
             // 
+            smartGridDocumentTypes1.AllowEditing = false;
             smartGridDocumentTypes1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridDocumentTypes1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridDocumentTypes1.AllowNodeMove = false;

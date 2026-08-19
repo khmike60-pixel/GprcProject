@@ -1,4 +1,6 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using C1.Win.Command;
+using C1.Win.FlexGrid;
+using Google.Protobuf.WellKnownTypes;
 using GrapeCity.Documents.Common;
 using Grpc.Core;
 using GrpcCommonNet.Library.Common;
@@ -7,10 +9,10 @@ using GrpcCommonNet.Library.Contragent;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Forms;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
-using GrpcWinForms.GrpcUtils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -96,7 +98,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             try
             {
                 period1.Period.From = new DateTime(DateTime.Now.Year, 1, 1);
-                period1.Period.To    = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
+                period1.Period.To = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
 
                 RefreshContract();
             }
@@ -250,6 +252,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void smartGridContracts_DoubleClick(object sender, EventArgs e)
         {
+            Point pt = smartGridContracts1.PointToClient(Control.MousePosition);
+            HitTestInfo hit = smartGridContracts1.HitTest(pt);
+
+            if (hit.Row + 1 > smartGridContracts1.Rows.Count - smartGridContracts1.Footers.Descriptions.Count) return;
+            if (hit.Row - 1 < smartGridContracts1.Rows.Fixed) return;
+
             var row = smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
             Contract _contract = row as Contract;
             ViewContract(sender, _contract);
@@ -384,5 +392,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         #endregion
 
+        private void smartGridContracts1_GridChanged(object sender, C1.Win.FlexGrid.GridChangedEventArgs e)
+        {
+            
+        }
     }
 }

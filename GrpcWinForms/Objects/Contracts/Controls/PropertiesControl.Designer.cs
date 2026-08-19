@@ -121,6 +121,7 @@
             // 
             // smartGridProperies1
             // 
+            smartGridProperies1.AllowEditing = false;
             smartGridProperies1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridProperies1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridProperies1.AllowNodeMove = false;

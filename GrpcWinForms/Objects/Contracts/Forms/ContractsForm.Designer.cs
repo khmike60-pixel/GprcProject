@@ -231,6 +231,7 @@
             // 
             // smartGridLines1
             // 
+            smartGridLines1.AllowEditing = false;
             smartGridLines1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridLines1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridLines1.AllowNodeMove = false;
@@ -284,6 +285,7 @@
             // 
             // smartGridContracts1
             // 
+            smartGridContracts1.AllowEditing = false;
             smartGridContracts1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridContracts1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smartGridContracts1.AllowNodeMove = false;
@@ -320,6 +322,7 @@
             smartGridContracts1.SortingType = SmartLib.SortingType.Descending;
             smartGridContracts1.StyleInfo = resources.GetString("smartGridContracts1.StyleInfo");
             smartGridContracts1.TabIndex = 6;
+            smartGridContracts1.GridChanged += smartGridContracts1_GridChanged;
             smartGridContracts1.AfterSelChange += smartGridContracts_AfterSelChange;
             smartGridContracts1.GetUnboundValue += smartGridContracts_GetUnboundValue;
             smartGridContracts1.DoubleClick += smartGridContracts_DoubleClick;

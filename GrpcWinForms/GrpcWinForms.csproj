@@ -7,6 +7,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <PropertyGroup>
+    <NeutralResourcesLanguage>ru-RU</NeutralResourcesLanguage>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Controls\CurrencyType\**" />
     <Compile Remove="Objects\Geolocations\Places\**" />
@@ -31,12 +34,16 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="SmartLib" Version="1.0.0" />
+    <PackageReference Include="SmartLib" Version="1.0.1" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +51,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
