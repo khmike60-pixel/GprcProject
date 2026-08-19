@@ -11,7 +11,6 @@ using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
 using GrpcWinForms.GrpcUtils;
-using SmartGrid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

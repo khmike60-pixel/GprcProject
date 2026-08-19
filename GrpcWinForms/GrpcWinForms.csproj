@@ -31,7 +31,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="SmartGrid" Version="8.0.0.3" />
     <PackageReference Include="SmartLib" Version="1.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="10.0.1" />
   </ItemGroup>

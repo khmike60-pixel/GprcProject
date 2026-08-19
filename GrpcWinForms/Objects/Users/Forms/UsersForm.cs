@@ -10,7 +10,6 @@ using GrpcCommonNet.Library.User;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Applications;
-using SmartGrid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

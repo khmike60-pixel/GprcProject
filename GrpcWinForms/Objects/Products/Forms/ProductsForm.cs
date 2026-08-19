@@ -4,7 +4,6 @@ using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Product;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
-using SmartGrid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

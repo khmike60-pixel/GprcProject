@@ -3,7 +3,6 @@ using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contragent;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
-using SmartGrid;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
