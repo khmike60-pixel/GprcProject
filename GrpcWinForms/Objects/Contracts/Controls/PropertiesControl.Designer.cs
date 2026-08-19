@@ -32,7 +32,6 @@
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PropertiesControl));
-            smartGridProperies = new SmartGrid.SmartGrid();
             c1CommandHolder1 = new C1.Win.Command.C1CommandHolder();
             c1Command1 = new C1.Win.Command.C1CommandControl();
             toolStripProperties = new ToolStrip();
@@ -42,33 +41,11 @@
             toolStripButtonDelete = new ToolStripButton();
             toolStripButtonRefresh = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
-            ((System.ComponentModel.ISupportInitialize)smartGridProperies).BeginInit();
+            smartGridProperies1 = new SmartLib.SmartGrid(components);
             ((System.ComponentModel.ISupportInitialize)c1CommandHolder1).BeginInit();
             toolStripProperties.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)smartGridProperies1).BeginInit();
             SuspendLayout();
-            // 
-            // smartGridProperies
-            // 
-            smartGridProperies.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
-            smartGridProperies.AllowNodeMove = false;
-            smartGridProperies.ColumnInfo = "3,1,0,0,0,-1,Columns:0{Width:30;}\t1{Width:370;StarWidth:\"*\";Caption:\"Наименование свойста\";AllowEditing:False;}\t2{Width:370;StarWidth:\"*\";Caption:\"Значение\";}\t";
-            smartGridProperies.Dock = DockStyle.Fill;
-            smartGridProperies.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGridProperies.Footers.Descriptions.Add(footerDescription1);
-            smartGridProperies.Footers.Fixed = true;
-            smartGridProperies.Headers = null;
-            smartGridProperies.IdName = null;
-            smartGridProperies.IsEditing = false;
-            smartGridProperies.Location = new Point(0, 31);
-            smartGridProperies.Name = "smartGridProperies";
-            smartGridProperies.Rows.Count = 4;
-            smartGridProperies.SelectedRows = (List<int>)resources.GetObject("smartGridProperies.SelectedRows");
-            smartGridProperies.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridProperies.Size = new Size(772, 254);
-            smartGridProperies.SortingType = SmartGrid.SortingType.Descending;
-            smartGridProperies.StyleInfo = resources.GetString("smartGridProperies.StyleInfo");
-            smartGridProperies.TabIndex = 0;
             // 
             // c1CommandHolder1
             // 
@@ -80,6 +57,7 @@
             c1Command1.Name = "c1Command1";
             c1Command1.ShortcutText = "";
             c1Command1.Text = "New Command";
+            c1Command1.Virgin = false;
             // 
             // toolStripProperties
             // 
@@ -141,18 +119,43 @@
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(6, 31);
             // 
+            // smartGridProperies1
+            // 
+            smartGridProperies1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridProperies1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridProperies1.AllowNodeMove = false;
+            smartGridProperies1.ColumnInfo = "3,1,0,0,0,-1,Columns:0{AllowMerging:True;}\t1{Width:359;StarWidth:\"*\";AllowMerging:True;}\t2{Width:358;StarWidth:\"*\";AllowMerging:True;}\t";
+            smartGridProperies1.Dock = DockStyle.Fill;
+            smartGridProperies1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 1;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            smartGridProperies1.Footers.Descriptions.Add(footerDescription1);
+            smartGridProperies1.Footers.Fixed = true;
+            smartGridProperies1.IdName = null;
+            smartGridProperies1.Location = new Point(0, 31);
+            smartGridProperies1.Name = "smartGridProperies1";
+            smartGridProperies1.Rows.Count = 51;
+            smartGridProperies1.SelectedRows = (List<int>)resources.GetObject("smartGridProperies1.SelectedRows");
+            smartGridProperies1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGridProperies1.Size = new Size(772, 254);
+            smartGridProperies1.SortingType = SmartLib.SortingType.Descending;
+            smartGridProperies1.StyleInfo = resources.GetString("smartGridProperies1.StyleInfo");
+            smartGridProperies1.TabIndex = 2;
+            // 
             // PropertiesControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(smartGridProperies);
+            Controls.Add(smartGridProperies1);
             Controls.Add(toolStripProperties);
             Name = "PropertiesControl";
             Size = new Size(772, 285);
-            ((System.ComponentModel.ISupportInitialize)smartGridProperies).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1CommandHolder1).EndInit();
             toolStripProperties.ResumeLayout(false);
             toolStripProperties.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)smartGridProperies1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -167,6 +170,6 @@
         private ToolStripButton toolStripButtonDelete;
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator1;
-        public SmartGrid.SmartGrid smartGridProperies;
+        public SmartLib.SmartGrid smartGridProperies1;
     }
 }

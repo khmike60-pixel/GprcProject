@@ -44,7 +44,7 @@
             SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
             SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
             panel1 = new Panel();
-            period = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
+            period1 = new SmartLib.PeriodBox(components);
             labelBuyer = new Label();
             companySeller = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             companyBuyer = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
@@ -69,9 +69,8 @@
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripButtonHistory = new ToolStripButton();
             toolStripButton1 = new ToolStripButton();
-            period1 = new SmartLib.PeriodBox(components);
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)period).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)period1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companyBuyer).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox2).BeginInit();
@@ -83,13 +82,11 @@
             c1SplitterPanelContractList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)smartGridContracts1).BeginInit();
             toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)period1).BeginInit();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.Controls.Add(period1);
-            panel1.Controls.Add(period);
             panel1.Controls.Add(labelBuyer);
             panel1.Controls.Add(companySeller);
             panel1.Controls.Add(companyBuyer);
@@ -106,17 +103,12 @@
             panel1.Size = new Size(1085, 93);
             panel1.TabIndex = 5;
             // 
-            // period
+            // period1
             // 
-            period.DropDownAlign = C1.Framework.DropDownAlignment.Left;
-            period.DropDownWidth = 250;
-            period.EndDate = new DateTime(2026, 3, 31, 23, 59, 59, 0);
-            period.Location = new Point(616, 58);
-            period.Name = "period";
-            period.Size = new Size(150, 23);
-            period.StartDate = new DateTime(2026, 1, 1, 0, 0, 0, 0);
-            period.TabIndex = 19;
-            period.Value = "01.01.2026 - 31.12.2026";
+            period1.Location = new Point(99, 63);
+            period1.Name = "period1";
+            period1.Period.From = new DateTime(2026, 5, 21, 0, 0, 0, 0);
+            period1.Period.To = new DateTime(2026, 8, 19, 1, 9, 34, 529);
             // 
             // labelBuyer
             // 
@@ -416,13 +408,6 @@
             toolStripButton1.Size = new Size(28, 28);
             toolStripButton1.Text = "toolStripButton1";
             // 
-            // period1
-            // 
-            period1.Location = new Point(99, 63);
-            period1.Name = "period1";
-            period1.Period.From = new DateTime(2026, 5, 21, 0, 0, 0, 0);
-            period1.Period.To = new DateTime(2026, 8, 19, 1, 9, 34, 529);
-            // 
             // ContractsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -436,7 +421,7 @@
             Load += ContractsForm_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)period).EndInit();
+            ((System.ComponentModel.ISupportInitialize)period1).EndInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).EndInit();
             ((System.ComponentModel.ISupportInitialize)companyBuyer).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1ComboBox2).EndInit();
@@ -450,7 +435,6 @@
             ((System.ComponentModel.ISupportInitialize)smartGridContracts1).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)period1).EndInit();
             ResumeLayout(false);
         }
 
@@ -479,7 +463,6 @@
         private Label labelBuyer;
         private Contragents.Components.CompanyDropDown companySeller;
         private Contragents.Components.CompanyDropDown companyBuyer;
-        private GrpcWinForms.Controls.PeriodControl.PeriodComponent period;
         private SmartLib.SmartGrid smartGridContracts1;
         private SmartLib.SmartGrid smartGridLines1;
         private SmartLib.PeriodBox period1;

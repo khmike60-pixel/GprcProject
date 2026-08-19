@@ -28,15 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             buttonCancel = new Button();
             buttonSave = new Button();
             buttonSaveExit = new Button();
             textBox1 = new TextBox();
-            period1 = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
-            periodComponent1 = new GrpcWinForms.Controls.PeriodControl.PeriodComponent(components);
-            ((System.ComponentModel.ISupportInitialize)period1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)periodComponent1).BeginInit();
             SuspendLayout();
             // 
             // buttonCancel
@@ -77,47 +72,17 @@
             textBox1.Size = new Size(100, 23);
             textBox1.TabIndex = 1;
             // 
-            // period1
-            // 
-            period1.DropDownAlign = C1.Framework.DropDownAlignment.Left;
-            period1.DropDownWidth = 250;
-            period1.EndDate = new DateTime(2026, 8, 9, 13, 31, 29, 635);
-            period1.Location = new Point(108, 129);
-            period1.Name = "period1";
-            period1.Size = new Size(153, 23);
-            period1.StartDate = new DateTime(2026, 5, 11, 13, 31, 29, 635);
-            period1.Styles.Default.BackColor = SystemColors.Control;
-            period1.TabIndex = 2;
-            period1.Value = "11.05.2026 - 09.08.2026";
-            // 
-            // periodComponent1
-            // 
-            periodComponent1.DropDownAlign = C1.Framework.DropDownAlignment.Left;
-            periodComponent1.DropDownWidth = 250;
-            periodComponent1.EndDate = new DateTime(0L);
-            periodComponent1.Location = new Point(108, 193);
-            periodComponent1.Name = "periodComponent1";
-            periodComponent1.Size = new Size(153, 23);
-            periodComponent1.StartDate = new DateTime(0L);
-            periodComponent1.Styles.Default.BackColor = SystemColors.Control;
-            periodComponent1.TabIndex = 24;
-            periodComponent1.Value = "";
-            // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(627, 450);
-            Controls.Add(periodComponent1);
-            Controls.Add(period1);
             Controls.Add(textBox1);
             Controls.Add(buttonSaveExit);
             Controls.Add(buttonSave);
             Controls.Add(buttonCancel);
             Name = "TestLookup";
             Text = "TestLoolkup";
-            ((System.ComponentModel.ISupportInitialize)period1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)periodComponent1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -127,7 +92,5 @@
         private Button buttonSave;
         private Button buttonSaveExit;
         private TextBox textBox1;
-        private Controls.PeriodControl.PeriodComponent period1;
-        private Controls.PeriodControl.PeriodComponent periodComponent1;
     }
 }

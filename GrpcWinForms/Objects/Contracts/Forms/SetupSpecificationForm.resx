@@ -120,10 +120,10 @@
   <metadata name="toolStripLines.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="smartGrid.ColumnInfo" xml:space="preserve">
-    <value>4,1,0,0,0,-1,Columns:0{Width:30;}	1{Width:50;MinWidth:50;MaxWidth:50;Name:"Order";Caption:"Номер";Style:"DataType:System.Int16;TextAlign:GeneralCenter;";}	2{Width:118;StarWidth:"*";Name:"Name";Caption:"Наименование";}	3{Width:236;StarWidth:"2*";Name:"Comment";Caption:"Комментарий";}	</value>
+  <data name="smartGrid1.ColumnInfo" xml:space="preserve">
+    <value>4,1,0,0,0,-1,Columns:0{AllowMerging:True;}	1{Width:70;Name:"Order";Caption:"Порядок";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	2{Width:110;StarWidth:"*";Name:"Name";Caption:"Наименование";AllowMerging:True;}	3{Width:218;StarWidth:"2*";Name:"Name";Caption:"Комментарий";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";}	</value>
   </data>
-  <data name="smartGrid.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
+  <data name="smartGrid1.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAEAQAAAH5TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW1N5
         c3RlbS5JbnQzMiwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJs
@@ -131,7 +131,7 @@
         CAkCAAAAAAAAAAAAAAAPAgAAAAAAAAAICw==
 </value>
   </data>
-  <data name="smartGrid.StyleInfo" xml:space="preserve">
-    <value>Normal{Margins:1, 1, 1, 1;}	Alternate{}	Fixed{BackColor:Control;ForeColor:ControlText;BackgroundImageLayout:Hide;}	Highlight{BackColor:Info;ForeColor:HighlightText;SearchBackColor:Orange;}	Focus{BackColor:Info;}	Editor{}	Search{BackColor:Highlight;ForeColor:HighlightText;}	Frozen{BackColor:Beige;}	FrozenAlternate{}	NewRow{ForeColor:GrayText;}	EmptyArea{BackColor:AppWorkspace;Border:None,1,Black,Both;}	SelectedColumnHeader{}	SelectedRowHeader{}	GrandTotal{BackColor:Black;ForeColor:White;}	Subtotal0{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal1{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal2{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal3{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal4{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal5{BackColor:ControlDarkDark;ForeColor:White;}	FilterEditor{}	Footer{BackColor:Window;ForeColor:ControlText;BackgroundImageLayout:Hide;}	FirstCustomStyle{}	Selected{ForeColor:Red;Margins:1, 1, 1, 1;}	</value>
+  <data name="smartGrid1.StyleInfo" xml:space="preserve">
+    <value>Normal{}	Alternate{}	Hover{}	Fixed{BackColor:Control;ForeColor:ControlText;TextAlign:CenterCenter;Border:Flat,1,ControlDark,Both;BorderHorz:1,Black;BorderVert:1,Black;BackgroundImageLayout:Hide;}	Highlight{BackColor:Info;ForeColor:ControlText;SearchBackColor:Orange;}	Focus{BackColor:Info;ForeColor:ControlText;}	Editor{}	Search{BackColor:Highlight;ForeColor:HighlightText;}	Frozen{BackColor:Beige;}	FrozenAlternate{}	NewRow{ForeColor:GrayText;}	EmptyArea{BackColor:AppWorkspace;Border:None,1,Black,Both;BorderHorz:1,Black;BorderVert:1,Black;}	SelectedColumnHeader{}	SelectedRowHeader{}	GrandTotal{BackColor:Black;ForeColor:White;}	Subtotal0{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal1{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal2{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal3{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal4{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal5{BackColor:ControlDarkDark;ForeColor:White;}	FilterEditor{}	Footer{BackColor:Window;ForeColor:ControlText;Border:Flat,1,ControlDark,Both;BorderHorz:1,Black;BorderVert:1,Black;BackgroundImageLayout:Hide;}	FirstCustomStyle{}	</value>
   </data>
 </root>

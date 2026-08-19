@@ -53,7 +53,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void SetupSpecificationForm_Load(object sender, EventArgs e)
         {
-            smartGrid.DataSource = Fill(StringJson);
+            smartGrid1.DataSource = Fill(StringJson);
         }
 
         private void buttonOk_Click(object sender, EventArgs e)
@@ -71,5 +71,5 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         }
     }
 
-    
+
 }

@@ -30,6 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SetupSpecificationForm));
+            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             panel1 = new Panel();
             buttonCancel = new Button();
             buttonOk = new Button();
@@ -40,10 +42,10 @@
             toolStripButtonDelete = new ToolStripButton();
             toolStripButtonRefresh = new ToolStripButton();
             toolStripSeparator2 = new ToolStripSeparator();
-            smartGrid = new SmartGrid.SmartGrid();
+            smartGrid1 = new SmartLib.SmartGrid(components);
             panel1.SuspendLayout();
             toolStripLines.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -138,33 +140,38 @@
             toolStripSeparator2.Name = "toolStripSeparator2";
             toolStripSeparator2.Size = new Size(6, 31);
             // 
-            // smartGrid
+            // smartGrid1
             // 
-            smartGrid.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
-            smartGrid.AllowNodeMove = false;
-            smartGrid.AutoGenerateColumns = false;
-            smartGrid.ColumnInfo = resources.GetString("smartGrid.ColumnInfo");
-            smartGrid.Dock = DockStyle.Fill;
-            smartGrid.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            smartGrid.Headers = null;
-            smartGrid.IdName = null;
-            smartGrid.IsEditing = false;
-            smartGrid.Location = new Point(0, 31);
-            smartGrid.Name = "smartGrid";
-            smartGrid.Rows.Count = 10;
-            smartGrid.SelectedRows = (List<int>)resources.GetObject("smartGrid.SelectedRows");
-            smartGrid.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid.Size = new Size(453, 152);
-            smartGrid.SortingType = SmartGrid.SortingType.Descending;
-            smartGrid.StyleInfo = resources.GetString("smartGrid.StyleInfo");
-            smartGrid.TabIndex = 7;
+            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowNodeMove = false;
+            smartGrid1.AutoGenerateColumns = false;
+            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
+            smartGrid1.Dock = DockStyle.Fill;
+            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 2;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            smartGrid1.Footers.Descriptions.Add(footerDescription1);
+            smartGrid1.Footers.Fixed = true;
+            smartGrid1.IdName = null;
+            smartGrid1.Location = new Point(0, 31);
+            smartGrid1.Name = "smartGrid1";
+            smartGrid1.Rows.Count = 51;
+            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
+            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGrid1.Size = new Size(453, 152);
+            smartGrid1.SortingType = SmartLib.SortingType.Descending;
+            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
+            smartGrid1.TabIndex = 8;
             // 
             // SetupSpecificationForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(453, 213);
-            Controls.Add(smartGrid);
+            Controls.Add(smartGrid1);
             Controls.Add(toolStripLines);
             Controls.Add(panel1);
             Name = "SetupSpecificationForm";
@@ -173,7 +180,7 @@
             panel1.ResumeLayout(false);
             toolStripLines.ResumeLayout(false);
             toolStripLines.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -190,6 +197,6 @@
         private ToolStripButton toolStripButtonDelete;
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator2;
-        private SmartGrid.SmartGrid smartGrid;
+        private SmartLib.SmartGrid smartGrid1;
     }
 }

@@ -32,50 +32,49 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HistoryContractControl));
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
-            smartGridHistory = new SmartGrid.SmartGrid();
-            ((System.ComponentModel.ISupportInitialize)smartGridHistory).BeginInit();
+            smartGridHistory1 = new SmartLib.SmartGrid(components);
+            ((System.ComponentModel.ISupportInitialize)smartGridHistory1).BeginInit();
             SuspendLayout();
             // 
-            // smartGridHistory
+            // smartGridHistory1
             // 
-            smartGridHistory.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.None;
-            smartGridHistory.AllowNodeMove = false;
-            smartGridHistory.AutoGenerateColumns = false;
-            smartGridHistory.ColumnInfo = resources.GetString("smartGridHistory.ColumnInfo");
-            smartGridHistory.Dock = DockStyle.Fill;
-            smartGridHistory.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smartGridHistory1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridHistory1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridHistory1.AllowNodeMove = false;
+            smartGridHistory1.AutoGenerateColumns = false;
+            smartGridHistory1.ColumnInfo = resources.GetString("smartGridHistory1.ColumnInfo");
+            smartGridHistory1.Dock = DockStyle.Fill;
+            smartGridHistory1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 1;
+            aggregateDefinition1.Column = 4;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGridHistory.Footers.Descriptions.Add(footerDescription1);
-            smartGridHistory.Footers.Fixed = true;
-            smartGridHistory.Headers = null;
-            smartGridHistory.IdName = null;
-            smartGridHistory.IsEditing = false;
-            smartGridHistory.Location = new Point(0, 0);
-            smartGridHistory.Name = "smartGridHistory";
-            smartGridHistory.Rows.Count = 3;
-            smartGridHistory.SelectedRows = (List<int>)resources.GetObject("smartGridHistory.SelectedRows");
-            smartGridHistory.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridHistory.Size = new Size(835, 184);
-            smartGridHistory.SortingType = SmartGrid.SortingType.Descending;
-            smartGridHistory.StyleInfo = resources.GetString("smartGridHistory.StyleInfo");
-            smartGridHistory.TabIndex = 0;
+            smartGridHistory1.Footers.Descriptions.Add(footerDescription1);
+            smartGridHistory1.Footers.Fixed = true;
+            smartGridHistory1.IdName = null;
+            smartGridHistory1.Location = new Point(0, 0);
+            smartGridHistory1.Name = "smartGridHistory1";
+            smartGridHistory1.Rows.Count = 51;
+            smartGridHistory1.SelectedRows = (List<int>)resources.GetObject("smartGridHistory1.SelectedRows");
+            smartGridHistory1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGridHistory1.Size = new Size(835, 184);
+            smartGridHistory1.SortingType = SmartLib.SortingType.Descending;
+            smartGridHistory1.StyleInfo = resources.GetString("smartGridHistory1.StyleInfo");
+            smartGridHistory1.TabIndex = 1;
             // 
             // HistoryContractControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(smartGridHistory);
+            Controls.Add(smartGridHistory1);
             Name = "HistoryContractControl";
             Size = new Size(835, 184);
-            ((System.ComponentModel.ISupportInitialize)smartGridHistory).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartGridHistory1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        public SmartGrid.SmartGrid smartGridHistory;
+        public SmartLib.SmartGrid smartGridHistory1;
     }
 }

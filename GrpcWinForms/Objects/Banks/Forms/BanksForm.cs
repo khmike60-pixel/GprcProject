@@ -40,7 +40,7 @@ namespace GrpcWinForms.Objects.Banks.Forms
 
             banks = new BindingList<Bank>(response.Banks);
 
-            smartGrid.DataSource = banks;
+            smartGrid1.DataSource = banks;
         }
 
         private void BanksForm_Load(object sender, EventArgs e)
@@ -70,9 +70,9 @@ namespace GrpcWinForms.Objects.Banks.Forms
                         }
                         else
                         {
-                            int rowsel = smartGrid.RowSel;
-                            banks.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Bank);
-                            smartGrid.Row = rowsel;
+                            int rowsel = smartGrid1.RowSel;
+                            banks.Insert(smartGrid1.RowSel - smartGrid1.Rows.Fixed, response.Bank);
+                            smartGrid1.Row = rowsel;
                         }
                     }
                 }
@@ -86,7 +86,7 @@ namespace GrpcWinForms.Objects.Banks.Forms
         private async void toolStripButtonDouble_Click(object sender, EventArgs e)
         {
             Bank bank = new Bank();
-            bank = smartGrid.Rows[smartGrid.Row].DataSource as Bank;
+            bank = smartGrid1.Rows[smartGrid1.Row].DataSource as Bank;
             CreateBankRequest request = new CreateBankRequest()
             {
                 Bank = bank
@@ -104,9 +104,9 @@ namespace GrpcWinForms.Objects.Banks.Forms
             }
             else
             {
-                int rowsel = smartGrid.RowSel;
-                banks.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Bank);
-                smartGrid.Row = rowsel;
+                int rowsel = smartGrid1.RowSel;
+                banks.Insert(smartGrid1.RowSel - smartGrid1.Rows.Fixed, response.Bank);
+                smartGrid1.Row = rowsel;
             }
         }
 
@@ -114,7 +114,7 @@ namespace GrpcWinForms.Objects.Banks.Forms
         {
             using (var form = new BankForm())
             {
-                form.Bank = banks[smartGrid.RowSel - smartGrid.Rows.Fixed];
+                form.Bank = banks[smartGrid1.RowSel - smartGrid1.Rows.Fixed];
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -132,8 +132,8 @@ namespace GrpcWinForms.Objects.Banks.Forms
                     }
                     else
                     {
-                        int rowsel = smartGrid.RowSel;
-                        banks[rowsel - smartGrid.Rows.Fixed] = response.Bank;
+                        int rowsel = smartGrid1.RowSel;
+                        banks[rowsel - smartGrid1.Rows.Fixed] = response.Bank;
                     }
 
                 }
@@ -145,23 +145,23 @@ namespace GrpcWinForms.Objects.Banks.Forms
             List<int> ids = new List<int>();
             List<int> oldList = new List<int>();
             List<int> newMarked = new List<int>();
-            if (smartGrid.SelectedRows.Count == 0)
+            if (smartGrid1.SelectedRows.Count == 0)
             { // Удаляется одна запись
                 DialogResult result = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
                 if (result == DialogResult.OK)
                 {
                     DeleteBankRequest request = new DeleteBankRequest()
                     {
-                        Id = (int)smartGrid.Rows[smartGrid.RowSel]["Id"]
+                        Id = (int)smartGrid1.Rows[smartGrid1.RowSel]["Id"]
                     };
                     DeleteBankResponse response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Bank.DeleteBankAsync(request).ResponseAsync);
-                    int i = smartGrid.RowSel - smartGrid.Rows.Fixed;
+                    int i = smartGrid1.RowSel - smartGrid1.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
                     {
-                        smartGrid.BeginUpdate();
+                        smartGrid1.BeginUpdate();
                         banks.RemoveAt(i);
-                        smartGrid.EndUpdate();
+                        smartGrid1.EndUpdate();
                     }
                     else
                         MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
@@ -170,15 +170,15 @@ namespace GrpcWinForms.Objects.Banks.Forms
             else
             { // Был режим выделения
 
-                DialogResult result = MessageBox.Show($"Вы отметили {smartGrid.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
+                DialogResult result = MessageBox.Show($"Вы отметили {smartGrid1.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
 
                 if (result == DialogResult.OK)
                 {
 
-                    oldList.AddRange(smartGrid.SelectedRows);
-                    newMarked.AddRange(smartGrid.SelectedRows);
+                    oldList.AddRange(smartGrid1.SelectedRows);
+                    newMarked.AddRange(smartGrid1.SelectedRows);
 
-                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid.Rows[index]["Id"]));
+                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid1.Rows[index]["Id"]));
 
                     DeleteIdsBankRequest request = new DeleteIdsBankRequest();
                     request.Ids.AddRange(ids);
@@ -190,10 +190,10 @@ namespace GrpcWinForms.Objects.Banks.Forms
                     List<int> undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
 
-                    smartGrid.BeginUpdate();
-                    List<int> testList = Utils.UndeleteList<Bank>((C1FlexGrid)smartGrid, banks, undelIds, smartGrid.SelectedRows, "Id");
-                    smartGrid.SelectedRows = testList;
-                    smartGrid.EndUpdate();
+                    smartGrid1.BeginUpdate();
+                    List<int> testList = Utils.UndeleteList<Bank>((C1FlexGrid)smartGrid1, banks, undelIds, smartGrid1.SelectedRows, "Id");
+                    smartGrid1.SelectedRows = testList;
+                    smartGrid1.EndUpdate();
 
                     if (response.Result.Status != Status.Ok)
                         MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
@@ -211,10 +211,10 @@ namespace GrpcWinForms.Objects.Banks.Forms
 
         private void smartGrid_GetUnboundValue(object sender, UnboundValueEventArgs e)
         {
-            Bank _bank = smartGrid.Rows[e.Row].DataSource as Bank;
-            if (e.Row < smartGrid.Rows.Fixed || e.Row >= smartGrid.Rows.Count || _bank == null)
+            Bank _bank = smartGrid1.Rows[e.Row].DataSource as Bank;
+            if (e.Row < smartGrid1.Rows.Fixed || e.Row >= smartGrid1.Rows.Count || _bank == null)
                 return;
-            switch (smartGrid.Cols[e.Col].Name)
+            switch (smartGrid1.Cols[e.Col].Name)
             {
                 case "colCode2":
                     e.Value = _bank.Geolocation.Code2;

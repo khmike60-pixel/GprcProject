@@ -41,7 +41,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
         {
             InitializeComponent();
 
-            //smartGridLines.Headers = new string[]
+            //smartGridLines1.Headers = new string[]
             //{
             //    "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
             //    "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t(%)\tСумма\tСумма с НДС",
@@ -101,7 +101,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                     DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, firstName);
                     propertiesControl1.SetTreeNodes(nodes);
                 }
-                smartGridLines.DataSource = contract.Lines;
+                smartGridLines1.DataSource = contract.Lines;
             }
             catch
             {
@@ -113,8 +113,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 
         private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            Line line = (Line)smartGridLines.Rows[e.Row].DataSource;
-            switch (smartGridLines.Cols[e.Col].Name)
+            Line line = (Line)smartGridLines1.Rows[e.Row].DataSource;
+            switch (smartGridLines1.Cols[e.Col].Name)
             {
                 case "colUnitShort":
                     {
@@ -156,8 +156,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 
         private void smartGridHistory_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            Contract _contract = (Contract)historyContractControl.smartGridHistory.Rows[e.Row].DataSource;
-            switch (historyContractControl.smartGridHistory.Cols[e.Col].Name)
+            Contract _contract = (Contract)historyContractControl.smartGridHistory1.Rows[e.Row].DataSource;
+            switch (historyContractControl.smartGridHistory1.Cols[e.Col].Name)
             {
                 case "colDate":
                     {
@@ -238,7 +238,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 
                 // Обновление данных контракта на основе данных из propertiesControl1
 
-                // Обновление данных контракта на основе данных из smartGridLines
+                // Обновление данных контракта на основе данных из smartGridLines1
 
                 // Обновление данных контракта на основе данных из managerControl
                 //contract.Manager = managerControl1.SelectedManager; // Получаем выбранного менеджера из managerControl
