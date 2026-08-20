@@ -139,7 +139,7 @@ public class ContractRepository
                 with cnt as (
                     SELECT c.*
                     FROM cwatis.contracts c
-                    where c.contract_PreviousId is null
+                    -- where c.contract_PreviousId is null
                 )
                 SELECT 
                     cnt.*,
@@ -151,7 +151,7 @@ public class ContractRepository
                     LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = cnt.currencyId
                 where 
                     1 = 1
-                    and cnt.contract_Date >= @startdate and cnt.contract_Date <= @enddate
+                    -- and cnt.contract_Date >= @startdate and cnt.contract_Date <= @enddate
                 order by cnt.contract_date desc;
             ";
 

@@ -28,10 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestLookup));
+            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             buttonCancel = new Button();
             buttonSave = new Button();
             buttonSaveExit = new Button();
-            textBox1 = new TextBox();
+            smartGrid1 = new SmartLib.SmartGrid(components);
+            periodBox1 = new SmartLib.PeriodBox(components);
+            lPeriod = new Label();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)periodBox1).BeginInit();
             SuspendLayout();
             // 
             // buttonCancel
@@ -65,24 +73,61 @@
             buttonSaveExit.UseVisualStyleBackColor = true;
             buttonSaveExit.Click += buttonSaveExit_Click;
             // 
-            // textBox1
+            // smartGrid1
             // 
-            textBox1.Location = new Point(102, 42);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(100, 23);
-            textBox1.TabIndex = 1;
+            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowNodeMove = false;
+            smartGrid1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
+            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            smartGrid1.Footers.Descriptions.Add(footerDescription1);
+            smartGrid1.Footers.Fixed = true;
+            smartGrid1.IdName = null;
+            smartGrid1.Location = new Point(12, 64);
+            smartGrid1.Name = "smartGrid1";
+            smartGrid1.Rows.Count = 51;
+            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
+            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGrid1.Size = new Size(859, 329);
+            smartGrid1.SortingType = SmartLib.SortingType.Descending;
+            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
+            smartGrid1.TabIndex = 24;
+            smartGrid1.Tree.Column = 1;
+            // 
+            // periodBox1
+            // 
+            periodBox1.Location = new Point(75, 8);
+            periodBox1.Name = "periodBox1";
+            periodBox1.Period.From = new DateTime(2026, 5, 21, 20, 4, 21, 950);
+            periodBox1.Period.To = new DateTime(2026, 8, 19, 20, 4, 21, 950);
+            // 
+            // lPeriod
+            // 
+            lPeriod.AutoSize = true;
+            lPeriod.Location = new Point(17, 12);
+            lPeriod.Name = "lPeriod";
+            lPeriod.Size = new Size(52, 15);
+            lPeriod.TabIndex = 26;
+            lPeriod.Text = "Период:";
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(627, 450);
-            Controls.Add(textBox1);
+            ClientSize = new Size(883, 450);
+            Controls.Add(lPeriod);
+            Controls.Add(periodBox1);
+            Controls.Add(smartGrid1);
             Controls.Add(buttonSaveExit);
             Controls.Add(buttonSave);
             Controls.Add(buttonCancel);
             Name = "TestLookup";
             Text = "TestLoolkup";
+            Load += TestLookup_Load;
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)periodBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -91,6 +136,8 @@
         private Button buttonCancel;
         private Button buttonSave;
         private Button buttonSaveExit;
-        private TextBox textBox1;
+        private SmartLib.SmartGrid smartGrid1;
+        private SmartLib.PeriodBox periodBox1;
+        private Label lPeriod;
     }
 }
