@@ -170,7 +170,7 @@ where
     and c.contract_Date >= @startdate and c.contract_Date <= @enddate
     and c.contract_RootId is not null
 
-order by RootId, Date desc;
+order by RootId, Date desc; 
             ";
 
             cmd.Parameters.AddWithValue("@startdate", dateStart);

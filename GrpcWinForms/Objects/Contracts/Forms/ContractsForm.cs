@@ -434,7 +434,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 if (node.Nodes != null && node.Nodes.Length > 0)
                 {
                     // Вставляем данные самого нода в начало списка детей
-                    Node new_node = node.AddNode(NodeTypeEnum.FirstChild, node.Data.ToString() + " (первичный)");
+                    Node new_node = node.AddNode(NodeTypeEnum.FirstChild, node.Data.ToString() + " (первичный) ");
                     new_node.Key = node.Key;
 
                     // Рекурсивно обрабатываем детей (начиная со 2-го элемента, чтобы пропустить копию)

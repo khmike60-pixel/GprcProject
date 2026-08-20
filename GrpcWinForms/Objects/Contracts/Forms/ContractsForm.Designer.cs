@@ -39,8 +39,6 @@
             SmartLib.StringItem stringItem2 = new SmartLib.StringItem();
             C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition5 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition6 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition7 = new C1.Win.FlexGrid.AggregateDefinition();
             SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
             SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
             panel1 = new Panel();
@@ -296,13 +294,7 @@
             aggregateDefinition5.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition5.Caption = "Всего: ";
             aggregateDefinition5.Column = 3;
-            aggregateDefinition6.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
-            aggregateDefinition6.Column = 9;
-            aggregateDefinition7.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
-            aggregateDefinition7.Column = 10;
             footerDescription2.Aggregates.Add(aggregateDefinition5);
-            footerDescription2.Aggregates.Add(aggregateDefinition6);
-            footerDescription2.Aggregates.Add(aggregateDefinition7);
             smartGridContracts1.Footers.Descriptions.Add(footerDescription2);
             smartGridContracts1.Footers.Fixed = true;
             stringItem3.Name = "Заголовок 1";
