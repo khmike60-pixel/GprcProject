@@ -129,6 +129,7 @@ public class ContractRepository
             Contragent seller  = request.Seller;
             int stateFrom      = request.StateFrom;
             int stateTo        = request.StateTo;
+            bool withAdd       = request.WithAdd;
 
 
             List<Contract> contracts = new List<Contract>();
@@ -136,27 +137,45 @@ public class ContractRepository
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-                with cnt as (
-                    SELECT c.*
-                    FROM cwatis.contracts c
-                    where c.contract_PreviousId is null
-                )
-                SELECT 
-                    cnt.*,
-                    c.DocumentType_Name as DocumentType_Name, c.DocumentType_Code as DocumentType_Code,
-                    c.DocumentType_Form as DocumentType_Form,
-                    cu.Abbrev as Abbrev
-                from cnt
-                    left join cwatis.documenttypes c on c.DocumentType_Id = cnt.DocumentType_Id
-                    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = cnt.currencyId
-                where 
-                    1 = 1
-                    and cnt.contract_Date >= @startdate and cnt.contract_Date <= @enddate
-                order by cnt.contract_date desc;
+SELECT 
+    t.DocumentType_Name as DocumentType_Name, t.DocumentType_Code as DocumentType_Code,
+    t.DocumentType_Form as DocumentType_Form,
+    c.contract_Date as Date,
+    c.contract_id,
+    c.contract_RootId as RootId,
+    cu.Abbrev as Abbrev,
+    c.*
+from cwatis.contracts c
+    left join cwatis.documenttypes t on t.DocumentType_Id = c.DocumentType_Id
+    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+where 
+    1 = 1
+    and c.contract_Date >= @startdate and c.contract_Date <= @enddate
+    and c.contract_RootId is null
+
+union all
+
+select 
+    'Допсоглашение' as DocumentType_Name, '' as DocumentType_Code,
+    '' as DocumentType_Form,
+    c.contract_Date as Date,
+    c.contract_id,
+    c.contract_RootId as RootId,
+    '' as Abbrev,
+    c.*
+from cwatis.contracts c
+where 
+    1 = 1
+    and ifnull(@withAdd,false)
+    and c.contract_Date >= @startdate and c.contract_Date <= @enddate
+    and c.contract_RootId is not null
+
+order by RootId, Date desc;
             ";
 
-            cmd.Parameters.AddWithValue("startdate", dateStart);
-            cmd.Parameters.AddWithValue("enddate", dateEnd);
+            cmd.Parameters.AddWithValue("@startdate", dateStart);
+            cmd.Parameters.AddWithValue("@enddate", dateEnd);
+            cmd.Parameters.AddWithValue("@withAdd", withAdd);
 
             using var rdr = await cmd.ExecuteReaderAsync();
 

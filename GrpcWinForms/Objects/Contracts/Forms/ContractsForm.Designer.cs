@@ -308,7 +308,7 @@
             stringItem3.Name = "Заголовок 1";
             stringItem3.Value = "...;Id;Контракт;Контракт;Контракт;Контракт;Контрагенты;Контрагенты;Тип;Операции;Операции;Действует до";
             stringItem4.Name = "Заголовок 2";
-            stringItem4.Value = "...;Id;Дата;Номер;Сумма;Сумма;Покупатель;Продавец;Тип;Оплачено;Отгружено;Действует до";
+            stringItem4.Value = "...;Id;Номер;Дата;Сумма;Сумма;Покупатель;Продавец;Тип;Оплачено;Отгружено;Действует до";
             smartGridContracts1.Headers.Add(stringItem3);
             smartGridContracts1.Headers.Add(stringItem4);
             smartGridContracts1.IdName = null;

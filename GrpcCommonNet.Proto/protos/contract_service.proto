@@ -106,6 +106,8 @@ message ListContractsRequest {
 	int32 page_size = 10;                     // размер страницы. Если 0 илине указан, то без пагинации
 	string page_token = 11;                  // номер страницы. Если page_size = 0, то от параметр не используется
 
+	bool with_add = 12;						 // true - данные будут содержать контракта и допсоглашения, false - только контракты 
+
 }
 
 message ListContractsResponse {

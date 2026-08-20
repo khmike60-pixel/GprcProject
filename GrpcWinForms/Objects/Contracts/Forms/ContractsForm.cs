@@ -13,6 +13,7 @@ using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
+using SmartLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -73,15 +74,38 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
-                    Paths = { "id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data", "sum", "type_contract" }
+                    Paths = { "id", "root_id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data", "sum", "type_contract" }
                 };
                 // Вызов через обёртку, которая сама обрабатывает RpcException(Unathenticated) и повторную авторизацию
                 ListContractsResponse response = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.Contract.GetListContractsAsync(request).ResponseAsync
                 );
 
-                contracts = new BindingList<Contract>(response.Contracts);
-                smartGridContracts1.DataSource = contracts;
+                List<TreeContract> treeContracts = new List<TreeContract>();
+                foreach (Contract contract in response.Contracts)
+                {
+                    treeContracts.Add(new TreeContract()
+                    { 
+                        Id = contract.Id,
+                        ParentId = contract.RootId,
+                        Name = (contract.RootId > 0 ? "Допсоглашение" : "Контракт") + " " + contract.Number,
+                        Buyer = contract.Buyer,
+                        Seller = contract.Seller,
+                        Date = contract.Date.ToDateTime(),
+                        Number = contract.Number,
+                        Currency = contract.Currency,
+                        DateExpiried = contract.ExpirationDate == null ? null : contract.ExpirationDate.ToDateTime(),
+                        Paid = 0,
+                        Shipped = 0,
+                        Sum = MyConvert.ToDecimal(contract.Sum),
+                        Type = contract.TypeContract
+                    }
+                    );
+                }
+                smartGridContracts1.BuildTree(treeContracts, false);
+
+                ProcessNodes(smartGridContracts1.Nodes);
+
             }
             catch (Exception ex)
             {
@@ -176,11 +200,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 loaderLines.ShowLoader();
                 if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
                 {
-                    Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
+                    //Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
+                    var _id = smartGridContracts1.Rows[smartGridContracts1.Row].Node;
+                    //treeContract = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
 
                     ContractLineRequest request = new ContractLineRequest()
                     {
-                        Id = contract.Id
+                        Id = 0
                     };
                     ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
@@ -392,9 +418,37 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         #endregion
 
+        /// <summary>
+        /// Метод формирует Nodes[] с учетом допсоглашений
+        /// </summary>
+        /// <param name="nodes"></param>
+        public static void ProcessNodes(Node[] nodes)
+        {
+            if (nodes == null) return;
+
+            // Итерируем по копии списка, так как будем изменять его во время обхода
+            var originalNodes = new List<Node>(nodes);
+
+            foreach (var node in originalNodes)
+            {
+                if (node.Nodes != null && node.Nodes.Length > 0)
+                {
+                    // Вставляем данные самого нода в начало списка детей
+                    Node new_node = node.AddNode(NodeTypeEnum.FirstChild, node.Data.ToString() + " (первичный)");
+                    new_node.Key = node.Key;
+
+                    // Рекурсивно обрабатываем детей (начиная со 2-го элемента, чтобы пропустить копию)
+                    // Либо передаем весь список, но внутри метода копия отфильтруется, так как у нее нет детей
+                    ProcessNodes(node.Nodes);
+                }
+            }
+        }
+
+
         private void smartGridContracts1_GridChanged(object sender, C1.Win.FlexGrid.GridChangedEventArgs e)
         {
             
         }
     }
+
 }
