@@ -30,8 +30,6 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestLookup));
-            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             buttonCancel = new Button();
             buttonSave = new Button();
             buttonSaveExit = new Button();
@@ -81,13 +79,11 @@
             smartGrid1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
             smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid1.Footers.Descriptions.Add(footerDescription1);
             smartGrid1.Footers.Fixed = true;
             smartGrid1.IdName = null;
             smartGrid1.Location = new Point(12, 64);
             smartGrid1.Name = "smartGrid1";
-            smartGrid1.Rows.Count = 51;
+            smartGrid1.Rows.Fixed = 2;
             smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
             smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
             smartGrid1.Size = new Size(859, 329);
