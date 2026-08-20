@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using Line = GrpcCommonNet.Library.Contract.Line;
 
 namespace GrpcWinForms.Objects.Contracts.Forms
@@ -71,6 +72,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     request.Seller = new Contragent() { Id = companySeller.SelectedCompany.Id };
                 if (companyBuyer.SelectedItem.Id != 0)
                     request.Buyer = new Contragent() { Id = companyBuyer.SelectedCompany.Id };
+                request.WithAdd = true;
 
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
@@ -89,22 +91,26 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                         Id = contract.Id,
                         ParentId = contract.RootId,
                         Name = (contract.RootId > 0 ? "Допсоглашение" : "Контракт") + " " + contract.Number,
-                        Buyer = contract.Buyer,
-                        Seller = contract.Seller,
+                        Buyer =  contract.Buyer.Entity != null ? contract.Buyer.Entity.EntityName :
+                                 contract.Buyer.Person != null ? contract.Buyer.Person.PersonName : "",
+                        Seller = contract.Seller.Entity != null ? contract.Seller.Entity.EntityName : 
+                                 contract.Seller.Person != null ? contract.Seller.Person.PersonName : "",
                         Date = contract.Date.ToDateTime(),
                         Number = contract.Number,
-                        Currency = contract.Currency,
+                        Currency = contract.Currency.Abbrev,
                         DateExpiried = contract.ExpirationDate == null ? null : contract.ExpirationDate.ToDateTime(),
                         Paid = 0,
                         Shipped = 0,
                         Sum = MyConvert.ToDecimal(contract.Sum),
-                        Type = contract.TypeContract
+                        Type = contract.TypeContract.Name
                     }
                     );
                 }
                 smartGridContracts1.BuildTree(treeContracts, false);
 
                 ProcessNodes(smartGridContracts1.Nodes);
+                var x = smartGridContracts1.Nodes[3];
+                var y = smartGridContracts1.Nodes[3].Nodes[0];
 
             }
             catch (Exception ex)
@@ -141,21 +147,24 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         private void smartGridContracts_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
             Contract contract = (Contract)smartGridContracts1.Rows[e.Row].DataSource;
+            TreeContract treeContract = smartGridContracts1.Rows[e.Row].Node.Key as TreeContract;
+
+
             switch (smartGridContracts1.Cols[e.Col].Name)
             {
                 case "colSeller":
                     {
-                        e.Value = contract.Seller == null ? "" : contract.Seller.Name;
+                        e.Value = treeContract.Seller;
                         break;
                     }
                 case "colBuyer":
                     {
-                        e.Value = contract.Buyer == null ? "" : contract.Buyer.Name;
+                        e.Value = treeContract.Buyer;
                         break;
                     }
                 case "colAbbrev":
                     {
-                        e.Value = contract.Currency == null ? "" : contract.Currency.Abbrev;
+                        e.Value = treeContract.Currency;
                         break;
                     }
                 case "colDepartment":
@@ -165,17 +174,17 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     }
                 case "colSum":
                     {
-                        e.Value = contract.Sum == null || contract.Sum.Units == 0 ? "" : MyConvert.ToDecimal(contract.Sum);
+                        e.Value = treeContract.Sum;
                         break;
                     }
                 case "colDate":
                     {
-                        e.Value = contract.Date == null ? "" : contract.Date.ToDateTime();
+                        e.Value = treeContract.Date == null ? "" : treeContract.Date;
                         break;
                     }
                 case "colExpirationDate":
                     {
-                        e.Value = contract.ExpirationDate == null ? "" : contract.ExpirationDate.ToDateTime();
+                        e.Value = treeContract.DateExpiried == null ? "" : treeContract.DateExpiried;
                         break;
                     }
                 case "colType":
@@ -197,16 +206,19 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             BindingList<Line> lines = new BindingList<Line>();
             try
             {
+                if (smartGridContracts1.Row < smartGridContracts1.Rows.Fixed) return;
+                if (smartGridContracts1.Rows[smartGridContracts1.Row].Node == null) return;
                 loaderLines.ShowLoader();
                 if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
                 {
                     //Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
-                    var _id = smartGridContracts1.Rows[smartGridContracts1.Row].Node;
+                    TreeContract _obj = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
+                    
                     //treeContract = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
 
                     ContractLineRequest request = new ContractLineRequest()
                     {
-                        Id = 0
+                        Id = _obj.Id
                     };
                     ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
@@ -419,7 +431,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         #endregion
 
         /// <summary>
-        /// Метод формирует Nodes[] с учетом допсоглашений
+        /// Метод формирует Nodes[] с учетом первичного контракта и допсоглашений
         /// </summary>
         /// <param name="nodes"></param>
         public static void ProcessNodes(Node[] nodes)
@@ -434,8 +446,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 if (node.Nodes != null && node.Nodes.Length > 0)
                 {
                     // Вставляем данные самого нода в начало списка детей
-                    Node new_node = node.AddNode(NodeTypeEnum.FirstChild, node.Data.ToString() + " (первичный) ");
-                    new_node.Key = node.Key;
+                    node.AddNode(NodeTypeEnum.FirstChild, node.Data.ToString() + " (первичный) ", node.Key, null );
 
                     // Рекурсивно обрабатываем детей (начиная со 2-го элемента, чтобы пропустить копию)
                     // Либо передаем весь список, но внутри метода копия отфильтруется, так как у нее нет детей

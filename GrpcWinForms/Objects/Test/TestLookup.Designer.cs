@@ -60,7 +60,6 @@
             buttonSave.TabIndex = 22;
             buttonSave.Text = "Записать";
             buttonSave.UseVisualStyleBackColor = true;
-            buttonSave.Click += buttonSave_Click;
             // 
             // buttonSaveExit
             // 

@@ -8,6 +8,8 @@ using GrpcCommonNet.Library.Contragent;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Controls.PeriodControl;
+using GrpcWinForms.Objects.Contracts.Models;
+using SmartLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -95,16 +97,18 @@ namespace GrpcWinForms.Objects.Test
                     Id = contract.Id,
                     ParentId = contract.RootId,
                     Name = (contract.RootId > 0 ? "Допсоглашение" : "Контракт") + " " + contract.Number,
-                    Buyer = contract.Buyer,
-                    Seller = contract.Seller,
+                    Buyer = contract.Buyer.Entity != null ? contract.Buyer.Entity.EntityName :
+                            contract.Buyer.Person != null ? contract.Buyer.Person.PersonName : "",
+                    Seller = contract.Seller.Entity != null ? contract.Seller.Entity.EntityName :
+                             contract.Seller.Person != null ? contract.Seller.Person.PersonName : "",
                     Date = contract.Date.ToDateTime(),
                     Number = contract.Number,
-                    Currency = contract.Currency,
+                    Currency = contract.Currency.Abbrev,
                     DateExpiried = contract.ExpirationDate == null ? null : contract.ExpirationDate.ToDateTime(),
                     Paid = 0,
                     Shipped = 0,
                     Sum = MyConvert.ToDecimal(contract.Sum),
-                    Type = contract.TypeContract
+                    Type = contract.TypeContract.Name
                 }
                 );
             }
