@@ -8,9 +8,6 @@ using GrpcCommonNet.Library.Contragent;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Controls.PeriodControl;
-using GrpcWinForms.Models;
-using GrpcWinForms.Objects.Contracts.Models;
-using SmartLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -45,11 +42,6 @@ namespace GrpcWinForms.Objects.Test
         }
 
         private void buttonSaveExit_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void buttonSave_Click(object sender, EventArgs e)
         {
 
         }
