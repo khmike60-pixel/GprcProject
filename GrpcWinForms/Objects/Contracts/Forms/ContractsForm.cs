@@ -109,8 +109,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 smartGridContracts1.BuildTree(treeContracts, false);
 
                 ProcessNodes(smartGridContracts1.Nodes);
-                var x = smartGridContracts1.Nodes[3];
-                var y = smartGridContracts1.Nodes[3].Nodes[0];
 
             }
             catch (Exception ex)

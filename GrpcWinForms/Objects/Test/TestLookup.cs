@@ -48,7 +48,7 @@ namespace GrpcWinForms.Objects.Test
 
         }
 
-        public static void ProcessNodes(Node[] nodes)
+        public void ProcessNodes(Node[] nodes)
         {
             if (nodes == null) return;
 
@@ -59,8 +59,14 @@ namespace GrpcWinForms.Objects.Test
             {
                 if (node.Nodes != null && node.Nodes.Length > 0)
                 {
+
+
                     // Вставляем данные самого нода в начало списка детей
-                    Node new_node = node.AddNode(NodeTypeEnum.FirstChild, node.Data.ToString() + " (первичный)");
+                    TreeContract dataForNew;
+                    dataForNew = node.Key as TreeContract;
+                    dataForNew.Name = dataForNew.Name + " (первичный)";
+
+                    Node new_node = node.AddNode(NodeTypeEnum.FirstChild, dataForNew);
                     new_node.Key = node.Key;
 
                     // Рекурсивно обрабатываем детей (начиная со 2-го элемента, чтобы пропустить копию)
@@ -69,6 +75,8 @@ namespace GrpcWinForms.Objects.Test
                 }
             }
         }
+
+
 
         private async void TestLookup_Load(object sender, EventArgs e)
         {
@@ -116,21 +124,7 @@ namespace GrpcWinForms.Objects.Test
             smartGrid1.BuildTree(treeContracts, false); // Создается структура Nodes
             
             ProcessNodes(smartGrid1.Nodes);
-            
-            // smartGrid1.DataSource = treeContracts; 
         }
     }
-
-    public class ContractTree : ITreeData
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int ParentId { get; set; }
-        public string Number { get; set; }
-        public DateTime Date { get; set; }
-        public decimal Sum {  get; set; }
-        public Contragent Seller {  get; set; }
-        public Contragent Buyer {  get; set; }
-        public DocumentType Type {  get; set; }
-    }
+    
 }
