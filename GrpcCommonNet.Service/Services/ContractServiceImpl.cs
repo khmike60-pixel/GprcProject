@@ -183,5 +183,29 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
 
     }
 
+    public override async Task<TreeNodeResponse> GetTreeContracts(ListContractsRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetTreeContracts called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        try
+        {
+            var nodes = await _repo.GetTreeNodesAsync(request);
+            TreeNodeResponse response = new TreeNodeResponse();
+            if (nodes == null || nodes.Count == 0)
+            {
+                response.Result = new Result { Status = Status.NotFound };
+                return response;
+            }
+            response.NodeContracts.AddRange(nodes);
+            response.Result = new Result { Status = Status.Ok };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetTreeContracts: " + ex.Message);
+            throw;
+        }
+    }
+
     #endregion
 }

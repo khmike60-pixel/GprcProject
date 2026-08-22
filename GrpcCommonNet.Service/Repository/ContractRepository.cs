@@ -4,6 +4,7 @@ using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Proto.Utils;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI.Common;
+using System.Data;
 using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Reflection.Metadata;
@@ -83,7 +84,7 @@ public class ContractRepository
                 WHERE 1=1
                     and c.contract_id = {id};
                 SELECT
-                    l.contractline_id line_id, l.contractline_order line_order, 
+                    l.contractline_id line_id, l.contractline_order line_order, l.operation,
                     l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
                     l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, 
                     l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
@@ -123,13 +124,13 @@ public class ContractRepository
     {
         try
         {
-            DateTime dateStart = request.StartDate == null ? DateTime.MinValue: request.StartDate.ToDateTime().ToLocalTime();
-            DateTime dateEnd   = request.EndDate == null ? DateTime.MaxValue: request.EndDate.ToDateTime().ToLocalTime();
-            Contragent buyer   = request.Buyer;
-            Contragent seller  = request.Seller;
-            int stateFrom      = request.StateFrom;
-            int stateTo        = request.StateTo;
-            bool withAdd       = request.WithAdd;
+            DateTime dateStart = request.StartDate == null ? DateTime.MinValue : request.StartDate.ToDateTime().ToLocalTime();
+            DateTime dateEnd = request.EndDate == null ? DateTime.MaxValue : request.EndDate.ToDateTime().ToLocalTime();
+            Contragent buyer = request.Buyer;
+            Contragent seller = request.Seller;
+            int stateFrom = request.StateFrom;
+            int stateTo = request.StateTo;
+            bool withAdd = request.WithAdd;
 
 
             List<Contract> contracts = new List<Contract>();
@@ -137,41 +138,62 @@ public class ContractRepository
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-SELECT 
-    t.DocumentType_Name as DocumentType_Name, t.DocumentType_Code as DocumentType_Code,
-    t.DocumentType_Form as DocumentType_Form,
-    c.contract_Date as Date,
-    c.contract_id,
-    c.contract_RootId as RootId,
-    cu.Abbrev as Abbrev,
-    c.*
-from cwatis.contracts c
-    left join cwatis.documenttypes t on t.DocumentType_Id = c.DocumentType_Id
-    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
-where 
-    1 = 1
-    and c.contract_Date >= @startdate and c.contract_Date <= @enddate
-    and c.contract_RootId is null
+            WITH curr_contracts AS (
+                SELECT 
+                    c.contract_id,
+                    c.contract_rootid,
+                    c.contract_date,
+                    c.contract_number,
+                    c.DocumentType_Id,
+                    c.CurrencyId,
+                    c.sum,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY COALESCE(c.contract_rootid, c.contract_id) 
+                        ORDER BY c.contract_date DESC, c.contract_id
+                    ) AS rn
+                FROM cwatis.contracts c
+            )
+            select 
+                c.contract_id,
+                t.DocumentType_Name as DocumentType_Name,
+                t.DocumentType_Code as DocumentType_Code,
+                t.DocumentType_Form as DocumentType_Form,
+                c.contract_Date as Date,
+                curr.sum,
+                c.contract_RootId as RootId,
+                cu.Abbrev as Abbrev,
+                c.*	
+            from cwatis.contracts c  
+                right join curr_contracts curr on COALESCE(curr.contract_rootid, curr.contract_id) = c.contract_id
+                left join cwatis.documenttypes t on t.DocumentType_Id = c.DocumentType_Id
+                left join global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+            where 1 = 1 
+                and c.contract_Date >= @startdate and c.contract_Date <= @enddate
+                and curr.rn = 1
 
-union all
+            union
 
-select 
-    'Допсоглашение' as DocumentType_Name, '' as DocumentType_Code,
-    '' as DocumentType_Form,
-    c.contract_Date as Date,
-    c.contract_id,
-    c.contract_RootId as RootId,
-    '' as Abbrev,
-    c.*
-from cwatis.contracts c
-where 
-    1 = 1
-    and ifnull(@withAdd,false)
-    and c.contract_Date >= @startdate and c.contract_Date <= @enddate
-    and c.contract_RootId is not null
+            select 
+                c.contract_id,
+                t.DocumentType_Name as DocumentType_Name,
+                t.DocumentType_Code as DocumentType_Code,
+                t.DocumentType_Form as DocumentType_Form,
+                c.contract_Date as Date,
+                c.Sum,
+                c.contract_RootId as RootId,
+                cu.Abbrev as Abbrev,
+                c.*
+            from cwatis.contracts c
+                left join cwatis.documenttypes t on t.DocumentType_Id = c.DocumentType_Id
+                left join global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+            where 
+                1 = 1
+                and ifnull(@withAdd,false)
+                and c.contract_Date >= @startdate and c.contract_Date <= @enddate
+                and c.contract_RootId is not null
 
-order by RootId, Date desc; 
-            ";
+            order by RootId, Date desc;
+                        ";
 
             cmd.Parameters.AddWithValue("@startdate", dateStart);
             cmd.Parameters.AddWithValue("@enddate", dateEnd);
@@ -181,7 +203,7 @@ order by RootId, Date desc;
 
             while (await rdr.ReadAsync())
                 contracts.Add(FillContract(rdr));
-            
+
             return contracts;
         }
         catch (Exception ex)
@@ -201,21 +223,21 @@ order by RootId, Date desc;
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-                        SELECT 
-                            l.contractline_id line_id, l.contractline_order line_order, 
-                            l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
-                            l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, 
-                            l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
-                            1
-                        FROM cwatis.contractlines l 
-                            LEFT JOIN global_db.rfr_units u ON u.UnitId = l.UnitId
-                            LEFT JOIN global_db.rfr_goods_tree g ON g.MGoodGroupId = l.rfr_MGoodGroupId
-                        WHERE 1=1
-                            and l.contract_id = {request.Id} 
-                        ORDER BY contractline_order";
+                                    SELECT 
+                                        l.contractline_id line_id, l.contractline_order line_order, l.operation,
+                                        l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
+                                        l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, 
+                                        l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
+                                        1
+                                    FROM cwatis.contractlines l 
+                                        LEFT JOIN global_db.rfr_units u ON u.UnitId = l.UnitId
+                                        LEFT JOIN global_db.rfr_goods_tree g ON g.MGoodGroupId = l.rfr_MGoodGroupId
+                                    WHERE 1=1
+                                        and l.contract_id = {request.Id} 
+                                    ORDER BY contractline_order";
             using var rdr = await cmd.ExecuteReaderAsync();
 
-            while(await rdr.ReadAsync())
+            while (await rdr.ReadAsync())
                 lines.Add(FillLine(rdr));
 
             return lines;
@@ -235,19 +257,19 @@ order by RootId, Date desc;
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-                SELECT 
-                    c.* ,
-                    cu.Abbrev, t.DocumentType_Name, t.DocumentType_Code as DocumentType_Code,
-                    t.DocumentType_Form as DocumentType_Form
-                FROM cwatis.contracts c 
-                    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
-                    LEFT JOIN cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
-                WHERE 1=1
-                and (c.contract_RootId = {root_id} Or c.contract_id = {root_id})
-                ORDER BY c.contract_date ASC
-            ";
+                            SELECT 
+                                c.* ,
+                                cu.Abbrev, t.DocumentType_Name, t.DocumentType_Code as DocumentType_Code,
+                                t.DocumentType_Form as DocumentType_Form
+                            FROM cwatis.contracts c 
+                                LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+                                LEFT JOIN cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
+                            WHERE 1=1
+                            and (c.contract_RootId = {root_id} Or c.contract_id = {root_id})
+                            ORDER BY c.contract_date ASC
+                        ";
             using var rdr = await cmd.ExecuteReaderAsync();
-            
+
             List<Contract> contracts = new List<Contract>();
             while (await rdr.ReadAsync())
             {
@@ -275,26 +297,27 @@ order by RootId, Date desc;
                 await conn.OpenAsync();
                 using var cmd = conn.CreateCommand();
                 cmd.CommandText = @"
-                        UPDATE cwatis.contracts set 
-                            contract_RootId = @RootId, 
-                            contract_PreviousId = @PrevId, 
-                            contract_SellerId = @SellerId, contract_SellerName = @SellerName, contract_SellerSignId = @SellerSignId, contract_SellerBAccountId = @SellerBAcctId, 
-                            contract_BuyerId = @BuyerId, contract_BuyerName = @BuyerName, contract_BuyerSignId = @BuyerSignId, contract_BuyerBAccountId = @BuyerBAcctId, 
-                            contract_ShipperId = @ShipperId, contract_ShipperName = @ShipperName, 
-                            contract_ConsigneeId = @ConsigneeId, contract_ConsigneeName = @ConsigneeName,
-                            Initiator_Id = @InitId, Initiator_Name = @InitName, Executor_Id = @ExecId, Executor_Name = @ExecName, 
-                            contract_Date = @CDate, contract_ExpirationDate = @ExpDate,
-                            contract_Number = @CNumber, contract_Name = @CName, contract_DocName = @DocName, 
-                            CurrencyId = @CurrId, CurrencyPaymentId = @CurrPayId, 
-                            Sum = @Sum, Amount = @Amount, SumVat = @SumVat, IsVat = @IsVat, VatPrc = @VatPrc, 
-                            contract_State = @CState, contract_data = @CData, IsContract = @IsCont, IsOrder = @IsOrd, DocumentType_Id = @DocTypeId, 
-                            SDid = @SDid,
-                            ProjectTypes = @ProjTypes, TemplDoc_Id = @TemplDocId, Comment = @Comment, 
-                            create_at = @CreateAt, create_by = @CreateBy, create_userid = @CreateUid, 
-                            Contract_SignPlaceId = @SignPlaceId
-                        where contract_id = @Id;
-                        select * from cwatis.contracts where contract_id = @Id;
-                        ";
+                                    UPDATE cwatis.contracts set 
+                                        contract_RootId = @RootId, 
+                                        contract_PreviousId = @PrevId, 
+                                        contract_SellerId = @SellerId, contract_SellerName = @SellerName, contract_SellerSignId = @SellerSignId, contract_SellerBAccountId = @SellerBAcctId, 
+                                        contract_BuyerId = @BuyerId, contract_BuyerName = @BuyerName, contract_BuyerSignId = @BuyerSignId, contract_BuyerBAccountId = @BuyerBAcctId, 
+                                        contract_ShipperId = @ShipperId, contract_ShipperName = @ShipperName, 
+                                        contract_ConsigneeId = @ConsigneeId, contract_ConsigneeName = @ConsigneeName,
+                                        Initiator_Id = @InitId, Initiator_Name = @InitName, Executor_Id = @ExecId, Executor_Name = @ExecName, 
+                                        contract_Date = @CDate, contract_ExpirationDate = @ExpDate,
+                                        contract_Number = @CNumber, contract_Name = @CName, contract_DocName = @DocName, 
+                                        CurrencyId = @CurrId, CurrencyPaymentId = @CurrPayId, 
+                                        Sum = @Sum, Amount = @Amount, SumVat = @SumVat, IsVat = @IsVat, VatPrc = @VatPrc, 
+                                        contract_State = @CState, contract_data = @CData, IsContract = @IsCont, IsOrder = @IsOrd, DocumentType_Id = @DocTypeId, 
+                                        SDid = @SDid,
+                                        ProjectTypes = @ProjTypes, TemplDoc_Id = @TemplDocId, Comment = @Comment, 
+                                        create_at = @CreateAt, create_by = @CreateBy, create_userid = @CreateUid, 
+                                        Contract_SignPlaceId = @SignPlaceId
+                                    where contract_id = @Id;
+                                    select * from cwatis.contracts where contract_id = @Id;
+                                    ";
+
                 MySqlParameterCollection p = cmd.Parameters;
                 p.AddWithValue("@Id", contract.Id);
                 p.AddWithValue("@RootId", contract.RootId);
@@ -353,7 +376,7 @@ order by RootId, Date desc;
         {
             throw new Exception("Ошибка при обновлении контракта.", ex);
         }
-        return contract; 
+        return contract;
     }
 
     public async Task<Line> UpdateLineAsync(Line _line)
@@ -420,7 +443,46 @@ order by RootId, Date desc;
         {
             throw new Exception("Ошибка при обновлении строки контракта.", ex);
         }
-        return line; 
+        return line;
+    }
+
+    public async Task<List<NodeContract>> GetTreeNodesAsync(ListContractsRequest request)
+    {
+        try
+        {
+            DateTime dateStart = request.StartDate == null ? DateTime.MinValue : request.StartDate.ToDateTime().ToLocalTime();
+            DateTime dateEnd = request.EndDate == null ? DateTime.MaxValue : request.EndDate.ToDateTime().ToLocalTime();
+            Contragent buyer = request.Buyer;
+            Contragent seller = request.Seller;
+            int stateFrom = request.StateFrom;
+            int stateTo = request.StateTo;
+            bool withAdd = request.WithAdd;
+
+
+            List<NodeContract> nodes = new List<NodeContract>();
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using (MySqlCommand cmd = new MySqlCommand("cwatis.Contract_Tree_Get", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("_Start", dateStart);
+                cmd.Parameters.AddWithValue("_End", dateEnd);
+                cmd.Parameters.AddWithValue("_WithAgreement", withAdd);
+
+                using var rdr = await cmd.ExecuteReaderAsync();
+
+                while (await rdr.ReadAsync())
+                    nodes.Add(FillNodeContract(rdr));
+            }
+
+            return nodes;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetTreeNodesAsync: " + ex.Message);
+            throw;
+        }
     }
 
     #endregion
@@ -461,7 +523,7 @@ order by RootId, Date desc;
             Id = rdr["currencyId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["currencyId"]),
             Abbrev = rdr["Abbrev"] == DBNull.Value ? "" : rdr["Abbrev"].ToString() ?? ""
         };
-        contract.Sum = rdr["Sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0,2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Sum"]),2);
+        contract.Sum = rdr["Sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Sum"]), 2);
         contract.Amount = rdr["Amount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Amount"]), 2);
         contract.SumVat = rdr["SumVat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["SumVat"]), 2);
         contract.TypeContract = new DocumentType()
@@ -508,9 +570,26 @@ order by RootId, Date desc;
         line.VatPrc = rdr["line_vat_per"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_vat_per"]), 2);
         line.SumVat = rdr["line_sum_vat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_sum_vat"]), 2);
         line.Sum = rdr["line_sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_sum"]), 2);
+        line.Operation = rdr["operation"] == DBNull.Value ? "" : rdr["line_sum"].ToString();
 
 
         return line;
+    }
+
+    private NodeContract FillNodeContract(DbDataReader rdr)
+    {
+        NodeContract nodeContract = new NodeContract();
+
+        nodeContract.NodeId = rdr["node_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["node_id"]);
+        nodeContract.ParentNodeId = rdr["parent_node_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["parent_node_id"]);
+        nodeContract.TreeLevel = rdr["Tree_Level"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["Tree_Level"]);
+        nodeContract.NodeType = rdr["node_type"] == DBNull.Value ? "" : rdr["node_type"].ToString();
+
+        Contract contract = new Contract();
+        contract = FillContract(rdr);
+        nodeContract.Contract = contract;
+
+        return nodeContract;
     }
 
     private async Task<List<Contract>> Fill(DbDataReader rd, Dictionary<int, Contract> dict)

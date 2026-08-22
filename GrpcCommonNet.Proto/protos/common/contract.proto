@@ -63,6 +63,7 @@ message Line {
   int32 specification = 20;
   string added_from = 21;
   Metadata metadata = 22;
+  string operation = 23;
 
 }
 
@@ -120,3 +121,11 @@ message Contract {
   repeated Line lines = 32;
 }
 
+// Класс для построения дерева контрактов
+message NodeContract {
+	int32 node_id = 1;
+	int32 parent_node_id = 2;
+	int32 tree_level = 3;								// 0,						       0,		  1,			  2
+	string node_type = 4;								// contract_without_agreements, root, agreement, first_contract
+	Contract contract = 5;
+}

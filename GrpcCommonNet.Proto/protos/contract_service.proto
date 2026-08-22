@@ -21,6 +21,7 @@ service ContractServices {
   rpc DeleteContract(DeleteContractRequest) returns (DeleteContractResponse);             // Удалить контракт по id
   rpc DeleteIdsContract(DeleteIdsContractRequest) returns (UndeleteIdsContractResponse);        // Удалить контракты по массиву ids
   rpc GetContractFull(GetContractRequest) returns (ContractResponse);						// Получить полный контракт по id (одним запросом)
+  rpc GetTreeContracts(ListContractsRequest) returns (TreeNodeResponse);							// Получить дерево контрактов с допсоглашениями
 
 // Дополнительные специфические запросы по контрактам
   rpc GetContractIerarch(GetContractByRootRequest) returns (ContractIerarchResponse);                 // Выдает массив ids, по которому строиться "цепочка" контрактов-допсоглашений-заказов (сверху вниз) 
@@ -92,8 +93,8 @@ message ListContractsRequest {
 	google.protobuf.Timestamp end_date = 2;   // контракты до дата включительно (date -> Timestamp)
 	Common.Contragent seller = 3;                   // продавец
 	Common.Contragent buyer = 4;                    // покупатель
-	int32 State_from = 5;                    // Со статуса
-	int32 State_to = 6;                      // До статуса включительно
+	int32 state_from = 5;                    // Со статуса
+	int32 state_to = 6;                      // До статуса включительно
 
 	// Фильтр в виде json структуры, накладывающий фильтр на свойства модели.
 	// { "isOderd":true, "contract_Name": "%весы%", "or": ["sdID": 5, "sdID": 13] }
@@ -150,7 +151,10 @@ message UpdateContractLineRequest {
 
 message ContractLineRequest {
   int64 id = 1;
-  google.protobuf.FieldMask field_mask = 2;
+  // true - Признак указывает, что доставляться будут все строки
+  // false - Признак указывает, что доставляться будут только новые и измененные строки
+  bool all = 2;								
+  google.protobuf.FieldMask field_mask = 3;
 }
 
 message DeleteIdsContractLineRequest {
@@ -175,4 +179,9 @@ message ListContractLinesRequest {
 message ListContractLinesResponse {
   Common.Result result = 1;
   repeated Line lines  = 2;
+}
+
+message TreeNodeResponse {
+  Common.Result result = 1;
+  repeated NodeContract node_contracts = 2;
 }

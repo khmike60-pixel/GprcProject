@@ -59,18 +59,34 @@ namespace GrpcWinForms.Objects.Test
             {
                 if (node.Nodes != null && node.Nodes.Length > 0)
                 {
+                    // Вставляем в начало списка детей
+                    var newNode = node.AddNode(NodeTypeEnum.FirstChild, node.Data);
 
+                    // Попытка получить модель из родительского узла (Key хранит модель, использованную BuildTree)
+                    var model = node.Key;
+                    if (model != null)
+                    {
+                        // Устанавливаем модель в новый узел и заполняем значения колонок через свойства модели
+                        newNode.Key = model;
+                        var props = model.GetType().GetProperties();
+                        foreach (var prop in props)
+                        {
+                            try
+                            {
+                                // Проверяем существование колонки и записываем значение
+                                if (smartGrid1?.Cols != null && smartGrid1.Cols[prop.Name] != null)
+                                {
+                                    newNode.Row[prop.Name] = prop.GetValue(model);
+                                }
+                            }
+                            catch
+                            {
+                                // Игнорируем несопоставимые свойства
+                            }
+                        }
+                    }
 
-                    // Вставляем данные самого нода в начало списка детей
-                    TreeContract dataForNew;
-                    dataForNew = node.Key as TreeContract;
-                    dataForNew.Name = dataForNew.Name + " (первичный)";
-
-                    Node new_node = node.AddNode(NodeTypeEnum.FirstChild, dataForNew);
-                    new_node.Key = node.Key;
-
-                    // Рекурсивно обрабатываем детей (начиная со 2-го элемента, чтобы пропустить копию)
-                    // Либо передаем весь список, но внутри метода копия отфильтруется, так как у нее нет детей
+                    // Рекурсивно обрабатываем детей
                     ProcessNodes(node.Nodes);
                 }
             }

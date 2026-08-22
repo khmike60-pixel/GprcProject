@@ -42,6 +42,7 @@
             SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
             SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
             panel1 = new Panel();
+            chWithAdd = new CheckBox();
             period1 = new SmartLib.PeriodBox(components);
             labelBuyer = new Label();
             companySeller = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
@@ -84,6 +85,7 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(chWithAdd);
             panel1.Controls.Add(period1);
             panel1.Controls.Add(labelBuyer);
             panel1.Controls.Add(companySeller);
@@ -100,6 +102,17 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1085, 93);
             panel1.TabIndex = 5;
+            // 
+            // chWithAdd
+            // 
+            chWithAdd.AutoSize = true;
+            chWithAdd.CheckAlign = ContentAlignment.MiddleRight;
+            chWithAdd.Location = new Point(581, 9);
+            chWithAdd.Name = "chWithAdd";
+            chWithAdd.Size = new Size(207, 19);
+            chWithAdd.TabIndex = 20;
+            chWithAdd.Text = "Показывать с допсоглашениями";
+            chWithAdd.UseVisualStyleBackColor = true;
             // 
             // period1
             // 
@@ -461,5 +474,6 @@
         private SmartLib.SmartGrid smartGridContracts1;
         private SmartLib.SmartGrid smartGridLines1;
         private SmartLib.PeriodBox period1;
+        private CheckBox chWithAdd;
     }
 }

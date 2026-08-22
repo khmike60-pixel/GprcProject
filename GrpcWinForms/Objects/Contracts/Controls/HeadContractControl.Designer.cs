@@ -211,6 +211,7 @@
             // 
             // dateEditStart
             // 
+            dateEditStart.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             dateEditStart.ButtonsSettings.UpDownButton.Visible = false;
             dateEditStart.EmptyAsNull = true;
             dateEditStart.FormatType = C1.Win.Input.FormatType.ShortDate;
@@ -222,6 +223,7 @@
             // 
             // dateEditStop
             // 
+            dateEditStop.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             dateEditStop.ButtonsSettings.UpDownButton.Visible = false;
             dateEditStop.EmptyAsNull = true;
             dateEditStop.FormatType = C1.Win.Input.FormatType.ShortDate;

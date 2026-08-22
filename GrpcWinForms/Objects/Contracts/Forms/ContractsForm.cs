@@ -39,6 +39,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         public ContractsForm()
         {
             InitializeComponent();
+
+            // В конструкторе не выполняем runtime-логику при загрузке в дизайнере VS.
+            // DesignMode в конструкторе ненадёжен, используем LicenseManager.UsageMode.
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+                return;
+
+
             loaderContracts.Parent = smartGridContracts1;
             loaderLines.Parent = smartGridLines1;
 
@@ -72,43 +79,53 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     request.Seller = new Contragent() { Id = companySeller.SelectedCompany.Id };
                 if (companyBuyer.SelectedItem.Id != 0)
                     request.Buyer = new Contragent() { Id = companyBuyer.SelectedCompany.Id };
-                request.WithAdd = true;
+                request.WithAdd = chWithAdd.Checked;
 
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
-                    Paths = { "id", "root_id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data", "sum", "type_contract" }
+                    Paths = {  "node_id", "parent_node_id", "tree_level", "node_type",
+                        "contract.id", "contract.root_id", "contract.seller", "contract.buyer", "contract.number", "contract.date", "contract.expiration_date", "contract.currency", "contract.department", "contract.data", "contract.sum", "contract.type_contract" }
                 };
                 // Вызов через обёртку, которая сама обрабатывает RpcException(Unathenticated) и повторную авторизацию
-                ListContractsResponse response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Contract.GetListContractsAsync(request).ResponseAsync
+                 TreeNodeResponse response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Contract.GetTreeContractsAsync(request).ResponseAsync
                 );
 
                 List<TreeContract> treeContracts = new List<TreeContract>();
-                foreach (Contract contract in response.Contracts)
+                foreach (NodeContract node in response.NodeContracts)
                 {
                     treeContracts.Add(new TreeContract()
                     { 
-                        Id = contract.Id,
-                        ParentId = contract.RootId,
-                        Name = (contract.RootId > 0 ? "Допсоглашение" : "Контракт") + " " + contract.Number,
-                        Buyer =  contract.Buyer.Entity != null ? contract.Buyer.Entity.EntityName :
-                                 contract.Buyer.Person != null ? contract.Buyer.Person.PersonName : "",
-                        Seller = contract.Seller.Entity != null ? contract.Seller.Entity.EntityName : 
-                                 contract.Seller.Person != null ? contract.Seller.Person.PersonName : "",
-                        Date = contract.Date.ToDateTime(),
-                        Number = contract.Number,
-                        Currency = contract.Currency.Abbrev,
-                        DateExpiried = contract.ExpirationDate == null ? null : contract.ExpirationDate.ToDateTime(),
+                        Id = node.NodeId,
+                        ParentId = node.ParentNodeId,
+                        Name = (node.NodeType == "contract_without_agreements" ? "Контракт": // Контракт без ДС
+                                node.NodeType == "root" ? "Контракт" :                       // Корень контракта с ДС
+                                node.NodeType == "agreement" ? "Допсоглашение" :             // ДС
+                                node.NodeType == "first_contract" ? "Первичный контракт" : "Неизвестно")  // Певичный контракт
+                        + " " + node.Contract.Number,
+                        ContractId = node.Contract.Id,
+                        ContractDate = node.Contract.Date.ToDateTime(),
+                        Buyer =  node.Contract.Buyer.Name,
+                        Seller = node.Contract.Seller.Name,
+                        Date = node.Contract.Date.ToDateTime(),
+                        Number = node.Contract.Number,
+                        Currency = node.Contract.Currency.Abbrev,
+                        DateExpiried = node.Contract.ExpirationDate == null ? null : node.Contract.ExpirationDate.ToDateTime(),
                         Paid = 0,
                         Shipped = 0,
-                        Sum = MyConvert.ToDecimal(contract.Sum),
-                        Type = contract.TypeContract.Name
+                        Sum = MyConvert.ToDecimal(node.Contract.Sum),
+                        Type = node.Contract.TypeContract.Name,
+                        TypeId = node.Contract.TypeContract.Id,
+                        TypeCode = node.Contract.TypeContract.Code,
+                        TypeForm = node.Contract.TypeContract.Form 
                     }
                     );
                 }
                 smartGridContracts1.BuildTree(treeContracts, false);
-
-                ProcessNodes(smartGridContracts1.Nodes);
+                //if (chWithAdd.Checked) 
+                //    ProcessNodes(smartGridContracts1.Nodes);
+                smartGridContracts1.Row = 0;
+                smartGridContracts1.Row = smartGridContracts1.Rows.Fixed;
 
             }
             catch (Exception ex)
@@ -205,7 +222,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             try
             {
                 if (smartGridContracts1.Row < smartGridContracts1.Rows.Fixed) return;
-                if (smartGridContracts1.Rows[smartGridContracts1.Row].Node == null) return;
+                if (smartGridContracts1.Rows[smartGridContracts1.Row].Node == null)
+                {
+                    smartGridLines1.DataSource = new BindingList<Line>();
+                    return;
+                }
                 loaderLines.ShowLoader();
                 if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
                 {
@@ -216,7 +237,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
                     ContractLineRequest request = new ContractLineRequest()
                     {
-                        Id = _obj.Id
+                        Id = _obj.ContractId
                     };
                     ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
@@ -292,10 +313,15 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             HitTestInfo hit = smartGridContracts1.HitTest(pt);
 
             if (hit.Row + 1 > smartGridContracts1.Rows.Count - smartGridContracts1.Footers.Descriptions.Count) return;
-            if (hit.Row - 1 < smartGridContracts1.Rows.Fixed) return;
+            if (hit.Row < smartGridContracts1.Rows.Fixed) return;
 
-            var row = smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
-            Contract _contract = row as Contract;
+            TreeContract rowNode = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
+
+            Contract _contract = new Contract()
+            {
+                Id = rowNode.ContractId,
+                TypeContract = new DocumentType() { Id = rowNode.TypeId, Code = rowNode.TypeCode, Form = rowNode.TypeForm, Name = rowNode.Type }
+            };
             ViewContract(sender, _contract);
         }
 
@@ -306,10 +332,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             string fullTypeContract = $"{nameSpace}.{nameForm}";
             try
             {
-                int contractId = ((Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource).Id;
-                var contractType_Name = ((Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource).TypeContract?.Name;
-                var contractType_Code = ((Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource).TypeContract?.Code;
-                var contractType_Form = ((Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource).TypeContract?.Form;
+                int contractId = contract.Id;
+                var contractType_Name = contract.TypeContract?.Name;
+                var contractType_Code = contract.TypeContract?.Code;
+                var contractType_Form = contract.TypeContract?.Form;
                 fullTypeContract = $"{nameSpace}.{contractType_Form}";
                 string contractType = fullTypeContract;
 
@@ -432,7 +458,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         /// Метод формирует Nodes[] с учетом первичного контракта и допсоглашений
         /// </summary>
         /// <param name="nodes"></param>
-        public static void ProcessNodes(Node[] nodes)
+        public void ProcessNodes(Node[] nodes)
         {
             if (nodes == null) return;
 
@@ -443,11 +469,37 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 if (node.Nodes != null && node.Nodes.Length > 0)
                 {
-                    // Вставляем данные самого нода в начало списка детей
-                    node.AddNode(NodeTypeEnum.FirstChild, node.Data.ToString() + " (первичный) ", node.Key, null );
+                    // Вставляем в начало списка детей
+                    var newNode = node.AddNode(NodeTypeEnum.LastChild, node.Data);
 
-                    // Рекурсивно обрабатываем детей (начиная со 2-го элемента, чтобы пропустить копию)
-                    // Либо передаем весь список, но внутри метода копия отфильтруется, так как у нее нет детей
+                    // Попытка получить модель из родительского узла (Key хранит модель, использованную BuildTree)
+                    var model = node.Key;
+                    if (model != null)
+                    {
+                        // Устанавливаем модель в новый узел и заполняем значения колонок через свойства модели
+                        newNode.Key = model;
+                        var props = model.GetType().GetProperties();
+                        foreach (var prop in props)
+                        {
+                            try
+                            {
+                                // Проверяем существование колонки и записываем значение
+                                if (smartGridContracts1?.Cols != null && smartGridContracts1.Cols[prop.Name] != null)
+                                {
+                                    newNode.Row[prop.Name] = prop.GetValue(model);
+                                }
+                            }
+                            catch
+                            {
+                                // Игнорируем несопоставимые свойства
+                            }
+                        }
+                        newNode.Data += " (первичный контракт)";
+
+                    }
+
+
+                    // Рекурсивно обрабатываем детей
                     ProcessNodes(node.Nodes);
                 }
             }
