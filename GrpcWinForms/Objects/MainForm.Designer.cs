@@ -304,6 +304,7 @@ namespace GrpcWinForms.Forms
             // 
             ClientSize = new Size(1100, 364);
             Controls.Add(menuStrip1);
+            IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
             Name = "MainForm";
             Text = "Приложение  Bookkeep  (gRPCLocalHost)";

@@ -62,6 +62,8 @@
             smartGridHistory1.SortingType = SmartLib.SortingType.Descending;
             smartGridHistory1.StyleInfo = resources.GetString("smartGridHistory1.StyleInfo");
             smartGridHistory1.TabIndex = 1;
+            smartGridHistory1.GetUnboundValue += smartGridHistory1_GetUnboundValue;
+            smartGridHistory1.DoubleClick += smartGridHistory1_DoubleClick;
             // 
             // HistoryContractControl
             // 

@@ -107,6 +107,8 @@
             // 
             chWithAdd.AutoSize = true;
             chWithAdd.CheckAlign = ContentAlignment.MiddleRight;
+            chWithAdd.Checked = true;
+            chWithAdd.CheckState = CheckState.Checked;
             chWithAdd.Location = new Point(581, 9);
             chWithAdd.Name = "chWithAdd";
             chWithAdd.Size = new Size(207, 19);

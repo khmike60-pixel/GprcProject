@@ -122,8 +122,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     );
                 }
                 smartGridContracts1.BuildTree(treeContracts, false);
-                //if (chWithAdd.Checked) 
-                //    ProcessNodes(smartGridContracts1.Nodes);
+                foreach (Node node in smartGridContracts1.Nodes)
+                    node.Collapsed = true;
+
                 smartGridContracts1.Row = 0;
                 smartGridContracts1.Row = smartGridContracts1.Rows.Fixed;
 
@@ -215,8 +216,50 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             RefreshContract();
         }
 
+        private async void RefreshLines()
+        {
+            // Считать строки контракта
+            BindingList<Line> lines = new BindingList<Line>();
+            try
+            {
+                loaderLines.ShowLoader();
+                if (smartGridContracts1.Row < smartGridContracts1.Rows.Fixed) return;
+                if (smartGridContracts1.Rows[smartGridContracts1.Row].Node == null)
+                {
+                    smartGridLines1.DataSource = new BindingList<Line>();
+                    return;
+                }
+                if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
+                {
+                    //Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
+                    TreeContract _obj = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
+
+                    ContractLineRequest request = new ContractLineRequest()
+                    {
+                        Id = _obj.ContractId,
+                        All = false
+                    };
+                    ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
+                    );
+
+                    lines = new BindingList<Line>(response.Lines);
+                }
+                smartGridLines1.DataSource = lines;
+                loaderLines.HideLoader();
+            }
+            catch (Exception ex)
+            {
+                loaderLines.HideLoader();
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+
+            }
+        }
+
         private async void smartGridContracts_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
+            RefreshLines();
             // Считать строки контракта
             BindingList<Line> lines = new BindingList<Line>();
             try
@@ -320,107 +363,17 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             Contract _contract = new Contract()
             {
                 Id = rowNode.ContractId,
+                Number = rowNode.Number,
+                Date = rowNode.Date.ToUniversalTime().ToTimestamp(),
+                RootId = rowNode.ParentId,
                 TypeContract = new DocumentType() { Id = rowNode.TypeId, Code = rowNode.TypeCode, Form = rowNode.TypeForm, Name = rowNode.Type }
             };
-            ViewContract(sender, _contract);
-        }
 
-        private void ViewContract(object sender, Contract contract)
-        {
-            string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.ContractViews";
-            string nameForm = "ContractSaleStandartForm";
-            string fullTypeContract = $"{nameSpace}.{nameForm}";
-            try
-            {
-                int contractId = contract.Id;
-                var contractType_Name = contract.TypeContract?.Name;
-                var contractType_Code = contract.TypeContract?.Code;
-                var contractType_Form = contract.TypeContract?.Form;
-                fullTypeContract = $"{nameSpace}.{contractType_Form}";
-                string contractType = fullTypeContract;
+            ViewContract viewContract = new ViewContract(_contract, smartGridContracts1.Rows[smartGridContracts1.Row].Node.Children > 0);
+            
+            viewContract.Show();
 
-                // Попытка получить Type по строке имени
-                System.Type formType = System.Type.GetType(contractType);
-
-                // Локальная функция: читать ContractId с РЕАЛЬНОГО типа через рефлексию, fallback на базовое свойство
-                int? GetContractIdFrom(Form f)
-                {
-                    var prop = f.GetType().GetProperty("ContractId", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                    if (prop != null && prop.PropertyType == typeof(int))
-                    {
-                        try
-                        {
-                            return (int)prop.GetValue(f);
-                        }
-                        catch
-                        {
-                            return null;
-                        }
-                    }
-
-                    if (f is ContractFormClass baseForm)
-                        return baseForm.ContractId;
-
-                    return null;
-                }
-
-                // Если Type найден — проверим, есть ли уже открыт экземпляр того же типа с таким ContractId,
-                // читая значение ContractId именно с реального типа экземпляра.
-                if (formType != null)
-                {
-                    foreach (Form child in MdiParent.MdiChildren)
-                    {
-                        if (child.GetType() != formType) continue;
-
-                        int? existingId = GetContractIdFrom(child);
-                        if (existingId.HasValue && existingId.Value == contractId)
-                        {
-                            child.Activate();
-                            return;
-                        }
-                    }
-                }
-
-                // Создаём форму и передаём contractId фабрике
-                var form = Utils.CreateForm(contractType, contractId);
-                if (form == null) return;
-
-                // Ещё одна проверка — на случай, если Type не резолвился ранее; читаем ContractId с реального типа
-                foreach (Form child in MdiParent.MdiChildren)
-                {
-                    if (child.GetType() != form.GetType()) continue;
-
-                    int? existingId = GetContractIdFrom(child);
-                    if (existingId.HasValue && existingId.Value == contractId)
-                    {
-                        child.Activate();
-                        form.Dispose();
-                        return;
-                    }
-                }
-
-                form.MdiParent = this.MdiParent;
-                form.ContractChanged += UpdateContract;
-                form.Show();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-        }
-
-        private void UpdateContract(object sender, Contract contract)
-        {
-            if (contract == null) return;
-            // Найти контракт в списке по Id
-            var existingContract = contracts.FirstOrDefault(c => c.Id == contract.Id);
-            if (existingContract != null)
-            {
-                // Обновить существующий контракт
-                int index = contracts.IndexOf(existingContract);
-                contracts[index] = contract;
-            }
+            //ViewContract(sender, _contract);
         }
 
         #region Методы для companyDropDown

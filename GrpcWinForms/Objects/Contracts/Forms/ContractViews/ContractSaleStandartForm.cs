@@ -24,30 +24,15 @@ using Contract = GrpcCommonNet.Library.Contract.Contract;
 using Status = GrpcCommonNet.Library.Common.Status;
 
 namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
-{ 
+{
     public partial class ContractSaleStandartForm : ContractFormClass
-    {        
-        //private int contractId = 0;
-        //public int ContractId
-        //{
-        //    get { return contractId; }
-        //    set { contractId = value; }
-        //}
+    {
         private Contract contract;
-
-
+        public bool CurrentMode = false;
 
         public ContractSaleStandartForm()
         {
             InitializeComponent();
-
-            //smartGridLines1.Headers = new string[]
-            //{
-            //    "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tРеализация\tРеализация\tНДС\tНДС\tСумма с НДС",
-            //    "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t(%)\tСумма\tСумма с НДС",
-            //    "Id\tНомер\tНаименование\tЕд.изм.\tКол-во\tЦена\tСумма\t(%)\tСумма\tСумма с НДС"
-            //};
-
         }
 
         public ContractSaleStandartForm(int id)
@@ -82,7 +67,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                 {
                     return;
                 }
-                GetContractRequest requestContract = new GetContractRequest { ContractId = this.ContractId };
+                GetContractRequest requestContract = new GetContractRequest 
+                { 
+                    ContractId = this.ContractId
+                };
                 ContractResponse responseContract = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.Contract.GetContractFullAsync(requestContract).ResponseAsync
                 );
@@ -101,6 +89,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                     DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, firstName);
                     propertiesControl1.SetTreeNodes(nodes);
                 }
+                
                 smartGridLines1.DataSource = contract.Lines;
             }
             catch
@@ -108,7 +97,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                 MessageBox.Show("Ошибка в дополнительных параметрах");
             }
 
-            this.Text = $"Контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
+            //this.Text = $"Контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
         }
 
         private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
@@ -266,6 +255,63 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
             OnContractChanged(contract);
             //MessageBox.Show("Данные будут записаны");
             Close();
+        }
+
+        private void smartGridLines1_OwnerDrawCell(object sender, C1.Win.FlexGrid.OwnerDrawCellEventArgs e)
+        {
+            int row = e.Row;
+            Line line = smartGridLines1.Rows[row].DataSource as Line;
+            // Получаем базовый стиль
+            var baseStyle = e.Style ?? smartGridLines1.Styles.Normal;
+
+            // Получаем базовый шрифт
+            var baseFont = baseStyle?.Font ?? smartGridLines1.Font ?? SystemFonts.DefaultFont;
+
+            if (!Validate(line))
+            {
+                // Добавляем Strikeout
+                if ((baseFont.Style & FontStyle.Strikeout) != FontStyle.Strikeout)
+                    e.Style.Font = new Font(baseFont.FontFamily, baseFont.Size, baseFont.Style | FontStyle.Strikeout);
+                else
+                    e.Style.Font = baseFont;
+            }
+            else
+            {
+                // Убираем Strikeout, если он был
+                if ((baseFont.Style & FontStyle.Strikeout) == FontStyle.Strikeout)
+                    e.Style.Font = new Font(baseFont.FontFamily, baseFont.Size, baseFont.Style & ~FontStyle.Strikeout);
+                else
+                    e.Style.Font = baseFont;
+            }
+        }
+
+        /// <summary>
+        /// Валиюация строки. Пока реализована тольео смена стиля для удаленных записей
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        private bool Validate(Line line)
+        {
+            if (line == null) return true;
+            if (line.Operation == "удалена") return false;
+            return true;
+        }
+
+        private async void c1DockingTab2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (c1DockingTab2.SelectedIndex == 2)
+            {
+                historyContractControl.SetControl(contract);
+
+                // Загрузить дополнительные соглашения и первичный контракт
+                int id = contract.Id;
+                GetContractRequest requestContract = new GetContractRequest { ContractId = id };
+                ListContractsResponse response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Contract.GetContractHistoryAsync(requestContract).ResponseAsync
+                );
+                BindingList<Contract> contracts = new BindingList<Contract>(response.Contracts);
+                historyContractControl.smartGridHistory1.DataSource = contracts;
+            }
         }
     }
 

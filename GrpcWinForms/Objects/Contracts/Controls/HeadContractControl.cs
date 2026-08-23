@@ -51,7 +51,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             companySeller.Text = contract.Seller.Name;                      // Контрагент продавец
             companySeller.Value = contract.Seller.Id;                       // Идентификатор контрагента продавца
 
-            comboBoxContractType.Text = contract.TypeContract.ToString();   // Тип договора
+            comboBoxContractType.Text = contract.TypeContract.Name.ToString();   // Тип договора
             comboBoxCurrency.Text = contract.Currency.Abbrev;               // Валюта договора
 
             companySeller.Text = contract.Seller.Name;

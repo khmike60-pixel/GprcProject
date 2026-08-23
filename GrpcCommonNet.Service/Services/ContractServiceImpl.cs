@@ -54,7 +54,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
 
         try
         {
-            Contract contract = await _repo.GetContractFullAsync(request.ContractId);
+            Contract contract = await _repo.GetContractFullAsync(request);
             if (contract == null || contract.Id == 0)
             {
                 return new ContractResponse() { Result = { Status = Status.NotFound } };
@@ -122,14 +122,14 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
 
     }
 
-    public override async Task<ContractIerarchResponse> GetContractIerarch(GetContractByRootRequest request, ServerCallContext context)
+    public override async Task<ListContractsResponse> GetContractHistory(GetContractRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
         _logger.LogDebug($"GetContractIerarch called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
         try
         {
-            var contractsHistory = await _repo.GetContractIerarchAsync(request.RootId);
-            ContractIerarchResponse response = new ContractIerarchResponse();
+            var contractsHistory = await _repo.GetContractHistoryAsync(request.ContractId);
+            ListContractsResponse response = new ListContractsResponse();
             if (contractsHistory == null || contractsHistory.Count == 0)
             {
                 response.Result = new Result { Status = Status.NotFound };
@@ -141,7 +141,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in GetContractIerarch: " + ex.Message);
+            _logger.LogError(ex, "Error in GetContractHistory: " + ex.Message);
             throw;
         }
     }
