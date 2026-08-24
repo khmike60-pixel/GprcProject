@@ -27,8 +27,13 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         private Loader loaderDocumentTypes = new Loader();
         private BindingList<DocumentType> documentTypes;
         private int maxLevel = 0;
+        private DocumentType documentType;
 
         public string HeadCode = string.Empty;
+        public bool DialogMode { get; set; }
+        public DocumentType DocumentType { get => documentType; }
+
+
         public DocumentTypesForm()
         {
             InitializeComponent();
@@ -43,15 +48,15 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             {
                 smartGridDocumentTypes1.BeginUpdate();
                 List<DocumentType> treeContractTypes = new List<DocumentType>();
-
                 DocumentTypeFilterRequest request = new DocumentTypeFilterRequest()
                 {
-                    Head = HeadCode, // Получить весь список
+                    Head = HeadCode,
                     FieldMask = new FieldMask()
                     {
                         Paths = { "id", "parent", "ids", "parents", "name", "code", "form", "currency_type", "data", "country_currency_id", "view_master", "view_detail", "is_default", "approved", "kind_id" }
                     }
                 };
+
                 ListDocumentTypeResponse response = new ListDocumentTypeResponse();
                 response = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.DocumentType.GetBranchDocumentTypesAsync(request).ResponseAsync);
@@ -72,8 +77,6 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         ParentNames = item.Parents,
                         KindId = Convert.ToInt32(item.KindId),
                         IsDefault = item.IsDefault,
-                        //CountryCurrencyId = Convert.ToInt32(item.CountryCurrencyId),
-                        //CurrencyType = item.CurrencyType,
                         Data = item.Data,
                         ViewMaster = item.ViewMaster,
                         ViewDetail = item.ViewDetail
@@ -83,6 +86,14 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 var tree = treeDocumentTypes.AsEnumerable();
 
                 smartGridDocumentTypes1.BuildTree(tree);
+                if (DialogMode)
+                {
+                    // Делаем все колонки невидимыми
+                    for (int i = 0; i < smartGridDocumentTypes1.Cols.Count; i++)
+                        smartGridDocumentTypes1.Cols[i].Visible = false;
+                    // Видимыми делаем только первые две колонки
+                    smartGridDocumentTypes1.Cols[0].Visible = smartGridDocumentTypes1.Cols[1].Visible = true;
+                }
 
                 // Находим максимальный уровень среди всех строк, которые являются узлами
                 int maxLevel = smartGridDocumentTypes1.GetDepth();
@@ -148,7 +159,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 TreeDocumentType treeNodeKey = (TreeDocumentType)treeNode.Key;
                 DocumentTypeRequest requestById = new DocumentTypeRequest() { Id = treeNodeKey.Id };
 
-                DocumentTypeResponse responseById = await GrpcRetry.CallAsync(() => 
+                DocumentTypeResponse responseById = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.DocumentType.GetDocumentTypeAsync(requestById).ResponseAsync);
                 using DocumentTypeForm form = new DocumentTypeForm();
                 form.EditMode = true;
@@ -194,7 +205,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 NewParentId = ((TreeDocumentType)parentNode.Key).Id
             };
 
-            DocumentTypeResponse response = GrpcRetry.CallAsync(() => 
+            DocumentTypeResponse response = GrpcRetry.CallAsync(() =>
                 GrpcClients.GrpcClients.DocumentType.MoveDocumentTypeAsync(request).ResponseAsync).GetAwaiter().GetResult();
             if (response.Result.Status != Status.Ok)
             {
@@ -228,7 +239,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
                 CreateDocumentTypeRequest request = new CreateDocumentTypeRequest() { DocumentType = form.DocumentType };
 
-                DocumentTypeResponse response = await GrpcRetry.CallAsync(() => 
+                DocumentTypeResponse response = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.DocumentType.CreateDocumentTypeAsync(request).ResponseAsync);
                 if (response.Result.Status == Status.Ok)
                 {
@@ -289,7 +300,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     {
                         Id = (int)smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row]["Id"]
                     };
-                    DeleteDocumentTypeResponse response = await GrpcRetry.CallAsync(() => 
+                    DeleteDocumentTypeResponse response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.DocumentType.DeleteDocumentTypeAsync(request).ResponseAsync);
                     int i = smartGridDocumentTypes1.RowSel - smartGridDocumentTypes1.Rows.Fixed;
                     if (response.Result.Status == Status.Ok)
@@ -322,7 +333,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     request.Ids.AddRange(ids);
 
                     UndeletedIdsDocumentTypeResponse response = new UndeletedIdsDocumentTypeResponse();
-                    response = await GrpcRetry.CallAsync(() => 
+                    response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.DocumentType.DeleteIdsDocumentTypeAsync(request).ResponseAsync);
                     if (response.Result.Status != Status.Ok)
                     {
@@ -452,6 +463,26 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
 
 
+        private void smartGridDocumentTypes1_DoubleClick(object sender, EventArgs e)
+        {
+            if (DialogMode)
+            {
+                DialogResult = DialogResult.OK;
+                TreeDocumentType treeDocType = smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node.Key as TreeDocumentType;
+                documentType = new DocumentType()
+                {
+                    Id = treeDocType.Id,
+                    Form = treeDocType.Form,
+                    Name = treeDocType.Name
+                };
+                Close();
+            }
+            else
+            {
+                toolStripButtonEdit_Click(sender, e);
+            }
+
+        }
     }
 
     public class TreeDocumentType : SmartLib.ITreeData

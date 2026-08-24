@@ -1,4 +1,5 @@
-﻿using GrpcWinForms.Objects.Contracts.Models;
+﻿using GrpcCommonNet.Library.Contract;
+using GrpcWinForms.Objects.Contracts.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,16 +14,17 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
 {
     public partial class ContractTestForm : ContractFormClass
     {
+        private Contract contract;
         public ContractTestForm()
         {
             InitializeComponent();
 
         }
 
-        public ContractTestForm(int contractId)
+        public ContractTestForm(Contract _contract)
         {
             InitializeComponent();
-            ContractId = contractId;
+            contract = _contract;
 
         }
 

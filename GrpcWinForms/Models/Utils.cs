@@ -1,5 +1,6 @@
 ﻿using C1.Win.FlexGrid;
 using Grpc.Core;
+using GrpcCommonNet.Library.Contract;
 using GrpcWinForms.Forms;
 using GrpcWinForms.Objects.Contracts.Models;
 using System;
@@ -55,7 +56,7 @@ namespace GrpcWinForms.Models
         /// <param name="contractId">Идентификатор контракта.</param>
         /// <param name="contractType">Полное имя класса формы (включая Namespace).</param>
         /// <returns>Экземпляр созданной формы или null в случае ошибки.</returns>
-        public static ContractFormClass CreateForm(string contractType = "GrpcWinForms.Objects.Contracts.Forms.SaleStandart.ContractStandartForm", int contractId = 0)
+        public static ContractFormClass CreateForm(string contractType = "GrpcWinForms.Objects.Contracts.Forms.SaleStandart.ContractStandartForm", Contract contract = null)
         {
             try
             {
@@ -71,7 +72,7 @@ namespace GrpcWinForms.Models
                     ConstructorInfo ctorWithInt = formType.GetConstructor(new Type[] { typeof(int) });
                     if (ctorWithInt != null)
                     {
-                        form = (ContractFormClass)ctorWithInt.Invoke(new object[] { contractId });
+                        form = (ContractFormClass)ctorWithInt.Invoke(new object[] { contract.Id });
                         return form;
                     }
 
@@ -85,7 +86,7 @@ namespace GrpcWinForms.Models
                         PropertyInfo prop = formType.GetProperty("ContractId", BindingFlags.Public | BindingFlags.Instance);
                         if (prop != null && prop.CanWrite && prop.PropertyType == typeof(int))
                         {
-                            prop.SetValue(form, contractId);
+                            prop.SetValue(form, contract.Id);
                         }
 
                         return form;

@@ -16,6 +16,9 @@ namespace GrpcWinForms.Objects.Contracts.Models
         private Contract contract;
         private Form mainForm = new Form();
         private bool currentMode = false;
+        public Contract Contract { get => contract; set => contract = value; } 
+
+        public ViewMode ViewMode { get; set; } = ViewMode.View;
         
         public ViewContract() { }
         
@@ -51,14 +54,14 @@ namespace GrpcWinForms.Objects.Contracts.Models
                 System.Type formType = System.Type.GetType(contractType);
 
                 // Локальная функция: читать ContractId с РЕАЛЬНОГО типа через рефлексию, fallback на базовое свойство
-                int? GetContractIdFrom(Form f)
+                Contract? GetContractIdFrom(Form f)
                 {
                     var prop = f.GetType().GetProperty("ContractId", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
                     if (prop != null && prop.PropertyType == typeof(int))
                     {
                         try
                         {
-                            return (int)prop.GetValue(f);
+                            return (Contract)prop.GetValue(f);
                         }
                         catch
                         {
@@ -67,7 +70,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
                     }
 
                     if (f is ContractFormClass baseForm)
-                        return baseForm.ContractId;
+                        return baseForm.Contract;
 
                     return null;
                 }
@@ -80,8 +83,8 @@ namespace GrpcWinForms.Objects.Contracts.Models
                     {
                         if (child.GetType() != formType) continue;
 
-                        int? existingId = GetContractIdFrom(child);
-                        if (existingId.HasValue && existingId.Value == contractId)
+                        Contract? existingContract = GetContractIdFrom(child);
+                        if (existingContract != null)
                         {
                             child.Activate();
                             return;
@@ -90,7 +93,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
                 }
 
                 // Создаём форму и передаём contractId фабрике
-                var form = Utils.CreateForm(contractType, contractId);
+                var form = Utils.CreateForm(contractType, Contract);
                 if (form == null) return;
 
                 // Ещё одна проверка — на случай, если Type не резолвился ранее; читаем ContractId с реального типа
@@ -98,8 +101,8 @@ namespace GrpcWinForms.Objects.Contracts.Models
                 {
                     if (child.GetType() != form.GetType()) continue;
 
-                    int? existingId = GetContractIdFrom(child);
-                    if (existingId.HasValue && existingId.Value == contractId)
+                    Contract? existingContract = GetContractIdFrom(child);
+                    if (existingContract != null)
                     {
                         child.Activate();
                         form.Dispose();
@@ -126,5 +129,12 @@ namespace GrpcWinForms.Objects.Contracts.Models
                 return;
             }
         }
+    }
+
+    public enum ViewMode
+    {
+        New,
+        Edit,
+        View
     }
 }

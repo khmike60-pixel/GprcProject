@@ -1,4 +1,5 @@
 ﻿using C1.Framework;
+using C1.Win.FlexGrid;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using GrpcCommonNet.Library.Common;
@@ -30,15 +31,17 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
         private Contract contract;
         public bool CurrentMode = false;
 
+        public Contract Contract { get => contract; set => contract = value; }
+
         public ContractSaleStandartForm()
         {
             InitializeComponent();
         }
 
-        public ContractSaleStandartForm(int id)
+        public ContractSaleStandartForm(Contract _contract)
         {
             InitializeComponent();
-            ContractId = id;
+            contract = _contract;
         }
 
         private void toolStripButtonSetupSpecification_Click(object sender, EventArgs e)
@@ -63,18 +66,21 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
         {
             try
             {
-                if (this.ContractId == 0)
+                if (this.contract.Id == 0)
                 {
-                    return;
+                    if (contract == null) return;
                 }
-                GetContractRequest requestContract = new GetContractRequest 
-                { 
-                    ContractId = this.ContractId
-                };
-                ContractResponse responseContract = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Contract.GetContractFullAsync(requestContract).ResponseAsync
-                );
-                contract = responseContract.Contract;
+                else
+                {
+                    GetContractRequest requestContract = new GetContractRequest
+                    {
+                        ContractId = this.contract.Id
+                    };
+                    ContractResponse responseContract = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.GetContractFullAsync(requestContract).ResponseAsync
+                    );
+                    contract = responseContract.Contract;
+                }
                 headContractControl.SetControls(contract);
                 sumContractControl1.SetControls(contract);
                 managerControl1.SetControl(contract);
@@ -89,8 +95,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                     DataNode nodes = MyConvert.ProtoConverter.ToNodeTree(properties, firstName);
                     propertiesControl1.SetTreeNodes(nodes);
                 }
-                
+
                 smartGridLines1.DataSource = contract.Lines;
+
             }
             catch
             {

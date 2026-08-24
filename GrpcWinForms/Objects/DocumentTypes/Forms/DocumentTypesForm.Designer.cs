@@ -117,6 +117,7 @@
             smartGridDocumentTypes1.Tree.Column = 1;
             smartGridDocumentTypes1.BeforeNodeMove += smartGridDocumentTypes_BeforeNodeMove;
             smartGridDocumentTypes1.AfterNodeMove += smartGridDocumentTypes_AfterNodeMove;
+            smartGridDocumentTypes1.DoubleClick += smartGridDocumentTypes1_DoubleClick;
             // 
             // toolStrip1
             // 

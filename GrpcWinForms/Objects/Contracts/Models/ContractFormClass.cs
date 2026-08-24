@@ -14,16 +14,20 @@ namespace GrpcWinForms.Objects.Contracts.Models
 {
     public partial class ContractFormClass : Form
     {
-        private int _contractId;
+        //private int _contractId;
+
+        private Contract contract;
+
+        public Contract Contract { get => contract; set => contract = value; }
 
         // Событие для передачи изменённого контракта
         public event EventHandler<Contract> ContractChanged;
 
-        public int ContractId
-        {
-            get => _contractId;
-            set => _contractId = value;
-        }
+        //public int ContractId
+        //{
+        //    get => _contractId;
+        //    set => _contractId = value;
+        //}
 
         public ContractFormClass()
         {

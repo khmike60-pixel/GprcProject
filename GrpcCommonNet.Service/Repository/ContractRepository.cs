@@ -87,8 +87,11 @@ public class ContractRepository
                 SELECT
                     l.contractline_id line_id, l.contractline_order line_order, l.operation, l.contract_id,
                     l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
-                    l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, 
-                    l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
+                    l.contractline_qty line_qty, l.contractline_price line_price, 
+                    l.contractline_vat_prc line_vat_per, 
+                    if(l.Operation = 'удалена', 0, l.contractline_amount) line_amount, 
+                    if(l.Operation = 'удалена', 0, l.contractline_sumvat) line_sum_vat, 
+                    if(l.Operation = 'удалена', 0, l.contractline_sum) line_sum,
                     u.Short
                 FROM cwatis.contractlines l
                     left join global_db.rfr_units u on l.UnitId = u.UnitId

@@ -13,6 +13,7 @@ using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
+using GrpcWinForms.Objects.DocumentTypes.Forms;
 using SmartLib;
 using System;
 using System.Collections.Generic;
@@ -56,12 +57,27 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void toolStripButtonNew_Click(object sender, EventArgs e)
         {
-            foreach (Form child in MdiParent.MdiChildren)
+            DocumentTypesForm form = new DocumentTypesForm();
+            form.DialogMode = true;
+            form.HeadCode = "Contracts";
+
+            if (form.ShowDialog() == DialogResult.OK)
             {
-                if (child is ContractSaleStandartForm && ((ContractSaleStandartForm)child).ContractId == 0) { child.Activate(); return; }
+                DocumentType documentType = form.DocumentType;
+                Contract _contract = new Contract()
+                {
+                    Id = 0,
+                    Number = "",
+                    Date = DateTime.Now.ToUniversalTime().ToTimestamp(),
+                    RootId = 0,
+                    TypeContract = new DocumentType() { Id = documentType.Id, Code = documentType.Code, Form = documentType.Form, Name = documentType.Name }
+                };
+
+                ViewContract viewContract = new ViewContract(_contract);
+                viewContract.ViewMode = ViewMode.New;
+
+                viewContract.Show();
             }
-            var f = new ContractSaleStandartForm(0) { MdiParent = this.MdiParent };
-            f.Show();
 
         }
 
