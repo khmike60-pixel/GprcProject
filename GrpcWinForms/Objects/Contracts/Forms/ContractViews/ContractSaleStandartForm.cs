@@ -59,6 +59,29 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
         private void ContractStandartForm_Load(object sender, EventArgs e)
         {
             RefreshContractFull();
+            if (ViewMode == ViewMode.View)
+            {
+                headContractControl.ReadOnly = managerControl1.ReadOnly =
+                sumContractControl1.ReadOnly = true;
+                buttonOk.Enabled = false;
+                toolStripButtonEdit.Enabled = true;
+            }
+            if (ViewMode == ViewMode.Edit)
+            {
+                headContractControl.ReadOnly = managerControl1.ReadOnly =
+                sumContractControl1.ReadOnly = false;
+                buttonOk.Enabled = true;
+                toolStripButtonEdit.Enabled = false;
+            }
+            if (ViewMode == ViewMode.New)
+            {
+                headContractControl.ReadOnly = managerControl1.ReadOnly =
+                sumContractControl1.ReadOnly = false;
+                buttonOk.Enabled = true;
+                toolStripButtonEdit.Enabled = true;
+            }
+
+
         }
 
         // Обновление контракта делается одним запросом - быстрее.

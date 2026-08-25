@@ -84,7 +84,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
                         if (child.GetType() != formType) continue;
 
                         Contract? existingContract = GetContractIdFrom(child);
-                        if (existingContract != null)
+                        if (existingContract != null && existingContract.Id == contract.Id)
                         {
                             child.Activate();
                             return;
@@ -92,7 +92,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
                     }
                 }
 
-                // Создаём форму и передаём contractId фабрике
+                // Создаём форму и передаём Contract фабрике
                 var form = Utils.CreateForm(contractType, Contract);
                 if (form == null) return;
 
@@ -102,7 +102,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
                     if (child.GetType() != form.GetType()) continue;
 
                     Contract? existingContract = GetContractIdFrom(child);
-                    if (existingContract != null)
+                    if (existingContract != null && existingContract.Id == contract.Id)
                     {
                         child.Activate();
                         form.Dispose();
@@ -120,7 +120,8 @@ namespace GrpcWinForms.Objects.Contracts.Models
                     form.Text = $"Первичный контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={contract.Id})";
                 else
                     form.Text = $"Допсоглашение № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={contract.Id})";
-                
+
+                form.ViewMode = this.ViewMode;
                 form.Show();
             }
             catch (Exception ex)

@@ -17,11 +17,16 @@ using System.Windows.Forms;
 namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 {
 
-    public partial class HeadContractControl : UserControl
+    public partial class HeadContractControl : UserControl, ISupportInitialize
     {
         private Contragent _selectedSeller;
         private Contragent _selectedBuyer;
+        private bool _initializing;
 
+        private bool readOnly = true;
+
+        public bool ReadOnly { get => readOnly; set => readOnly = value; }
+        
         public HeadContractControl()
         {
             InitializeComponent();
@@ -30,36 +35,68 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
         }
 
+        public void BeginInit()
+        {
+            _initializing = true;
+            this.SuspendLayout();
+        }
+
+        public void EndInit()
+        {
+            _initializing = false;
+            this.ResumeLayout(false);
+            this.PerformLayout();
+        }
+
         public void SetControls(Contract contract)
         {
-            if (contract.Id == 0) // Новый контракт?
-            { 
+            this.SuspendLayout();
+            try
+            {
+                if (contract.Id == 0) // Новый контракт?
+                {
 
+                }
+                textBoxNumber.Text = contract.Number ?? "1";                    // Номер договора
+
+                if (contract.Date != null)                                      // Дата начала договора
+                    dateEditStart.Value = contract.Date.ToDateTime();
+                else
+                    dateEditStart.Value = DateTime.Now;
+                if (contract.ExpirationDate != null)                            // Дата окончания договора
+                    dateEditStop.Value = contract.ExpirationDate.ToDateTime();
+                else
+                    dateEditStop.Value = string.Empty;
+
+                textBoxTaxnoBuyer.Text = contract.Buyer?.Taxno;                  // ИНН покупателя
+                companyBuyer.Text = contract.Buyer?.Name;                        // Контрагент покупатель
+                companyBuyer.Value = contract.Buyer?.Id;                         // Идентификатор контрагента покупателя
+
+                textBoxTaxnoSeller.Text = contract.Seller?.Taxno;                // ИНН продавца
+                companySeller.Text = contract.Seller?.Name;                      // Контрагент продавец
+                companySeller.Value = contract.Seller?.Id;                       // Идентификатор контрагента продавца
+
+                comboBoxContractType.Text = contract.TypeContract.Name.ToString();   // Тип договора
+                comboBoxCurrency.Text = contract.Currency?.Abbrev;               // Валюта договора
+
+                companySeller.Text = contract.Seller?.Name;
+                companyBuyer.Text = contract.Buyer?.Name;
+
+                companyBuyer.ReadOnly = readOnly;
+                companySeller.ReadOnly = readOnly;
+                textBoxNumber.ReadOnly = readOnly;
+                dateEditStart.ReadOnly = readOnly;
+                dateEditStop.ReadOnly = readOnly;
+                textBoxTaxnoBuyer.ReadOnly = readOnly;
+                textBoxTaxnoSeller.ReadOnly = readOnly;
+                comboBoxContractType.ReadOnly = readOnly;
+                comboBoxCurrency.ReadOnly = readOnly;
             }
-            textBoxNumber.Text = contract.Number ?? "1";                    // Номер договора
-
-            if (contract.Date != null)                                      // Дата начала договора
-                dateEditStart.Value = contract.Date.ToDateTime();
-            else
-                dateEditStart.Value = DateTime.Now;
-            if (contract.ExpirationDate != null)                            // Дата окончания договора
-                dateEditStop.Value = contract.ExpirationDate.ToDateTime();
-            else
-                dateEditStop.Value = string.Empty;
-
-            textBoxTaxnoBuyer.Text = contract.Buyer?.Taxno;                  // ИНН покупателя
-            companyBuyer.Text = contract.Buyer?.Name;                        // Контрагент покупатель
-            companyBuyer.Value = contract.Buyer?.Id;                         // Идентификатор контрагента покупателя
-
-            textBoxTaxnoSeller.Text = contract.Seller?.Taxno;                // ИНН продавца
-            companySeller.Text = contract.Seller?.Name;                      // Контрагент продавец
-            companySeller.Value = contract.Seller?.Id;                       // Идентификатор контрагента продавца
-
-            comboBoxContractType.Text = contract.TypeContract.Name.ToString();   // Тип договора
-            comboBoxCurrency.Text = contract.Currency?.Abbrev;               // Валюта договора
-
-            companySeller.Text = contract.Seller?.Name;
-            companyBuyer.Text = contract.Buyer?.Name;
+            finally
+            {
+                this.ResumeLayout(false);
+                this.PerformLayout();
+            }
 
         }
 

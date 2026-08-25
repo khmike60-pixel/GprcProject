@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            C1.Win.Input.ComboBoxItem comboBoxItem1 = new C1.Win.Input.ComboBoxItem();
-            C1.Win.Input.ComboBoxItem comboBoxItem2 = new C1.Win.Input.ComboBoxItem();
-            C1.Win.Input.ComboBoxItem comboBoxItem3 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem4 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem5 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem6 = new C1.Win.Input.ComboBoxItem();
             groupBox1 = new GroupBox();
             cbProjectType = new C1.Win.Input.C1ComboBox();
             label1 = new Label();
             labelExecutor = new Label();
             labelInitiator = new Label();
-            c1DropDownControl2 = new C1.Win.Input.C1DropDownControl();
+            cddByCreate = new C1.Win.Input.C1DropDownControl();
             tbComment = new TextBox();
             labelManagerType = new Label();
             empInittiator = new C1.Win.Input.C1DropDownControl();
@@ -44,7 +44,7 @@
             empExecutor = new C1.Win.Input.C1DropDownControl();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)cbProjectType).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)c1DropDownControl2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)cddByCreate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)empInittiator).BeginInit();
             ((System.ComponentModel.ISupportInitialize)empExecutor).BeginInit();
             SuspendLayout();
@@ -56,7 +56,7 @@
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(labelExecutor);
             groupBox1.Controls.Add(labelInitiator);
-            groupBox1.Controls.Add(c1DropDownControl2);
+            groupBox1.Controls.Add(cddByCreate);
             groupBox1.Controls.Add(tbComment);
             groupBox1.Controls.Add(labelManagerType);
             groupBox1.Controls.Add(empInittiator);
@@ -74,12 +74,12 @@
             cbProjectType.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cbProjectType.AutoCompleteCustomSource.AddRange(new string[] { "стандарт", "проект", "распродажа" });
             cbProjectType.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxItem1.DisplayText = "стандарт";
-            comboBoxItem2.DisplayText = "проект";
-            comboBoxItem3.DisplayText = "распродажа";
-            cbProjectType.Items.Add(comboBoxItem1);
-            cbProjectType.Items.Add(comboBoxItem2);
-            cbProjectType.Items.Add(comboBoxItem3);
+            comboBoxItem4.DisplayText = "стандарт";
+            comboBoxItem5.DisplayText = "проект";
+            comboBoxItem6.DisplayText = "распродажа";
+            cbProjectType.Items.Add(comboBoxItem4);
+            cbProjectType.Items.Add(comboBoxItem5);
+            cbProjectType.Items.Add(comboBoxItem6);
             cbProjectType.Location = new Point(435, 15);
             cbProjectType.Name = "cbProjectType";
             cbProjectType.Size = new Size(122, 23);
@@ -117,13 +117,13 @@
             labelInitiator.Text = "Инициатор:";
             labelInitiator.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // c1DropDownControl2
+            // cddByCreate
             // 
-            c1DropDownControl2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            c1DropDownControl2.Location = new Point(503, 44);
-            c1DropDownControl2.Name = "c1DropDownControl2";
-            c1DropDownControl2.Size = new Size(54, 23);
-            c1DropDownControl2.TabIndex = 9;
+            cddByCreate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cddByCreate.Location = new Point(503, 44);
+            cddByCreate.Name = "cddByCreate";
+            cddByCreate.Size = new Size(54, 23);
+            cddByCreate.TabIndex = 9;
             // 
             // tbComment
             // 
@@ -180,7 +180,7 @@
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)cbProjectType).EndInit();
-            ((System.ComponentModel.ISupportInitialize)c1DropDownControl2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)cddByCreate).EndInit();
             ((System.ComponentModel.ISupportInitialize)empInittiator).EndInit();
             ((System.ComponentModel.ISupportInitialize)empExecutor).EndInit();
             ResumeLayout(false);
@@ -197,7 +197,7 @@
         public C1.Win.Input.C1DropDownControl empExecutor;
         public C1.Win.Input.C1DropDownControl empInittiator;
         public TextBox tbComment;
-        public C1.Win.Input.C1DropDownControl c1DropDownControl2;
+        public C1.Win.Input.C1DropDownControl cddByCreate;
         private C1.Win.Input.C1ComboBox cbProjectType;
     }
 }

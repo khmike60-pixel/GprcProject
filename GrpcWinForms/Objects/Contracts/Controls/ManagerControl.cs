@@ -19,6 +19,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
         private string[] projectTypes = new string[] { "стандартный", "проект", "распродажа" };
 
+        private bool readOnly = false;
+        public bool ReadOnly { get => readOnly; set => readOnly = value; }
+
         public ManagerControl()
         {
             InitializeComponent();
@@ -57,6 +60,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
             // Описание
             tbComment.Text = Contract.Comment;
+
+            empExecutor.ReadOnly = readOnly;
+            empInittiator.ReadOnly = readOnly;
+            cbProjectType.ReadOnly = readOnly;
+            tbComment.ReadOnly = readOnly;
+            cddByCreate.ReadOnly = readOnly;
+
         }
 
         private void tbComment_TextChanged(object sender, EventArgs e)

@@ -359,7 +359,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             viewContract.ViewMode = ViewMode.Edit;
 
             viewContract.Show();
-            smartGridContracts_DoubleClick(sender, e);
+            
+            //smartGridContracts_DoubleClick(sender, e);
 
         }
 
