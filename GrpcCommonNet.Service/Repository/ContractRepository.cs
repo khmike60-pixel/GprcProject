@@ -560,6 +560,7 @@ public class ContractRepository
         }
 
         contract.ManagerType = rdr["ProjectTypes"] == DBNull.Value ? "" : rdr["ProjectTypes"].ToString();
+        contract.State = rdr["contract_State"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_State"]);
 
         return contract;
     }

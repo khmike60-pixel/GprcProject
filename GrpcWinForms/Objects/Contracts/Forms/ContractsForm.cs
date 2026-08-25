@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+//using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -59,7 +60,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         {
             DocumentTypesForm form = new DocumentTypesForm();
             form.DialogMode = true;
-            form.HeadCode = "Contracts";
+            form.HeadCode = "ContractSale";
 
             if (form.ShowDialog() == DialogResult.OK)
             {
@@ -100,7 +101,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
                     Paths = {  "node_id", "parent_node_id", "tree_level", "node_type",
-                        "contract.id", "contract.root_id", "contract.seller", "contract.buyer", "contract.number", "contract.date", "contract.expiration_date", "contract.currency", "contract.department", "contract.data", "contract.sum", "contract.type_contract" }
+                        "contract.id", "contract.root_id", 
+                        "contract.seller", "contract.buyer", 
+                        "contract.number", "contract.date", "contract.expiration_date", "contract.currency", 
+                        "contract.department", "contract.sum", "contract.type_contract",
+                        "contract.state"
+                    }
                 };
                 // Вызов через обёртку, которая сама обрабатывает RpcException(Unathenticated) и повторную авторизацию
                  TreeNodeResponse response = await GrpcRetry.CallAsync(() =>
@@ -133,7 +139,14 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                         Type = node.Contract.TypeContract.Name,
                         TypeId = node.Contract.TypeContract.Id,
                         TypeCode = node.Contract.TypeContract.Code,
-                        TypeForm = node.Contract.TypeContract.Form 
+                        TypeForm = node.Contract.TypeContract.Form,
+                        Contract_RootId = node.Contract.RootId,
+                        State = node.Contract.State == 0 ? "" : // Новый
+                                node.Contract.State == 1 ? "+" : // В работе
+                                node.Contract.State == 2 ? ">" : // Есть операции
+                                node.Contract.State == 3 ? "=" : // Баланс
+                                node.Contract.State == 4 ? "*" : // Завершен
+                                "?"
                     }
                     );
                 }
@@ -172,12 +185,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
 
         /// <summary>
-        /// Метод заполнения вычисляемых полей грида
+        /// Метод не работает, так как работа идет с нодами. Метод заполнения вычисляемых полей грида
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void smartGridContracts_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
+
             Contract contract = (Contract)smartGridContracts1.Rows[e.Row].DataSource;
             TreeContract treeContract = smartGridContracts1.Rows[e.Row].Node.Key as TreeContract;
 
@@ -222,6 +236,16 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 case "colType":
                     {
                         e.Value = contract.TypeContract == null ? "" : contract.TypeContract.Name ?? "";
+                        break;
+                    }
+                case "colState":
+                    {
+                        e.Value = contract.State == 0 ? "" : // Новый
+                                  contract.State == 1 ? "+" : // В работе
+                                  contract.State == 2 ? ">" : // Есть операции
+                                  contract.State == 3 ? "=" : // Баланс
+                                  contract.State == 4 ? "*" : // Завершен
+                                  "?";
                         break;
                     }
             }
@@ -318,6 +342,23 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
+            int row = smartGridContracts1.Row;
+
+            TreeContract rowNode = smartGridContracts1.Rows[row].Node.Key as TreeContract;
+
+            Contract _contract = new Contract()
+            {
+                Id = rowNode.ContractId,
+                Number = rowNode.Number,
+                Date = rowNode.Date.ToUniversalTime().ToTimestamp(),
+                RootId = rowNode.Contract_RootId ?? 0,
+                TypeContract = new DocumentType() { Id = rowNode.TypeId, Code = rowNode.TypeCode, Form = rowNode.TypeForm, Name = rowNode.Type }
+            };
+
+            ViewContract viewContract = new ViewContract(_contract, smartGridContracts1.Rows[smartGridContracts1.Row].Node.Children > 0);
+            viewContract.ViewMode = ViewMode.Edit;
+
+            viewContract.Show();
             smartGridContracts_DoubleClick(sender, e);
 
         }
@@ -381,15 +422,15 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 Id = rowNode.ContractId,
                 Number = rowNode.Number,
                 Date = rowNode.Date.ToUniversalTime().ToTimestamp(),
-                RootId = rowNode.ParentId,
+                RootId = rowNode.Contract_RootId?? 0,
                 TypeContract = new DocumentType() { Id = rowNode.TypeId, Code = rowNode.TypeCode, Form = rowNode.TypeForm, Name = rowNode.Type }
             };
 
             ViewContract viewContract = new ViewContract(_contract, smartGridContracts1.Rows[smartGridContracts1.Row].Node.Children > 0);
-            
+            viewContract.ViewMode = ViewMode.View;
+
             viewContract.Show();
 
-            //ViewContract(sender, _contract);
         }
 
         #region Методы для companyDropDown

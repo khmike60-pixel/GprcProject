@@ -71,7 +71,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         Name = item.Name,
                         Code = item.Code,
                         Form = item.Form,
-                        ParentId = item.Parent.Id,
+                        ParentId = item.Code == HeadCode ? 0 : item.Parent.Id,
                         Parent = item.Parent,
                         ParentIds = item.Ids,
                         ParentNames = item.Parents,
@@ -85,7 +85,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
                 var tree = treeDocumentTypes.AsEnumerable();
 
-                smartGridDocumentTypes1.BuildTree(tree);
+                smartGridDocumentTypes1.BuildTree(treeDocumentTypes);
                 if (DialogMode)
                 {
                     // Делаем все колонки невидимыми

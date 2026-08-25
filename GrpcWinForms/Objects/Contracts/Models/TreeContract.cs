@@ -1,4 +1,5 @@
 ﻿using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Contract;
 using SmartLib;
 using System;
 using System.Collections.Generic;
@@ -28,5 +29,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
         public decimal Paid { get; set; }
         public decimal Shipped { get; set; }
         public DateTime? DateExpiried {  get; set; }
+        public int? Contract_RootId { get; set; }
+        public string State {  get; set; }
     }
 }

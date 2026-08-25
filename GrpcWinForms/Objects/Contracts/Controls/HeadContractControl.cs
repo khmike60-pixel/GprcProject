@@ -32,6 +32,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
         public void SetControls(Contract contract)
         {
+            if (contract.Id == 0) // Новый контракт?
+            { 
+
+            }
             textBoxNumber.Text = contract.Number ?? "1";                    // Номер договора
 
             if (contract.Date != null)                                      // Дата начала договора
@@ -43,19 +47,19 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             else
                 dateEditStop.Value = string.Empty;
 
-            textBoxTaxnoBuyer.Text = contract.Buyer.Taxno;                  // ИНН покупателя
-            companyBuyer.Text = contract.Buyer.Name;                        // Контрагент покупатель
-            companyBuyer.Value = contract.Buyer.Id;                         // Идентификатор контрагента покупателя
+            textBoxTaxnoBuyer.Text = contract.Buyer?.Taxno;                  // ИНН покупателя
+            companyBuyer.Text = contract.Buyer?.Name;                        // Контрагент покупатель
+            companyBuyer.Value = contract.Buyer?.Id;                         // Идентификатор контрагента покупателя
 
-            textBoxTaxnoSeller.Text = contract.Seller.Taxno;                // ИНН продавца
-            companySeller.Text = contract.Seller.Name;                      // Контрагент продавец
-            companySeller.Value = contract.Seller.Id;                       // Идентификатор контрагента продавца
+            textBoxTaxnoSeller.Text = contract.Seller?.Taxno;                // ИНН продавца
+            companySeller.Text = contract.Seller?.Name;                      // Контрагент продавец
+            companySeller.Value = contract.Seller?.Id;                       // Идентификатор контрагента продавца
 
             comboBoxContractType.Text = contract.TypeContract.Name.ToString();   // Тип договора
-            comboBoxCurrency.Text = contract.Currency.Abbrev;               // Валюта договора
+            comboBoxCurrency.Text = contract.Currency?.Abbrev;               // Валюта договора
 
-            companySeller.Text = contract.Seller.Name;
-            companyBuyer.Text = contract.Buyer.Name;
+            companySeller.Text = contract.Seller?.Name;
+            companyBuyer.Text = contract.Buyer?.Name;
 
         }
 

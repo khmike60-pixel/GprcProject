@@ -56,8 +56,8 @@ namespace GrpcWinForms.Objects.Contracts.Models
                 // Локальная функция: читать ContractId с РЕАЛЬНОГО типа через рефлексию, fallback на базовое свойство
                 Contract? GetContractIdFrom(Form f)
                 {
-                    var prop = f.GetType().GetProperty("ContractId", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
-                    if (prop != null && prop.PropertyType == typeof(int))
+                    var prop = f.GetType().GetProperty("Contract", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    if (prop != null && prop.PropertyType == typeof(Contract))
                     {
                         try
                         {
@@ -120,7 +120,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
                     form.Text = $"Первичный контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={contract.Id})";
                 else
                     form.Text = $"Допсоглашение № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={contract.Id})";
-
+                
                 form.Show();
             }
             catch (Exception ex)

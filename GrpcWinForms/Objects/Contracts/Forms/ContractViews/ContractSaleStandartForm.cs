@@ -66,9 +66,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
         {
             try
             {
+                if (contract == null) return;
                 if (this.contract.Id == 0)
                 {
-                    if (contract == null) return;
+                    // Новый контракт?
                 }
                 else
                 {
@@ -84,7 +85,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                 headContractControl.SetControls(contract);
                 sumContractControl1.SetControls(contract);
                 managerControl1.SetControl(contract);
-                var properties = contract.Data;
+                var properties = contract?.Data;
                 if (properties != null)
                 {
                     var _root = properties.Fields;
@@ -99,7 +100,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                 smartGridLines1.DataSource = contract.Lines;
 
             }
-            catch
+            catch (Exception ex)
             {
                 MessageBox.Show("Ошибка в дополнительных параметрах");
             }

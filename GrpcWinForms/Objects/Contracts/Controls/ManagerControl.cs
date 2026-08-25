@@ -32,8 +32,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         public void SetControl(Contract cntr)
         {
             _contract = cntr;
+            if (_contract.Id == 0) // Новый контракт
+            {
 
-            // Исполнитель
+            }    
+                // Исполнитель
             empExecutor.Text = _contract.Executor == null ? "" : _contract.Executor.Name;
             empExecutor.Value = _contract.Executor == null ? 0 : _contract.Executor.Id;
 

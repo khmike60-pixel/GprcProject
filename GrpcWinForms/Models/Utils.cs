@@ -68,11 +68,11 @@ namespace GrpcWinForms.Models
                 {
                     ContractFormClass form = null;
 
-                    // Попробуем найти конструктор с одним параметром int
-                    ConstructorInfo ctorWithInt = formType.GetConstructor(new Type[] { typeof(int) });
+                    // Попробуем найти конструктор с одним параметром Contrtact
+                    ConstructorInfo ctorWithInt = formType.GetConstructor(new Type[] { typeof(Contract) });
                     if (ctorWithInt != null)
                     {
-                        form = (ContractFormClass)ctorWithInt.Invoke(new object[] { contract.Id });
+                        form = (ContractFormClass)ctorWithInt.Invoke(new object[] { contract });
                         return form;
                     }
 
@@ -82,11 +82,11 @@ namespace GrpcWinForms.Models
                     {
                         form = (ContractFormClass)parameterlessCtor.Invoke(null);
 
-                        // Если есть свойство ContractId, попробуем установить его
-                        PropertyInfo prop = formType.GetProperty("ContractId", BindingFlags.Public | BindingFlags.Instance);
-                        if (prop != null && prop.CanWrite && prop.PropertyType == typeof(int))
+                        // Если есть свойство Contract, попробуем установить его
+                        PropertyInfo prop = formType.GetProperty("Contract", BindingFlags.Public | BindingFlags.Instance);
+                        if (prop != null && prop.CanWrite && prop.PropertyType == typeof(Contract))
                         {
-                            prop.SetValue(form, contract.Id);
+                            prop.SetValue(form, contract);
                         }
 
                         return form;
