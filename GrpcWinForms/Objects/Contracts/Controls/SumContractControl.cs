@@ -15,7 +15,19 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
     public partial class SumContractControl : UserControl
     {
         private bool readOnly = false;
-        public bool ReadOnly { get => readOnly; set => readOnly = value; }
+        public bool ReadOnly
+        {
+            get => readOnly;
+            set
+            {
+                readOnly = value;
+                textBoxSumContract.ReadOnly = readOnly;
+                textBoxSumDeliveried.ReadOnly = readOnly;
+                textBoxSumPayed.ReadOnly = readOnly;
+                textBoxSumSaldo.ReadOnly = readOnly;
+
+            }
+        }
         public SumContractControl()
         {
             InitializeComponent();
@@ -30,10 +42,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             textBoxSumDeliveried.Value = 0;
             textBoxSumSaldo.Value = 0;
 
-            textBoxSumContract.ReadOnly = readOnly;
-            textBoxSumDeliveried.ReadOnly = readOnly;
-            textBoxSumPayed.ReadOnly = readOnly;
-            textBoxSumSaldo.ReadOnly = readOnly;
         }
     }
 }

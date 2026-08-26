@@ -9,6 +9,7 @@ using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Products.ProductsForm;
+using SmartLib;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -86,6 +87,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 var tree = treeDocumentTypes.AsEnumerable();
 
                 smartGridDocumentTypes1.BuildTree(treeDocumentTypes);
+
                 if (DialogMode)
                 {
                     // Делаем все колонки невидимыми
@@ -459,23 +461,29 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             }
         }
 
-        #endregion
-
-
-
         private void smartGridDocumentTypes1_DoubleClick(object sender, EventArgs e)
         {
             if (DialogMode)
             {
                 DialogResult = DialogResult.OK;
                 TreeDocumentType treeDocType = smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node.Key as TreeDocumentType;
-                documentType = new DocumentType()
+
+                if (String.IsNullOrEmpty(treeDocType.Form))
                 {
-                    Id = treeDocType.Id,
-                    Form = treeDocType.Form,
-                    Name = treeDocType.Name
-                };
-                Close();
+                    MessageBox.Show("Данный тип выбрать нельзя.");
+                    DialogResult = DialogResult.Cancel;
+                }
+                else
+                {
+                    documentType = new DocumentType()
+                    {
+                        Id = treeDocType.Id,
+                        Form = treeDocType.Form,
+                        Name = treeDocType.Name
+                    };
+
+                    Close();
+                }
             }
             else
             {
@@ -483,6 +491,12 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             }
 
         }
+
+        #endregion
+
+
+
+
     }
 
     public class TreeDocumentType : SmartLib.ITreeData

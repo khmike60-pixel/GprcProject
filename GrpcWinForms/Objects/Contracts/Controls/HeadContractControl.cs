@@ -23,10 +23,25 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         private Contragent _selectedBuyer;
         private bool _initializing;
 
-        private bool readOnly = true;
+        private bool readOnly = false;
 
-        public bool ReadOnly { get => readOnly; set => readOnly = value; }
-        
+        public bool ReadOnly
+        {
+            get => readOnly;
+            set {
+                readOnly = value;
+                companyBuyer.ReadOnly = readOnly;
+                companySeller.ReadOnly = readOnly;
+                textBoxNumber.ReadOnly = readOnly;
+                dateEditStart.ReadOnly = readOnly;
+                dateEditStop.ReadOnly = readOnly;
+                textBoxTaxnoBuyer.ReadOnly = readOnly;
+                textBoxTaxnoSeller.ReadOnly = readOnly;
+                comboBoxContractType.ReadOnly = readOnly;
+                comboBoxCurrency.ReadOnly = readOnly;
+            }
+        }
+
         public HeadContractControl()
         {
             InitializeComponent();
@@ -81,16 +96,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
                 companySeller.Text = contract.Seller?.Name;
                 companyBuyer.Text = contract.Buyer?.Name;
-
-                companyBuyer.ReadOnly = readOnly;
-                companySeller.ReadOnly = readOnly;
-                textBoxNumber.ReadOnly = readOnly;
-                dateEditStart.ReadOnly = readOnly;
-                dateEditStop.ReadOnly = readOnly;
-                textBoxTaxnoBuyer.ReadOnly = readOnly;
-                textBoxTaxnoSeller.ReadOnly = readOnly;
-                comboBoxContractType.ReadOnly = readOnly;
-                comboBoxCurrency.ReadOnly = readOnly;
             }
             finally
             {
@@ -112,7 +117,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             searchRequest.FieldMask =
                 new Google.Protobuf.WellKnownTypes.FieldMask() { Paths = { "id", "name", "taxno" } };
 
-            ListContragentResponse searchResponse = GrpcRetry.CallAsync(()=>
+            ListContragentResponse searchResponse = GrpcRetry.CallAsync(() =>
                 GrpcClients.GrpcClients.Contragent.SearchListContragentAsync(searchRequest).ResponseAsync).GetAwaiter().GetResult();
 
             BindingList<Company> _contragents = new BindingList<Company>();
@@ -165,5 +170,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
                 textBoxTaxnoSeller.Text = _selectedSeller.Taxno;
             }
         }
+
     }
 }

@@ -20,7 +20,18 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         private string[] projectTypes = new string[] { "стандартный", "проект", "распродажа" };
 
         private bool readOnly = false;
-        public bool ReadOnly { get => readOnly; set => readOnly = value; }
+        public bool ReadOnly {
+            get => readOnly;
+            set { 
+                readOnly = value;
+                empExecutor.ReadOnly = readOnly;
+                empInittiator.ReadOnly = readOnly;
+                cbProjectType.ReadOnly = readOnly;
+                tbComment.ReadOnly = readOnly;
+                cddByCreate.ReadOnly = readOnly;
+
+            }
+        }
 
         public ManagerControl()
         {
@@ -61,11 +72,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             // Описание
             tbComment.Text = Contract.Comment;
 
-            empExecutor.ReadOnly = readOnly;
-            empInittiator.ReadOnly = readOnly;
-            cbProjectType.ReadOnly = readOnly;
-            tbComment.ReadOnly = readOnly;
-            cddByCreate.ReadOnly = readOnly;
+            //empExecutor.ReadOnly = readOnly;
+            //empInittiator.ReadOnly = readOnly;
+            //cbProjectType.ReadOnly = readOnly;
+            //tbComment.ReadOnly = readOnly;
+            //cddByCreate.ReadOnly = readOnly;
 
         }
 
