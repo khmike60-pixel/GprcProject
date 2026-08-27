@@ -37,6 +37,7 @@
             buttonSaveExit = new Button();
             smartGrid1 = new SmartLib.SmartGrid(components);
             periodBox1 = new SmartLib.PeriodBox(components);
+            toolStrip1 = new ToolStrip();
             ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)periodBox1).BeginInit();
             SuspendLayout();
@@ -44,7 +45,7 @@
             // buttonCancel
             // 
             buttonCancel.AutoSize = true;
-            buttonCancel.Location = new Point(546, 415);
+            buttonCancel.Location = new Point(546, 340);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 25);
             buttonCancel.TabIndex = 23;
@@ -54,7 +55,7 @@
             // 
             // buttonSave
             // 
-            buttonSave.Location = new Point(465, 417);
+            buttonSave.Location = new Point(465, 342);
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(75, 23);
             buttonSave.TabIndex = 22;
@@ -63,7 +64,7 @@
             // 
             // buttonSaveExit
             // 
-            buttonSaveExit.Location = new Point(337, 417);
+            buttonSaveExit.Location = new Point(337, 342);
             buttonSaveExit.Name = "buttonSaveExit";
             buttonSaveExit.Size = new Size(122, 23);
             buttonSaveExit.TabIndex = 21;
@@ -89,7 +90,7 @@
             smartGrid1.Rows.Fixed = 2;
             smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
             smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid1.Size = new Size(603, 358);
+            smartGrid1.Size = new Size(603, 270);
             smartGrid1.SortingType = SmartLib.SortingType.Descending;
             smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
             smartGrid1.TabIndex = 24;
@@ -102,11 +103,21 @@
             periodBox1.Period.From = new DateTime(2026, 5, 22, 11, 1, 24, 642);
             periodBox1.Period.To = new DateTime(2026, 8, 20, 11, 1, 24, 642);
             // 
+            // toolStrip1
+            // 
+            toolStrip1.Dock = DockStyle.Bottom;
+            toolStrip1.Location = new Point(0, 425);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Size = new Size(627, 25);
+            toolStrip1.TabIndex = 25;
+            toolStrip1.Text = "toolStrip1";
+            // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(627, 450);
+            Controls.Add(toolStrip1);
             Controls.Add(periodBox1);
             Controls.Add(smartGrid1);
             Controls.Add(buttonSaveExit);
@@ -127,5 +138,6 @@
         private Button buttonSaveExit;
         private SmartLib.SmartGrid smartGrid1;
         private SmartLib.PeriodBox periodBox1;
+        private ToolStrip toolStrip1;
     }
 }

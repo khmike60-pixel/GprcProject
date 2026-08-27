@@ -97,12 +97,12 @@ namespace GrpcWinForms.Objects.Test
         private async void TestLookup_Load(object sender, EventArgs e)
         {
             periodBox1.Period.From = new DateTime(2025, 1, 1);
-            periodBox1.Period.To   = new DateTime(2027, 1, 1).AddSeconds(-1);
+            periodBox1.Period.To = new DateTime(2027, 1, 1).AddSeconds(-1);
 
             ListContractsRequest request = new ListContractsRequest()
             {
                 StartDate = periodBox1.Period.From.ToUniversalTime().ToTimestamp(),
-                EndDate   = periodBox1.Period.To.ToUniversalTime().ToTimestamp(),
+                EndDate = periodBox1.Period.To.ToUniversalTime().ToTimestamp(),
                 WithAdd = true
             };
             request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
@@ -114,7 +114,7 @@ namespace GrpcWinForms.Objects.Test
             response = await GrpcClients.GrpcClients.Contract.GetListContractsAsync(request);
             List<TreeContract> treeContracts = new List<TreeContract>();
 
-            foreach(Contract contract in response.Contracts)
+            foreach (Contract contract in response.Contracts)
             {
                 treeContracts.Add(new TreeContract()
                 {
@@ -138,9 +138,9 @@ namespace GrpcWinForms.Objects.Test
             }
 
             smartGrid1.BuildTree(treeContracts, false); // Создается структура Nodes
-            
+
             ProcessNodes(smartGrid1.Nodes);
         }
     }
-    
+
 }

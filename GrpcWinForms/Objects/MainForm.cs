@@ -16,18 +16,45 @@ using System;
 using System.Windows.Forms;
 using GrpcWinForms.Objects.Departaments;
 using GrpcWinForms.Objects.Banks.Forms;
+using GrpcWinForms.Controls.TaskBar;
 
 namespace GrpcWinForms.Forms
 {
 
     public partial class MainForm : Form
     {
+        private TaskBar _taskBar;
+
         public MainForm()
         {
             InitializeComponent();
             this.Text = $"Приложение {MainClass.AppName} ({MainClass.HostName})";
             IsMdiContainer = true;
-            //InitMenu();
+            SetupMdiAndTaskBar();
+
+        }
+
+        private void SetupMdiAndTaskBar()
+        {
+            // Настройка MDI
+            this.IsMdiContainer = true;
+            this.WindowState = FormWindowState.Maximized;
+
+            // Создание и добавление TaskBar
+            _taskBar = new TaskBar();
+            _taskBar.AttachToMdiParent(this);
+
+            // Добавляем TaskBar в форму
+            this.Controls.Add(_taskBar);
+            _taskBar.Dock = DockStyle.Bottom;
+            //_taskBar.BringToFront();
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            _taskBar?.DetachFromMdiParent();
+            _taskBar?.Dispose();
+            base.OnFormClosed(e);
         }
 
         private void CurrenciesToolStripMenuItem_Click(object sender, EventArgs e)
