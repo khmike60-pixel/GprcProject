@@ -395,6 +395,118 @@ public class ContractRepository
         return contract;
     }
 
+    public async Task<Contract> CreateContractAsync(Contract _contract)
+    {
+        Contract contract = new Contract();
+        contract = _contract;
+        try
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = @"
+                                    INSERT INTO cwatis.contracts (
+                                        contract_RootId, 
+                                        contract_PreviousId , 
+                                        contract_SellerId , contract_SellerName , contract_SellerSignId , contract_SellerBAccountId , 
+                                        contract_BuyerId , contract_BuyerName , contract_BuyerSignId , contract_BuyerBAccountId , 
+                                        contract_ShipperId , contract_ShipperName , 
+                                        contract_ConsigneeId , contract_ConsigneeName ,
+                                        Initiator_Id , Initiator_Name , Executor_Id , Executor_Name , 
+                                        contract_Date , contract_ExpirationDate ,
+                                        contract_Number , contract_Name , contract_DocName , 
+                                        CurrencyId , CurrencyPaymentId , 
+                                        Sum , Amount , SumVat , IsVat , VatPrc , 
+                                        contract_State , contract_data , IsContract , IsOrder , DocumentType_Id , 
+                                        SDid ,
+                                        ProjectTypes , TemplDoc_Id , Comment , 
+                                        create_at , create_by , create_userid , 
+                                        Contract_SignPlaceId 
+                                    )
+                                    VALUES (
+                                        @RootId, 
+                                        @PrevId, 
+                                        @SellerId, @SellerName, @SellerSignId, @SellerBAcctId, 
+                                        @BuyerId, @BuyerName, @BuyerSignId, @BuyerBAcctId, 
+                                        @ShipperId, @ShipperName, 
+                                        @ConsigneeId, @ConsigneeName,
+                                        @InitId, @InitName, @ExecId, @ExecName, 
+                                        @CDate, @ExpDate,
+                                        @CNumber, @CName, @DocName, 
+                                        @CurrId, @CurrPayId, 
+                                        @Sum, @Amount, @SumVat, @IsVat, @VatPrc, 
+                                        @CState, @CData, @IsCont, @IsOrd, @DocTypeId, 
+                                        @SDid,
+                                        @ProjTypes, @TemplDocId, @Comment, 
+                                        @CreateAt, @CreateBy, @CreateUid, 
+                                        @SignPlaceId
+                                    )
+                                    select * from cwatis.contracts where LAST_INSERT_ID() = @Id;
+                                    ";
+
+                MySqlParameterCollection p = cmd.Parameters;
+                p.AddWithValue("@Id", contract.Id);
+                p.AddWithValue("@RootId", contract.RootId == 0 ? null : contract.RootId);
+                p.AddWithValue("@PrevId", contract.PreviousId == 0 ? null : contract.PreviousId);
+                p.AddWithValue("@SellerId", contract.Seller.Id);
+                p.AddWithValue("@SellerName", contract.Seller.Name);
+                p.AddWithValue("@SellerSignId", contract.Seller.Entity?.Signatory.Id);
+                p.AddWithValue("@SellerBAcctId", null);                         // _contract.SellerBAccountId 
+                p.AddWithValue("@BuyerId", contract.Buyer.Id);
+                p.AddWithValue("@BuyerName", contract.Buyer.Name);
+                p.AddWithValue("@BuyerSignId", contract.Buyer.Entity?.Signatory.Id);
+                p.AddWithValue("@BuyerBAcctId", null);            // _contract.BuyerBAccountId
+                p.AddWithValue("@ShipperId", contract.Shipper.Id == 0 ? null : contract.Shipper.Id);
+                p.AddWithValue("@ShipperName", contract.Shipper.Name);
+                p.AddWithValue("@ConsigneeId", contract.Consignee.Id == 0 ? null : contract.Consignee.Id);
+                p.AddWithValue("@ConsigneeName", contract.Consignee?.Name);
+                p.AddWithValue("@InitId", contract.Initiator?.Id);
+                p.AddWithValue("@InitName", contract.Initiator?.Name);
+                p.AddWithValue("@ExecId", contract.Executor?.Id);
+                p.AddWithValue("@ExecName", contract.Executor?.Name);
+                p.AddWithValue("@CDate", contract.Data);
+                p.AddWithValue("@ExpDate", contract.ExpirationDate.ToDateTime() == DateTime.MinValue ? null : contract.ExpirationDate.ToDateTime());
+                p.AddWithValue("@CNumber", contract.Number);
+                p.AddWithValue("@CName", contract.Name);
+                p.AddWithValue("@DocName", contract.DocName);
+                p.AddWithValue("@CurrId", contract.Currency.Id);
+                p.AddWithValue("@CurrPayId", contract.CurrencyPayment?.Id);
+                p.AddWithValue("@Sum", MyConvert.ToDecimal(contract.Sum));
+                p.AddWithValue("@Amount", MyConvert.ToDecimal(contract.Amount));
+                p.AddWithValue("@SumVat", MyConvert.ToDecimal(contract.SumVat));
+                p.AddWithValue("@IsVat", contract.IsVat);
+                p.AddWithValue("@VatPrc", MyConvert.ToDecimal(contract.VatPrc));
+                p.AddWithValue("@CState", contract.State);
+                p.AddWithValue("@CData", contract.Data?.ToString()); // JSON как строка
+                p.AddWithValue("@IsCont", null);                    // _contract.IsContract
+                p.AddWithValue("@IsOrd", null);        // _contract.IsOrder
+                p.AddWithValue("@DocTypeId", contract.TypeContract.Id);
+                p.AddWithValue("@SDid", contract.Department?.Id);
+                p.AddWithValue("@ProjTypes", contract.ManagerType.ToString()); // Enum в строку
+                p.AddWithValue("@TemplDocId", null);               // _contract.TemplDocId
+                p.AddWithValue("@Comment", contract.Comment);
+                p.AddWithValue("@CreateAt", contract.Metadata?.CreateAt);
+                p.AddWithValue("@CreateBy", contract.Metadata?.CreateBy);
+                p.AddWithValue("@CreateUid", contract.Metadata?.CreateUserid);
+                p.AddWithValue("@SignPlaceId", contract.PlaceSigned?.Id);
+
+                using var rdr = await cmd.ExecuteReaderAsync();
+                contract = new Contract();
+
+                if (await rdr.ReadAsync())
+                    contract = FillContract(rdr);
+                else contract = _contract;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Ошибка при добавлении нового контракта.", ex);
+        }
+        return contract;
+    }
+
     public async Task<Line> UpdateLineAsync(Line _line)
     {
         Line line = new Line();
@@ -478,7 +590,7 @@ public class ContractRepository
             List<NodeContract> nodes = new List<NodeContract>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
-            using (MySqlCommand cmd = new MySqlCommand("cwatis.Contract_Tree_Get_1", conn))
+            using (MySqlCommand cmd = new MySqlCommand("cwatis.Contract_Tree_Get", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -561,6 +673,7 @@ public class ContractRepository
 
         contract.ManagerType = rdr["ProjectTypes"] == DBNull.Value ? "" : rdr["ProjectTypes"].ToString();
         contract.State = rdr["contract_State"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_State"]);
+        contract.DocName = rdr["contract_DocName"] == DBNull.Value ? "" : rdr["contract_DocName"].ToString();
 
         return contract;
     }
@@ -609,50 +722,7 @@ public class ContractRepository
 
         return nodeContract;
     }
-
-    private async Task<List<Contract>> Fill(DbDataReader rd, Dictionary<int, Contract> dict)
-    {
-        List<Contract> result = new List<Contract>();
-        while (await rd.ReadAsync())
-        {
-            int docId = rd["contract_id"] == DBNull.Value ? 0 : Convert.ToInt32(rd["contract_id"]);
-            Contract contract;
-
-
-            if (!dict.TryGetValue(docId, out contract))
-            {
-                contract = FillContract(rd);
-                dict.Add(docId, contract);
-                //result.Add(contract);
-            }
-
-            // если строка существует (LEFT JOIN может дать NULL)
-            if (rd["contractline_id"] != DBNull.Value)
-            {
-                var line = new Line();
-
-                line.Id = Convert.ToInt32(rd["contractline_id"]);
-                line.Order = Convert.ToInt32(rd["contractline_order"]);
-                line.Name = rd["contractline_name"] == DBNull.Value ? "" : Convert.ToString(rd["contractline_name"]);
-                line.Unit = new Unit()
-                {
-                    Id = rd["UnitId"] == DBNull.Value ? 0 : Convert.ToInt32(rd["UnitId"]),
-                    Short = rd["Short"] == DBNull.Value ? "" : Convert.ToString(rd["Short"])
-                };
-                line.Qty = rd["contractline_qty"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rd["contractline_qty"]), 2);
-                line.Price = rd["contractline_price"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rd["contractline_price"]), 2);
-                line.Sum = rd["contractline_amount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rd["contractline_amount"]), 2);
-                line.VatPrc = rd["contractline_vat_prc"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rd["contractline_vat_prc"]), 2);
-                line.SumVat = rd["contractline_sumvat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rd["contractline_sumvat"]), 2);
-                line.Sum = rd["contractline_sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rd["contractline_sum"]), 2);
-
-
-                contract.Lines.Add(line);
-                result.Add(contract);
-            }
-        }
-        return result;
-    }
+       
 
     #endregion
 

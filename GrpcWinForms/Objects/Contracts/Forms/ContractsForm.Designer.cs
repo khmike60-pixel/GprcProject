@@ -60,14 +60,14 @@
             c1SplitterPanelContractList = new C1.Win.SplitContainer.C1SplitterPanel();
             smartGridContracts1 = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
-            toolStripButtonNew = new ToolStripButton();
+            toolStripButtonNew = new ToolStripDropDownButton();
+            ToolStripMenuItemNewContract = new ToolStripMenuItem();
+            ToolStripMenuItemNewAgreement = new ToolStripMenuItem();
             toolStripButtonDouble = new ToolStripButton();
             toolStripButtonEdit = new ToolStripButton();
             toolStripButtonDelete = new ToolStripButton();
             toolStripButtonRefresh = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
-            toolStripButtonHistory = new ToolStripButton();
-            toolStripButton1 = new ToolStripButton();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)period1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
@@ -337,7 +337,7 @@
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(24, 24);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1, toolStripButtonHistory, toolStripButton1 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(1085, 31);
@@ -347,12 +347,29 @@
             // toolStripButtonNew
             // 
             toolStripButtonNew.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButtonNew.DropDownItems.AddRange(new ToolStripItem[] { ToolStripMenuItemNewContract, ToolStripMenuItemNewAgreement });
             toolStripButtonNew.Image = Properties.Resources.icons8_документ_50;
             toolStripButtonNew.ImageTransparentColor = Color.Magenta;
             toolStripButtonNew.Name = "toolStripButtonNew";
-            toolStripButtonNew.Size = new Size(28, 28);
+            toolStripButtonNew.Size = new Size(37, 28);
             toolStripButtonNew.Text = "Новый";
             toolStripButtonNew.Click += toolStripButtonNew_Click;
+            // 
+            // ToolStripMenuItemNewContract
+            // 
+            ToolStripMenuItemNewContract.Image = Properties.Resources.icons8_документ_50;
+            ToolStripMenuItemNewContract.Name = "ToolStripMenuItemNewContract";
+            ToolStripMenuItemNewContract.Size = new Size(247, 30);
+            ToolStripMenuItemNewContract.Text = "Новый контракт";
+            ToolStripMenuItemNewContract.Click += ToolStripMenuItemNewContract_Click;
+            // 
+            // ToolStripMenuItemNewAgreement
+            // 
+            ToolStripMenuItemNewAgreement.Image = Properties.Resources.icons8_agreement_50;
+            ToolStripMenuItemNewAgreement.Name = "ToolStripMenuItemNewAgreement";
+            ToolStripMenuItemNewAgreement.Size = new Size(247, 30);
+            ToolStripMenuItemNewAgreement.Text = "Дополнительное соглашение";
+            ToolStripMenuItemNewAgreement.Click += ToolStripMenuItemNewAgreement_Click;
             // 
             // toolStripButtonDouble
             // 
@@ -397,27 +414,6 @@
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(6, 31);
             // 
-            // toolStripButtonHistory
-            // 
-            toolStripButtonHistory.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButtonHistory.Image = Properties.Resources.icons8_order_history_32;
-            toolStripButtonHistory.ImageTransparentColor = Color.Magenta;
-            toolStripButtonHistory.Name = "toolStripButtonHistory";
-            toolStripButtonHistory.Size = new Size(28, 28);
-            toolStripButtonHistory.Text = "История";
-            // 
-            // toolStripButton1
-            // 
-            toolStripButton1.Checked = true;
-            toolStripButton1.CheckOnClick = true;
-            toolStripButton1.CheckState = CheckState.Checked;
-            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton1.Image = Properties.Resources.icons8_add_column_32;
-            toolStripButton1.ImageTransparentColor = Color.Magenta;
-            toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(28, 28);
-            toolStripButton1.Text = "toolStripButton1";
-            // 
             // ContractsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -456,7 +452,6 @@
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanelContractLinesList;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanelContractList;
         private ToolStrip toolStrip1;
-        private ToolStripButton toolStripButtonNew;
         private ToolStripButton toolStripButtonDouble;
         private ToolStripButton toolStripButtonEdit;
         private ToolStripButton toolStripButtonDelete;
@@ -468,8 +463,6 @@
         private Label labelContractType;
         private C1.Win.Input.C1ComboBox c1ComboBox2;
         private Label labelCurrency;
-        private ToolStripButton toolStripButtonHistory;
-        private ToolStripButton toolStripButton1;
         private Label labelBuyer;
         private Contragents.Components.CompanyDropDown companySeller;
         private Contragents.Components.CompanyDropDown companyBuyer;
@@ -477,5 +470,8 @@
         private SmartLib.SmartGrid smartGridLines1;
         private SmartLib.PeriodBox period1;
         private CheckBox chWithAdd;
+        private ToolStripDropDownButton toolStripButtonNew;
+        private ToolStripMenuItem ToolStripMenuItemNewContract;
+        private ToolStripMenuItem ToolStripMenuItemNewAgreement;
     }
 }

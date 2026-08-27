@@ -54,7 +54,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     Head = HeadCode,
                     FieldMask = new FieldMask()
                     {
-                        Paths = { "id", "parent", "ids", "parents", "name", "code", "form", "currency_type", "data", 
+                        Paths = { "id", "parent", "ids", "parents", "name", "code", "form", "currency_type", "data",
                             "country_currency_id", "view_master", "view_detail", "is_default", "approved", "kind_id", "is_contract" }
                     }
                 };
@@ -116,6 +116,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     toolStripButtonLevels.DropDownItems.Add(levelItem);
                 }
                 smartGridDocumentTypes1.EndUpdate();
+
             }
             catch (Exception ex)
             {
@@ -476,9 +477,6 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         }
 
         #endregion
-
-
-
 
     }
 

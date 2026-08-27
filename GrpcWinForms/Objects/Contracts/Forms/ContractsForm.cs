@@ -14,6 +14,7 @@ using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
 using GrpcWinForms.Objects.DocumentTypes.Forms;
+using GrpcWinForms.Properties;
 using SmartLib;
 using System;
 using System.Collections.Generic;
@@ -101,33 +102,34 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
                 {
                     Paths = {  "node_id", "parent_node_id", "tree_level", "node_type",
-                        "contract.id", "contract.root_id", 
-                        "contract.seller", "contract.buyer", 
-                        "contract.number", "contract.date", "contract.expiration_date", "contract.currency", 
+                        "contract.id", "contract.root_id",
+                        "contract.seller", "contract.buyer",
+                        "contract.number", "contract.date", "contract.expiration_date", "contract.currency",
                         "contract.department", "contract.sum", "contract.type_contract",
-                        "contract.state"
+                        "contract.state", "doc_name"
                     }
                 };
                 // Вызов через обёртку, которая сама обрабатывает RpcException(Unathenticated) и повторную авторизацию
-                 TreeNodeResponse response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Contract.GetTreeContractsAsync(request).ResponseAsync
-                );
+                TreeNodeResponse response = await GrpcRetry.CallAsync(() =>
+                   GrpcClients.GrpcClients.Contract.GetTreeContractsAsync(request).ResponseAsync
+               );
 
                 List<TreeContract> treeContracts = new List<TreeContract>();
                 foreach (NodeContract node in response.NodeContracts)
                 {
-                    treeContracts.Add(new TreeContract()
-                    { 
+                    TreeContract treeContract = new TreeContract()
+                    {
                         Id = node.NodeId,
                         ParentId = node.ParentNodeId,
-                        Name = (node.NodeType == "contract_without_agreements" ? "Контракт": // Контракт без ДС
+                        Name = (node.NodeType == "contract_without_agreements" ? "Контракт" : // Контракт без ДС
                                 node.NodeType == "root" ? "Контракт" :                       // Корень контракта с ДС
                                 node.NodeType == "agreement" ? "Допсоглашение" :             // ДС
-                                node.NodeType == "first_contract" ? "Первичный контракт" : "Неизвестно")  // Певичный контракт
+                                node.NodeType == "first_contract" ? "Первичный контракт" :   // Первичный контракт
+                                node.NodeType == "frame_root" ? "Рамочный контракт" : "Неизвестно")  // Певичный контракт
                         + " " + node.Contract.Number,
                         ContractId = node.Contract.Id,
                         ContractDate = node.Contract.Date.ToDateTime(),
-                        Buyer =  node.Contract.Buyer.Name,
+                        Buyer = node.Contract.Buyer.Name,
                         Seller = node.Contract.Seller.Name,
                         Date = node.Contract.Date.ToDateTime(),
                         Number = node.Contract.Number,
@@ -141,14 +143,16 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                         TypeCode = node.Contract.TypeContract.Code,
                         TypeForm = node.Contract.TypeContract.Form,
                         Contract_RootId = node.Contract.RootId,
-                        State = node.Contract.State == 0 ? "" : // Новый
-                                node.Contract.State == 1 ? "+" : // В работе
+                        State = node.Contract.State == 0 ? "" :  // Новый
+                                node.Contract.State == 1 ? "+" : // Подписан
                                 node.Contract.State == 2 ? ">" : // Есть операции
                                 node.Contract.State == 3 ? "=" : // Баланс
                                 node.Contract.State == 4 ? "*" : // Завершен
                                 "?"
-                    }
-                    );
+                    };
+                    if (!string.IsNullOrEmpty(node.Contract.DocName))
+                        treeContract.Name = node.Contract.DocName + " " + node.Contract.Number;
+                    treeContracts.Add(treeContract);
                 }
                 smartGridContracts1.BuildTree(treeContracts, false);
                 foreach (Node node in smartGridContracts1.Nodes)
@@ -156,6 +160,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
                 smartGridContracts1.Row = 0;
                 smartGridContracts1.Row = smartGridContracts1.Rows.Fixed;
+
+
 
             }
             catch (Exception ex)
@@ -176,6 +182,13 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 period1.Period.To = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
 
                 RefreshContract();
+
+                smartGridContracts1.AddSeparator();
+                smartGridContracts1.AddItemToContextMenu("Новый контракт",
+                    Properties.Resources.icons8_документ_50, toolStripButtonNew_Click);
+                smartGridContracts1.AddItemToContextMenu("Новое допсоглашение",
+                    Properties.Resources.icons8_agreement_50, toolStripButtonNew_Click);
+
             }
             catch (RpcException ex)
             {
@@ -315,7 +328,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 {
                     //Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
                     TreeContract _obj = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
-                    
+
                     //treeContract = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
 
                     ContractLineRequest request = new ContractLineRequest()
@@ -359,7 +372,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             viewContract.ViewMode = ViewMode.Edit;
 
             viewContract.Show();
-            
+
             //smartGridContracts_DoubleClick(sender, e);
 
         }
@@ -423,7 +436,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 Id = rowNode.ContractId,
                 Number = rowNode.Number,
                 Date = rowNode.Date.ToUniversalTime().ToTimestamp(),
-                RootId = rowNode.Contract_RootId?? 0,
+                RootId = rowNode.Contract_RootId ?? 0,
                 TypeContract = new DocumentType() { Id = rowNode.TypeId, Code = rowNode.TypeCode, Form = rowNode.TypeForm, Name = rowNode.Type }
             };
 
@@ -519,7 +532,19 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void smartGridContracts1_GridChanged(object sender, C1.Win.FlexGrid.GridChangedEventArgs e)
         {
-            
+
+        }
+
+        private void ToolStripMenuItemNewContract_Click(object sender, EventArgs e)
+        {
+            // Добавить новый контракт
+            toolStripButtonNew_Click(sender, e);
+        }
+
+        private void ToolStripMenuItemNewAgreement_Click(object sender, EventArgs e)
+        {
+            // Добавить дополнительное соглашение
+            toolStripButtonNew_Click(sender, e);
         }
     }
 
