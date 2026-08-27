@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            C1.Win.Input.ComboBoxItem comboBoxItem1 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem2 = new C1.Win.Input.ComboBoxItem();
             lName = new Label();
             lParent = new Label();
             lCurrencyType = new Label();
@@ -49,10 +49,12 @@
             cbCountryCurrency = new C1.Win.Input.C1ComboBox();
             lForm = new Label();
             tbForm = new TextBox();
+            chkIsContract = new C1.Win.Input.C1CheckBox();
             ((System.ComponentModel.ISupportInitialize)cbCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)chkDefault).BeginInit();
             ((System.ComponentModel.ISupportInitialize)btnAdditionalParameters).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cbCountryCurrency).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)chkIsContract).BeginInit();
             SuspendLayout();
             // 
             // lName
@@ -225,9 +227,9 @@
             cbCountryCurrency.AutoCompleteSource = AutoCompleteSource.ListItems;
             cbCountryCurrency.DropDownStyle = C1.Win.Input.DropDownStyle.DropDownList;
             cbCountryCurrency.InitialSelection = C1.Win.Input.InitialSelection.CaretAtStart;
-            comboBoxItem1.DisplayText = "Продажа в DDP (Узбекистан)";
-            comboBoxItem1.Value = "1";
-            cbCountryCurrency.Items.Add(comboBoxItem1);
+            comboBoxItem2.DisplayText = "Продажа в DDP (Узбекистан)";
+            comboBoxItem2.Value = "1";
+            cbCountryCurrency.Items.Add(comboBoxItem2);
             cbCountryCurrency.Location = new Point(14, 204);
             cbCountryCurrency.Name = "cbCountryCurrency";
             cbCountryCurrency.ReadOnly = true;
@@ -252,11 +254,24 @@
             tbForm.Size = new Size(318, 23);
             tbForm.TabIndex = 3;
             // 
+            // chkIsContract
+            // 
+            chkIsContract.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            chkIsContract.AutoSize = true;
+            chkIsContract.CheckAlign = ContentAlignment.MiddleRight;
+            chkIsContract.Location = new Point(142, 250);
+            chkIsContract.Name = "chkIsContract";
+            chkIsContract.Size = new Size(99, 19);
+            chkIsContract.TabIndex = 15;
+            chkIsContract.Text = "это Контракт";
+            chkIsContract.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // DocumentTypeForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(344, 441);
+            Controls.Add(chkIsContract);
             Controls.Add(tbForm);
             Controls.Add(lForm);
             Controls.Add(tbParent);
@@ -285,6 +300,7 @@
             ((System.ComponentModel.ISupportInitialize)chkDefault).EndInit();
             ((System.ComponentModel.ISupportInitialize)btnAdditionalParameters).EndInit();
             ((System.ComponentModel.ISupportInitialize)cbCountryCurrency).EndInit();
+            ((System.ComponentModel.ISupportInitialize)chkIsContract).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -311,5 +327,6 @@
         private C1.Win.Input.C1ComboBox cbCountryCurrency;
         private Label lForm;
         private TextBox tbForm;
+        private C1.Win.Input.C1CheckBox chkIsContract;
     }
 }

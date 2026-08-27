@@ -478,7 +478,7 @@ public class ContractRepository
             List<NodeContract> nodes = new List<NodeContract>();
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
-            using (MySqlCommand cmd = new MySqlCommand("cwatis.Contract_Tree_Get", conn))
+            using (MySqlCommand cmd = new MySqlCommand("cwatis.Contract_Tree_Get_1", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 

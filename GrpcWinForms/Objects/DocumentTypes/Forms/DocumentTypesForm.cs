@@ -54,7 +54,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                     Head = HeadCode,
                     FieldMask = new FieldMask()
                     {
-                        Paths = { "id", "parent", "ids", "parents", "name", "code", "form", "currency_type", "data", "country_currency_id", "view_master", "view_detail", "is_default", "approved", "kind_id" }
+                        Paths = { "id", "parent", "ids", "parents", "name", "code", "form", "currency_type", "data", 
+                            "country_currency_id", "view_master", "view_detail", "is_default", "approved", "kind_id", "is_contract" }
                     }
                 };
 
@@ -78,6 +79,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         ParentNames = item.Parents,
                         KindId = Convert.ToInt32(item.KindId),
                         IsDefault = item.IsDefault,
+                        IsContract = item.IsContract,
                         Data = item.Data,
                         ViewMaster = item.ViewMaster,
                         ViewDetail = item.ViewDetail
@@ -130,27 +132,6 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         private void ContractTypesForm_Load(object sender, EventArgs e)
         {
             RefreshDocumentTypes();
-        }
-
-        private async void smartGridDocumentTypes_DoubleClick(object sender, EventArgs e)
-        {
-            try
-            {
-                Node treeNode = smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node;
-                TreeDocumentType treeNodeKey = (TreeDocumentType)treeNode.Key;
-                DocumentTypeRequest requestById = new DocumentTypeRequest() { Id = treeNodeKey.Id };
-
-                DocumentTypeResponse responseById = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.DocumentType.GetDocumentTypeAsync(requestById).ResponseAsync);
-                using DocumentTypeForm form = new DocumentTypeForm();
-                form.EditMode = false;
-                form.DocumentType = responseById.DocumentType;
-                form.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ошибка: \n" + ex.Message, "Оишбка");
-            }
         }
 
         private async void toolStripButtonEdit_Click(object sender, EventArgs e)
@@ -463,15 +444,17 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
         private void smartGridDocumentTypes1_DoubleClick(object sender, EventArgs e)
         {
+            int row = smartGridDocumentTypes1.Row;
+            if (row < smartGridDocumentTypes1.Rows.Fixed || row > smartGridDocumentTypes1.Rows.Count - smartGridDocumentTypes1.Footers.Descriptions.Count)
+                return;
+            TreeDocumentType treeDocType = smartGridDocumentTypes1.Rows[row].Node.Key as TreeDocumentType;
+            if (treeDocType.Data == null) return;
             if (DialogMode)
             {
-                DialogResult = DialogResult.OK;
-                TreeDocumentType treeDocType = smartGridDocumentTypes1.Rows[smartGridDocumentTypes1.Row].Node.Key as TreeDocumentType;
 
                 if (String.IsNullOrEmpty(treeDocType.Form))
                 {
-                    MessageBox.Show("Данный тип выбрать нельзя.");
-                    DialogResult = DialogResult.Cancel;
+                    MessageBox.Show("Данный тип выбрать нельзя.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
@@ -481,7 +464,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                         Form = treeDocType.Form,
                         Name = treeDocType.Name
                     };
-
+                    DialogResult = DialogResult.OK;
                     Close();
                 }
             }
@@ -513,6 +496,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         public string ViewDetail {  get; set; }
         public Struct Data { get; set; }
         public bool IsDefault {  get; set; }
+        public bool IsContract { get; set; }
         public int CurrencyType_Id { get; set; }
         public int CountryCurrency_Id { get; set; }
         public int KindId {  get; set; }

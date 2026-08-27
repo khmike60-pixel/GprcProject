@@ -53,12 +53,13 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
             // Установка значения флажка по умолчанию
             chkDefault.Checked = DocumentType.IsDefault;
+            chkIsContract.Checked = DocumentType.IsContract;
 
             if (!EditMode)
             {
                 tbName.ReadOnly = tbCode.ReadOnly = tbForm.ReadOnly = tbViewDetail.ReadOnly = tbViewMaster.ReadOnly = true;
                 cbCurrency.ReadOnly = cbCountryCurrency.ReadOnly = true;
-                chkDefault.Enabled = false;
+                chkDefault.Enabled = chkIsContract.Enabled = false;
                 btnOk.Enabled = false;
             }
 
@@ -79,6 +80,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             DocumentType.ViewDetail = tbViewDetail.Text;
             DocumentType.ViewMaster = tbViewMaster.Text;
             DocumentType.CurrencyType = Convert.ToInt32(cbCurrency.SelectedItem.Value);
+            DocumentType.IsContract = chkIsContract.Checked;
             DialogResult = DialogResult.OK;
             Close();
         }

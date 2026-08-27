@@ -333,9 +333,8 @@ namespace GrpcCommonNet.Service.Repository
 
             var _data = MyConvert.JsonToStruct(rdr["DocumentType_Data"] == DBNull.Value ? null : rdr["DocumentType_Data"].ToString());
             docType.Data = _data;
-            docType.IsDefault = rdr["DocumentType_IsDefault"] == DBNull.Value ? false : Convert.ToBoolean(rdr["DocumentType_IsDefault"]); 
-
-
+            docType.IsDefault = rdr["DocumentType_IsDefault"] == DBNull.Value ? false : Convert.ToBoolean(rdr["DocumentType_IsDefault"]);
+            docType.IsContract = rdr["IsContract"] == DBNull.Value ? false : Convert.ToBoolean(rdr["IsContract"]);
 
             return docType;
 

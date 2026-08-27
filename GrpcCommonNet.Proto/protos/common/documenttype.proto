@@ -17,19 +17,20 @@ message Checked {
 
 // Модель типа документа
 message DocumentType {
-	int32 id = 1;
-	Tree parent = 2;
-	string ids = 3;
-	string parents = 4;
-	string name = 5;
-	string code = 6;
-	string form = 7;
-	int32 currency_type = 8;
-	google.protobuf.Struct data = 9;
-	int32 country_currency_id = 10;
-	string view_master = 11;
-	string view_detail = 12;
-	bool is_default = 13;
-	Checked approved = 14;
-	int32 kind_id = 15;
+	int32 id = 1;						// Иденификатор
+	Tree parent = 2;					// Структура родитель
+	string ids = 3;						// список родителей + сам через ,
+	string parents = 4;					// "Список наименование родитедей + сам через ' / '
+	string name = 5;					// наименование	
+	string code = 6;					// Код, используется для получения срезов дерева
+	string form = 7;					// Форма, которой показывается документ данного типа 
+	int32 currency_type = 8;			// Валюта 
+	google.protobuf.Struct data = 9;	// Json-структура для дополнительных данных документа данного типа
+	int32 country_currency_id = 10;		// Валюты для страны продажи
+	string view_master = 11;			// Наименование sql view для получения данных для печати данных "шапки"" шаблона
+	string view_detail = 12;			// Наименование sql view для получения данных для печати данных "строк" шаблона
+	bool is_default = 13;				// Является умолчальным типом даннных (обдумать)
+	Checked approved = 14;				// Тип утвержден
+	int32 kind_id = 15;					// Тип контракта в BK
+	bool is_contract = 16;				// Признак того, что тип используется как контракт
 }

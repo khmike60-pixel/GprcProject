@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="smartGridDocumentTypes1.ColumnInfo" xml:space="preserve">
-    <value>6,1,0,0,0,-1,Columns:0{Caption:"...";AllowMerging:True;}	1{Width:305;StarWidth:"*";Name:"Name";Caption:"Наименование";AllowMerging:True;}	2{Name:"Code";Caption:"Код";AllowMerging:True;}	3{Name:"ParentNames";Caption:"Вышестояшие";AllowMerging:True;}	4{Name:"Form";Caption:"Код формы";AllowMerging:True;}	5{Name:"Id";Caption:"Id";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	</value>
+    <value>7,1,0,0,0,-1,Columns:0{Caption:"...";AllowMerging:True;StyleFixed:"TextAlign:CenterCenter;";}	1{Width:273;StarWidth:"3*";Name:"Name";Caption:"Наименование";AllowMerging:True;StyleFixed:"TextAlign:CenterCenter;";}	2{Name:"Code";Caption:"Код";AllowMerging:True;StyleFixed:"TextAlign:CenterCenter;";}	3{Name:"ParentNames";Caption:"Вышестояшие";Visible:False;AllowMerging:True;StyleFixed:"TextAlign:CenterCenter;";}	4{Width:182;StarWidth:"2*";Name:"Form";Caption:"Код формы";AllowMerging:True;StyleFixed:"TextAlign:CenterCenter;";}	5{Width:70;Name:"IsContract";Caption:"Контракт";Style:"DataType:System.Boolean;TextAlign:LeftCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	6{Name:"Id";Caption:"Id";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	</value>
   </data>
   <data name="smartGridDocumentTypes1.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
