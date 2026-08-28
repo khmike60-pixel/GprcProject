@@ -39,8 +39,8 @@ namespace GrpcWinForms.Objects.Contracts.Models
         {
             TreeContract treeContract = new TreeContract()
             {
-                Id = node.Contract.Id,
-                ParentId = node.Contract.RootId,
+                Id = node.NodeId,
+                ParentId = node.ParentNodeId,
                 Name = (node.NodeType == "contract_without_agreements" ? "Контракт" : // Контракт без ДС
                                 node.NodeType == "root" ? "Контракт" :                       // Корень контракта с ДС
                                 node.NodeType == "agreement" ? "Допсоглашение" :             // ДС

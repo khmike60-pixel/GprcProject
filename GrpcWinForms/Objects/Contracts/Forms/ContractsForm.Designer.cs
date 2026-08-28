@@ -353,7 +353,6 @@
             toolStripButtonNew.Name = "toolStripButtonNew";
             toolStripButtonNew.Size = new Size(37, 28);
             toolStripButtonNew.Text = "Новый";
-            toolStripButtonNew.Click += toolStripButtonNew_Click;
             // 
             // ToolStripMenuItemNewContract
             // 

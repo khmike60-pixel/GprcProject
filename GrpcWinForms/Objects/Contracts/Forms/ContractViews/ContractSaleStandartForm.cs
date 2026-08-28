@@ -293,10 +293,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                 contract = response.Contract;
 
                 // Уведомляем всех подписчиков об изменении
-                if(ViewMode == ViewMode.Edit)
+                if (ViewMode == ViewMode.Edit)
                     ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);
                 if (ViewMode == ViewMode.New)
-                    ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);
+                    ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Created);
 
             }
             catch (Exception ex)

@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            C1.Win.Input.ComboBoxItem comboBoxItem4 = new C1.Win.Input.ComboBoxItem();
-            C1.Win.Input.ComboBoxItem comboBoxItem5 = new C1.Win.Input.ComboBoxItem();
-            C1.Win.Input.ComboBoxItem comboBoxItem6 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem1 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem2 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem3 = new C1.Win.Input.ComboBoxItem();
             groupBox1 = new GroupBox();
             cbProjectType = new C1.Win.Input.C1ComboBox();
             label1 = new Label();
@@ -65,32 +65,30 @@
             groupBox1.Location = new Point(3, 0);
             groupBox1.MinimumSize = new Size(569, 73);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(569, 73);
+            groupBox1.Size = new Size(694, 73);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             // 
             // cbProjectType
             // 
-            cbProjectType.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cbProjectType.AutoCompleteCustomSource.AddRange(new string[] { "стандарт", "проект", "распродажа" });
             cbProjectType.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBoxItem4.DisplayText = "стандарт";
-            comboBoxItem5.DisplayText = "проект";
-            comboBoxItem6.DisplayText = "распродажа";
-            cbProjectType.Items.Add(comboBoxItem4);
-            cbProjectType.Items.Add(comboBoxItem5);
-            cbProjectType.Items.Add(comboBoxItem6);
-            cbProjectType.Location = new Point(435, 15);
+            comboBoxItem1.DisplayText = "стандарт";
+            comboBoxItem2.DisplayText = "проект";
+            comboBoxItem3.DisplayText = "распродажа";
+            cbProjectType.Items.Add(comboBoxItem1);
+            cbProjectType.Items.Add(comboBoxItem2);
+            cbProjectType.Items.Add(comboBoxItem3);
+            cbProjectType.Location = new Point(447, 15);
             cbProjectType.Name = "cbProjectType";
-            cbProjectType.Size = new Size(122, 23);
+            cbProjectType.Size = new Size(99, 23);
             cbProjectType.TabIndex = 5;
             cbProjectType.Value = "";
             // 
             // label1
             // 
-            label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Location = new Point(448, 48);
+            label1.Location = new Point(552, 19);
             label1.Name = "label1";
             label1.Size = new Size(49, 15);
             label1.TabIndex = 11;
@@ -110,7 +108,7 @@
             // labelInitiator
             // 
             labelInitiator.AutoSize = true;
-            labelInitiator.Location = new Point(181, 19);
+            labelInitiator.Location = new Point(202, 19);
             labelInitiator.Name = "labelInitiator";
             labelInitiator.Size = new Size(72, 15);
             labelInitiator.TabIndex = 2;
@@ -119,26 +117,28 @@
             // 
             // cddByCreate
             // 
-            cddByCreate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            cddByCreate.Location = new Point(503, 44);
+            cddByCreate.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_multiply_16);
+            cddByCreate.ButtonsSettings.CustomButton.Visible = true;
+            cddByCreate.ButtonsSettings.DropDownButton.Visible = false;
+            cddByCreate.ButtonsSettings.ModalButton.Visible = true;
+            cddByCreate.Location = new Point(607, 15);
             cddByCreate.Name = "cddByCreate";
-            cddByCreate.Size = new Size(54, 23);
+            cddByCreate.Size = new Size(75, 23);
             cddByCreate.TabIndex = 9;
+            cddByCreate.Value = "МВХ";
             // 
             // tbComment
             // 
-            tbComment.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            tbComment.Location = new Point(121, 44);
+            tbComment.Location = new Point(121, 45);
             tbComment.Name = "tbComment";
-            tbComment.Size = new Size(296, 23);
+            tbComment.Size = new Size(561, 23);
             tbComment.TabIndex = 7;
             tbComment.TextChanged += tbComment_TextChanged;
             // 
             // labelManagerType
             // 
-            labelManagerType.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelManagerType.AutoSize = true;
-            labelManagerType.Location = new Point(349, 19);
+            labelManagerType.Location = new Point(361, 19);
             labelManagerType.Name = "labelManagerType";
             labelManagerType.Size = new Size(80, 15);
             labelManagerType.TabIndex = 10;
@@ -147,9 +147,13 @@
             // 
             // empInittiator
             // 
-            empInittiator.Location = new Point(259, 15);
+            empInittiator.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_multiply_16);
+            empInittiator.ButtonsSettings.CustomButton.Visible = true;
+            empInittiator.ButtonsSettings.DropDownButton.Visible = false;
+            empInittiator.ButtonsSettings.ModalButton.Visible = true;
+            empInittiator.Location = new Point(280, 15);
             empInittiator.Name = "empInittiator";
-            empInittiator.Size = new Size(54, 23);
+            empInittiator.Size = new Size(75, 23);
             empInittiator.TabIndex = 3;
             // 
             // labelDescription
@@ -164,9 +168,13 @@
             // 
             // empExecutor
             // 
+            empExecutor.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_multiply_16);
+            empExecutor.ButtonsSettings.CustomButton.Visible = true;
+            empExecutor.ButtonsSettings.DropDownButton.Visible = false;
+            empExecutor.ButtonsSettings.ModalButton.Visible = true;
             empExecutor.Location = new Point(121, 15);
             empExecutor.Name = "empExecutor";
-            empExecutor.Size = new Size(54, 23);
+            empExecutor.Size = new Size(75, 23);
             empExecutor.TabIndex = 1;
             // 
             // ManagerControl
@@ -174,9 +182,9 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(groupBox1);
-            MinimumSize = new Size(575, 76);
+            MinimumSize = new Size(700, 76);
             Name = "ManagerControl";
-            Size = new Size(575, 76);
+            Size = new Size(700, 76);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)cbProjectType).EndInit();

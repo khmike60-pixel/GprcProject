@@ -20,6 +20,11 @@ namespace GrpcWinForms.Forms
     public partial class CurrenciesForm : Form
     {
         private BindingList<Currency> currencies;
+        private Currency currencySelected;
+
+        public Currency CurrencySelected {  get { return currencySelected; } }
+        public bool DialogMode { get; set; }
+
 
         public CurrenciesForm()
         {
@@ -197,4 +202,5 @@ namespace GrpcWinForms.Forms
         }
 
     }
+         
 }

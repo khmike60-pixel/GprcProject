@@ -76,7 +76,7 @@
             // 
             labelTaxNoBuyer.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelTaxNoBuyer.AutoSize = true;
-            labelTaxNoBuyer.Location = new Point(366, 17);
+            labelTaxNoBuyer.Location = new Point(492, 17);
             labelTaxNoBuyer.Name = "labelTaxNoBuyer";
             labelTaxNoBuyer.Size = new Size(95, 15);
             labelTaxNoBuyer.TabIndex = 2;
@@ -86,7 +86,7 @@
             // textBoxTaxnoBuyer
             // 
             textBoxTaxnoBuyer.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            textBoxTaxnoBuyer.Location = new Point(467, 13);
+            textBoxTaxnoBuyer.Location = new Point(593, 13);
             textBoxTaxnoBuyer.Name = "textBoxTaxnoBuyer";
             textBoxTaxnoBuyer.ReadOnly = true;
             textBoxTaxnoBuyer.Size = new Size(94, 23);
@@ -107,7 +107,7 @@
             // 
             labelTaxnoSeller.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelTaxnoSeller.AutoSize = true;
-            labelTaxnoSeller.Location = new Point(366, 46);
+            labelTaxnoSeller.Location = new Point(492, 46);
             labelTaxnoSeller.Name = "labelTaxnoSeller";
             labelTaxnoSeller.Size = new Size(95, 15);
             labelTaxnoSeller.TabIndex = 6;
@@ -117,7 +117,7 @@
             // textBoxTaxnoSeller
             // 
             textBoxTaxnoSeller.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            textBoxTaxnoSeller.Location = new Point(467, 42);
+            textBoxTaxnoSeller.Location = new Point(593, 42);
             textBoxTaxnoSeller.Name = "textBoxTaxnoSeller";
             textBoxTaxnoSeller.ReadOnly = true;
             textBoxTaxnoSeller.Size = new Size(94, 23);
@@ -126,7 +126,7 @@
             // ContractType
             // 
             ContractType.AutoSize = true;
-            ContractType.Location = new Point(10, 75);
+            ContractType.Location = new Point(28, 105);
             ContractType.Name = "ContractType";
             ContractType.Size = new Size(88, 15);
             ContractType.TabIndex = 8;
@@ -137,15 +137,16 @@
             // 
             comboBoxContractType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             comboBoxContractType.AutoSize = false;
-            comboBoxContractType.Location = new Point(125, 71);
+            comboBoxContractType.Location = new Point(124, 101);
             comboBoxContractType.Name = "comboBoxContractType";
-            comboBoxContractType.Size = new Size(113, 23);
+            comboBoxContractType.ReadOnly = true;
+            comboBoxContractType.Size = new Size(233, 23);
             comboBoxContractType.TabIndex = 9;
             // 
             // labelNumber
             // 
             labelNumber.AutoSize = true;
-            labelNumber.Location = new Point(10, 104);
+            labelNumber.Location = new Point(10, 75);
             labelNumber.Name = "labelNumber";
             labelNumber.Size = new Size(106, 15);
             labelNumber.TabIndex = 10;
@@ -155,16 +156,16 @@
             // textBoxNumber
             // 
             textBoxNumber.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textBoxNumber.Location = new Point(125, 100);
+            textBoxNumber.Location = new Point(125, 71);
             textBoxNumber.Name = "textBoxNumber";
-            textBoxNumber.Size = new Size(113, 23);
+            textBoxNumber.Size = new Size(100, 23);
             textBoxNumber.TabIndex = 13;
             // 
             // labelDateStart
             // 
             labelDateStart.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelDateStart.AutoSize = true;
-            labelDateStart.Location = new Point(238, 104);
+            labelDateStart.Location = new Point(235, 74);
             labelDateStart.Name = "labelDateStart";
             labelDateStart.Size = new Size(22, 15);
             labelDateStart.TabIndex = 12;
@@ -175,11 +176,11 @@
             // 
             labelDateStop.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelDateStop.AutoSize = true;
-            labelDateStop.Location = new Point(371, 104);
+            labelDateStop.Location = new Point(363, 75);
             labelDateStop.Name = "labelDateStop";
-            labelDateStop.Size = new Size(90, 15);
+            labelDateStop.Size = new Size(24, 15);
             labelDateStop.TabIndex = 14;
-            labelDateStop.Text = "Срок действия:";
+            labelDateStop.Text = "по:";
             labelDateStop.TextAlign = ContentAlignment.MiddleRight;
             // 
             // groupBoxMain
@@ -205,7 +206,7 @@
             groupBoxMain.Controls.Add(labelSeller);
             groupBoxMain.Location = new Point(3, 0);
             groupBoxMain.Name = "groupBoxMain";
-            groupBoxMain.Size = new Size(569, 133);
+            groupBoxMain.Size = new Size(694, 133);
             groupBoxMain.TabIndex = 16;
             groupBoxMain.TabStop = false;
             // 
@@ -215,7 +216,7 @@
             dateEditStart.ButtonsSettings.UpDownButton.Visible = false;
             dateEditStart.EmptyAsNull = true;
             dateEditStart.FormatType = C1.Win.Input.FormatType.ShortDate;
-            dateEditStart.Location = new Point(266, 100);
+            dateEditStart.Location = new Point(263, 70);
             dateEditStart.Name = "dateEditStart";
             dateEditStart.Size = new Size(94, 23);
             dateEditStart.TabIndex = 20;
@@ -227,7 +228,7 @@
             dateEditStop.ButtonsSettings.UpDownButton.Visible = false;
             dateEditStop.EmptyAsNull = true;
             dateEditStop.FormatType = C1.Win.Input.FormatType.ShortDate;
-            dateEditStop.Location = new Point(467, 100);
+            dateEditStop.Location = new Point(393, 71);
             dateEditStop.Name = "dateEditStop";
             dateEditStop.Size = new Size(94, 23);
             dateEditStop.TabIndex = 19;
@@ -244,7 +245,7 @@
             companySeller.GetDataSourceFunc = null;
             companySeller.Location = new Point(125, 42);
             companySeller.Name = "companySeller";
-            companySeller.Size = new Size(235, 23);
+            companySeller.Size = new Size(362, 23);
             companySeller.TabIndex = 18;
             companySeller.Value = "";
             companySeller.ModalButtonClick += companySeller_ModalButtonClick;
@@ -260,7 +261,7 @@
             companyBuyer.GetDataSourceFunc = null;
             companyBuyer.Location = new Point(125, 13);
             companyBuyer.Name = "companyBuyer";
-            companyBuyer.Size = new Size(235, 23);
+            companyBuyer.Size = new Size(362, 23);
             companyBuyer.TabIndex = 17;
             companyBuyer.Value = "";
             companyBuyer.ModalButtonClick += companyBuyer_ModalButtonClick;
@@ -269,20 +270,24 @@
             // 
             labelCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelCurrency.AutoSize = true;
-            labelCurrency.Location = new Point(247, 75);
+            labelCurrency.Location = new Point(558, 75);
             labelCurrency.Name = "labelCurrency";
-            labelCurrency.Size = new Size(51, 15);
+            labelCurrency.Size = new Size(29, 15);
             labelCurrency.TabIndex = 16;
-            labelCurrency.Text = "Валюта:";
+            labelCurrency.Text = "Влт:";
             labelCurrency.TextAlign = ContentAlignment.MiddleRight;
             // 
             // comboBoxCurrency
             // 
             comboBoxCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            comboBoxCurrency.Location = new Point(304, 71);
+            comboBoxCurrency.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_multiply_16);
+            comboBoxCurrency.ButtonsSettings.CustomButton.Visible = true;
+            comboBoxCurrency.ButtonsSettings.ModalButton.Visible = true;
+            comboBoxCurrency.Location = new Point(593, 71);
             comboBoxCurrency.Name = "comboBoxCurrency";
-            comboBoxCurrency.Size = new Size(56, 23);
+            comboBoxCurrency.Size = new Size(94, 23);
             comboBoxCurrency.TabIndex = 11;
+            comboBoxCurrency.ModalButtonClick += comboBoxCurrency_ModalButtonClick;
             // 
             // c1FlexGrid1
             // 
@@ -313,9 +318,9 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(groupBoxMain);
-            MinimumSize = new Size(575, 136);
+            MinimumSize = new Size(700, 136);
             Name = "HeadContractControl";
-            Size = new Size(575, 136);
+            Size = new Size(700, 136);
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).EndInit();
             groupBoxMain.ResumeLayout(false);
             groupBoxMain.PerformLayout();

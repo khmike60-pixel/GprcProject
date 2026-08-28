@@ -2,6 +2,7 @@
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
 using GrpcWinForms.Controls.CompanyDropDown;
+using GrpcWinForms.Forms;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Contragents.Forms;
 using System;
@@ -28,7 +29,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         public bool ReadOnly
         {
             get => readOnly;
-            set {
+            set
+            {
                 readOnly = value;
                 companyBuyer.ReadOnly = readOnly;
                 companySeller.ReadOnly = readOnly;
@@ -171,5 +173,20 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             }
         }
 
+        private void comboBoxCurrency_ModalButtonClick(object sender, EventArgs e)
+        {
+            CurrenciesForm form = new CurrenciesForm();
+            form.DialogMode = true;
+
+            if (DialogResult.OK == form.ShowDialog())
+            {
+                Currency currency = form.CurrencySelected;
+                comboBoxCurrency.Value = currency.Id;
+                comboBoxCurrency.Text = currency.Abbrev;
+            }
+
+        }
     }
+
+
 }
