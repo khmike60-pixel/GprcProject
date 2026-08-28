@@ -49,6 +49,7 @@ namespace GrpcWinForms.Forms
             UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             ApplicationsToolStripMenuItem = new ToolStripMenuItem();
             òåñòîâàÿÔîğìàToolStripMenuItem = new ToolStripMenuItem();
+            taskBar = new GrpcWinForms.Controls.TaskBar.TaskBar();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -300,9 +301,22 @@ namespace GrpcWinForms.Forms
             òåñòîâàÿÔîğìàToolStripMenuItem.Text = "Òåñòîâàÿ ôîğìà";
             òåñòîâàÿÔîğìàToolStripMenuItem.Click += òåñòîâàÿÔîğìàToolStripMenuItem_Click;
             // 
+            // taskBar
+            // 
+            taskBar.BackColor = SystemColors.Control;
+            taskBar.Dock = DockStyle.Bottom;
+            taskBar.ForeColor = SystemColors.ControlText;
+            taskBar.GripStyle = ToolStripGripStyle.Hidden;
+            taskBar.Location = new Point(0, 339);
+            taskBar.Name = "taskBar";
+            taskBar.Size = new Size(1100, 25);
+            taskBar.TabIndex = 2;
+            taskBar.Text = "taskBarComponent1";
+            // 
             // MainForm
             // 
             ClientSize = new Size(1100, 364);
+            Controls.Add(taskBar);
             Controls.Add(menuStrip1);
             IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
@@ -352,5 +366,6 @@ namespace GrpcWinForms.Forms
         private ToolStripMenuItem ContractTypesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem DocumentTypesToolStripMenuItem;
+        private Controls.TaskBar.TaskBar taskBar;
     }
 }

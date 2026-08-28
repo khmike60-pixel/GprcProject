@@ -37,7 +37,8 @@
             buttonSaveExit = new Button();
             smartGrid1 = new SmartLib.SmartGrid(components);
             periodBox1 = new SmartLib.PeriodBox(components);
-            toolStrip1 = new ToolStrip();
+            toolStripDropDownButton1 = new Button();
+            toolStripSplitButton1 = new ToolStripSplitButton();
             ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)periodBox1).BeginInit();
             SuspendLayout();
@@ -103,21 +104,29 @@
             periodBox1.Period.From = new DateTime(2026, 5, 22, 11, 1, 24, 642);
             periodBox1.Period.To = new DateTime(2026, 8, 20, 11, 1, 24, 642);
             // 
-            // toolStrip1
+            // toolStripDropDownButton1
             // 
-            toolStrip1.Dock = DockStyle.Bottom;
-            toolStrip1.Location = new Point(0, 425);
-            toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(627, 25);
-            toolStrip1.TabIndex = 25;
-            toolStrip1.Text = "toolStrip1";
+            toolStripDropDownButton1.Image = (Image)resources.GetObject("toolStripDropDownButton1.Image");
+            toolStripDropDownButton1.Location = new Point(0, 0);
+            toolStripDropDownButton1.Name = "toolStripDropDownButton1";
+            toolStripDropDownButton1.Size = new Size(180, 20);
+            toolStripDropDownButton1.TabIndex = 0;
+            toolStripDropDownButton1.Text = "toolStripDropDownButton1";
+            // 
+            // toolStripSplitButton1
+            // 
+            toolStripSplitButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripSplitButton1.Image = (Image)resources.GetObject("toolStripSplitButton1.Image");
+            toolStripSplitButton1.ImageTransparentColor = Color.Magenta;
+            toolStripSplitButton1.Name = "toolStripSplitButton1";
+            toolStripSplitButton1.Size = new Size(32, 20);
+            toolStripSplitButton1.Text = "toolStripSplitButton1";
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(627, 450);
-            Controls.Add(toolStrip1);
             Controls.Add(periodBox1);
             Controls.Add(smartGrid1);
             Controls.Add(buttonSaveExit);
@@ -138,6 +147,7 @@
         private Button buttonSaveExit;
         private SmartLib.SmartGrid smartGrid1;
         private SmartLib.PeriodBox periodBox1;
-        private ToolStrip toolStrip1;
+        private Button toolStripDropDownButton1;
+        private ToolStripSplitButton toolStripSplitButton1;
     }
 }

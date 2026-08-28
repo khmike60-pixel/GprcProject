@@ -131,7 +131,22 @@
   <data name="smartGrid1.StyleInfo" xml:space="preserve">
     <value>Normal{}	Alternate{}	Hover{}	Fixed{BackColor:Control;ForeColor:ControlText;TextAlign:CenterCenter;BackgroundImageLayout:Hide;}	Highlight{BackColor:Info;ForeColor:ControlText;SearchBackColor:Orange;}	Focus{BackColor:Info;ForeColor:ControlText;}	Editor{}	Search{BackColor:Highlight;ForeColor:HighlightText;}	Frozen{BackColor:Beige;}	FrozenAlternate{}	NewRow{ForeColor:GrayText;}	EmptyArea{BackColor:AppWorkspace;Border:None,1,Black,Both;BorderHorz:1,Black;BorderVert:1,Black;}	SelectedColumnHeader{}	SelectedRowHeader{}	GrandTotal{BackColor:Black;ForeColor:White;}	Subtotal0{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal1{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal2{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal3{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal4{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal5{BackColor:ControlDarkDark;ForeColor:White;}	FilterEditor{}	Footer{BackColor:Control;ForeColor:ControlText;BackgroundImageLayout:Hide;}	FirstCustomStyle{}	</value>
   </data>
-  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="toolStripDropDownButton1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        wgAADsIBFShKgAAAAJFJREFUOE9j+Pbt239KMNgAJycnsjCKAR/efyQJk2zA81sn/5/oNgXTID7JBpzo
+        Nvl/qFYKbAiIT6YLTAi7YNLZV/8XXHoN5+PCWA3I2vfiv/TCR2BMyBAMA5A1E2MIigE6DSsxNMMwsiEg
+        duuJl5gGYNOIjEEaQRjGB7mWJAOwYZCrKTIAhKlnACWYgTLAwAAABzX8nC+3qw0AAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="toolStripSplitButton1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACRSURBVDhPY/j27dt/SjDYACcnJ7IwigEf3n8kCZNswPNb
+        J/+f6DYF0yA+yQac6Db5f6hWCmwIiE+mC0wIu2DS2Vf/F1x6DefjwlgNyNr34r/0wkdgTMgQDAOQNRNj
+        CIoBOg0rMTTDMLIhIHbriZeYBmDTiIxBGkEYxge5liQDsGGQqykyAISpZwAlmIEywMAAAAc1/Jwvt6sN
+        AAAAAElFTkSuQmCC
+</value>
+  </data>
 </root>

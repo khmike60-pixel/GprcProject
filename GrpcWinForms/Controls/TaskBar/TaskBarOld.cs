@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace GrpcWinForms.Controls.TaskBar
 {
-    public partial class TaskBar : ToolStrip
+    //public class TaskBar : StatusStrip
+    public class TaskBarOld : ToolStrip
     {
         private readonly Dictionary<Form, ToolStripButton> _formButtons = new();
         private Form _mdiParent;
@@ -17,18 +17,19 @@ namespace GrpcWinForms.Controls.TaskBar
         public event EventHandler<Form> FormActivated;
         public event EventHandler<Form> FormClosed;
 
-        public TaskBar()
+        public TaskBarOld()
         {
-            InitializeComponent();
+            // Настройка внешнего вида
+            //this.SizingGrip = false;
+            this.GripStyle = ToolStripGripStyle.Hidden;
+            this.RenderMode = ToolStripRenderMode.ManagerRenderMode;
+            this.BackColor = SystemColors.Control;
+            this.ForeColor = SystemColors.ControlText;
+            this.Dock = DockStyle.Bottom;
+            this.AutoSize = true;
+
             // Разделитель
             this.Items.Add(new ToolStripSeparator());
-        }
-
-        public TaskBar(IContainer container)
-        {
-            container.Add(this);
-
-            InitializeComponent();
         }
 
         // Привязка к MDI-родителю
@@ -86,15 +87,9 @@ namespace GrpcWinForms.Controls.TaskBar
                 Checked = false,
                 CheckOnClick = false
             };
-
+            
             // Обработчик клика
             button.Click += OnTaskButtonClick;
-
-            // Делаем неактивными все Button
-            foreach(var _button in _formButtons)
-            {
-                _button.Value.Checked = false;
-            }
 
             // Добавляем в панель
             this.Items.Add(button);
@@ -112,7 +107,6 @@ namespace GrpcWinForms.Controls.TaskBar
             if (form.Visible && form.WindowState != FormWindowState.Minimized)
             {
                 button.Checked = true;
-                button.AutoToolTip = false;
                 _activeForm = form;
             }
             else
@@ -495,6 +489,16 @@ namespace GrpcWinForms.Controls.TaskBar
             }
             _formButtons.Clear();
             _activeForm = null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Cleanup();
+                DetachFromMdiParent();
+            }
+            base.Dispose(disposing);
         }
     }
 }
