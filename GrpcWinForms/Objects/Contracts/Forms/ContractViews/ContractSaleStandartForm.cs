@@ -265,27 +265,46 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                 // Обновление данных контракта на основе данных из managerControl
                 //contract.Manager = managerControl1.SelectedManager; // Получаем выбранного менеджера из managerControl
 
-                UpdateContractRequest request = new UpdateContractRequest()
+                ContractRequest request = new ContractRequest()
                 {
                     Contract = contract
                 };
+
                 ContractResponse response = new ContractResponse();
-                response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Contract.UpdateContractAsync(request).ResponseAsync
-                );
+                if (ViewMode == ViewMode.Edit)  // Редактируем запись
+                {
+                    response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.UpdateContractAsync(request).ResponseAsync
+                    );
+                }
+                if (ViewMode == ViewMode.New)  // Создаем новый контракт
+                {
+                    response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.CreateContractAsync(request).ResponseAsync
+                    );
+                }
+
+
                 if (response.Result.Status != Status.Ok)
                 {
                     contract = oldContract;
-                    throw new InvalidOperationException($"Ошибка обновления контракта: {response.Result.Message}");
+                    throw new InvalidOperationException($"Ошибка обновления / создания контракта: {response.Result.Message}");
                 }
                 contract = response.Contract;
+
+                // Уведомляем всех подписчиков об изменении
+                if(ViewMode == ViewMode.Edit)
+                    ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);
+                if (ViewMode == ViewMode.New)
+                    ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
             // Вызываем событие, если кто-то на него подписан
-            OnContractChanged(contract);
+//            OnContractChanged(contract);
             //MessageBox.Show("Данные будут записаны");
             Close();
         }

@@ -55,6 +55,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             companyBuyer.GetDataSourceFunc = CompanyFilterLoad;
             companySeller.GetDataSourceFunc = CompanyFilterLoad;
 
+            // Подписываемся на событие изменения контракта
+            ContractEventService.Instance.ContractChanged += OnContractChanged;
+
         }
 
         private void toolStripButtonNew_Click(object sender, EventArgs e)
@@ -117,39 +120,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 List<TreeContract> treeContracts = new List<TreeContract>();
                 foreach (NodeContract node in response.NodeContracts)
                 {
-                    TreeContract treeContract = new TreeContract()
-                    {
-                        Id = node.NodeId,
-                        ParentId = node.ParentNodeId,
-                        Name = (node.NodeType == "contract_without_agreements" ? "Контракт" : // Контракт без ДС
-                                node.NodeType == "root" ? "Контракт" :                       // Корень контракта с ДС
-                                node.NodeType == "agreement" ? "Допсоглашение" :             // ДС
-                                node.NodeType == "first_contract" ? "Первичный контракт" :   // Первичный контракт
-                                node.NodeType == "frame_root" ? "Рамочный контракт" : "Неизвестно")  // Певичный контракт
-                        + " " + node.Contract.Number,
-                        ContractId = node.Contract.Id,
-                        ContractDate = node.Contract.Date.ToDateTime(),
-                        Buyer = node.Contract.Buyer.Name,
-                        Seller = node.Contract.Seller.Name,
-                        Date = node.Contract.Date.ToDateTime(),
-                        Number = node.Contract.Number,
-                        Currency = node.Contract.Currency.Abbrev,
-                        DateExpiried = node.Contract.ExpirationDate == null ? null : node.Contract.ExpirationDate.ToDateTime(),
-                        Paid = 0,
-                        Shipped = 0,
-                        Sum = MyConvert.ToDecimal(node.Contract.Sum),
-                        Type = node.Contract.TypeContract.Name,
-                        TypeId = node.Contract.TypeContract.Id,
-                        TypeCode = node.Contract.TypeContract.Code,
-                        TypeForm = node.Contract.TypeContract.Form,
-                        Contract_RootId = node.Contract.RootId,
-                        State = node.Contract.State == 0 ? "" :  // Новый
-                                node.Contract.State == 1 ? "+" : // Подписан
-                                node.Contract.State == 2 ? ">" : // Есть операции
-                                node.Contract.State == 3 ? "=" : // Баланс
-                                node.Contract.State == 4 ? "*" : // Завершен
-                                "?"
-                    };
+                    TreeContract treeContract = new TreeContract();
+                    treeContract = treeContract.FromNodeContract(node);
+
                     if (!string.IsNullOrEmpty(node.Contract.DocName))
                         treeContract.Name = node.Contract.DocName + " " + node.Contract.Number;
                     treeContracts.Add(treeContract);
@@ -275,13 +248,14 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             BindingList<Line> lines = new BindingList<Line>();
             try
             {
-                loaderLines.ShowLoader();
                 if (smartGridContracts1.Row < smartGridContracts1.Rows.Fixed) return;
                 if (smartGridContracts1.Rows[smartGridContracts1.Row].Node == null)
                 {
                     smartGridLines1.DataSource = new BindingList<Line>();
                     return;
                 }
+
+                loaderLines.ShowLoader();
                 if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
                 {
                     //Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
@@ -476,6 +450,49 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             return _contragents;
         }
 
+        private void OnContractChanged(object sender, ContractChangedEventArgs e)
+        {
+            // Проверяем, что изменение относится к текущему списку
+            // Используем Invoke для безопасного обновления UI из другого потока
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => HandleContractChange(e)));
+            }
+            else
+            {
+                HandleContractChange(e);
+            }
+        }
+
+        private void HandleContractChange(ContractChangedEventArgs e)
+        {
+            int row = smartGridContracts1.Row;
+
+            NodeContract node = new NodeContract()
+            {
+                NodeId = e.Contract.Id * 1000 + 1,
+                ParentNodeId = 0,
+                TreeLevel = 0,
+                NodeType = "",
+                Contract = e.Contract
+            };
+
+            switch (e.ChangeType)
+            {
+                case ContractChangeType.Updated:
+                    // Обновляем конкретный контракт в списке
+                    smartGridContracts1.Rows[row].Node.Key = e.Contract;
+                    break;
+
+                case ContractChangeType.Created:
+                    // Добавляем новый контракт
+                    Node newNode = smartGridContracts1.Rows.AddNode(0);
+                  
+                    break;
+
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -546,6 +563,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             // Добавить дополнительное соглашение
             toolStripButtonNew_Click(sender, e);
         }
+
+
     }
 
 }

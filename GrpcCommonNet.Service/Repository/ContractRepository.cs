@@ -354,7 +354,7 @@ public class ContractRepository
                 p.AddWithValue("@InitName", contract.Initiator?.Name);
                 p.AddWithValue("@ExecId", contract.Executor?.Id);
                 p.AddWithValue("@ExecName", contract.Executor?.Name);
-                p.AddWithValue("@CDate", contract.Data);
+                p.AddWithValue("@CDate", contract.Date.ToDateTime() == DateTime.MinValue ? null : contract.Date.ToDateTime());
                 p.AddWithValue("@ExpDate", contract.ExpirationDate.ToDateTime() == DateTime.MinValue ? null: contract.ExpirationDate.ToDateTime()) ;
                 p.AddWithValue("@CNumber", contract.Number);
                 p.AddWithValue("@CName", contract.Name);
@@ -442,36 +442,48 @@ public class ContractRepository
                                         @ProjTypes, @TemplDocId, @Comment, 
                                         @CreateAt, @CreateBy, @CreateUid, 
                                         @SignPlaceId
-                                    )
-                                    select * from cwatis.contracts where LAST_INSERT_ID() = @Id;
+                                    );
+                                    SELECT 
+                                        c.* ,
+                                        if(cd.ContractDoc_Id is not null, true, false) as haveDoc,
+                                        cu.Abbrev, 
+                                        t.DocumentType_Name as DocumentType_Name, 
+                                        t.DocumentType_Code as DocumentType_Code,
+                                        t.DocumentType_Form as DocumentType_Form
+                                    FROM cwatis.contracts c 
+                                        LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+                                        left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
+                                        left join cwatis.contractdocs cd on cd.contract_id = c.contract_id  
+                                    WHERE 1=1
+                                        and c.contract_id = LAST_INSERT_ID();
                                     ";
 
                 MySqlParameterCollection p = cmd.Parameters;
-                p.AddWithValue("@Id", contract.Id);
+
                 p.AddWithValue("@RootId", contract.RootId == 0 ? null : contract.RootId);
                 p.AddWithValue("@PrevId", contract.PreviousId == 0 ? null : contract.PreviousId);
-                p.AddWithValue("@SellerId", contract.Seller.Id);
-                p.AddWithValue("@SellerName", contract.Seller.Name);
+                p.AddWithValue("@SellerId", contract.Seller?.Id);
+                p.AddWithValue("@SellerName", contract.Seller?.Name);
                 p.AddWithValue("@SellerSignId", contract.Seller.Entity?.Signatory.Id);
                 p.AddWithValue("@SellerBAcctId", null);                         // _contract.SellerBAccountId 
-                p.AddWithValue("@BuyerId", contract.Buyer.Id);
-                p.AddWithValue("@BuyerName", contract.Buyer.Name);
-                p.AddWithValue("@BuyerSignId", contract.Buyer.Entity?.Signatory.Id);
+                p.AddWithValue("@BuyerId", contract.Buyer?.Id);
+                p.AddWithValue("@BuyerName", contract.Buyer?.Name);
+                p.AddWithValue("@BuyerSignId", contract.Buyer?.Entity?.Signatory.Id);
                 p.AddWithValue("@BuyerBAcctId", null);            // _contract.BuyerBAccountId
-                p.AddWithValue("@ShipperId", contract.Shipper.Id == 0 ? null : contract.Shipper.Id);
-                p.AddWithValue("@ShipperName", contract.Shipper.Name);
-                p.AddWithValue("@ConsigneeId", contract.Consignee.Id == 0 ? null : contract.Consignee.Id);
+                p.AddWithValue("@ShipperId", contract.Shipper?.Id);
+                p.AddWithValue("@ShipperName", contract.Shipper?.Name);
+                p.AddWithValue("@ConsigneeId", contract.Consignee?.Id);
                 p.AddWithValue("@ConsigneeName", contract.Consignee?.Name);
                 p.AddWithValue("@InitId", contract.Initiator?.Id);
                 p.AddWithValue("@InitName", contract.Initiator?.Name);
                 p.AddWithValue("@ExecId", contract.Executor?.Id);
                 p.AddWithValue("@ExecName", contract.Executor?.Name);
-                p.AddWithValue("@CDate", contract.Data);
+                p.AddWithValue("@CDate", contract.Date.ToDateTime() == DateTime.MinValue ? null : contract.Date.ToDateTime());
                 p.AddWithValue("@ExpDate", contract.ExpirationDate.ToDateTime() == DateTime.MinValue ? null : contract.ExpirationDate.ToDateTime());
                 p.AddWithValue("@CNumber", contract.Number);
                 p.AddWithValue("@CName", contract.Name);
                 p.AddWithValue("@DocName", contract.DocName);
-                p.AddWithValue("@CurrId", contract.Currency.Id);
+                p.AddWithValue("@CurrId", contract.Currency?.Id);
                 p.AddWithValue("@CurrPayId", contract.CurrencyPayment?.Id);
                 p.AddWithValue("@Sum", MyConvert.ToDecimal(contract.Sum));
                 p.AddWithValue("@Amount", MyConvert.ToDecimal(contract.Amount));
@@ -502,7 +514,7 @@ public class ContractRepository
         }
         catch (Exception ex)
         {
-            throw new Exception("Ошибка при добавлении нового контракта.", ex);
+            throw new Exception("Ошибка при создании нового контракта.", ex);
         }
         return contract;
     }

@@ -146,7 +146,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
         }
     }
 
-    public override async Task<ContractResponse> UpdateContract(UpdateContractRequest request, ServerCallContext context)
+    public override async Task<ContractResponse> UpdateContract(ContractRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
         _logger.LogDebug($"GetListContractLines called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
@@ -161,6 +161,25 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
             _logger.LogError(ex, "Error in UpdateContract: " + ex.Message);
             throw;
         }
+    }
+
+    public override async Task<ContractResponse> CreateContract(ContractRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetListContractLines called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            Contract _contract = await _repo.CreateContractAsync(request.Contract);
+            return new ContractResponse() { Contract = _contract, Result = new Result { Status = Status.Ok } };
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in CreateContract: " + ex.Message);
+            throw;
+        }
+
     }
 
     public override async Task<ContractLineResponse> UpdateContractLine(UpdateContractLineRequest request, ServerCallContext context)
@@ -206,6 +225,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
             throw;
         }
     }
+
 
     #endregion
 }

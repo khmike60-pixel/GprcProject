@@ -21,7 +21,7 @@ namespace GrpcCommonNet.Proto.Utils
             return (decimal)(value.Units / Math.Pow(10,value.Scale));
         }
 
-        public static DecimalValue ToDecimalValue(decimal? value, int scale)
+        public static DecimalValue ToDecimalValue(decimal? value, int scale = 2)
         {
             if (value == null) 
                 return new DecimalValue { Units = 0, Scale = scale };

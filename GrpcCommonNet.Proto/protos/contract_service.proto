@@ -16,8 +16,8 @@ service ContractServices {
 // Контракты
   rpc GetContract(GetContractRequest) returns (ContractResponse);                         // Получить контракт по id (со строками контракта)
   rpc GetListContracts(ListContractsRequest) returns (ListContractsResponse);                // Список контрактов без строк контрактов с пагинацией и фильтром на данные
-  rpc CreateContract(CreateContractRequest) returns (ContractResponse);                   // Создать контракт (запрос без id или с id = 0, возвращает созданный контракт с заполненным id)
-  rpc UpdateContract(UpdateContractRequest) returns (ContractResponse);                   // Обновить контракт без строк контракта (поддержка partial update через FieldMask)
+  rpc CreateContract(ContractRequest) returns (ContractResponse);                   // Создать контракт (запрос без id или с id = 0, возвращает созданный контракт с заполненным id)
+  rpc UpdateContract(ContractRequest) returns (ContractResponse);                   // Обновить контракт без строк контракта (поддержка partial update через FieldMask)
   rpc DeleteContract(DeleteContractRequest) returns (DeleteContractResponse);             // Удалить контракт по id
   rpc DeleteIdsContract(DeleteIdsContractRequest) returns (UndeleteIdsContractResponse);        // Удалить контракты по массиву ids
   rpc GetContractFull(GetContractRequest) returns (ContractResponse);						// Получить полный контракт по id (одним запросом)
@@ -67,6 +67,13 @@ message DeleteContractRequest {
 
 message DeleteIdsContractRequest {
   repeated int32 id = 1;               // массив contract_id для удаления
+}
+
+message ContractRequest {
+  Contract contract = 1;               
+  // Маска полей для частичного заполнения обновления (если пусто — заменяем целиком). 
+  // Пример {"paths": ["contract_data","sdId":]}, обновляться будут только указанные поля, хотя передана вся модель.
+  google.protobuf.FieldMask update_mask = 2;     
 }
 
 message ContractResponse {
