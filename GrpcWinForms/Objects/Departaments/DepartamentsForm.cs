@@ -19,6 +19,10 @@ namespace GrpcWinForms.Objects.Departaments
 {
     public partial class DepartamentsForm : Form
     {
+        public bool DialogMode { get; set; } = false;
+        private Department selectedItem;
+        public Department SelectedItem { get => selectedItem; }
+
         private BindingList<Department> departments;
         public DepartamentsForm()
         {
@@ -210,7 +214,15 @@ namespace GrpcWinForms.Objects.Departaments
 
         private void smartGrid_DoubleClick(object sender, EventArgs e)
         {
-            toolStripButtonEdit_Click(sender, e);
+            if (!DialogMode)
+            {
+                toolStripButtonEdit_Click(sender, e); return;
+            }
+            int row = smartGrid1.Row;
+            if (row < smartGrid1.Rows.Fixed) return;
+            selectedItem = smartGrid1.Rows[row].DataSource as Department;
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

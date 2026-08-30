@@ -30,23 +30,19 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestLookup));
-            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             buttonCancel = new Button();
-            buttonSave = new Button();
-            buttonSaveExit = new Button();
-            smartGrid1 = new SmartLib.SmartGrid(components);
-            periodBox1 = new SmartLib.PeriodBox(components);
-            toolStripDropDownButton1 = new Button();
-            toolStripSplitButton1 = new ToolStripSplitButton();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)periodBox1).BeginInit();
+            textBox1 = new TextBox();
+            smartBoxCurrency = new GrpcWinForms.Controls.SmartBox.SmartBox(components);
+            smartBoxDepartment = new GrpcWinForms.Controls.SmartBox.SmartBox(components);
+            ((System.ComponentModel.ISupportInitialize)smartBoxCurrency).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)smartBoxDepartment).BeginInit();
             SuspendLayout();
             // 
             // buttonCancel
             // 
+            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonCancel.AutoSize = true;
-            buttonCancel.Location = new Point(546, 340);
+            buttonCancel.Location = new Point(383, 257);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 25);
             buttonCancel.TabIndex = 23;
@@ -54,100 +50,65 @@
             buttonCancel.UseVisualStyleBackColor = true;
             buttonCancel.Click += buttonCancel_Click;
             // 
-            // buttonSave
+            // textBox1
             // 
-            buttonSave.Location = new Point(465, 342);
-            buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(75, 23);
-            buttonSave.TabIndex = 22;
-            buttonSave.Text = "Записать";
-            buttonSave.UseVisualStyleBackColor = true;
+            textBox1.Location = new Point(82, 170);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new Size(100, 23);
+            textBox1.TabIndex = 25;
             // 
-            // buttonSaveExit
+            // smartBoxCurrency
             // 
-            buttonSaveExit.Location = new Point(337, 342);
-            buttonSaveExit.Name = "buttonSaveExit";
-            buttonSaveExit.Size = new Size(122, 23);
-            buttonSaveExit.TabIndex = 21;
-            buttonSaveExit.Text = "Записать и выйти";
-            buttonSaveExit.UseVisualStyleBackColor = true;
-            buttonSaveExit.Click += buttonSaveExit_Click;
+            smartBoxCurrency.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            smartBoxCurrency.AutoCompleteSource = AutoCompleteSource.ListItems;
+            smartBoxCurrency.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
+            smartBoxCurrency.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBox1.ButtonsSettings.CustomButton.Icon"));
+            smartBoxCurrency.ButtonsSettings.CustomButton.Visible = true;
+            smartBoxCurrency.ButtonsSettings.ModalButton.Visible = true;
+            smartBoxCurrency.Location = new Point(72, 37);
+            smartBoxCurrency.Name = "smartBoxCurrency";
+            smartBoxCurrency.NullEnable = true;
+            smartBoxCurrency.Size = new Size(100, 23);
+            smartBoxCurrency.TabIndex = 26;
+            smartBoxCurrency.Value = "";
             // 
-            // smartGrid1
+            // smartBoxDepartment
             // 
-            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowNodeMove = false;
-            smartGrid1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
-            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid1.Footers.Descriptions.Add(footerDescription1);
-            smartGrid1.Footers.Fixed = true;
-            smartGrid1.IdName = null;
-            smartGrid1.Location = new Point(12, 51);
-            smartGrid1.Name = "smartGrid1";
-            smartGrid1.Rows.Count = 51;
-            smartGrid1.Rows.Fixed = 2;
-            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
-            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid1.Size = new Size(603, 270);
-            smartGrid1.SortingType = SmartLib.SortingType.Descending;
-            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
-            smartGrid1.TabIndex = 24;
-            smartGrid1.Tree.Column = 1;
-            // 
-            // periodBox1
-            // 
-            periodBox1.Location = new Point(12, 12);
-            periodBox1.Name = "periodBox1";
-            periodBox1.Period.From = new DateTime(2026, 5, 22, 11, 1, 24, 642);
-            periodBox1.Period.To = new DateTime(2026, 8, 20, 11, 1, 24, 642);
-            // 
-            // toolStripDropDownButton1
-            // 
-            toolStripDropDownButton1.Image = (Image)resources.GetObject("toolStripDropDownButton1.Image");
-            toolStripDropDownButton1.Location = new Point(0, 0);
-            toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            toolStripDropDownButton1.Size = new Size(180, 20);
-            toolStripDropDownButton1.TabIndex = 0;
-            toolStripDropDownButton1.Text = "toolStripDropDownButton1";
-            // 
-            // toolStripSplitButton1
-            // 
-            toolStripSplitButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripSplitButton1.Image = (Image)resources.GetObject("toolStripSplitButton1.Image");
-            toolStripSplitButton1.ImageTransparentColor = Color.Magenta;
-            toolStripSplitButton1.Name = "toolStripSplitButton1";
-            toolStripSplitButton1.Size = new Size(32, 20);
-            toolStripSplitButton1.Text = "toolStripSplitButton1";
+            smartBoxDepartment.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            smartBoxDepartment.AutoCompleteSource = AutoCompleteSource.ListItems;
+            smartBoxDepartment.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
+            smartBoxDepartment.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBox2.ButtonsSettings.CustomButton.Icon"));
+            smartBoxDepartment.ButtonsSettings.CustomButton.Visible = true;
+            smartBoxDepartment.ButtonsSettings.ModalButton.Visible = true;
+            smartBoxDepartment.Location = new Point(72, 81);
+            smartBoxDepartment.Name = "smartBoxDepartment";
+            smartBoxDepartment.NullEnable = true;
+            smartBoxDepartment.Size = new Size(100, 23);
+            smartBoxDepartment.TabIndex = 27;
+            smartBoxDepartment.Value = "";
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(627, 450);
-            Controls.Add(periodBox1);
-            Controls.Add(smartGrid1);
-            Controls.Add(buttonSaveExit);
-            Controls.Add(buttonSave);
+            ClientSize = new Size(470, 294);
+            Controls.Add(smartBoxDepartment);
+            Controls.Add(smartBoxCurrency);
+            Controls.Add(textBox1);
             Controls.Add(buttonCancel);
             Name = "TestLookup";
             Text = "TestLoolkup";
             Load += TestLookup_Load;
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)periodBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartBoxCurrency).EndInit();
+            ((System.ComponentModel.ISupportInitialize)smartBoxDepartment).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
         private Button buttonCancel;
-        private Button buttonSave;
-        private Button buttonSaveExit;
-        private SmartLib.SmartGrid smartGrid1;
-        private SmartLib.PeriodBox periodBox1;
-        private Button toolStripDropDownButton1;
-        private ToolStripSplitButton toolStripSplitButton1;
+        private TextBox textBox1;
+        private Controls.SmartBox.SmartBox smartBoxCurrency;
+        private Controls.SmartBox.SmartBox smartBoxDepartment;
     }
 }

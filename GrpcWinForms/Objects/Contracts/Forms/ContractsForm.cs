@@ -172,6 +172,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         #region Обработка событий кнопок
 
+        private void ToolStripMenuItemNewContract_Click(object sender, EventArgs e)
+        {
+            // Добавить новый контракт
+            toolStripButtonNew_Click(sender, e);
+        }
+
         private void toolStripButtonNew_Click(object sender, EventArgs e)
         {
             DocumentTypesForm form = new DocumentTypesForm();
@@ -198,23 +204,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         }
 
-        private void ToolStripMenuItemNewContract_Click(object sender, EventArgs e)
-        {
-            // Добавить новый контракт
-            toolStripButtonNew_Click(sender, e);
-        }
-
-        private void toolStripButtonRefresh_Click(object sender, EventArgs e)
-        {
-            RefreshContract();
-        }
-
         private void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
             int row = smartGridContracts1.Row;
 
             TreeContract rowNode = smartGridContracts1.Rows[row].Node.Key as TreeContract;
-
             Contract _contract = new Contract()
             {
                 Id = rowNode.ContractId,
@@ -232,6 +226,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             //smartGridContracts_DoubleClick(sender, e);
 
         }
+        private void toolStripButtonRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshContract();
+        }
+
 
         private void smartGridContracts_DoubleClick(object sender, EventArgs e)
         {
@@ -584,11 +583,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         #endregion
 
         /// <summary>
-        /// Метод формирует Nodes[] с учетом первичного контракта и допсоглашений
+        /// Не используется. Метод формирует Nodes[] с учетом первичного контракта и допсоглашений
         /// </summary>
         /// <param name="nodes"></param>
-
-
         public void ProcessNodes(Node[] nodes)
         {
             if (nodes == null) return;

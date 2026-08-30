@@ -5,10 +5,16 @@ using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
+using GrpcCommonNet.Library.Currency;
+using GrpcCommonNet.Library.Department;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Controls.PeriodControl;
+using GrpcWinForms.Controls.SmartBox;
+using GrpcWinForms.Forms;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Contracts.Models;
+using GrpcWinForms.Objects.Departaments;
 using SmartLib;
 using System;
 using System.Collections.Generic;
@@ -20,17 +26,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Currency = GrpcCommonNet.Library.Common.Currency;
 
 namespace GrpcWinForms.Objects.Test
 {
     public partial class TestLookup : Form
     {
-        private BindingList<Company> _contragents = new BindingList<Company>();
-        Company selectedItem = new Company();
-
-        private DateTime startDate = DateTime.Now.AddDays(-90);
-        private DateTime endDate = DateTime.Now;
-
 
         public TestLookup()
         {
@@ -40,107 +41,49 @@ namespace GrpcWinForms.Objects.Test
 
         private void buttonCancel_Click(object sender, EventArgs e) // Cancel
         {
-            this.Close();
+            MessageBox.Show(string.Join(Environment.NewLine, 
+                $"Валюта smartBoxCurrency  : Id = {smartBoxCurrency.SelectedItemBox.Id}, Name = {smartBoxCurrency.SelectedItemBox.Name}",
+                $"Валюта smartBoxDepartment: Id = {smartBoxDepartment.SelectedItemBox.Id}, Name = {smartBoxDepartment.SelectedItemBox.Name}"
+                ));
         }
-
-        private void buttonSaveExit_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        public void ProcessNodes(Node[] nodes)
-        {
-            if (nodes == null) return;
-
-            // Итерируем по копии списка, так как будем изменять его во время обхода
-            var originalNodes = new List<Node>(nodes);
-
-            foreach (var node in originalNodes)
-            {
-                if (node.Nodes != null && node.Nodes.Length > 0)
-                {
-                    // Вставляем в начало списка детей
-                    var newNode = node.AddNode(NodeTypeEnum.FirstChild, node.Data);
-
-                    // Попытка получить модель из родительского узла (Key хранит модель, использованную BuildTree)
-                    var model = node.Key;
-                    if (model != null)
-                    {
-                        // Устанавливаем модель в новый узел и заполняем значения колонок через свойства модели
-                        newNode.Key = model;
-                        var props = model.GetType().GetProperties();
-                        foreach (var prop in props)
-                        {
-                            try
-                            {
-                                // Проверяем существование колонки и записываем значение
-                                if (smartGrid1?.Cols != null && smartGrid1.Cols[prop.Name] != null)
-                                {
-                                    newNode.Row[prop.Name] = prop.GetValue(model);
-                                }
-                            }
-                            catch
-                            {
-                                // Игнорируем несопоставимые свойства
-                            }
-                        }
-                    }
-
-                    // Рекурсивно обрабатываем детей
-                    ProcessNodes(node.Nodes);
-                }
-            }
-        }
-
-
 
         private async void TestLookup_Load(object sender, EventArgs e)
         {
-            periodBox1.Period.From = new DateTime(2025, 1, 1);
-            periodBox1.Period.To = new DateTime(2027, 1, 1).AddSeconds(-1);
-
-            ListContractsRequest request = new ListContractsRequest()
+            // Читаем данные для smartBoxCurrency
+            ListCurrencyRequest request = new ListCurrencyRequest()
             {
-                StartDate = periodBox1.Period.From.ToUniversalTime().ToTimestamp(),
-                EndDate = periodBox1.Period.To.ToUniversalTime().ToTimestamp(),
-                WithAdd = true
+                IncludeInvisible = false,
             };
-            request.FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
-            {
-                Paths = { "id", "root_id", "seller", "buyer", "number", "date", "expiration_date", "currency", "department", "data", "sum", "type_contract" }
-            };
+            request.FieldMask = new FieldMask() { Paths = { "id", "abbrev" } };
+            ListCurrencyResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Currency.GetListCurrencyAsync(request).ResponseAsync);
 
-            ListContractsResponse response = new ListContractsResponse();
-            response = await GrpcClients.GrpcClients.Contract.GetListContractsAsync(request);
-            List<TreeContract> treeContracts = new List<TreeContract>();
+            // Передаем данные в smartBoxCurrency
+            Currency curr = new Currency() { Id = 31, Name = "UZS" };
+            smartBoxCurrency.DataSourceList(response.Currencies, "Abbrev");
+            smartBoxCurrency.SetSelectedItemBox(curr, "Id");
+            smartBoxCurrency.AutoSuggestMode = AutoSuggestMode.StartsWith;
+            smartBoxCurrency.SetModalForm(new CurrenciesForm() { DialogMode = true });
 
-            foreach (Contract contract in response.Contracts)
-            {
-                treeContracts.Add(new TreeContract()
-                {
-                    Id = contract.Id,
-                    ParentId = contract.RootId,
-                    Name = (contract.RootId > 0 ? "Допсоглашение" : "Контракт") + " " + contract.Number,
-                    Buyer = contract.Buyer.Entity != null ? contract.Buyer.Entity.EntityName :
-                            contract.Buyer.Person != null ? contract.Buyer.Person.PersonName : "",
-                    Seller = contract.Seller.Entity != null ? contract.Seller.Entity.EntityName :
-                             contract.Seller.Person != null ? contract.Seller.Person.PersonName : "",
-                    Date = contract.Date.ToDateTime(),
-                    Number = contract.Number,
-                    Currency = contract.Currency.Abbrev,
-                    DateExpiried = contract.ExpirationDate == null ? null : contract.ExpirationDate.ToDateTime(),
-                    Paid = 0,
-                    Shipped = 0,
-                    Sum = MyConvert.ToDecimal(contract.Sum),
-                    Type = contract.TypeContract.Name
-                }
-                );
-            }
+            // Читаем данные для smartBoxDepartment
+            ListDepartmentRequest requstDep = new ListDepartmentRequest()
+            { FieldMask = new FieldMask() { Paths = { "id", "symbol" } } };
+            ListDepartmentResponse responseDep = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Department.GetListDepartmentAsync(requstDep).ResponseAsync);
 
-            smartGrid1.BuildTree(treeContracts, false); // Создается структура Nodes
-
-            ProcessNodes(smartGrid1.Nodes);
+            // Передаем данные в smartBoxDepartment
+            Department dep = new Department() { };
+            smartBoxDepartment.DataSourceList(responseDep.Departments, "symbol");
+            smartBoxDepartment.SetSelectedItemBox(dep, "Id");
+            smartBoxDepartment.AutoSuggestMode = AutoSuggestMode.StartsWith;
+            smartBoxDepartment.SetModalForm(new DepartamentsForm() {DialogMode = true });
         }
+    }
+
+    public class CurrencyItemBox : IItemBox
+    {
+        public int Id { get; set; }
+        public string Name { get; set ; }
     }
 
 }

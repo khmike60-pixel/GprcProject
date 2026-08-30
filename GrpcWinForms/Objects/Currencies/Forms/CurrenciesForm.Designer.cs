@@ -111,6 +111,7 @@ namespace GrpcWinForms.Forms
             smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
             smartGrid1.TabIndex = 3;
             smartGrid1.AfterResizeColumn += smartGrid_AfterResizeColumn;
+            smartGrid1.DoubleClick += smartGrid1_DoubleClick;
             // 
             // toolStrip1
             // 

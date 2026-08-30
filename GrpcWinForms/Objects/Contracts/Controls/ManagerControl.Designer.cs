@@ -87,6 +87,7 @@
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Location = new Point(552, 19);
             label1.Name = "label1";
@@ -117,6 +118,7 @@
             // 
             // cddByCreate
             // 
+            cddByCreate.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cddByCreate.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_multiply_16);
             cddByCreate.ButtonsSettings.CustomButton.Visible = true;
             cddByCreate.ButtonsSettings.DropDownButton.Visible = false;
@@ -129,6 +131,7 @@
             // 
             // tbComment
             // 
+            tbComment.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbComment.Location = new Point(121, 45);
             tbComment.Name = "tbComment";
             tbComment.Size = new Size(561, 23);

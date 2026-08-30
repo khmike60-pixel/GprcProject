@@ -20,9 +20,9 @@ namespace GrpcWinForms.Forms
     public partial class CurrenciesForm : Form
     {
         private BindingList<Currency> currencies;
-        private Currency currencySelected;
+        private Currency selectedItem = null;
 
-        public Currency CurrencySelected {  get { return currencySelected; } }
+        public Currency SelectedItem { get { return selectedItem; } }
         public bool DialogMode { get; set; }
 
 
@@ -34,6 +34,7 @@ namespace GrpcWinForms.Forms
         private async void CurrenciesForm_Load(object sender, EventArgs e)
         {
             RefreshCurrency(sender, e);
+            
         }
 
         private async void toolStripButtonRefresh_Click(object sender, EventArgs e)
@@ -56,7 +57,7 @@ namespace GrpcWinForms.Forms
             request.FieldMask.Paths.Add("order_number");
             request.FieldMask.Paths.Add("is_visible");
 
-            ListCurrencyResponse response = await GrpcRetry.CallAsync(()=>
+            ListCurrencyResponse response = await GrpcRetry.CallAsync(() =>
                 GrpcClients.GrpcClients.Currency.GetListCurrencyAsync(request).ResponseAsync
             );
             currencies = new BindingList<Currency>(response.Currencies);
@@ -78,7 +79,7 @@ namespace GrpcWinForms.Forms
                         Currency = form.Currency
                     };
 
-                    CurrencyResponse response = await GrpcRetry.CallAsync(()=>
+                    CurrencyResponse response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Currency.CreateCurrencyAsync(request).ResponseAsync
                     );
                     if (response.Result.Status != Status.Ok || response.Currency == null)
@@ -144,7 +145,7 @@ namespace GrpcWinForms.Forms
                     {
                         Id = (int)smartGrid1.Rows[smartGrid1.RowSel]["Id"]
                     };
-                    DeleteCurrencyResponse response = await GrpcRetry.CallAsync(() => 
+                    DeleteCurrencyResponse response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Currency.DeleteCurrencyAsync(request).ResponseAsync
                     );
                     int i = smartGrid1.RowSel - smartGrid1.Rows.Fixed;
@@ -175,7 +176,7 @@ namespace GrpcWinForms.Forms
                     request.Ids.AddRange(ids);
 
                     UndeletedIdsCurrencyResponse response = new UndeletedIdsCurrencyResponse();
-                    response = await GrpcRetry.CallAsync(() => 
+                    response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Currency.DeleteIdsCurrencyAsync(request).ResponseAsync
                     );
 
@@ -201,6 +202,16 @@ namespace GrpcWinForms.Forms
             smartGrid1.Cols["Name"].StarWidth = "*";
         }
 
+        private void smartGrid1_DoubleClick(object sender, EventArgs e)
+        {
+            int row = smartGrid1.Row;
+            if (row < smartGrid1.Rows.Fixed) return;
+            if (!DialogMode) return;
+
+            selectedItem = smartGrid1.Rows[smartGrid1.Row].DataSource as Currency;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
     }
-         
+
 }

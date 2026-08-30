@@ -43,22 +43,22 @@
             labelDateStart = new Label();
             labelDateStop = new Label();
             groupBoxMain = new GroupBox();
+            smartBoxCurrency = new GrpcWinForms.Controls.SmartBox.SmartBox(components);
             dateEditStart = new C1.Win.Calendar.C1DateEdit();
             dateEditStop = new C1.Win.Calendar.C1DateEdit();
             companySeller = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             companyBuyer = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             labelCurrency = new Label();
-            comboBoxCurrency = new C1.Win.Input.C1ComboBox();
             c1FlexGrid1 = new C1.Win.FlexGrid.C1FlexGrid();
             control1 = new Control();
             control2 = new Control();
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).BeginInit();
             groupBoxMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)smartBoxCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dateEditStart).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dateEditStop).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).BeginInit();
             ((System.ComponentModel.ISupportInitialize)companyBuyer).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)comboBoxCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1FlexGrid1).BeginInit();
             SuspendLayout();
             // 
@@ -186,6 +186,7 @@
             // groupBoxMain
             // 
             groupBoxMain.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            groupBoxMain.Controls.Add(smartBoxCurrency);
             groupBoxMain.Controls.Add(dateEditStart);
             groupBoxMain.Controls.Add(dateEditStop);
             groupBoxMain.Controls.Add(companySeller);
@@ -197,7 +198,6 @@
             groupBoxMain.Controls.Add(labelNumber);
             groupBoxMain.Controls.Add(labelBuyer);
             groupBoxMain.Controls.Add(labelCurrency);
-            groupBoxMain.Controls.Add(comboBoxCurrency);
             groupBoxMain.Controls.Add(textBoxTaxnoBuyer);
             groupBoxMain.Controls.Add(ContractType);
             groupBoxMain.Controls.Add(textBoxTaxnoSeller);
@@ -209,6 +209,23 @@
             groupBoxMain.Size = new Size(694, 133);
             groupBoxMain.TabIndex = 16;
             groupBoxMain.TabStop = false;
+            // 
+            // smartBoxCurrency
+            // 
+            smartBoxCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            smartBoxCurrency.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            smartBoxCurrency.AutoCompleteSource = AutoCompleteSource.ListItems;
+            smartBoxCurrency.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
+            smartBoxCurrency.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBoxCurrency.ButtonsSettings.CustomButton.Icon"));
+            smartBoxCurrency.ButtonsSettings.CustomButton.Visible = true;
+            smartBoxCurrency.ButtonsSettings.ModalButton.Visible = true;
+            smartBoxCurrency.Location = new Point(594, 71);
+            smartBoxCurrency.ModalForm = null;
+            smartBoxCurrency.Name = "smartBoxCurrency";
+            smartBoxCurrency.NullEnable = true;
+            smartBoxCurrency.Size = new Size(93, 23);
+            smartBoxCurrency.TabIndex = 21;
+            smartBoxCurrency.Value = "";
             // 
             // dateEditStart
             // 
@@ -277,18 +294,6 @@
             labelCurrency.Text = "Влт:";
             labelCurrency.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // comboBoxCurrency
-            // 
-            comboBoxCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            comboBoxCurrency.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, Properties.Resources.icons8_multiply_16);
-            comboBoxCurrency.ButtonsSettings.CustomButton.Visible = true;
-            comboBoxCurrency.ButtonsSettings.ModalButton.Visible = true;
-            comboBoxCurrency.Location = new Point(593, 71);
-            comboBoxCurrency.Name = "comboBoxCurrency";
-            comboBoxCurrency.Size = new Size(94, 23);
-            comboBoxCurrency.TabIndex = 11;
-            comboBoxCurrency.ModalButtonClick += comboBoxCurrency_ModalButtonClick;
-            // 
             // c1FlexGrid1
             // 
             c1FlexGrid1.ColumnInfo = "10,1,0,0,0,-1,Columns:";
@@ -321,14 +326,15 @@
             MinimumSize = new Size(700, 136);
             Name = "HeadContractControl";
             Size = new Size(700, 136);
+            Load += HeadContractControl_Load;
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).EndInit();
             groupBoxMain.ResumeLayout(false);
             groupBoxMain.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)smartBoxCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)dateEditStart).EndInit();
             ((System.ComponentModel.ISupportInitialize)dateEditStop).EndInit();
             ((System.ComponentModel.ISupportInitialize)companySeller).EndInit();
             ((System.ComponentModel.ISupportInitialize)companyBuyer).EndInit();
-            ((System.ComponentModel.ISupportInitialize)comboBoxCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1FlexGrid1).EndInit();
             ResumeLayout(false);
         }
@@ -352,10 +358,10 @@
         private Label labelCurrency;
         public C1.Win.Input.C1ComboBox comboBoxContractType;
         public TextBox textBoxNumber;
-        public C1.Win.Input.C1ComboBox comboBoxCurrency;
         public Contragents.Components.CompanyDropDown companySeller;
         public Contragents.Components.CompanyDropDown companyBuyer;
         public C1.Win.Calendar.C1DateEdit dateEditStop;
         public C1.Win.Calendar.C1DateEdit dateEditStart;
+        public GrpcWinForms.Controls.SmartBox.SmartBox smartBoxCurrency;
     }
 }

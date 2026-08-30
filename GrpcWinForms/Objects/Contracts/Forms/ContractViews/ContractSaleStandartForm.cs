@@ -253,17 +253,22 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
                 contract.ExpirationDate = headContractControl.dateEditStop.Value == DBNull.Value ?
                     DateTime.MinValue.ToUniversalTime().ToTimestamp() :
                     Convert.ToDateTime(headContractControl.dateEditStop.Value).ToUniversalTime().ToTimestamp();
+                contract.Currency = new Currency()
+                {
+                    Id = headContractControl.smartBoxCurrency.SelectedItemBox.Id,
+                    Name = headContractControl.smartBoxCurrency.SelectedItemBox.Name
+                };
 
                 // Получаем наименование контракта из headContractControl
 
-                // Обновление данных контракта на основе данных из sumContractControl1
+                    // Обновление данных контракта на основе данных из sumContractControl1
 
-                // Обновление данных контракта на основе данных из propertiesControl1
+                    // Обновление данных контракта на основе данных из propertiesControl1
 
-                // Обновление данных контракта на основе данных из smartGridLines1
+                    // Обновление данных контракта на основе данных из smartGridLines1
 
-                // Обновление данных контракта на основе данных из managerControl
-                //contract.Manager = managerControl1.SelectedManager; // Получаем выбранного менеджера из managerControl
+                    // Обновление данных контракта на основе данных из managerControl
+                    //contract.Manager = managerControl1.SelectedManager; // Получаем выбранного менеджера из managerControl
 
                 ContractRequest request = new ContractRequest()
                 {
@@ -338,7 +343,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
         }
 
         /// <summary>
-        /// Валиюация строки. Пока реализована тольео смена стиля для удаленных записей
+        /// Валидация строки. Пока реализована тольео смена стиля для удаленных записей
         /// </summary>
         /// <param name="line"></param>
         /// <returns></returns>

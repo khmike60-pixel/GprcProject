@@ -1,6 +1,7 @@
 ﻿using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
+using GrpcCommonNet.Library.Currency;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Forms;
 using GrpcWinForms.GrpcUtils;
@@ -23,6 +24,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         private Contragent _selectedSeller;
         private Contragent _selectedBuyer;
         private bool _initializing;
+        private Currency _selectedCurrency;
 
         private bool readOnly = false;
 
@@ -40,15 +42,15 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
                 textBoxTaxnoBuyer.ReadOnly = readOnly;
                 textBoxTaxnoSeller.ReadOnly = readOnly;
                 comboBoxContractType.ReadOnly = readOnly;
-                comboBoxCurrency.ReadOnly = readOnly;
+                smartBoxCurrency.ReadOnly = readOnly;
             }
         }
 
         public HeadContractControl()
         {
             InitializeComponent();
-            companyBuyer.GetDataSourceFunc = Load;
-            companySeller.GetDataSourceFunc = Load;
+            companyBuyer.GetDataSourceFunc = LoadCompany;
+            companySeller.GetDataSourceFunc = LoadCompany;
 
         }
 
@@ -65,7 +67,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             this.PerformLayout();
         }
 
-        public void SetControls(Contract contract)
+        public async Task SetControls(Contract contract)
         {
             this.SuspendLayout();
             try
@@ -94,7 +96,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
                 companySeller.Value = contract.Seller?.Id;                       // Идентификатор контрагента продавца
 
                 comboBoxContractType.Text = contract.TypeContract.Name.ToString();   // Тип договора
-                comboBoxCurrency.Text = contract.Currency?.Abbrev;               // Валюта договора
+
+                // Работа с валютой контракта
+                Currency curr = new Currency() { Id = contract.Currency.Id, Name = contract.Currency?.Abbrev };
+                smartBoxCurrency.SetSelectedItemBox(curr);
 
                 companySeller.Text = contract.Seller?.Name;
                 companyBuyer.Text = contract.Buyer?.Name;
@@ -108,7 +113,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         }
 
         #region Методы для companyDropDown
-        private BindingList<Company> Load(string filter)
+        private BindingList<Company> LoadCompany(string filter)
         {
             SearchRequest searchRequest = new SearchRequest()
             {
@@ -136,14 +141,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         }
 
         #endregion
-
-        private BindingList<Currency> LoadCurrency(string filter)
-        {
-            BindingList<Currency> _currencies = new BindingList<Currency>();
-
-
-            return _currencies;
-        }
 
         private void companyBuyer_ModalButtonClick(object sender, EventArgs e)
         {
@@ -173,18 +170,22 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             }
         }
 
-        private void comboBoxCurrency_ModalButtonClick(object sender, EventArgs e)
+        private async void HeadContractControl_Load(object sender, EventArgs e)
         {
-            CurrenciesForm form = new CurrenciesForm();
-            form.DialogMode = true;
+            CurrencyLoad();
+        }
 
-            if (DialogResult.OK == form.ShowDialog())
-            {
-                Currency currency = form.CurrencySelected;
-                comboBoxCurrency.Value = currency.Id;
-                comboBoxCurrency.Text = currency.Abbrev;
-            }
+        private async void CurrencyLoad()
+        {
+            // Работа с валютой контракта
+            ListCurrencyRequest currencyRequest = new ListCurrencyRequest()
+            { IncludeInvisible = false };
+            ListCurrencyResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Currency.GetListCurrencyAsync(currencyRequest).ResponseAsync);
 
+            smartBoxCurrency.DataSourceList(response.Currencies, "Abbrev");
+            smartBoxCurrency.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.StartsWith;
+            smartBoxCurrency.SetModalForm(new CurrenciesForm() { DialogMode = true });
         }
     }
 
