@@ -126,8 +126,8 @@ namespace GrpcCommonNet.Proto.Utils
 
     public class DataNode
     {
-        public string Name { get; set; }
-        public object Value { get; set; }
+        public required string Name { get; set; }
+        public object? Value { get; set; }
         public List<DataNode> Children { get; set; } = new();
 
         // Вспомогательное свойство для проверки, лист это или ветка

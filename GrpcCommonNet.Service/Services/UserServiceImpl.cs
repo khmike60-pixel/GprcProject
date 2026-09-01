@@ -25,7 +25,7 @@ public class UserServiceImpl : UserServices.UserServicesBase
 
         try 
         {
-            var user = await _repo.GetUserByIdAsync(request.UserId, userData);
+            var user = await _repo.GetUserByIdAsync(request.Id, userData);
             return new UserResponse
             {
                 Result = new Result() { Status = Status.Ok },
@@ -90,7 +90,7 @@ public class UserServiceImpl : UserServices.UserServicesBase
             UserResponse response = new UserResponse();
             User user = new User()
             {
-                UserId = 0,
+                Id = 0,
                 UserAccess = request.UserAccess,
                 UserIsBlocked = request.UserIsBlocked,
                 UserLogin = request.UserLogin,
@@ -117,7 +117,7 @@ public class UserServiceImpl : UserServices.UserServicesBase
             UserResponse response = new UserResponse();
             User user = new User()
             {
-                UserId = request.UserId,
+                Id = request.Id,
                 Contragent = new Contragent() { CountryId = request.ContragentId },
                 UserAccess = request.UserAccess,
                 UserIsBlocked = request.UserIsBlocked,
@@ -127,7 +127,7 @@ public class UserServiceImpl : UserServices.UserServicesBase
             };
             User newUser = await _repo.UpdateUserAsync(user, userData);
             response.User = newUser;
-            if (newUser.UserId == 0) 
+            if (newUser.Id == 0) 
                 response.Result = new Result { Status = Status.NotFound, Message = "Объект не найден." };
             else 
                 response.Result = new Result() { Status = Status.Ok };
@@ -145,7 +145,7 @@ public class UserServiceImpl : UserServices.UserServicesBase
         _logger.LogDebug($"DeleteUser called: {request}");
         UserData userData = new UserData().GetUserData(context);
         
-        bool result = await _repo.DeleteUserAsync(request.UserId, userData);
+        bool result = await _repo.DeleteUserAsync(request.Id, userData);
         
         return new DeleteUserResponse
         {

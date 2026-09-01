@@ -1,5 +1,6 @@
 ﻿using GrpcCommonNet.Library.Common;
-using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
+using GrpcWinForms.Objects.Contracts.ContractViews;
+using GrpcWinForms.Objects.Contracts.Models;
 using Microsoft.VisualBasic.ApplicationServices;
 using Newtonsoft.Json;
 using System;

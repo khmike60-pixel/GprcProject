@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+
+package Common;
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+// Импорт указан верно
+import "google/protobuf/wrappers.proto";
+
+message Test {
+  int32 id = 1;
+  string name = 2;
+  // ИСПРАВЛЕНО: тип пишется как google.protobuf.Int32Value
+  google.protobuf.Int32Value age = 5; 
+}

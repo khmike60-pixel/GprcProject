@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
+namespace GrpcWinForms.Objects.Contracts.ContractViews
 {
     public partial class ContractTestForm : ContractFormClass
     {

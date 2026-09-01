@@ -226,6 +226,26 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
         }
     }
 
+    public override  async Task<ContractLineResponse> CreateContractLine(CreateContractLineRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetListContractLines called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            Line line = await _repo.CreateContractLineAsync(request);
+            return new ContractLineResponse() { Line = line, Result = new Result { Status = Status.Ok } };
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in CreateContractLine: " + ex.Message);
+            throw;
+        }
+    }
+
+
+
 
     #endregion
 }

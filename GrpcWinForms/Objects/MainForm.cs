@@ -17,6 +17,8 @@ using System.Windows.Forms;
 using GrpcWinForms.Objects.Departaments;
 using GrpcWinForms.Objects.Banks.Forms;
 using GrpcWinForms.Controls.TaskBar;
+using GrpcWinForms.Objects.Employees.Forms;
+using GrpcWinForms.Objects.Users;
 
 namespace GrpcWinForms.Forms
 {
@@ -127,9 +129,9 @@ namespace GrpcWinForms.Forms
         {
             foreach (Form child in MdiChildren)
             {
-                if (child is UsersForm) { child.Activate(); return; }
+                if (child is UsersAppForm) { child.Activate(); return; }
             }
-            var f = new UsersForm { MdiParent = this };
+            var f = new UsersAppForm { MdiParent = this };
             f.Show();
         }
 
@@ -193,6 +195,37 @@ namespace GrpcWinForms.Forms
                 if (child is BanksForm) { child.Activate(); return; }
             }
             var f = new BanksForm { MdiParent = this };
+            f.Show();
+
+        }
+
+        private void EmployeeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is EmployeesForm) { child.Activate(); return; }
+            }
+            var f = new EmployeesForm { MdiParent = this };
+            f.Show();
+        }
+
+        private void UsersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is UsersForm) { child.Activate(); return; }
+            }
+            var f = new UsersForm { MdiParent = this };
+            f.Show();
+        }
+
+        private void ContragentsShortToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is ContragentsShortForm) { child.Activate(); return; }
+            }
+            var f = new ContragentsShortForm { MdiParent = this };
             f.Show();
 
         }

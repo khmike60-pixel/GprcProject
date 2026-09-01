@@ -38,7 +38,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
 
         public void Show()
         {
-            string nameSpace = "GrpcWinForms.Objects.Contracts.Forms.ContractViews";
+            string nameSpace = "GrpcWinForms.Objects.Contracts.ContractViews";
             string nameForm = "ContractSaleStandartForm";
             string fullTypeContract = $"{nameSpace}.{nameForm}";
             try

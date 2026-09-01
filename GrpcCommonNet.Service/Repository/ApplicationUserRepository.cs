@@ -57,7 +57,7 @@ namespace GrpcCommonNet.Service.Repository
                     app.Product = Convert.ToString(reader["ProductName"]);
 
                     User user = new User();
-                    user.UserId = Convert.ToInt32(reader["UserId"]);
+                    user.Id = Convert.ToInt32(reader["UserId"]);
                     ApplicationUser applicationUser = new ApplicationUser
                     {
                         Id = Convert.ToInt32(reader["MUSysId"]),
@@ -108,7 +108,7 @@ namespace GrpcCommonNet.Service.Repository
                     app.Db = Convert.ToString(rdr["BaseName"]);
                     app.Product = Convert.ToString(rdr["ProductName"]);
                     User user = new User();
-                    user.UserId = Convert.ToInt32(rdr["UserId"]);
+                    user.Id = Convert.ToInt32(rdr["UserId"]);
 
                     newApplicationUser.Application = app;
                     newApplicationUser.User = user;
@@ -158,7 +158,7 @@ namespace GrpcCommonNet.Service.Repository
                         app.Db = Convert.ToString(rdr["BaseName"]);
                         app.Product = Convert.ToString(rdr["ProductName"]);
                         User user = new User();
-                        user.UserId = Convert.ToInt32(rdr["UserId"]);
+                        user.Id = Convert.ToInt32(rdr["UserId"]);
                         ApplicationUser newApplicationUser = new ApplicationUser
                         {
                             Application = app,

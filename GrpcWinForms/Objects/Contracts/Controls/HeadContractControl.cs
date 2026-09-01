@@ -21,10 +21,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
     public partial class HeadContractControl : UserControl, ISupportInitialize
     {
-        private Contragent _selectedSeller;
-        private Contragent _selectedBuyer;
+        private Contragent _selectedSeller = new Contragent();
+        private Contragent _selectedBuyer =  new Contragent();
         private bool _initializing;
-        private Currency _selectedCurrency;
+        private Currency _selectedCurrency =  new Currency();
 
         private bool readOnly = false;
 
@@ -49,8 +49,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         public HeadContractControl()
         {
             InitializeComponent();
-            companyBuyer.GetDataSourceFunc = LoadCompany;
-            companySeller.GetDataSourceFunc = LoadCompany;
 
         }
 
@@ -172,11 +170,16 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
         private async void HeadContractControl_Load(object sender, EventArgs e)
         {
+            if (DesignMode) return;
+            companyBuyer.GetDataSourceFunc = LoadCompany;
+            companySeller.GetDataSourceFunc = LoadCompany;
+
             CurrencyLoad();
         }
 
         private async void CurrencyLoad()
         {
+            if(DesignMode) return;
             // Работа с валютой контракта
             ListCurrencyRequest currencyRequest = new ListCurrencyRequest()
             { IncludeInvisible = false };

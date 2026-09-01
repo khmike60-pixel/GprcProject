@@ -4,8 +4,10 @@ package Contract;
 
 option csharp_namespace = "GrpcCommonNet.Library.Contract";
 
+import "google/protobuf/wrappers.proto";
 import "google/protobuf/struct.proto";
 import "google/protobuf/timestamp.proto";
+
 import "protos/common/general.proto";
 import "protos/common/contragent.proto";
 import "protos/common/unit.proto";
@@ -35,17 +37,17 @@ message Nomenclature {
 
 
 message Manager {
-  int32 id = 1;								// Идентификатор менеджера
-  string name = 2;							// ФИО менеджера
+  google.protobuf.Int32Value id = 1;								// Идентификатор менеджера
+  optional string name = 2;							// ФИО менеджера
 }
 
 // Строка контракта
 message Line {
   int32 id = 1;								// Идентификатор строки контракта
   int32 contract_id	= 2;					// Идентификатор контракта /допсоглашения / счета-договора
-  int32 previous_id	= 3;					// Идентификатор предыдущей строки контракта, которая была изменена
+  google.protobuf.Int32Value previous_id	= 3;					// Идентификатор предыдущей строки контракта, которая была изменена
   Common.Unit unit = 4;                     // Единица измерения
-  Common.Product product = 5;	            // Товара из справочника
+  optional Common.Product product = 5;	            // Товара из справочника
   int32 order = 6;							// Порядковый номер строки
   string name = 7;							// Наименование в строке контракта
   Common.DecimalValue qty = 8;	            // Кол-во 
@@ -60,7 +62,7 @@ message Line {
   Common.DecimalValue sum = 17;				// Сумма с НДС
   string comment = 18; 
   Common.DecimalValue round_for_line = 19;
-  int32 specification = 20;
+  optional int32 specification = 20;
   string added_from = 21;
   Metadata metadata = 22;
   string operation = 23;
@@ -77,8 +79,8 @@ message Contract {
   // Основные Идентификаторы
   int32 id = 1;											// Идентификатор контракта
   int32 direct = 2;										// Направление сделки относительно нашей компании: 0 - реализация (Seller = наша орг), 1 - приобретение.
-  int32 root_id = 3;									// Ссылка на Первичный контракт (основной) 
-  int32 previous_id = 4;								// Ссылка на Предыдущую запись, из которой "порождена" данная (цепочка допсоглашений)
+  google.protobuf.Int32Value root_id = 3;									// Ссылка на Первичный контракт (основной) 
+  google.protobuf.Int32Value previous_id = 4;								// Ссылка на Предыдущую запись, из которой "порождена" данная (цепочка допсоглашений)
   Common.DocumentType type_contract = 5;				// Тип контракта
   int32 state = 6;										// Статус контракта (новый, выдан клиенту, заключен, в работе, завершен)
 

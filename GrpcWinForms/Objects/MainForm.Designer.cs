@@ -11,6 +11,7 @@ namespace GrpcWinForms.Forms
         }
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             menuStrip1 = new MenuStrip();
             ContractsToolStripMenuItem = new ToolStripMenuItem();
             ToolStripMenuItemContrtacts = new ToolStripMenuItem();
@@ -21,9 +22,11 @@ namespace GrpcWinForms.Forms
             toolStripMenuItem2 = new ToolStripSeparator();
             OurCompanyToolStripMenuItem1 = new ToolStripMenuItem();
             BanksToolStripMenuItem = new ToolStripMenuItem();
+            ContragentsShortToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             OurCompanyToolStripMenuItem = new ToolStripMenuItem();
             DepartmentsToolStripMenuItem = new ToolStripMenuItem();
+            EmployeeToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator3 = new ToolStripSeparator();
             CatalogToolStripMenuItem = new ToolStripMenuItem();
             ProductsToolStripMenuItem = new ToolStripMenuItem();
@@ -46,10 +49,11 @@ namespace GrpcWinForms.Forms
             RolesRightsToolStripMenuItem = new ToolStripMenuItem();
             ObjectsRightsToolStripMenuItem = new ToolStripMenuItem();
             ApplicationsAndUsersToolStripMenuItem = new ToolStripMenuItem();
-            UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
+            UsersToolStripMenuItem = new ToolStripMenuItem();
             ApplicationsToolStripMenuItem = new ToolStripMenuItem();
+            UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             тестоваяФормаToolStripMenuItem = new ToolStripMenuItem();
-            taskBar = new GrpcWinForms.Controls.TaskBar.TaskBar();
+            taskBar = new GrpcWinForms.Controls.TaskBar.TaskBar(components);
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -85,14 +89,14 @@ namespace GrpcWinForms.Forms
             // 
             // MainDictionariesToolStripMenuItem
             // 
-            MainDictionariesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { контрагентыToolStripMenuItem, toolStripSeparator4, OurCompanyToolStripMenuItem, DepartmentsToolStripMenuItem, toolStripSeparator3, CatalogToolStripMenuItem, toolStripSeparator1, CurrenciesAndRatesToolStripMenuItem, toolStripSeparator2, GeographAndPlacesToolStripMenuItem, toolStripSeparator5, DocumentTypesToolStripMenuItem });
+            MainDictionariesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { контрагентыToolStripMenuItem, toolStripSeparator4, OurCompanyToolStripMenuItem, DepartmentsToolStripMenuItem, EmployeeToolStripMenuItem, toolStripSeparator3, CatalogToolStripMenuItem, toolStripSeparator1, CurrenciesAndRatesToolStripMenuItem, toolStripSeparator2, GeographAndPlacesToolStripMenuItem, toolStripSeparator5, DocumentTypesToolStripMenuItem });
             MainDictionariesToolStripMenuItem.Name = "MainDictionariesToolStripMenuItem";
             MainDictionariesToolStripMenuItem.Size = new Size(135, 20);
             MainDictionariesToolStripMenuItem.Text = "Общие справочники";
             // 
             // контрагентыToolStripMenuItem
             // 
-            контрагентыToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ContragentsToolStripMenuItem, toolStripMenuItem2, OurCompanyToolStripMenuItem1, BanksToolStripMenuItem });
+            контрагентыToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ContragentsToolStripMenuItem, ContragentsShortToolStripMenuItem, toolStripMenuItem2, OurCompanyToolStripMenuItem1, BanksToolStripMenuItem });
             контрагентыToolStripMenuItem.Name = "контрагентыToolStripMenuItem";
             контрагентыToolStripMenuItem.Size = new Size(228, 22);
             контрагентыToolStripMenuItem.Text = "Контрагенты";
@@ -100,28 +104,35 @@ namespace GrpcWinForms.Forms
             // ContragentsToolStripMenuItem
             // 
             ContragentsToolStripMenuItem.Name = "ContragentsToolStripMenuItem";
-            ContragentsToolStripMenuItem.Size = new Size(181, 22);
+            ContragentsToolStripMenuItem.Size = new Size(239, 22);
             ContragentsToolStripMenuItem.Text = "Контрагенты";
             ContragentsToolStripMenuItem.Click += ContragentsToolStripMenuItem_Click;
             // 
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(178, 6);
+            toolStripMenuItem2.Size = new Size(236, 6);
             // 
             // OurCompanyToolStripMenuItem1
             // 
             OurCompanyToolStripMenuItem1.Name = "OurCompanyToolStripMenuItem1";
-            OurCompanyToolStripMenuItem1.Size = new Size(181, 22);
+            OurCompanyToolStripMenuItem1.Size = new Size(239, 22);
             OurCompanyToolStripMenuItem1.Text = "Наши организации";
             OurCompanyToolStripMenuItem1.Click += OurCompanyToolStripMenuItem_Click;
             // 
             // BanksToolStripMenuItem
             // 
             BanksToolStripMenuItem.Name = "BanksToolStripMenuItem";
-            BanksToolStripMenuItem.Size = new Size(181, 22);
+            BanksToolStripMenuItem.Size = new Size(239, 22);
             BanksToolStripMenuItem.Text = "Банки";
             BanksToolStripMenuItem.Click += BanksToolStripMenuItem_Click;
+            // 
+            // ContragentsShortToolStripMenuItem
+            // 
+            ContragentsShortToolStripMenuItem.Name = "ContragentsShortToolStripMenuItem";
+            ContragentsShortToolStripMenuItem.Size = new Size(239, 22);
+            ContragentsShortToolStripMenuItem.Text = "Контрагенты (краткая форма)";
+            ContragentsShortToolStripMenuItem.Click += ContragentsShortToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
@@ -141,6 +152,13 @@ namespace GrpcWinForms.Forms
             DepartmentsToolStripMenuItem.Size = new Size(228, 22);
             DepartmentsToolStripMenuItem.Text = "Подразделения";
             DepartmentsToolStripMenuItem.Click += DepartmentsToolStripMenuItem_Click;
+            // 
+            // EmployeeToolStripMenuItem
+            // 
+            EmployeeToolStripMenuItem.Name = "EmployeeToolStripMenuItem";
+            EmployeeToolStripMenuItem.Size = new Size(228, 22);
+            EmployeeToolStripMenuItem.Text = "Сотрудники";
+            EmployeeToolStripMenuItem.Click += EmployeeToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
@@ -247,7 +265,7 @@ namespace GrpcWinForms.Forms
             // 
             GlobalRightsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { SubjectsRightsToolStripMenuItem, toolStripMenuItem1, RolesRightsToolStripMenuItem, ObjectsRightsToolStripMenuItem });
             GlobalRightsToolStripMenuItem.Name = "GlobalRightsToolStripMenuItem";
-            GlobalRightsToolStripMenuItem.Size = new Size(216, 22);
+            GlobalRightsToolStripMenuItem.Size = new Size(235, 22);
             GlobalRightsToolStripMenuItem.Text = "Глобальные права";
             // 
             // SubjectsRightsToolStripMenuItem
@@ -275,17 +293,17 @@ namespace GrpcWinForms.Forms
             // 
             // ApplicationsAndUsersToolStripMenuItem
             // 
-            ApplicationsAndUsersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { UsersOfAppToolStripMenuItem, ApplicationsToolStripMenuItem });
+            ApplicationsAndUsersToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { UsersToolStripMenuItem, ApplicationsToolStripMenuItem, UsersOfAppToolStripMenuItem });
             ApplicationsAndUsersToolStripMenuItem.Name = "ApplicationsAndUsersToolStripMenuItem";
-            ApplicationsAndUsersToolStripMenuItem.Size = new Size(216, 22);
-            ApplicationsAndUsersToolStripMenuItem.Text = "Справочник приложений";
+            ApplicationsAndUsersToolStripMenuItem.Size = new Size(235, 22);
+            ApplicationsAndUsersToolStripMenuItem.Text = "Пользователи и приложения";
             // 
-            // UsersOfAppToolStripMenuItem
+            // UsersToolStripMenuItem
             // 
-            UsersOfAppToolStripMenuItem.Name = "UsersOfAppToolStripMenuItem";
-            UsersOfAppToolStripMenuItem.Size = new Size(226, 22);
-            UsersOfAppToolStripMenuItem.Text = "Пользователи приложений";
-            UsersOfAppToolStripMenuItem.Click += UsersOfAppToolStripMenuItem_Click;
+            UsersToolStripMenuItem.Name = "UsersToolStripMenuItem";
+            UsersToolStripMenuItem.Size = new Size(226, 22);
+            UsersToolStripMenuItem.Text = "Пользователи";
+            UsersToolStripMenuItem.Click += UsersToolStripMenuItem_Click;
             // 
             // ApplicationsToolStripMenuItem
             // 
@@ -294,10 +312,17 @@ namespace GrpcWinForms.Forms
             ApplicationsToolStripMenuItem.Text = "Приложения";
             ApplicationsToolStripMenuItem.Click += ApplicationsToolStripMenuItem_Click;
             // 
+            // UsersOfAppToolStripMenuItem
+            // 
+            UsersOfAppToolStripMenuItem.Name = "UsersOfAppToolStripMenuItem";
+            UsersOfAppToolStripMenuItem.Size = new Size(226, 22);
+            UsersOfAppToolStripMenuItem.Text = "Пользователи приложений";
+            UsersOfAppToolStripMenuItem.Click += UsersOfAppToolStripMenuItem_Click;
+            // 
             // тестоваяФормаToolStripMenuItem
             // 
             тестоваяФормаToolStripMenuItem.Name = "тестоваяФормаToolStripMenuItem";
-            тестоваяФормаToolStripMenuItem.Size = new Size(216, 22);
+            тестоваяФормаToolStripMenuItem.Size = new Size(235, 22);
             тестоваяФормаToolStripMenuItem.Text = "Тестовая форма";
             тестоваяФормаToolStripMenuItem.Click += тестоваяФормаToolStripMenuItem_Click;
             // 
@@ -367,5 +392,8 @@ namespace GrpcWinForms.Forms
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem DocumentTypesToolStripMenuItem;
         private Controls.TaskBar.TaskBar taskBar;
+        private ToolStripMenuItem EmployeeToolStripMenuItem;
+        private ToolStripMenuItem UsersToolStripMenuItem;
+        private ToolStripMenuItem ContragentsShortToolStripMenuItem;
     }
 }

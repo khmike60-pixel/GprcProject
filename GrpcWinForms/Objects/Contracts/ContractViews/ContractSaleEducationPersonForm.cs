@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GrpcWinForms.Objects.Contracts.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,9 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Contracts.Forms.ContractViews
+namespace GrpcWinForms.Objects.Contracts.ContractViews
 {
-    public partial class ContractSaleEducationPersonForm : Form
+    public partial class ContractSaleEducationPersonForm : ContractFormClass
     {
         public ContractSaleEducationPersonForm()
         {

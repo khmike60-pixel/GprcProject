@@ -100,12 +100,15 @@ public class ContragentServiceImpl : ContragentServices.ContragentServicesBase
             int page_number = request.Paging == null ? 0 : request.Paging.PageNumber;
             int page_size = request.Paging == null ? 0 : request.Paging.PageSize;
             if (!request.HasTypeFilter) request.TypeFilter = ContragentTypeFilter.All;
+            //bool PrefixNotEmpty = request.PrefixNotEmpty;
 
             List<Contragent> contragents = await _repo.ShortListAsync(
                 request.Name ?? string.Empty,
                 request.Taxno ?? string.Empty,
                 request.TypeFilter,
                 request.CountrySymbol ?? string.Empty,
+                request.PrefixNotEmpty,
+                request.Prefix,
                 page_number, page_size,
                 userData);
 

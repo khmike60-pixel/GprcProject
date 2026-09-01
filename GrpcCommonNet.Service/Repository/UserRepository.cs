@@ -87,7 +87,7 @@ namespace GrpcCommonNet.Service.Repository
         {
             try
             {
-                if (user.UserId > 0) throw new Exception("Неправильные данные Пользователя:\n"); ;
+                if (user.Id > 0) throw new Exception("Неправильные данные Пользователя:\n"); ;
 
                 using var conn = new MySqlConnection(_connectionString);
                 await conn.OpenAsync();
@@ -131,7 +131,7 @@ namespace GrpcCommonNet.Service.Repository
         {
             try
             {
-                if (user.UserId == 0) throw new Exception("Неправильные данные Пользователя:\n");
+                if (user.Id == 0) throw new Exception("Неправильные данные Пользователя:\n");
 
                 using var conn = new MySqlConnection(_connectionString);
                 await conn.OpenAsync();
@@ -153,7 +153,7 @@ namespace GrpcCommonNet.Service.Repository
                             WHERE u.UserId = @Id;";
 
                 using var cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Id", user.UserId);
+                cmd.Parameters.AddWithValue("@Id", user.Id);
                 cmd.Parameters.AddWithValue("@Symbol", user.UserSymbol);
                 if (user.Contragent != null && user.Contragent.Id > 0) cmd.Parameters.AddWithValue("@ContragentId", user.Contragent.Id);
                 cmd.Parameters.AddWithValue("@Login", user.UserLogin);
@@ -226,7 +226,7 @@ namespace GrpcCommonNet.Service.Repository
         private User UserFill(DbDataReader rdr)
         {
             User user = new User();
-            user.UserId = rdr["UserId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["UserId"]);
+            user.Id = rdr["UserId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["UserId"]);
             user.UserSymbol = rdr["UserSymbol"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["UserSymbol"]);
             user.UserLogin = rdr["UserLogin"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["UserLogin"]);
             user.UserIsBlocked = rdr["UserIsBlocked"] == DBNull.Value ? false : Convert.ToBoolean(rdr["UserIsBlocked"]);

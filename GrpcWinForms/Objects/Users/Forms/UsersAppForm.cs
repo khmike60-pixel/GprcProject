@@ -23,7 +23,7 @@ using Application = GrpcCommonNet.Library.Common.Application;
 
 namespace GrpcWinForms.Objects.Users.Forms
 {
-    public partial class UsersForm : Form
+    public partial class UsersAppForm : Form
     {
         private BindingList<User> users;
         private BindingList<ApplicationUser> applications;
@@ -33,7 +33,7 @@ namespace GrpcWinForms.Objects.Users.Forms
         private int rowApp = 0;
 
 
-        public UsersForm()
+        public UsersAppForm()
         {
             InitializeComponent();
 
@@ -53,7 +53,7 @@ namespace GrpcWinForms.Objects.Users.Forms
                 UserLogin = string.Empty,
                 ContragentId = 0,
                 FieldMask = new Google.Protobuf.WellKnownTypes.FieldMask()
-                { Paths = { "user_id", "contragent_id", "user_login", "user_symbol", "user_is_blocked", "user_name", "contragent" } }
+                { Paths = { "id", "contragent_id", "user_login", "user_symbol", "user_is_blocked", "user_name", "contragent" } }
             };
 
             request.UserLogin = textAbbrev.Text;
@@ -95,7 +95,7 @@ namespace GrpcWinForms.Objects.Users.Forms
             User user = (User)(smartGridUsers1.Rows[smartGridUsers1.Row].DataSource);
             ApplicationUserFilterRequest request = new ApplicationUserFilterRequest()
             {
-                UserId = user.UserId,
+                UserId = user.Id,
                 FieldMask = new FieldMask()
                 { Paths = { "id", "application.id", "application.name", "application.db", "application.product" } }
             };
@@ -177,7 +177,7 @@ namespace GrpcWinForms.Objects.Users.Forms
                 {
                     UpdateUserRequest request = new UpdateUserRequest
                     {
-                        UserId = userForm.User.UserId,
+                        Id = userForm.User.Id,
                         //ContragentId = userForm.User.Contragent.Id,
                         UserLogin = userForm.User.UserLogin,
                         UserPassword = userForm.User.UserPassword,
@@ -221,7 +221,7 @@ namespace GrpcWinForms.Objects.Users.Forms
                     DeleteUserRequest request = new DeleteUserRequest()
                     {
                         //UserId = (int)smartGridUsers.Rows[smartGridUsers.RowSel]["UserId"]
-                        UserId = (int)smartGridUsers1.Rows[smartGridUsers1.RowSel]["UserId"]
+                        Id = (int)smartGridUsers1.Rows[smartGridUsers1.RowSel]["UserId"]
                     };
                     DeleteUserResponse response = await GrpcClients.GrpcClients.User.DeleteUserAsync(request);
                     int i = smartGridUsers1.RowSel - smartGridUsers1.Rows.Fixed;
@@ -247,7 +247,7 @@ namespace GrpcWinForms.Objects.Users.Forms
                     foreach (var index in oldList)
                     {
                         User user = (User)(smartGridUsers1.Rows[index].DataSource);
-                        ids.Add(user.UserId);
+                        ids.Add(user.Id);
                     }
 
                     DeleteIdsUserRequest request = new DeleteIdsUserRequest();
@@ -289,7 +289,7 @@ namespace GrpcWinForms.Objects.Users.Forms
 
                         AddApplicationUserRequest request = new AddApplicationUserRequest();
                         //request.UserId = ((User)(smartGridUsers.Rows[smartGridUsers.Row].DataSource)).UserId;
-                        request.UserId = ((User)(smartGridUsers1.Rows[smartGridUsers1.Row].DataSource)).UserId;
+                        request.UserId = ((User)(smartGridUsers1.Rows[smartGridUsers1.Row].DataSource)).Id;
                         request.ApplicationId = app.Id;
                         AddApplicationUserResponse response = await GrpcRetry.CallAsync(() => 
                             GrpcClients.GrpcClients.ApplicationUser.AddApplicationUserAsync(request).ResponseAsync);
@@ -315,7 +315,7 @@ namespace GrpcWinForms.Objects.Users.Forms
                             request.ApplicationIds.Add(appId.Id);
                         //User user = (User)smartGridUsers.Rows[smartGridUsers.Row].DataSource;
                         User user = (User)smartGridUsers1.Rows[smartGridUsers1.Row].DataSource;
-                        request.UserId = user.UserId;
+                        request.UserId = user.Id;
 
                         response = await GrpcRetry.CallAsync(() => 
                             GrpcClients.GrpcClients.ApplicationUser.AddIdsApplicationUserAsync(request).ResponseAsync);

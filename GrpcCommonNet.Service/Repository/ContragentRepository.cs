@@ -364,7 +364,7 @@ public class ContragentRepository
     }
 
     public async Task<List<Contragent>> ShortListAsync( string contragentName, string contragentTaxno,
-        ContragentTypeFilter contragentTypeFilter, string countrySymbol, int? pageNumber, int? pageSize,
+        ContragentTypeFilter contragentTypeFilter, string countrySymbol, bool prefixNotEmpty, string prefix, int? pageNumber, int? pageSize,
         UserData userData)
     {
         try
@@ -413,7 +413,10 @@ public class ContragentRepository
                                     AND (@contragentName is null or @contragentName = '' or s.MCODE_SUBJ LIKE CONCAT('%',@contragentName,'%'))
                                     AND (@contragentTaxno is null or @contragentTaxno = '' or s.TIN_SUBJ LIKE CONCAT('%',@contragentTaxno,'%') OR s.PIN_SUBJ LIKE CONCAT('%',@contragentTaxno,'%'))
                                     AND (s.TYPE_SUBJ in ({_contragentFilter}))
-                                    AND (@countrySymbol is null or @countrySymbol = '' or c.GeoLocation_Code2 LIKE CONCAT('%',@countrySymbol,'%')) ";
+                                    AND (@countrySymbol is null or @countrySymbol = '' or c.GeoLocation_Code2 LIKE CONCAT('%',@countrySymbol,'%')) 
+                                    AND (@prefixNotEmpty = 0 or (s.Prefix is not null and s.Prefix <> '')) 
+                                    AND (ifnull(@prefix,'') = '' or s.Prefix like CONCAT('%',@prefix,'%'))"
+                                    ;
 
             cmd.CommandText += $@"
                                 ORDER BY s.MCODE_SUBJ ";
@@ -422,6 +425,8 @@ public class ContragentRepository
             cmd.Parameters.AddWithValue("@contragentTaxno", contragentTaxno);
             cmd.Parameters.AddWithValue("@countrySymbol", countrySymbol);
             cmd.Parameters.AddWithValue("@target_date", DateTime.Now);
+            cmd.Parameters.AddWithValue("@prefixNotEmpty", prefixNotEmpty);
+            cmd.Parameters.AddWithValue("@prefix", prefix);
             if (pageNumber != null && pageNumber > 0)
             {
                 cmd.CommandText += " LIMIT @offset, @pageSize";

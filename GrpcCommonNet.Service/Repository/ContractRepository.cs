@@ -219,45 +219,6 @@ public class ContractRepository
         }
     }
 
-    public async Task<List<Line>> GetListLinesAsync(ContractLineRequest request)
-    {
-        try
-        {
-            //var dict = new Dictionary<int, Contract>();
-            List<Line> lines = new List<Line>();
-            using var conn = new MySqlConnection(_connectionString);
-            await conn.OpenAsync();
-            using var cmd = conn.CreateCommand();
-            cmd.CommandText = $@"
-                                    SELECT 
-                                        l.contractline_id line_id, l.contractline_order line_order, l.operation,l.contract_id,
-                                        l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
-                                        l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, 
-                                        l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
-                                        1
-                                    FROM cwatis.contractlines l 
-                                        LEFT JOIN global_db.rfr_units u ON u.UnitId = l.UnitId
-                                        LEFT JOIN global_db.rfr_goods_tree g ON g.MGoodGroupId = l.rfr_MGoodGroupId
-                                    WHERE 1=1
-                                        and l.contract_id = {request.Id} 
-                                        and (ifnull(@All,false) = true or l.operation != 'удалена')
-                                    ORDER BY contractline_order";
-            cmd.Parameters.AddWithValue("@All", request.All);
-
-            using var rdr = await cmd.ExecuteReaderAsync();
-
-            while (await rdr.ReadAsync())
-                lines.Add(FillLine(rdr));
-
-            return lines;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error in GetListLinesAsync: " + ex.Message);
-            throw;
-        }
-    }
-
     public async Task<List<Contract>> GetContractHistoryAsync(int id)
     {
         try
@@ -331,7 +292,20 @@ public class ContractRepository
                                         create_at = @CreateAt, create_by = @CreateBy, create_userid = @CreateUid, 
                                         Contract_SignPlaceId = @SignPlaceId
                                     where contract_id = @Id;
-                                    select * from cwatis.contracts where contract_id = @Id;
+
+                                    SELECT 
+                                        c.* ,
+                                        if(cd.ContractDoc_Id is not null, true, false) as haveDoc,
+                                        cu.Abbrev, 
+                                        t.DocumentType_Name as DocumentType_Name, 
+                                        t.DocumentType_Code as DocumentType_Code,
+                                        t.DocumentType_Form as DocumentType_Form
+                                    FROM cwatis.contracts c 
+                                        LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+                                        left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
+                                        left join cwatis.contractdocs cd on cd.contract_id = c.contract_id  
+                                    WHERE 1=1
+                                        and c.contract_id = @Id;
                                     ";
 
                 MySqlParameterCollection p = cmd.Parameters;
@@ -342,7 +316,7 @@ public class ContractRepository
                 p.AddWithValue("@SellerName", contract.Seller.Name);
                 p.AddWithValue("@SellerSignId", contract.Seller.Entity?.Signatory.Id);
                 p.AddWithValue("@SellerBAcctId", null);                         // _contract.SellerBAccountId 
-                p.AddWithValue("@BuyerId", contract.Buyer.Id);
+                p.AddWithValue("@BuyerId", contract.Buyer.Id == 0 ? null : contract.Buyer.Id);
                 p.AddWithValue("@BuyerName", contract.Buyer.Name);
                 p.AddWithValue("@BuyerSignId", contract.Buyer.Entity?.Signatory.Id);
                 p.AddWithValue("@BuyerBAcctId", null);            // _contract.BuyerBAccountId
@@ -350,16 +324,16 @@ public class ContractRepository
                 p.AddWithValue("@ShipperName", contract.Shipper.Name);
                 p.AddWithValue("@ConsigneeId", contract.Consignee.Id == 0 ? null : contract.Consignee.Id);
                 p.AddWithValue("@ConsigneeName", contract.Consignee?.Name);
-                p.AddWithValue("@InitId", contract.Initiator?.Id);
+                p.AddWithValue("@InitId", contract.Initiator.Id == 0 ? null : contract.Initiator.Id);
                 p.AddWithValue("@InitName", contract.Initiator?.Name);
-                p.AddWithValue("@ExecId", contract.Executor?.Id);
+                p.AddWithValue("@ExecId", contract.Executor.Id == 0 ? null : contract.Executor.Id);
                 p.AddWithValue("@ExecName", contract.Executor?.Name);
                 p.AddWithValue("@CDate", contract.Date.ToDateTime() == DateTime.MinValue ? null : contract.Date.ToDateTime());
                 p.AddWithValue("@ExpDate", contract.ExpirationDate.ToDateTime() == DateTime.MinValue ? null: contract.ExpirationDate.ToDateTime()) ;
                 p.AddWithValue("@CNumber", contract.Number);
                 p.AddWithValue("@CName", contract.Name);
                 p.AddWithValue("@DocName", contract.DocName);
-                p.AddWithValue("@CurrId", contract.Currency.Id);
+                p.AddWithValue("@CurrId", contract.Currency.Id ==  0 ? null : contract.Currency.Id);
                 p.AddWithValue("@CurrPayId", contract.CurrencyPayment?.Id);
                 p.AddWithValue("@Sum", MyConvert.ToDecimal(contract.Sum));
                 p.AddWithValue("@Amount", MyConvert.ToDecimal(contract.Amount));
@@ -519,6 +493,167 @@ public class ContractRepository
         return contract;
     }
 
+    public async Task<List<NodeContract>> GetTreeNodesAsync(ListContractsRequest request)
+    {
+        try
+        {
+            DateTime dateStart = request.StartDate == null ? DateTime.MinValue : request.StartDate.ToDateTime().ToLocalTime();
+            DateTime dateEnd = request.EndDate == null ? DateTime.MaxValue : request.EndDate.ToDateTime().ToLocalTime();
+            Contragent buyer = request.Buyer;
+            Contragent seller = request.Seller;
+            int stateFrom = request.StateFrom;
+            int stateTo = request.StateTo;
+            bool withAdd = request.WithAdd;
+
+
+            List<NodeContract> nodes = new List<NodeContract>();
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using (MySqlCommand cmd = new MySqlCommand("cwatis.Contract_Tree_Get", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("_Start", dateStart);
+                cmd.Parameters.AddWithValue("_End", dateEnd);
+                cmd.Parameters.AddWithValue("_WithAgreement", withAdd);
+
+                using var rdr = await cmd.ExecuteReaderAsync();
+
+                while (await rdr.ReadAsync())
+                    nodes.Add(FillNodeContract(rdr));
+            }
+
+            return nodes;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetTreeNodesAsync: " + ex.Message);
+            throw;
+        }
+    }
+
+
+    #endregion
+
+    #region Методы  рабюоты  со  строками 
+    public async Task<List<Line>> GetListLinesAsync(ContractLineRequest request)
+    {
+        try
+        {
+            //var dict = new Dictionary<int, Contract>();
+            List<Line> lines = new List<Line>();
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $@"
+                                    SELECT 
+                                        l.contractline_id line_id, l.contractline_order line_order, l.operation,l.contract_id,
+                                        l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
+                                        l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, 
+                                        l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
+                                        1
+                                    FROM cwatis.contractlines l 
+                                        LEFT JOIN global_db.rfr_units u ON u.UnitId = l.UnitId
+                                        LEFT JOIN global_db.rfr_goods_tree g ON g.MGoodGroupId = l.rfr_MGoodGroupId
+                                    WHERE 1=1
+                                        and l.contract_id = {request.Id} 
+                                        and (ifnull(@All,false) = true or l.operation != 'удалена')
+                                    ORDER BY contractline_order";
+            cmd.Parameters.AddWithValue("@All", request.All);
+
+            using var rdr = await cmd.ExecuteReaderAsync();
+
+            while (await rdr.ReadAsync())
+                lines.Add(FillLine(rdr));
+
+            return lines;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetListLinesAsync: " + ex.Message);
+            throw;
+        }
+    }
+
+    public async Task<Line> CreateContractLineAsync(CreateContractLineRequest request)
+    {
+        try
+        {
+            Line line = new Line();
+
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = $@"
+                                    INSERT INTO cwatis.contractlines l (
+                                        l.contractline_order, l.operation, l.contract_id,
+                                        l.contractline_Name, l.rfr_MGoodGroupId, l.UnitId, u.Short, 
+                                        l.contractline_qty, l.contractline_price, l.contractline_amount, 
+                                        l.contractline_vat_prc, l.contractline_sumvat, l.contractline_sum,
+                                        l.comment, l.RoundForLine, l.Specification, l.Added_From, 
+                                        l.SupplierId, l.contractline_baseDiscount, l.DiscountAdditional, 
+                                        l.contractline_baseprice
+
+                                    )
+                                    VALUES  (
+                                        @line_order, @operation, @contract_id,
+                                        @line_Name, @line_product_id, @line_Unit_Id, @line_Unit_Name, 
+                                        @line_qty, @line_price, @line_amount, 
+                                        @line_vat_per, @line_sum_vat, @line_sum,
+                                        @comment, @RoundForLine, @Specification, @Added_From, 
+                                        @SupplierId,  @line_baseDiscount, @line_DiscountAdditional, 
+                                        @line_baseprice
+                                    );
+
+                                    SELECT
+                                        l.contractline_id line_id, l.contractline_order line_order, l.operation,l.contract_id,
+                                        l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
+                                        l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, 
+                                        l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
+                                        1
+                                    FROM cwatis.contractlines l 
+                                        LEFT JOIN global_db.rfr_units u ON u.UnitId = l.UnitId
+                                        LEFT JOIN global_db.rfr_goods_tree g ON g.MGoodGroupId = l.rfr_MGoodGroupId
+                                    WHERE 1=1
+                                        and l.contractline_id = LAST_INSERT_ID() 
+                                        and (ifnull(@All,false) = true or l.operation != 'удалена')
+                                    ORDER BY contractline_order";
+
+            cmd.Parameters.AddWithValue("line_order", request);
+            cmd.Parameters.AddWithValue("operation", request);
+            cmd.Parameters.AddWithValue("contract_id", request);
+            cmd.Parameters.AddWithValue("line_Name", request);
+            cmd.Parameters.AddWithValue("line_product_id", request);
+            cmd.Parameters.AddWithValue("line_Unit_Id", request);
+            cmd.Parameters.AddWithValue("line_Unit_Name", request);
+            cmd.Parameters.AddWithValue("line_qty", request);
+            cmd.Parameters.AddWithValue("line_price", request);
+            cmd.Parameters.AddWithValue("line_amountv", request);
+            cmd.Parameters.AddWithValue("line_vat_per", request);
+            cmd.Parameters.AddWithValue("line_sum_vat", request);
+            cmd.Parameters.AddWithValue("line_sum", request);
+            cmd.Parameters.AddWithValue("comment", request);
+            cmd.Parameters.AddWithValue("RoundForLine", request);
+            cmd.Parameters.AddWithValue("Specification", request);
+            cmd.Parameters.AddWithValue("Added_From", request);
+            cmd.Parameters.AddWithValue("SupplierId", request);
+            cmd.Parameters.AddWithValue("line_baseDiscount", request);
+            cmd.Parameters.AddWithValue("line_DiscountAdditional", request);
+            cmd.Parameters.AddWithValue("line_baseprice", request);
+
+            using var rdr = await cmd.ExecuteReaderAsync();
+
+            if (await rdr.ReadAsync())
+                line = FillLine(rdr);
+
+            return line;
+        } catch (Exception  ex)
+        {
+            _logger.LogError(ex, "Error in CreateContractLineAsync: " + ex.Message);
+            throw;
+        }
+    }
+
     public async Task<Line> UpdateLineAsync(Line _line)
     {
         Line line = new Line();
@@ -586,46 +721,8 @@ public class ContractRepository
         return line;
     }
 
-    public async Task<List<NodeContract>> GetTreeNodesAsync(ListContractsRequest request)
-    {
-        try
-        {
-            DateTime dateStart = request.StartDate == null ? DateTime.MinValue : request.StartDate.ToDateTime().ToLocalTime();
-            DateTime dateEnd = request.EndDate == null ? DateTime.MaxValue : request.EndDate.ToDateTime().ToLocalTime();
-            Contragent buyer = request.Buyer;
-            Contragent seller = request.Seller;
-            int stateFrom = request.StateFrom;
-            int stateTo = request.StateTo;
-            bool withAdd = request.WithAdd;
-
-
-            List<NodeContract> nodes = new List<NodeContract>();
-            using var conn = new MySqlConnection(_connectionString);
-            await conn.OpenAsync();
-            using (MySqlCommand cmd = new MySqlCommand("cwatis.Contract_Tree_Get", conn))
-            {
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("_Start", dateStart);
-                cmd.Parameters.AddWithValue("_End", dateEnd);
-                cmd.Parameters.AddWithValue("_WithAgreement", withAdd);
-
-                using var rdr = await cmd.ExecuteReaderAsync();
-
-                while (await rdr.ReadAsync())
-                    nodes.Add(FillNodeContract(rdr));
-            }
-
-            return nodes;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error in GetTreeNodesAsync: " + ex.Message);
-            throw;
-        }
-    }
-
     #endregion
+
 
     #region внутренние методы   
     private Contract FillContract(DbDataReader rdr)
@@ -683,6 +780,17 @@ public class ContractRepository
             contract.Data = Google.Protobuf.WellKnownTypes.Struct.Parser.ParseJson(rdr["contract_data"].ToString() ?? "");
         }
 
+        contract.Initiator = new Manager() 
+        { 
+            Id = rdr["Initiator_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["Initiator_Id"]),
+            Name = rdr["Initiator_Name"] == DBNull.Value ? "" : rdr["Initiator_Name"].ToString()
+        };
+        contract.Executor = new Manager()
+        {
+            Id = rdr["Executor_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["Executor_Id"]),
+            Name = rdr["Executor_Name"] == DBNull.Value ? "" : rdr["Executor_Name"].ToString()
+        };
+
         contract.ManagerType = rdr["ProjectTypes"] == DBNull.Value ? "" : rdr["ProjectTypes"].ToString();
         contract.State = rdr["contract_State"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_State"]);
         contract.DocName = rdr["contract_DocName"] == DBNull.Value ? "" : rdr["contract_DocName"].ToString();
@@ -714,6 +822,27 @@ public class ContractRepository
         line.SumVat = rdr["line_sum_vat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_sum_vat"]), 2);
         line.Sum = rdr["line_sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_sum"]), 2);
         line.Operation = rdr["operation"] == DBNull.Value ? "" : rdr["operation"].ToString();
+        line.Comment = rdr["comment"] == DBNull.Value ? "" : rdr["comment"].ToString();
+        line.RoundForLine = rdr["RoundForLine"] == DBNull.Value ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["RoundForLine"]));
+        line.Specification = rdr["Specification"] == DBNull.Value ? 1 : Convert.ToInt32(rdr["Specification"]);
+        line.AddedFrom = rdr["Added_From"] == DBNull.Value ? "" : rdr["Added_From"].ToString();
+        //line.Supplier = new Contragent()
+        //{
+        //    Id = rdr["SupplierId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["SupplierId"])
+        //};
+        line.BaseDiscount = rdr["line_baseDiscount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_baseDiscount"]), 2);
+        line.DiscountAdditional = rdr["DiscountAdditional"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["DiscountAdditional"]), 2);
+        line.BasePrice = rdr["line_baseprice"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_baseprice"]), 2);
+        line.IsVat = rdr["IsVat"] == DBNull.Value ? false : Convert.ToBoolean(rdr["IsVat"]);
+        line.Metadata = new Metadata()
+        {
+            CreateAt = rdr["create_at"] == DBNull.Value ? DateTime.MinValue.ToUniversalTime().ToTimestamp() : Convert.ToDateTime(rdr["create_at"]).ToLocalTime().ToUniversalTime().ToTimestamp(),
+            CreateBy = rdr["create_by"] == DBNull.Value ? "" : rdr["create_by"].ToString(),
+            CreateUserid = rdr["create_userid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["create_userid"])
+        };
+        line.PreviousId = rdr["contractline_RootId"] == DBNull.Value ? null : Convert.ToInt32(rdr["contractline_RootId"]);
+        line.Operation = rdr["operation"] != DBNull.Value ?  ""  :  rdr["operation"].ToString();
+        
 
 
         return line;
@@ -727,11 +856,57 @@ public class ContractRepository
         nodeContract.ParentNodeId = rdr["parent_node_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["parent_node_id"]);
         nodeContract.TreeLevel = rdr["Tree_Level"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["Tree_Level"]);
         nodeContract.NodeType = rdr["node_type"] == DBNull.Value ? "" : rdr["node_type"].ToString();
+        nodeContract.Contract = new Contract();
+        nodeContract.Contract.Id = rdr["contract_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_id"]);
+        nodeContract.Contract.RootId = rdr["contract_rootid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_rootid"]);
+        nodeContract.Contract.Date = rdr["contract_date"] == DBNull.Value ? DateTime.MinValue.ToUniversalTime().ToTimestamp() : Convert.ToDateTime(rdr["contract_date"]).ToLocalTime().ToUniversalTime().ToTimestamp();
+        nodeContract.Contract.Number = rdr["contract_number"] == DBNull.Value ? "" : rdr["contract_number"].ToString();
+        nodeContract.Contract.DocName = rdr["contract_DocName"] == DBNull.Value ? "" : rdr["contract_DocName"].ToString();
+        nodeContract.Contract.Seller = new Contragent()
+        {
+            Id = rdr["contract_sellerId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_sellerId"]),
+            Name = rdr["contract_sellername"] == DBNull.Value ? "" : rdr["contract_sellername"].ToString() ?? ""
+        };
+        nodeContract.Contract.Buyer = new Contragent()
+        {
+            Id = rdr["contract_buyerId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_buyerId"]),
+            Name = rdr["contract_buyername"] == DBNull.Value ? "" : rdr["contract_buyername"].ToString() ?? ""
+        };
+        nodeContract.Contract.TypeContract = new DocumentType()
+        {
+            Id = rdr["DocumentType_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["DocumentType_Id"]),
+            Name = rdr["DocumentType_Name"] == DBNull.Value ? "" : rdr["DocumentType_Name"].ToString() ?? "",
+            Code = rdr["DocumentType_Code"] == DBNull.Value ? "" : rdr["DocumentType_Code"].ToString() ?? "",
+            Form = rdr["DocumentType_Form"] == DBNull.Value ? "" : rdr["DocumentType_Form"].ToString() ?? ""
+        };
+        nodeContract.Contract.Currency = new Currency()
+        {
+            Id = rdr["currencyId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["currencyId"]),
+            Abbrev = rdr["Abbrev"] == DBNull.Value ? "" : rdr["Abbrev"].ToString() ?? ""
+        };
+        nodeContract.Contract.Sum = rdr["Sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Sum"]), 2);
+        nodeContract.Contract.Amount = rdr["Amount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Amount"]), 2);
+        nodeContract.Contract.SumVat = rdr["SumVat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["SumVat"]), 2);
+        nodeContract.Contract.ManagerType = rdr["ProjectTypes"] == DBNull.Value ? "" : rdr["ProjectTypes"].ToString();
+        nodeContract.Contract.State = rdr["contract_State"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_State"]);
 
-        Contract contract = new Contract();
-        contract = FillContract(rdr);
-        nodeContract.Contract = contract;
-
+        /*
+		root_date,
+		sort_id,
+		sort_date,
+		path,
+		original_level,
+        */
+        /*
+		IsContract,
+		contract_consigneeId, 
+		contract_consigneeName,
+		contract_shipperId, 
+		contract_shipperName,
+		contract_data, 
+		ProjectTypes,
+		Contract_State
+        */
         return nodeContract;
     }
        

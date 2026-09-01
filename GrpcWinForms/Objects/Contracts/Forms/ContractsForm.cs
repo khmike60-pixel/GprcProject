@@ -11,7 +11,7 @@ using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Forms;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
-using GrpcWinForms.Objects.Contracts.Forms.ContractViews;
+using GrpcWinForms.Objects.Contracts.ContractViews;
 using GrpcWinForms.Objects.Contracts.Models;
 using GrpcWinForms.Objects.DocumentTypes.Forms;
 using GrpcWinForms.Properties;

@@ -56,7 +56,7 @@ namespace GrpcWinForms.Models
         /// <param name="contractId">Идентификатор контракта.</param>
         /// <param name="contractType">Полное имя класса формы (включая Namespace).</param>
         /// <returns>Экземпляр созданной формы или null в случае ошибки.</returns>
-        public static ContractFormClass CreateForm(string contractType = "GrpcWinForms.Objects.Contracts.Forms.SaleStandart.ContractStandartForm", Contract contract = null)
+        public static ContractFormClass CreateForm(string contractType = "GrpcWinForms.Objects.Contracts.ContractViews.ContractStandartForm", Contract contract = null)
         {
             try
             {

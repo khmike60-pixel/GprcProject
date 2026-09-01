@@ -117,26 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="smartBoxCreator.ButtonsSettings.CustomButton.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <metadata name="toolStripHead.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="smartGridLines1.ColumnInfo" xml:space="preserve">
+    <value>12,1,0,0,0,-1,Columns:0{Caption:"...";AllowMerging:True;StyleFixed:"TextAlign:CenterCenter;";}	1{Width:50;Name:"Order";Caption:"Номер";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	2{Width:207;StarWidth:"*";Name:"Name";Caption:"Наименование";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";StyleFixed:"TextAlign:CenterCenter;";}	3{Width:90;Caption:"ИПКУ";AllowMerging:True;StyleFixed:"TextAlign:CenterCenter;";}	4{Width:50;Name:"colUnitShort";Caption:"Ед.изм.";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";StyleFixed:"TextAlign:CenterCenter;";}	5{Width:90;Name:"colQty";Caption:"Кол-во";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	6{Width:90;Name:"colPrice";Caption:"Реализация";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	7{Name:"colAmount";Caption:"Реализация";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	8{Width:50;Name:"colVatPrc";Caption:"НДС";AllowMerging:True;Style:"Format:""N1"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	9{Width:90;Name:"colSumVat";Caption:"НДС";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	10{Width:90;Name:"colSum";Caption:"Сумма с НДС";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	11{Width:60;Name:"Operation";Caption:"Операция";AllowMerging:True;Style:"DataType:System.String;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	</value>
+  </data>
+  <data name="smartGridLines1.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DgAACw4BQL7hQQAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
-        RQZQ7IU7QIysAcQGiY0C6gMGBgBzORJ7p2197QAAAABJRU5ErkJggg==
+        AAEAAAD/////AQAAAAAAAAAEAQAAAH5TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW1N5
+        c3RlbS5JbnQzMiwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJs
+        aWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgcAAAgI
+        CAkCAAAAAAAAAAAAAAAPAgAAAAAAAAAICw==
 </value>
   </data>
-  <data name="smartBoxExecutor.ButtonsSettings.CustomButton.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DgAACw4BQL7hQQAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
-        RQZQ7IU7QIysAcQGiY0C6gMGBgBzORJ7p2197QAAAABJRU5ErkJggg==
-</value>
+  <data name="smartGridLines1.StyleInfo" xml:space="preserve">
+    <value>Normal{}	Alternate{}	Hover{}	Fixed{BackColor:Control;ForeColor:ControlText;TextAlign:CenterCenter;BackgroundImageLayout:Hide;}	Highlight{BackColor:Info;ForeColor:ControlText;SearchBackColor:Orange;}	Focus{BackColor:Info;ForeColor:ControlText;}	Editor{}	Search{BackColor:Highlight;ForeColor:HighlightText;}	Frozen{BackColor:Beige;}	FrozenAlternate{}	NewRow{ForeColor:GrayText;}	EmptyArea{BackColor:AppWorkspace;Border:None,1,Black,Both;BorderHorz:1,Black;BorderVert:1,Black;}	SelectedColumnHeader{}	SelectedRowHeader{}	GrandTotal{BackColor:Black;ForeColor:White;}	Subtotal0{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal1{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal2{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal3{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal4{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal5{BackColor:ControlDarkDark;ForeColor:White;}	FilterEditor{}	Footer{BackColor:Window;ForeColor:ControlText;BackgroundImageLayout:Hide;}	FirstCustomStyle{}	</value>
   </data>
-  <data name="smartBoxInitiator.ButtonsSettings.CustomButton.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DAAACwwBP0AiyAAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
-        RQZQ7IU7QIysAcQGiY0C6gMGBgBzORJ7p2197QAAAABJRU5ErkJggg==
-</value>
-  </data>
+  <metadata name="toolStripLines.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>63</value>
+  </metadata>
 </root>

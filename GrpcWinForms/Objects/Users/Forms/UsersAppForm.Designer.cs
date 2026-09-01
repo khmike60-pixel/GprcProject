@@ -1,6 +1,6 @@
 ﻿namespace GrpcWinForms.Objects.Users.Forms
 {
-    partial class UsersForm
+    partial class UsersAppForm
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@
             C1.Win.Input.ComboBoxItem comboBoxItem1 = new C1.Win.Input.ComboBoxItem();
             C1.Win.Input.ComboBoxItem comboBoxItem2 = new C1.Win.Input.ComboBoxItem();
             C1.Win.Input.ComboBoxItem comboBoxItem3 = new C1.Win.Input.ComboBoxItem();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UsersForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UsersAppForm));
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
@@ -392,14 +392,14 @@
             // 
             userBindingSource.DataSource = typeof(GrpcCommonNet.Library.Common.User);
             // 
-            // UsersForm
+            // UsersAppForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1114, 450);
             Controls.Add(c1SplitContainer1);
             Controls.Add(panel1);
-            Name = "UsersForm";
+            Name = "UsersAppForm";
             Text = "Приложения пользователей";
             Load += UsersForm_Load;
             panel1.ResumeLayout(false);

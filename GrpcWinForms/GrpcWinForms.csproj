@@ -67,4 +67,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GrpcCommonNet.Proto\GrpcCommonNet.Proto.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Objects\Contracts\Forms\ContractViews\" />
+  </ItemGroup>
 </Project>

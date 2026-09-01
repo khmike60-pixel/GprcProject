@@ -5,6 +5,7 @@ using Google.Protobuf.WellKnownTypes;
 using GrpcWinForms.Objects.Contracts.Forms;
 using SmartLib;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -25,6 +26,9 @@ namespace GrpcWinForms.Controls.SmartBox
         private BindingList<ItemBox> itemsBox = new BindingList<ItemBox>();
         private string nameDisplay = string.Empty;
 
+        // Кеш для построенных "геттеров" вложенных свойств: ключ - (Type, путь)
+        private static readonly ConcurrentDictionary<(System.Type type, string path), Func<object, object>> _getterCache
+            = new ConcurrentDictionary<(System.Type, string), Func<object, object>>();
 
         public ItemBox SelectedItemBox { get => selectedItemBox; }
         public bool NullEnable {  get; set; } = true;
@@ -212,22 +216,38 @@ namespace GrpcWinForms.Controls.SmartBox
             var items = new BindingList<string>();
             itemsBox = new BindingList<ItemBox>();
 
+            // Новое добавление: получаем или создаём геттер для типа T и запрошенного пути
+            var getter = _getterCache.GetOrAdd((typeof(T), nameProp), key => BuildPropertyGetter(key.type, key.path));
+            //
+
             foreach (var row in source)
             {
                 if (row == null) continue;
 
                 var item = new ItemBox();
 
+                // Новое: безопасно получить значение имени (включая вложенные свойства)
+                try
+                {
+                    var rawName = getter(row);
+                    item.Name = rawName?.ToString() ?? string.Empty;
+                }
+                catch
+                {
+                    item.Name = string.Empty;
+                }
+                // 
+                
+                // Ищем свойство Id (регистронезависимо) у корневого объекта
                 var srcType = row.GetType();
 
-                // Получаем свойство для названия (параметр nameProperty), регистронезависимо
-                var propName = srcType.GetProperty(nameProp, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
-                if (propName != null)
-                {
-                    var nameVal = propName.GetValue(row);
-                    item.Name = nameVal?.ToString();
-                }
-
+                //// Получаем свойство для названия (параметр nameProperty), регистронезависимо
+                //var propName = srcType.GetProperty(nameProp, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
+                //if (propName != null)
+                //{
+                //    var nameVal = propName.GetValue(row);
+                //    item.Name = nameVal?.ToString();
+                //}
                 // Ищем свойство Id (регистронезависимо)
                 var propId = srcType.GetProperty("Id", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
                 if (propId != null)
@@ -254,7 +274,43 @@ namespace GrpcWinForms.Controls.SmartBox
             this.ItemsDataSource = items;
             return items;
         }
-        
+
+        // Построить геттер для вложенного пути. Если какой-то сегмент не найден — вернуть делегат, который всегда возвращает null.
+        private static Func<object, object> BuildPropertyGetter(System.Type rootType, string path)
+        {
+            if (rootType == null || string.IsNullOrEmpty(path)) return _ => null;
+
+            var segments = path.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            var props = new PropertyInfo[segments.Length];
+
+            System.Type curType = rootType;
+            for (int i = 0; i < segments.Length; i++)
+            {
+                var seg = segments[i];
+                var p = curType.GetProperty(seg, BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase);
+                if (p == null)
+                {
+                    // если не нашли свойство на этапе построения — возвращаем делегат, который всегда null
+                    return _ => null;
+                }
+                props[i] = p;
+                curType = p.PropertyType;
+            }
+
+            // делегат последовательно вызывает Props[i].GetValue, безопасно проверяя null
+            return (object root) =>
+            {
+                if (root == null) return null;
+                object cur = root;
+                for (int i = 0; i < props.Length; i++)
+                {
+                    if (cur == null) return null;
+                    cur = props[i].GetValue(cur);
+                }
+                return cur;
+            };
+        }
+
         public void SetSelectedItemBox<T>(T item) where T : class, IItemBox
         {
             selectedItemBox = new ItemBox() { Id = item.Id, Name = item.Name };
@@ -291,7 +347,7 @@ namespace GrpcWinForms.Controls.SmartBox
 
         public void SetSelectedItemBox<T>(T sourceItem, string idPropertyName = "Id")
         {
-            if (sourceItem == null) return;
+            if (sourceItem == null) return; 
 
             string idPropName = string.IsNullOrWhiteSpace(idPropertyName) ? "Id" : idPropertyName;
             var srcType = sourceItem.GetType();

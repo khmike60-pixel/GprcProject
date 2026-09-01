@@ -1,0 +1,66 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Employee";
+
+import "google/protobuf/field_mask.proto";
+import "protos/common/general.proto";
+import "protos/common/user.proto";
+import "protos/common/employee.proto";
+
+package employee;
+
+service EmployeeServices {
+	rpc GetEmployee(EmployeeRequest) returns (EmployeeResponse);
+	rpc ListEmployee(ListEmployeeRequest) returns (ListEmployeeResponse);
+	rpc CreateEmployee(CreateEmployeeRequest) returns (EmployeeResponse);
+	rpc UpdateEmployee(UpdateEmployeeRequest) returns (EmployeeResponse);
+	rpc DeleteEmployee(DeleteEmployeeRequest) returns (DeleteEmployeeResponse);
+	rpc DeleteIdsEmployee(DeleteIdsEmployeeRequest) returns (UndeleteIdsEmployeeResponse);
+}
+
+message EmployeeRequest {
+	int32 id = 1;
+	optional google.protobuf.FieldMask field_mask = 2;
+}
+
+
+message EmployeeResponse {
+	Common.Result result = 1;
+	Common.Employee employee = 2;
+}
+
+message ListEmployeeRequest {
+	string employee_short = 1;
+	string employee_name = 2;
+	optional google.protobuf.FieldMask field_mask = 3;
+}
+
+message ListEmployeeResponse {
+	Common.Result result = 1;
+	repeated Common.Employee employees = 2;
+}
+
+message CreateEmployeeRequest {
+	Common.Employee employee = 1;
+}
+
+message UpdateEmployeeRequest {
+	Common.Employee  employee = 1;
+}
+
+message DeleteEmployeeRequest {
+	int32 id = 1;
+}
+
+message DeleteEmployeeResponse {
+	Common.Result  result = 1;
+}
+
+message DeleteIdsEmployeeRequest {
+	repeated int32 ids = 1;
+}
+
+message UndeleteIdsEmployeeResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_ids = 2;
+}

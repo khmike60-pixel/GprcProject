@@ -3,9 +3,7 @@
 option csharp_namespace = "GrpcCommonNet.Library.CountryCurrency";
 
 import "google/protobuf/field_mask.proto";
-import "google/protobuf/timestamp.proto";
 import "protos/common/general.proto";
-import "protos/common/currency.proto";
 import "protos/common/countrycurrency.proto";
 
 package currency;

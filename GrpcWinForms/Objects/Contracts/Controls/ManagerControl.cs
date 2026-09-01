@@ -1,4 +1,11 @@
-﻿using GrpcCommonNet.Library.Contract;
+﻿using Google.Protobuf.WellKnownTypes;
+using GrpcCommonNet.Library.Contract;
+using GrpcCommonNet.Library.Contragent;
+using GrpcCommonNet.Library.Employee;
+using GrpcCommonNet.Library.User;
+using GrpcWinForms.GrpcUtils;
+using GrpcWinForms.Objects.Contragents.Forms;
+using GrpcWinForms.Objects.Users;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,22 +21,23 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 {
     public partial class ManagerControl : UserControl
     {
-        private Contract _contract;
+        private Contract _contract = new Contract();
         public Contract Contract { get => _contract; set => _contract = value; }
 
         private string[] projectTypes = new string[] { "стандартный", "проект", "распродажа" };
 
         private bool readOnly = false;
-        public bool ReadOnly {
+        public bool ReadOnly
+        {
             get => readOnly;
-            set { 
+            set
+            {
                 readOnly = value;
-                empExecutor.ReadOnly = readOnly;
-                empInittiator.ReadOnly = readOnly;
+                smartBoxInitiator.ReadOnly = readOnly;
+                smartBoxExecutor.ReadOnly = readOnly;
+                smartBoxCreator.ReadOnly = readOnly;
                 cbProjectType.ReadOnly = readOnly;
                 tbComment.ReadOnly = readOnly;
-                cddByCreate.ReadOnly = readOnly;
-
             }
         }
 
@@ -49,14 +57,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             if (_contract.Id == 0) // Новый контракт
             {
 
-            }    
-                // Исполнитель
-            empExecutor.Text = _contract.Executor == null ? "" : _contract.Executor.Name;
-            empExecutor.Value = _contract.Executor == null ? 0 : _contract.Executor.Id;
-
-            // Инициатор
-            empInittiator.Text = _contract.Initiator == null ? "" : _contract.Initiator.Name;
-            empInittiator.Value = _contract.Initiator == null ? 0 : _contract.Initiator.Id;
+            }
+            // Инициатор, Исполнитель, Создатель
+            smartBoxInitiator.SetSelectedItemBox(_contract.Initiator, "Id");
+            smartBoxExecutor.SetSelectedItemBox(_contract.Executor, "Id");
+            if (_contract.Metadata == null) _contract.Metadata = new Metadata();
+            smartBoxCreator.SetSelectedItemBox(_contract.Metadata.CreateBy, "Id");
 
             // Менеджерский тип
             cbProjectType.Items.Clear();
@@ -72,22 +78,58 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             // Описание
             tbComment.Text = Contract.Comment;
 
-            //empExecutor.ReadOnly = readOnly;
-            //empInittiator.ReadOnly = readOnly;
-            //cbProjectType.ReadOnly = readOnly;
-            //tbComment.ReadOnly = readOnly;
-            //cddByCreate.ReadOnly = readOnly;
-
         }
 
         private void tbComment_TextChanged(object sender, EventArgs e)
         {
             _contract.Comment = tbComment.Text;
             _contract.ManagerType = projectTypes[cbProjectType.SelectedIndex];
-            _contract.Executor.Id = empExecutor.Value == null ? 0 : Convert.ToInt32(empExecutor.Value);
-            _contract.Executor.Name = empExecutor.Text;
-            _contract.Initiator.Id = empInittiator.Value == null ? 0 : Convert.ToInt32(empInittiator.Value);
-            _contract.Initiator.Name = empInittiator.Text;
+        }
+
+        private async void ManagerControl_Load(object sender, EventArgs e)
+        {
+            if (DesignMode) return;
+            try
+            {
+                ContragentFilterRequest request = new ContragentFilterRequest()
+                { PrefixNotEmpty = true, TypeFilter = GrpcCommonNet.Library.Common.ContragentTypeFilter.PersonFilter};
+                ListContragentResponse response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Contragent.ShortListContragentAsync(request).ResponseAsync
+                );
+
+                ContragentsShortForm form = new ContragentsShortForm()
+                {
+                    DialogMode = true,
+                    TypeFilter = GrpcCommonNet.Library.Common.ContragentTypeFilter.PersonFilter,
+                    ContragentTypeEnable = false,
+                    CheckedPrefixEnable = false,
+                    CheckedPrefix = true
+                };
+                smartBoxInitiator.DataSourceList(response.Contragents, "Prefix");
+                smartBoxExecutor.DataSourceList(response.Contragents, "Prefix");
+
+                smartBoxInitiator.SetModalForm(form);
+                smartBoxExecutor.SetModalForm(form);
+
+                UserFilterRequest request1 = new UserFilterRequest()
+                {
+                    FieldMask = new FieldMask() { Paths = { "id", "contragent.name" } }
+                };
+                ListUserResponse response1 = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.User.GetListUserAsync(request1).ResponseAsync
+                );
+
+                UsersForm form1 = new UsersForm() { DialogMode = true };
+                smartBoxCreator.DataSourceList(response1.Users, "Contragent.Name");
+                smartBoxCreator.SetModalForm(form1);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Join(Environment.NewLine,
+                    "Ошибка при загрузки данных",
+                    ex.Message));
+            }
         }
     }
 }
