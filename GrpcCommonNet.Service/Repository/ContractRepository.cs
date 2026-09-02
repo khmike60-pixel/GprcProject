@@ -2,6 +2,7 @@
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Proto.Utils;
+using GrpcCommonNet.Service.Models;
 using MySql.Data.MySqlClient;
 using MySqlX.XDevAPI.Common;
 using System.Data;
@@ -535,7 +536,7 @@ public class ContractRepository
 
     #endregion
 
-    #region Методы  рабюоты  со  строками 
+    #region Методы  работы  со  строками 
     public async Task<List<Line>> GetListLinesAsync(ContractLineRequest request)
     {
         try
@@ -575,7 +576,7 @@ public class ContractRepository
         }
     }
 
-    public async Task<Line> CreateContractLineAsync(CreateContractLineRequest request)
+    public async Task<Line> CreateContractLineAsync(CreateContractLineRequest request, UserData userData)
     {
         try
         {
@@ -585,19 +586,19 @@ public class ContractRepository
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-                                    INSERT INTO cwatis.contractlines l (
-                                        l.contractline_order, l.operation, l.contract_id,
-                                        l.contractline_Name, l.rfr_MGoodGroupId, l.UnitId, u.Short, 
-                                        l.contractline_qty, l.contractline_price, l.contractline_amount, 
-                                        l.contractline_vat_prc, l.contractline_sumvat, l.contractline_sum,
-                                        l.comment, l.RoundForLine, l.Specification, l.Added_From, 
-                                        l.SupplierId, l.contractline_baseDiscount, l.DiscountAdditional, 
-                                        l.contractline_baseprice
+                                    INSERT INTO cwatis.contractlines (
+                                        contractline_order, operation, contract_id,
+                                        contractline_Name, rfr_MGoodGroupId, UnitId, 
+                                        contractline_qty, contractline_price, contractline_amount, 
+                                        contractline_vat_prc, contractline_sumvat, contractline_sum,
+                                        comment, RoundForLine, Specification, Added_From, 
+                                        SupplierId, contractline_baseDiscount, DiscountAdditional, 
+                                        contractline_baseprice
 
                                     )
                                     VALUES  (
                                         @line_order, @operation, @contract_id,
-                                        @line_Name, @line_product_id, @line_Unit_Id, @line_Unit_Name, 
+                                        @line_Name, @line_product_id, @line_Unit_Id, 
                                         @line_qty, @line_price, @line_amount, 
                                         @line_vat_per, @line_sum_vat, @line_sum,
                                         @comment, @RoundForLine, @Specification, @Added_From, 
@@ -610,37 +611,37 @@ public class ContractRepository
                                         l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name, 
                                         l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, 
                                         l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
+                                        l.comment, l.RoundForLine, l.Specification, l.Added_From, 
+                                        l.SupplierId, l.contractline_baseDiscount, l.DiscountAdditional, 
+                                        l.contractline_baseprice,
                                         1
                                     FROM cwatis.contractlines l 
                                         LEFT JOIN global_db.rfr_units u ON u.UnitId = l.UnitId
                                         LEFT JOIN global_db.rfr_goods_tree g ON g.MGoodGroupId = l.rfr_MGoodGroupId
                                     WHERE 1=1
                                         and l.contractline_id = LAST_INSERT_ID() 
-                                        and (ifnull(@All,false) = true or l.operation != 'удалена')
                                     ORDER BY contractline_order";
 
-            cmd.Parameters.AddWithValue("line_order", request);
-            cmd.Parameters.AddWithValue("operation", request);
-            cmd.Parameters.AddWithValue("contract_id", request);
-            cmd.Parameters.AddWithValue("line_Name", request);
-            cmd.Parameters.AddWithValue("line_product_id", request);
-            cmd.Parameters.AddWithValue("line_Unit_Id", request);
-            cmd.Parameters.AddWithValue("line_Unit_Name", request);
-            cmd.Parameters.AddWithValue("line_qty", request);
-            cmd.Parameters.AddWithValue("line_price", request);
-            cmd.Parameters.AddWithValue("line_amountv", request);
-            cmd.Parameters.AddWithValue("line_vat_per", request);
-            cmd.Parameters.AddWithValue("line_sum_vat", request);
-            cmd.Parameters.AddWithValue("line_sum", request);
-            cmd.Parameters.AddWithValue("comment", request);
-            cmd.Parameters.AddWithValue("RoundForLine", request);
-            cmd.Parameters.AddWithValue("Specification", request);
-            cmd.Parameters.AddWithValue("Added_From", request);
-            cmd.Parameters.AddWithValue("SupplierId", request);
-            cmd.Parameters.AddWithValue("line_baseDiscount", request);
-            cmd.Parameters.AddWithValue("line_DiscountAdditional", request);
-            cmd.Parameters.AddWithValue("line_baseprice", request);
-
+            cmd.Parameters.AddWithValue("line_order", request.Line.Id);
+            cmd.Parameters.AddWithValue("operation", request.Line.Operation);
+            cmd.Parameters.AddWithValue("contract_id", request.Line.ContractId);
+            cmd.Parameters.AddWithValue("line_Name", request.Line.Name);
+            cmd.Parameters.AddWithValue("line_product_id", request.Line.Product?.Id);
+            cmd.Parameters.AddWithValue("line_Unit_Id", request.Line.Unit?.Id);
+            cmd.Parameters.AddWithValue("line_qty", request.Line.Qty);
+            cmd.Parameters.AddWithValue("line_price", request.Line.Price);
+            cmd.Parameters.AddWithValue("line_amount", request.Line.Amount);
+            cmd.Parameters.AddWithValue("line_vat_per", request.Line.VatPrc);
+            cmd.Parameters.AddWithValue("line_sum_vat", request.Line.SumVat);
+            cmd.Parameters.AddWithValue("line_sum", request.Line.Sum);
+            cmd.Parameters.AddWithValue("comment", request.Line.Comment);
+            cmd.Parameters.AddWithValue("RoundForLine", request.Line.RoundForLine);
+            cmd.Parameters.AddWithValue("Specification", request.Line.Specification);
+            cmd.Parameters.AddWithValue("Added_From", request.Line.AddedFrom);
+            cmd.Parameters.AddWithValue("SupplierId", request.Line.Supplier?.Id);
+            cmd.Parameters.AddWithValue("line_baseDiscount", request.Line.BaseDiscount);
+            cmd.Parameters.AddWithValue("line_DiscountAdditional", request.Line.DiscountAdditional);
+            cmd.Parameters.AddWithValue("line_baseprice", request.Line.BasePrice);
             using var rdr = await cmd.ExecuteReaderAsync();
 
             if (await rdr.ReadAsync())
@@ -800,6 +801,8 @@ public class ContractRepository
 
     private Line FillLine(DbDataReader rdr)
     {
+        bool t = HasColumn(rdr, "comment");
+
         Line line = new Line();
 
         line.Id = rdr["line_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["line_id"]);
@@ -909,7 +912,21 @@ public class ContractRepository
         */
         return nodeContract;
     }
-       
+
+    private bool HasColumn(DbDataReader reader, string columnName)
+    {
+        bool result = true;
+        try
+        {
+            int i = reader.GetOrdinal(columnName);
+            result = true;
+        } catch
+        {
+            result = false;
+        }
+
+        return result;
+    }
 
     #endregion
 

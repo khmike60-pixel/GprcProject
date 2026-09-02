@@ -396,55 +396,63 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             }
         }
 
-        private async void toolStripButton1_Click(object sender, EventArgs e)
+        private async void toolStripButtonNewLine_Click(object sender, EventArgs e)
         {
-            CreateContractLineRequest request = new CreateContractLineRequest
+            try
             {
-                Line = new Line
+                CreateContractLineRequest request = new CreateContractLineRequest
                 {
-                    ContractId = contract.Id,
-                    PreviousId = 0,
-                    Product = new Product { Id = 0, Name = "" },
-                    Unit = new Unit { Id = 1, Code = "шт", Short = "шт" },
-                    //                    Order = 0,
-                    Name = "Новая строка",
-                    Qty = MyConvert.ToDecimalValue(1),
-                    BasePrice = MyConvert.ToDecimalValue(0),
-                    BaseDiscount = MyConvert.ToDecimalValue(0),
-                    DiscountAdditional = MyConvert.ToDecimalValue(0),
-                    Price = MyConvert.ToDecimalValue(0),
-                    //                    Amount = MyConvert.ToDecimalValue(0),
-                    IsVat = true,
-                    VatPrc = MyConvert.ToDecimalValue(12),
-                    //                    SumVat = MyConvert.ToDecimalValue(0),
-                    //                    Sum = MyConvert.ToDecimalValue(0),
-                    Comment = "",
-                    RoundForLine = MyConvert.ToDecimalValue(0),
-                    Specification = 1,
-                    AddedFrom = "Контракт",
-                    Metadata = new GrpcCommonNet.Library.Contract.Metadata
+                    Line = new Line
                     {
-                        CreateUserid = 0,                       // Заполниться на службе
-                        CreateBy = "",                          // Заполниться на службе
-                        CreateAt = DateTime.Now.ToUniversalTime().ToTimestamp() // Заполниться на службе 
+                        ContractId = contract.Id,
+                        PreviousId = null,
+                        Product = null,
+                        Unit = null,
+                        //                    Order = 0,
+                        Name = "Новая строка",
+                        Qty = MyConvert.ToDecimalValue(1),
+                        BasePrice = MyConvert.ToDecimalValue(0),
+                        BaseDiscount = MyConvert.ToDecimalValue(0),
+                        DiscountAdditional = MyConvert.ToDecimalValue(0),
+                        Price = MyConvert.ToDecimalValue(0),
+                        //                    Amount = MyConvert.ToDecimalValue(0),
+                        IsVat = true,
+                        VatPrc = MyConvert.ToDecimalValue(12),
+                        //                    SumVat = MyConvert.ToDecimalValue(0),
+                        //                    Sum = MyConvert.ToDecimalValue(0),
+                        Comment = "",
+                        RoundForLine = MyConvert.ToDecimalValue(0),
+                        Specification = 1,
+                        AddedFrom = "",
+                        Metadata = new GrpcCommonNet.Library.Contract.Metadata
+                        {
+                            CreateUserid = 0,                                       // Должно заполнятся на службе
+                            CreateBy = "",                                          // Должно заполнятся на службе
+                            CreateAt = DateTime.Now.ToUniversalTime().ToTimestamp() // Должно заполнятся на службе 
+                        },
+                        Operation = "новая"
                     }
+                };
+
+                ContractLineResponse response = await GrpcRetry.Call(() =>
+                    GrpcClients.GrpcClients.Contract.CreateContractLineAsync(request).ResponseAsync
+                );
+
+                if (response.Result.Status != Status.Ok)
+                {
+                    throw new InvalidOperationException($"Ошибка создания строки контракта: {response.Result.Message}");
                 }
-            };
-
-            ContractLineResponse response = await GrpcRetry.Call(() =>
-                GrpcClients.GrpcClients.Contract.CreateContractLineAsync(request).ResponseAsync
-            );
-
-            if (response.Result.Status != Status.Ok)
+                else
+                {
+                    int row = smartGridLines1.Row;
+                    Line currentLine = smartGridLines1.Rows[row].DataSource as Line;
+                    int l = smartGridLines1.Rows[row].Index;
+                    lines.Insert(l, response.Line);
+                }
+            } catch (Exception ex)
             {
-                throw new InvalidOperationException($"Ошибка создания строки контракта: {response.Result.Message}");
-            }
-            else
-            {
-                int row = smartGridLines1.Row;
-                Line currentLine = smartGridLines1.Rows[row].DataSource as Line;
-                int l = smartGridLines1.Rows[row].Index;
-                lines.Insert(l,response.Line);
+                MessageBox.Show(String.Join(Environment.NewLine,"Ошибка при добавлении строки контракта",
+                    ex.Message));
             }
         }
 

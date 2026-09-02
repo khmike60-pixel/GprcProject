@@ -33,13 +33,13 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContractSaleStandartForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition3 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition4 = new C1.Win.FlexGrid.AggregateDefinition();
-            SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
-            SmartLib.StringItem stringItem2 = new SmartLib.StringItem();
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition5 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition6 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition7 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition8 = new C1.Win.FlexGrid.AggregateDefinition();
+            SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
             splitContainerAll = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanelMain = new C1.Win.SplitContainer.C1SplitterPanel();
             buttonOk = new Button();
@@ -59,7 +59,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             c1DockingTabPageSpecification = new C1.Win.Command.C1DockingTabPage();
             smartGridLines1 = new SmartLib.SmartGrid(components);
             toolStripLines = new ToolStrip();
-            toolStripButton1 = new ToolStripButton();
+            toolStripButtonNewLine = new ToolStripButton();
             toolStripButton2 = new ToolStripButton();
             toolStripButton3 = new ToolStripButton();
             toolStripButton4 = new ToolStripButton();
@@ -281,27 +281,27 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             smartGridLines1.ColumnInfo = resources.GetString("smartGridLines1.ColumnInfo");
             smartGridLines1.Dock = DockStyle.Fill;
             smartGridLines1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 2;
-            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
-            aggregateDefinition2.Column = 7;
-            aggregateDefinition3.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
-            aggregateDefinition3.Column = 9;
-            aggregateDefinition4.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
-            aggregateDefinition4.Column = 10;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            footerDescription1.Aggregates.Add(aggregateDefinition2);
-            footerDescription1.Aggregates.Add(aggregateDefinition3);
-            footerDescription1.Aggregates.Add(aggregateDefinition4);
-            smartGridLines1.Footers.Descriptions.Add(footerDescription1);
+            aggregateDefinition5.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition5.Caption = "Всего: ";
+            aggregateDefinition5.Column = 2;
+            aggregateDefinition6.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
+            aggregateDefinition6.Column = 7;
+            aggregateDefinition7.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
+            aggregateDefinition7.Column = 9;
+            aggregateDefinition8.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
+            aggregateDefinition8.Column = 10;
+            footerDescription2.Aggregates.Add(aggregateDefinition5);
+            footerDescription2.Aggregates.Add(aggregateDefinition6);
+            footerDescription2.Aggregates.Add(aggregateDefinition7);
+            footerDescription2.Aggregates.Add(aggregateDefinition8);
+            smartGridLines1.Footers.Descriptions.Add(footerDescription2);
             smartGridLines1.Footers.Fixed = true;
-            stringItem1.Name = "Заголовок 1";
-            stringItem1.Value = "...;Номер;Наименование;ИПКУ;Ед.изм.;Кол-во;Реализация;Реализация;НДС;НДС;Сумма с НДС;Операция";
-            stringItem2.Name = "Заголовок 2";
-            stringItem2.Value = "...;Номер;Наименование;ИПКУ;Ед.изм.;Кол-во;Цена;Сумма;%;Сумма;Сумма с НДС;Операция";
-            smartGridLines1.Headers.Add(stringItem1);
-            smartGridLines1.Headers.Add(stringItem2);
+            stringItem3.Name = "Заголовок 1";
+            stringItem3.Value = "...;Номер;Наименование;ИПКУ;Ед.изм.;Кол-во;Реализация;Реализация;НДС;НДС;Сумма с НДС;Операция";
+            stringItem4.Name = "Заголовок 2";
+            stringItem4.Value = "...;Номер;Наименование;ИПКУ;Ед.изм.;Кол-во;Цена;Сумма;%;Сумма;Сумма с НДС;Операция";
+            smartGridLines1.Headers.Add(stringItem3);
+            smartGridLines1.Headers.Add(stringItem4);
             smartGridLines1.IdName = null;
             smartGridLines1.Location = new Point(0, 31);
             smartGridLines1.Name = "smartGridLines1";
@@ -319,22 +319,22 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             // toolStripLines
             // 
             toolStripLines.ImageScalingSize = new Size(24, 24);
-            toolStripLines.Items.AddRange(new ToolStripItem[] { toolStripButton1, toolStripButton2, toolStripButton3, toolStripButton4, toolStripButton5, toolStripSeparator2, toolStripButtonSetupSpecification });
+            toolStripLines.Items.AddRange(new ToolStripItem[] { toolStripButtonNewLine, toolStripButton2, toolStripButton3, toolStripButton4, toolStripButton5, toolStripSeparator2, toolStripButtonSetupSpecification });
             toolStripLines.Location = new Point(0, 0);
             toolStripLines.Name = "toolStripLines";
             toolStripLines.Size = new Size(1032, 31);
             toolStripLines.TabIndex = 5;
             toolStripLines.Text = "toolStrip2";
             // 
-            // toolStripButton1
+            // toolStripButtonNewLine
             // 
-            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton1.Image = Properties.Resources.icons8_документ_50;
-            toolStripButton1.ImageTransparentColor = Color.Magenta;
-            toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(28, 28);
-            toolStripButton1.Text = "Новый";
-            toolStripButton1.Click += toolStripButton1_Click;
+            toolStripButtonNewLine.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButtonNewLine.Image = Properties.Resources.icons8_документ_50;
+            toolStripButtonNewLine.ImageTransparentColor = Color.Magenta;
+            toolStripButtonNewLine.Name = "toolStripButtonNewLine";
+            toolStripButtonNewLine.Size = new Size(28, 28);
+            toolStripButtonNewLine.Text = "Новый";
+            toolStripButtonNewLine.Click += toolStripButtonNewLine_Click;
             // 
             // toolStripButton2
             // 
@@ -504,7 +504,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private Button buttonCancel;
         private Button buttonOk;
         private ToolStrip toolStripLines;
-        private ToolStripButton toolStripButton1;
+        private ToolStripButton toolStripButtonNewLine;
         private ToolStripButton toolStripButton2;
         private ToolStripButton toolStripButton3;
         private ToolStripButton toolStripButton4;

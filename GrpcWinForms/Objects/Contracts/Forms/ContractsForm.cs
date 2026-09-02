@@ -168,9 +168,33 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             }
         }
 
+        private void ContractsForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                period1.Period.From = new DateTime(DateTime.Now.Year, 1, 1);
+                period1.Period.To = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
+
+                RefreshContract();
+
+                smartGridContracts1.AddSeparator();
+                smartGridContracts1.AddItemToContextMenu("Новый контракт",
+                    Properties.Resources.icons8_документ_50, toolStripButtonNew_Click);
+                smartGridContracts1.AddItemToContextMenu("Новое допсоглашение",
+                    Properties.Resources.icons8_agreement_50, toolStripButtonNew_Click);
+
+            }
+            catch (RpcException ex)
+            {
+                MessageBox.Show("Ошибка gRPC. \n" + ex.Message);
+            }
+        }
+
+
         #endregion
 
-        #region Обработка событий кнопок
+
+        #region Обработка событий общихкнопок контракта
 
         private void ToolStripMenuItemNewContract_Click(object sender, EventArgs e)
         {
@@ -265,28 +289,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         }
 
         #endregion
-
-        private void ContractsForm_Load(object sender, EventArgs e)
-        {
-            try
-            {
-                period1.Period.From = new DateTime(DateTime.Now.Year, 1, 1);
-                period1.Period.To = new DateTime(DateTime.Now.Year + 1, 1, 1).AddSeconds(-1);
-
-                RefreshContract();
-
-                smartGridContracts1.AddSeparator();
-                smartGridContracts1.AddItemToContextMenu("Новый контракт",
-                    Properties.Resources.icons8_документ_50, toolStripButtonNew_Click);
-                smartGridContracts1.AddItemToContextMenu("Новое допсоглашение",
-                    Properties.Resources.icons8_agreement_50, toolStripButtonNew_Click);
-
-            }
-            catch (RpcException ex)
-            {
-                MessageBox.Show("Ошибка gRPC. \n" + ex.Message);
-            }
-        }
 
 
         #region Методы грида Контрактов
@@ -403,6 +405,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         #endregion
 
+
         #region Методы грида строк Контрактов
 
         private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
@@ -457,6 +460,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
 
         #endregion
+
 
         #region Методы для работы с контролами зоны фильтрации companyDropDown (желательно избавиться)
 
@@ -581,6 +585,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
 
         #endregion
+
 
         /// <summary>
         /// Не используется. Метод формирует Nodes[] с учетом первичного контракта и допсоглашений

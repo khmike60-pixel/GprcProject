@@ -12,10 +12,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Controls\CurrencyType\**" />
+    <Compile Remove="Objects\Contracts\Forms\ContractViews\**" />
     <Compile Remove="Objects\Geolocations\Places\**" />
     <EmbeddedResource Remove="Controls\CurrencyType\**" />
+    <EmbeddedResource Remove="Objects\Contracts\Forms\ContractViews\**" />
     <EmbeddedResource Remove="Objects\Geolocations\Places\**" />
     <None Remove="Controls\CurrencyType\**" />
+    <None Remove="Objects\Contracts\Forms\ContractViews\**" />
     <None Remove="Objects\Geolocations\Places\**" />
   </ItemGroup>
   <ItemGroup>
@@ -66,8 +69,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GrpcCommonNet.Proto\GrpcCommonNet.Proto.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Objects\Contracts\Forms\ContractViews\" />
   </ItemGroup>
 </Project>

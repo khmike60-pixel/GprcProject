@@ -62,10 +62,11 @@ message Line {
   Common.DecimalValue sum = 17;				// Сумма с НДС
   string comment = 18; 
   Common.DecimalValue round_for_line = 19;
-  optional int32 specification = 20;
+  int32 specification = 20;
   string added_from = 21;
   Metadata metadata = 22;
   string operation = 23;
+  Common.Contragent supplier = 24;
 
 }
 
