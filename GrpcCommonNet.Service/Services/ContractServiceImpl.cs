@@ -210,7 +210,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
 
         try
         {
-            Line _line = await _repo.UpdateLineAsync(request.Line);
+            Line _line = await _repo.UpdateLineAsync(request,userData);
             if (_line == null) return new ContractLineResponse() { Result = new Result { Status = Status.BadRequest } };
 
             return new ContractLineResponse() { Line = _line, Result = new Result { Status = Status.Ok } };

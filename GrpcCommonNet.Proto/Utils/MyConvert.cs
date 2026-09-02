@@ -28,6 +28,14 @@ namespace GrpcCommonNet.Proto.Utils
             return new DecimalValue{ Units = (long)((double)value * Math.Pow(10, scale)), Scale = scale };    
         }
 
+        public static DecimalValue ToDecimalValue(string? value, int scale = 2)
+        {
+            if (value == null || value == "") 
+                return new DecimalValue { Units = 0, Scale = scale };
+            decimal val = Convert.ToDecimal(value);    
+            return new DecimalValue{ Units = (long)((double)val * Math.Pow(10, scale)), Scale = scale };
+        }
+
         public static DecimalValue ToDecimalValueField(DbDataReader rdr, string fieldName, DataTable? schema = null)
         {
             if (string.IsNullOrEmpty(fieldName)) return new DecimalValue { };

@@ -1,6 +1,7 @@
 ﻿using C1.Framework;
 using C1.Win.FlexGrid;
 using Google.Protobuf.WellKnownTypes;
+using GrapeCity.Documents.Common;
 using Grpc.Core;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
@@ -23,6 +24,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static C1.Util.Win.Win32;
 using Contract = GrpcCommonNet.Library.Contract.Contract;
+using Line = GrpcCommonNet.Library.Contract.Line;
 using Status = GrpcCommonNet.Library.Common.Status;
 
 namespace GrpcWinForms.Objects.Contracts.ContractViews
@@ -446,15 +448,114 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 {
                     int row = smartGridLines1.Row;
                     Line currentLine = smartGridLines1.Rows[row].DataSource as Line;
-                    int l = smartGridLines1.Rows[row].Index;
-                    lines.Insert(l, response.Line);
+                    int l = row - smartGridLines1.Rows.Fixed;
+                    lines.Add(response.Line);
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
-                MessageBox.Show(String.Join(Environment.NewLine,"Ошибка при добавлении строки контракта",
+                MessageBox.Show(String.Join(Environment.NewLine, "Ошибка при добавлении строки контракта",
                     ex.Message));
             }
         }
 
+        private void smartGridLines1_DoubleClick(object sender, EventArgs e)
+        {
+            int row = smartGridLines1.Row;
+            if (row < smartGridLines1.Rows.Fixed || row >= smartGridLines1.Rows.Count) return;
+
+        }
+
+        private async void smartGridLines1_AfterEdit(object sender, RowColEventArgs e)
+        {
+            Line line = smartGridLines1.Rows[e.Row].DataSource as Line;
+            UpdateContractLineRequest request = new UpdateContractLineRequest()
+            { Line = line, FieldMask = new FieldMask { Paths = { } } };
+            try
+            {
+
+                switch (smartGridLines1.Cols[e.Col].Name)
+                {
+                    case "Order":
+                        line.Order = Convert.ToInt32(smartGridLines1[e.Row, e.Col]);
+                        request.FieldMask.Paths.Add("order");
+                        break;
+                    case "Name":
+                        line.Name = smartGridLines1[e.Row, e.Col].ToString();
+                        request.FieldMask.Paths.Add("name");
+                        break;
+                    case "colQty":
+                        line.Qty = MyConvert.ToDecimalValue(smartGridLines1[e.Row, e.Col].ToString());
+                        request.FieldMask.Paths.Add("qty");
+                        break;
+                    case "colPrice":
+                        line.Price = MyConvert.ToDecimalValue(smartGridLines1[e.Row, e.Col].ToString());
+                        request.FieldMask.Paths.Add("price");
+                        break;
+                    case "colAmount":
+                        line.Amount = MyConvert.ToDecimalValue(smartGridLines1[e.Row, e.Col].ToString());
+                        request.FieldMask.Paths.Add("amount");
+                        break;
+                    case "colVatPrc":
+                        request.FieldMask.Paths.Add("vat_prc");
+                        break;
+                    case "colSumVat":
+                        request.FieldMask.Paths.Add("sum_vat");
+                        break;
+                    case "colSum":
+                        request.FieldMask.Paths.Add("sum");
+                        break;
+                }
+
+                request.Line = line;
+
+                ContractLineResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.UpdateContractLineAsync(request).ResponseAsync);
+                if (response.Result.Status == Status.Ok)
+                {
+                    int updatedRow = e.Row - smartGridLines1.Rows.Fixed;
+                    lines[updatedRow] = response.Line;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Join(Environment.NewLine, "Ошибка при редактировании.",
+                    ex.Message));
+            }
+        }
+
+        private void smartGridLines1_SetUnboundValue(object sender, UnboundValueEventArgs e)
+        {
+            try
+            {
+                int row = e.Row;
+                switch (smartGridLines1.Cols[e.Col].Name)
+                {
+                    case "colQty":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].Qty = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colPrice":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].Price = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colAmount":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].Amount = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colVatPrc":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].VatPrc = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colSumVat":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].SumVat = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colSum":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].Sum = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Join(Environment.NewLine, "Ошибка при редактировании.",
+                    ex.Message));
+            }
+        }
     }
 }

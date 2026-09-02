@@ -1,16 +1,21 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Proto.Utils;
 using GrpcCommonNet.Service.Models;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
 using MySqlX.XDevAPI.Common;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Xml.Linq;
 using Contract = GrpcCommonNet.Library.Contract.Contract;
+using Metadata = GrpcCommonNet.Library.Contract.Metadata;
 
 public class ContractRepository
 {
@@ -655,74 +660,212 @@ public class ContractRepository
         }
     }
 
-    public async Task<Line> UpdateLineAsync(Line _line)
+    public async Task<Line> UpdateLineAsync(UpdateContractLineRequest request,  UserData userData)
     {
-        Line line = new Line();
         try
         {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                using var conn = new MySqlConnection(_connectionString);
-                await conn.OpenAsync();
-                using var cmd = conn.CreateCommand();
-                cmd.CommandText = @"
-                        UPDATE cwatis.contractlines set 
-                            contractline_RootId = @RootId, contract_id = @contract_id, 
-                            rfr_MGoodGroupId = @rfr_MGoodGroupId, UnitId = @UnitId, SupplierId = @SupplierId, contractline_Name = @contractline_Name, 
-                            Added_From = @Added_From, contractline_order = @contractline_order, 
-                            Specification = @Specification, RoundForLine = @RoundForLine, 
-                            contractline_qty = @contractline_qty, 
-                            contractline_baseDiscount = @contractline_baseDiscount, DiscountAdditional = @DiscountAdditional, 
-                            contractline_baseprice = @contractline_baseprice, 
-                            contractline_price = @contractline_price, contractline_amount = @contractline_amount, 
-                            IsVat = @IsVat, contractline_vat_prc = @contractline_vat_prc, contractline_sumvat = @contractline_sumvat, 
-                            contractline_sum = @contractline_sum, Comment = @Comment, 
-                            create_at = @create_at, create_by = @create_by, create_userid = @create_userid
-                        where contractline_id = @Id;
-                        select * from cwatis.contractlines where contractline_id = @Id;
-                        ";
-                MySqlParameterCollection p = cmd.Parameters;
-                p.AddWithValue("@Id", _line.Id);
-                p.AddWithValue("@RootId", _line.PreviousId);
-                p.AddWithValue("@contract_id", _line.ContractId);
-                p.AddWithValue("@rfr_MGoodGroupId", _line.Product.Id);
-                p.AddWithValue("@UnitId", _line.Product.UnitId);
-                p.AddWithValue("@SupplierId", _line.Product.Supplier.Id);
-                p.AddWithValue("@contractline_Name", _line.Name);
-                p.AddWithValue("@Added_From", _line.AddedFrom);
-                p.AddWithValue("@contractline_order", _line.Order);
-                p.AddWithValue("@Specification", _line.Specification);
-                p.AddWithValue("@RoundForLine", _line.RoundForLine);
-                p.AddWithValue("@contractline_qty", _line);
-                p.AddWithValue("@contractline_baseDiscount", _line.BaseDiscount);
-                p.AddWithValue("@DiscountAdditional", _line.DiscountAdditional);
-                p.AddWithValue("@contractline_baseprice", _line.BasePrice);
-                p.AddWithValue("@contractline_price", _line.Price);
-                p.AddWithValue("@contractline_amount", _line.Amount);
-                p.AddWithValue("@IsVat", _line.IsVat);
-                p.AddWithValue("@contractline_vat_prc", _line.VatPrc);
-                p.AddWithValue("@contractline_sumvat", _line.SumVat);
-                p.AddWithValue("@contractline_sum", _line.Sum);
-                p.AddWithValue("@Comment", _line.Comment);
-                p.AddWithValue("@create_at", _line.Metadata.CreateAt);
-                p.AddWithValue("@create_by", _line.Metadata.CreateBy);
-                p.AddWithValue("@create_userid", _line.Metadata.UpdateUserid);
+            List<string> updateFields = new List<string>();
+            var parameters = new List<MySqlParameter> { new MySqlParameter("@id", request.Line.Id) };
+            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                updateFields = AllFieldsLine(request.Line, parameters);
+            else
+                updateFields = MappingLine(request.Line, parameters, request.FieldMask.Paths.ToList());
 
-                using var rdr = await cmd.ExecuteReaderAsync();
+            // Защита от ситуации, когда маска передана, но в ней нет валидных полей
+            if (updateFields.Count == 0)
+                throw new Exception(string.Join(Environment.NewLine, "UpdateMask пуста."));
 
-                if (await rdr.ReadAsync())
-                    line = FillLine(rdr);
-                else line = _line;
-            }
+            string sql = 
+                $@"UPDATE cwatis.contractlines SET {string.Join(", ", updateFields)} WHERE contractline_id = {request.Line.Id}; "+ 
+                $@"SELECT
+                    l.contractline_id line_id, l.contractline_order line_order, l.operation,l.contract_id,
+                    l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name,
+                    l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount,
+                    l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
+                    l.comment, l.RoundForLine, l.Specification, l.Added_From, 
+                    l.SupplierId, l.contractline_baseDiscount, l.DiscountAdditional, 
+                    l.contractline_baseprice,
+--                  u.Abbrev as Unit_Abbrev, g.MGoodGroupName as Product_Name, g.MGoodGroupCode as Product_Code,
+                    1
+                FROM cwatis.contractlines l
+                    LEFT JOIN global_db.rfr_units u ON u.UnitId = l.UnitId
+                    LEFT JOIN global_db.rfr_goods_tree g ON g.MGoodGroupId = l.rfr_MGoodGroupId
+                WHERE 1 = 1
+                    and l.contractline_id = {request.Line.Id}
+                ORDER BY contractline_order;
+                ";
+
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+
+            cmd.CommandText = sql;
+            cmd.Parameters.AddRange(parameters.ToArray());
+
+            using var rdr = await cmd.ExecuteReaderAsync();
+
+            Line line = new Line(); 
+            if (await rdr.ReadAsync())
+                line = FillLine(rdr);
+            else line = request.Line;
+            return line;
         }
         catch (Exception ex)
         {
             throw new Exception("Ошибка при обновлении строки контракта.", ex);
         }
-        return line;
     }
 
     #endregion
+
+    public List<string> MappingLine(Line line, List<MySqlParameter> parameters, List<string> Paths)
+    {
+        List<string> updateFields = new List<string>();
+        foreach (string path in Paths)
+        {
+            switch (path.ToLowerInvariant())
+            {
+                case "previous_id":
+                    updateFields.Add("contractline_id = @previous_id");
+                    parameters.Add(new MySqlParameter("@previous_id", line.Id));
+                    break;
+                case "operation":
+                    updateFields.Add("operation = @operation");
+                    parameters.Add(new MySqlParameter("@operation", line.Operation));
+                    break;
+                case "product.id":
+                    updateFields.Add("rfr_MGoodGroupId = @product_id");
+                    parameters.Add(new MySqlParameter("@product_id", line.Product.Id));
+                    break;
+                case "unit.id":
+                    updateFields.Add("unit_id = @unit_id");
+                    parameters.Add(new MySqlParameter("@unit_id", line.Unit.Id));
+                    break;
+                case "supplier.id":
+                    updateFields.Add("supplier_id = @supplier_id");
+                    parameters.Add(new MySqlParameter("@supplier_id", line.Supplier.Id));
+                    break;
+                case "name":
+                    updateFields.Add("contractline_Name = @name");
+                    parameters.Add(new MySqlParameter("@name", line.Name));
+                    break;
+                case "added_from":
+                    updateFields.Add("Added_From = @Added_From");
+                    parameters.Add(new MySqlParameter("@Added_From", line.AddedFrom));
+                    break;
+                case "order":
+                    updateFields.Add("contractline_order = @order");
+                    parameters.Add(new MySqlParameter("@order", line.Order));
+                    break;
+                case "specification":
+                    updateFields.Add("specification = @specification");
+                    parameters.Add(new MySqlParameter("@specification", line.Specification));
+                    break;
+                case "round_for_Line":
+                    updateFields.Add("RoundForLine = @RoundForLine");
+                    parameters.Add(new MySqlParameter("@RoundForLine", line.RoundForLine));
+                    break;
+                case "qty":
+                    updateFields.Add("contractline_qty = @qty");
+                    parameters.Add(new MySqlParameter("@qty", MyConvert.ToDecimal(line.Qty)));
+                    break;
+                case "base_discount":
+                    updateFields.Add("contractline_baseDiscount = @baseDiscount");
+                    parameters.Add(new MySqlParameter("@baseDiscount", MyConvert.ToDecimal(line.BaseDiscount)));
+                    break;
+                case "discount_additional":
+                    updateFields.Add("DiscountAdditional = @DiscountAdditional");
+                    parameters.Add(new MySqlParameter("@DiscountAdditional", MyConvert.ToDecimal(line.DiscountAdditional)));
+                    break;
+                case "base_price":
+                    updateFields.Add("contractline_baseprice = @BasePrice");
+                    parameters.Add(new MySqlParameter("@BasePrice", MyConvert.ToDecimal(line.BasePrice)));
+                    break;
+                case "price":
+                    updateFields.Add("contractline_price = @Price");
+                    parameters.Add(new MySqlParameter("@Price", MyConvert.ToDecimal(line.Price)));
+                    break;
+                case "amount":
+                    updateFields.Add("contractline_amount = @amount");
+                    parameters.Add(new MySqlParameter("@amount", MyConvert.ToDecimal(line.Amount)));
+                    break;
+                case "is_vat":
+                    updateFields.Add("IsVat = @IsVat");
+                    parameters.Add(new MySqlParameter("@IsVat", line.IsVat));
+                    break;
+                case "vat_prc":
+                    updateFields.Add("contractline_vat_prc = @IsVat");
+                    parameters.Add(new MySqlParameter("@IsVat", MyConvert.ToDecimal(line.VatPrc)));
+                    break;
+                case "sum_vat":
+                    updateFields.Add("contractline_sumvat = @SumVat");
+                    parameters.Add(new MySqlParameter("@SumVat", MyConvert.ToDecimal(line.SumVat)));
+                    break;
+                case "sum":
+                    updateFields.Add("contractline_sum = @Sum");
+                    parameters.Add(new MySqlParameter("@Sum", MyConvert.ToDecimal(line.Sum)));
+                    break;
+                case "comment":
+                    updateFields.Add("Comment = @comment");
+                    parameters.Add(new MySqlParameter("@comment", line.Comment));
+                    break;
+                default:
+                    // Игнорируем неизвестные или защищенные от изменения поля (например, id, contractline_id)
+                    break;
+            }
+        }
+
+        return updateFields;
+    }
+
+    public List<string> AllFieldsLine(Line line, List<MySqlParameter> parameters)
+    {
+        List<string> updateFields = new List<string>();
+        updateFields.Add("contractline_id = @previous_id");
+        parameters.Add(new MySqlParameter("@previous_id", line.Id));
+        updateFields.Add("operation = @operation");
+        parameters.Add(new MySqlParameter("@operation", line.Operation));
+        updateFields.Add("rfr_MGoodGroupId = @product_id");
+        parameters.Add(new MySqlParameter("@product_id", line.Product.Id));
+        updateFields.Add("unit_id = @unit_id");
+        parameters.Add(new MySqlParameter("@unit_id", line.Unit.Id));
+        updateFields.Add("supplier_id = @supplier_id");
+        parameters.Add(new MySqlParameter("@supplier_id", line.Supplier.Id));
+        updateFields.Add("contractline_Name = @name");
+        parameters.Add(new MySqlParameter("@name", line.Name));
+        updateFields.Add("Added_From = @Added_From");
+        parameters.Add(new MySqlParameter("@Added_From", line.AddedFrom));
+        updateFields.Add("contractline_order = @order");
+        parameters.Add(new MySqlParameter("@order", line.Order));
+        updateFields.Add("specification = @specification");
+        parameters.Add(new MySqlParameter("@specification", line.Specification));
+        updateFields.Add("RoundForLine = @RoundForLine");
+        parameters.Add(new MySqlParameter("@RoundForLine", line.RoundForLine));
+        updateFields.Add("contractline_qty = @qty");
+        parameters.Add(new MySqlParameter("@qty", MyConvert.ToDecimal(line.Qty)));
+        updateFields.Add("contractline_baseDiscount = @baseDiscount");
+        parameters.Add(new MySqlParameter("@baseDiscount", MyConvert.ToDecimal(line.BaseDiscount)));
+        updateFields.Add("DiscountAdditional = @DiscountAdditional");
+        parameters.Add(new MySqlParameter("@DiscountAdditional", MyConvert.ToDecimal(line.DiscountAdditional)));
+        updateFields.Add("contractline_baseprice = @BasePrice");
+        parameters.Add(new MySqlParameter("@BasePrice", MyConvert.ToDecimal(line.BasePrice)));
+        updateFields.Add("contractline_price = @Price");
+        parameters.Add(new MySqlParameter("@Price", MyConvert.ToDecimal(line.Price)));
+        updateFields.Add("contractline_amount = @amount");
+        parameters.Add(new MySqlParameter("@amount", MyConvert.ToDecimal(line.Amount)));
+        updateFields.Add("IsVat = @IsVat");
+        parameters.Add(new MySqlParameter("@IsVat", line.IsVat));
+        updateFields.Add("contractline_vat_prc = @IsVat");
+        parameters.Add(new MySqlParameter("@IsVat", line.IsVat));
+        updateFields.Add("contractline_sumvat = @SumVat");
+        parameters.Add(new MySqlParameter("@SumVat", MyConvert.ToDecimal(line.SumVat)));
+        updateFields.Add("contractline_sum = @Sum");
+        parameters.Add(new MySqlParameter("@Sum", MyConvert.ToDecimal(line.Sum)));
+        updateFields.Add("Comment = @comment");
+        parameters.Add(new MySqlParameter("@comment", line.Comment));
+
+        return updateFields;
+    }
 
 
     #region внутренние методы   
@@ -824,29 +967,39 @@ public class ContractRepository
         line.VatPrc = rdr["line_vat_per"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_vat_per"]), 2);
         line.SumVat = rdr["line_sum_vat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_sum_vat"]), 2);
         line.Sum = rdr["line_sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_sum"]), 2);
-        line.Operation = rdr["operation"] == DBNull.Value ? "" : rdr["operation"].ToString();
-        line.Comment = rdr["comment"] == DBNull.Value ? "" : rdr["comment"].ToString();
-        line.RoundForLine = rdr["RoundForLine"] == DBNull.Value ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["RoundForLine"]));
-        line.Specification = rdr["Specification"] == DBNull.Value ? 1 : Convert.ToInt32(rdr["Specification"]);
-        line.AddedFrom = rdr["Added_From"] == DBNull.Value ? "" : rdr["Added_From"].ToString();
-        //line.Supplier = new Contragent()
-        //{
-        //    Id = rdr["SupplierId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["SupplierId"])
-        //};
-        line.BaseDiscount = rdr["line_baseDiscount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_baseDiscount"]), 2);
-        line.DiscountAdditional = rdr["DiscountAdditional"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["DiscountAdditional"]), 2);
-        line.BasePrice = rdr["line_baseprice"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_baseprice"]), 2);
-        line.IsVat = rdr["IsVat"] == DBNull.Value ? false : Convert.ToBoolean(rdr["IsVat"]);
-        line.Metadata = new Metadata()
-        {
-            CreateAt = rdr["create_at"] == DBNull.Value ? DateTime.MinValue.ToUniversalTime().ToTimestamp() : Convert.ToDateTime(rdr["create_at"]).ToLocalTime().ToUniversalTime().ToTimestamp(),
-            CreateBy = rdr["create_by"] == DBNull.Value ? "" : rdr["create_by"].ToString(),
-            CreateUserid = rdr["create_userid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["create_userid"])
-        };
-        line.PreviousId = rdr["contractline_RootId"] == DBNull.Value ? null : Convert.ToInt32(rdr["contractline_RootId"]);
-        line.Operation = rdr["operation"] != DBNull.Value ?  ""  :  rdr["operation"].ToString();
-        
-
+        if (HasColumn(rdr, "operation"))
+            line.Operation = rdr["operation"] == DBNull.Value ? "" : rdr["operation"].ToString();
+        if (HasColumn(rdr, "Comment"))
+            line.Comment = rdr["comment"] == DBNull.Value ? "" : rdr["comment"].ToString();
+        if (HasColumn(rdr, "contractline_RootId"))
+            line.PreviousId = rdr["contractline_RootId"] == DBNull.Value ? null : Convert.ToInt32(rdr["contractline_RootId"]);
+        if (HasColumn(rdr, "create_at") && HasColumn(rdr, "create_by") && HasColumn(rdr, "create_userid"))
+            line.Metadata = new Metadata()
+            {
+                CreateAt = rdr["create_at"] == DBNull.Value ? DateTime.MinValue.ToUniversalTime().ToTimestamp() : Convert.ToDateTime(rdr["create_at"]).ToLocalTime().ToUniversalTime().ToTimestamp(),
+                CreateBy = rdr["create_by"] == DBNull.Value ? "" : rdr["create_by"].ToString(),
+                CreateUserid = rdr["create_userid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["create_userid"])
+            };
+        if (HasColumn(rdr, "line_baseDiscount"))
+            line.BaseDiscount = rdr["line_baseDiscount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_baseDiscount"]), 2);
+        if (HasColumn(rdr, "DiscountAdditional"))
+            line.DiscountAdditional = rdr["DiscountAdditional"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["DiscountAdditional"]), 2);
+        if (HasColumn(rdr, "line_baseprice"))
+            line.BasePrice = rdr["line_baseprice"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["line_baseprice"]), 2);
+        if (HasColumn(rdr, "IsVat"))
+            line.IsVat = rdr["IsVat"] == DBNull.Value ? false : Convert.ToBoolean(rdr["IsVat"]);
+        if (HasColumn(rdr, "line_Unit_Name"))
+            line.Unit.Short = rdr["line_Unit_Name"] == DBNull.Value ? "" : Convert.ToString(rdr["line_Unit_Name"]);
+        if (HasColumn(rdr, "line_Unit_Code"))
+            line.Unit.Code = rdr["line_Unit_Code"] == DBNull.Value ? "" : Convert.ToString(rdr["line_Unit_Code"]);
+        if  (HasColumn(rdr, "RoundForLine"))
+            line.RoundForLine = rdr["RoundForLine"] == DBNull.Value ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["RoundForLine"]));
+        if (HasColumn(rdr, "Specification"))
+            line.Specification = rdr["Specification"] == DBNull.Value ? 1 : Convert.ToInt32(rdr["Specification"]);
+        if (HasColumn(rdr, "Added_From"))
+            line.AddedFrom = rdr["Added_From"] == DBNull.Value ? "" : rdr["Added_From"].ToString();
+        if (HasColumn(rdr, "SupplierId"))
+            line.Supplier = new Contragent() { Id = rdr["SupplierId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["SupplierId"]) };
 
         return line;
     }

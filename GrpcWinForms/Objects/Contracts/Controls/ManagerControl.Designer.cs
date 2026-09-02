@@ -53,7 +53,6 @@
             // 
             // groupBox1
             // 
-            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.Controls.Add(smartBoxCreator);
             groupBox1.Controls.Add(smartBoxExecutor);
             groupBox1.Controls.Add(smartBoxInitiator);
@@ -64,10 +63,11 @@
             groupBox1.Controls.Add(tbComment);
             groupBox1.Controls.Add(labelManagerType);
             groupBox1.Controls.Add(labelDescription);
-            groupBox1.Location = new Point(3, 0);
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Location = new Point(0, 0);
             groupBox1.MinimumSize = new Size(569, 73);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(734, 73);
+            groupBox1.Size = new Size(740, 76);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             // 
@@ -80,7 +80,7 @@
             smartBoxCreator.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBoxCreator.ButtonsSettings.CustomButton.Icon"));
             smartBoxCreator.ButtonsSettings.CustomButton.Visible = true;
             smartBoxCreator.ButtonsSettings.ModalButton.Visible = true;
-            smartBoxCreator.Location = new Point(638, 15);
+            smartBoxCreator.Location = new Point(644, 15);
             smartBoxCreator.ModalForm = null;
             smartBoxCreator.Name = "smartBoxCreator";
             smartBoxCreator.NullEnable = true;
@@ -140,7 +140,7 @@
             // 
             label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Location = new Point(576, 19);
+            label1.Location = new Point(582, 19);
             label1.Name = "label1";
             label1.Size = new Size(49, 15);
             label1.TabIndex = 11;
@@ -172,7 +172,7 @@
             tbComment.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbComment.Location = new Point(121, 45);
             tbComment.Name = "tbComment";
-            tbComment.Size = new Size(607, 23);
+            tbComment.Size = new Size(613, 23);
             tbComment.TabIndex = 5;
             tbComment.TextChanged += tbComment_TextChanged;
             // 

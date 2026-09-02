@@ -76,7 +76,7 @@
             // 
             labelTaxNoBuyer.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelTaxNoBuyer.AutoSize = true;
-            labelTaxNoBuyer.Location = new Point(538, 17);
+            labelTaxNoBuyer.Location = new Point(544, 17);
             labelTaxNoBuyer.Name = "labelTaxNoBuyer";
             labelTaxNoBuyer.Size = new Size(95, 15);
             labelTaxNoBuyer.TabIndex = 2;
@@ -86,7 +86,7 @@
             // textBoxTaxnoBuyer
             // 
             textBoxTaxnoBuyer.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            textBoxTaxnoBuyer.Location = new Point(639, 13);
+            textBoxTaxnoBuyer.Location = new Point(645, 13);
             textBoxTaxnoBuyer.Name = "textBoxTaxnoBuyer";
             textBoxTaxnoBuyer.ReadOnly = true;
             textBoxTaxnoBuyer.Size = new Size(94, 23);
@@ -107,7 +107,7 @@
             // 
             labelTaxnoSeller.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelTaxnoSeller.AutoSize = true;
-            labelTaxnoSeller.Location = new Point(538, 46);
+            labelTaxnoSeller.Location = new Point(544, 46);
             labelTaxnoSeller.Name = "labelTaxnoSeller";
             labelTaxnoSeller.Size = new Size(95, 15);
             labelTaxnoSeller.TabIndex = 6;
@@ -117,7 +117,7 @@
             // textBoxTaxnoSeller
             // 
             textBoxTaxnoSeller.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            textBoxTaxnoSeller.Location = new Point(639, 42);
+            textBoxTaxnoSeller.Location = new Point(645, 42);
             textBoxTaxnoSeller.Name = "textBoxTaxnoSeller";
             textBoxTaxnoSeller.ReadOnly = true;
             textBoxTaxnoSeller.Size = new Size(94, 23);
@@ -140,7 +140,7 @@
             comboBoxContractType.Location = new Point(121, 100);
             comboBoxContractType.Name = "comboBoxContractType";
             comboBoxContractType.ReadOnly = true;
-            comboBoxContractType.Size = new Size(278, 23);
+            comboBoxContractType.Size = new Size(284, 23);
             comboBoxContractType.TabIndex = 7;
             // 
             // labelNumber
@@ -158,14 +158,14 @@
             textBoxNumber.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBoxNumber.Location = new Point(121, 71);
             textBoxNumber.Name = "textBoxNumber";
-            textBoxNumber.Size = new Size(146, 23);
+            textBoxNumber.Size = new Size(152, 23);
             textBoxNumber.TabIndex = 3;
             // 
             // labelDateStart
             // 
             labelDateStart.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelDateStart.AutoSize = true;
-            labelDateStart.Location = new Point(276, 74);
+            labelDateStart.Location = new Point(282, 74);
             labelDateStart.Name = "labelDateStart";
             labelDateStart.Size = new Size(22, 15);
             labelDateStart.TabIndex = 12;
@@ -176,7 +176,7 @@
             // 
             labelDateStop.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelDateStop.AutoSize = true;
-            labelDateStop.Location = new Point(404, 75);
+            labelDateStop.Location = new Point(410, 75);
             labelDateStop.Name = "labelDateStop";
             labelDateStop.Size = new Size(24, 15);
             labelDateStop.TabIndex = 14;
@@ -185,7 +185,6 @@
             // 
             // groupBoxMain
             // 
-            groupBoxMain.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             groupBoxMain.Controls.Add(smartBoxCurrency);
             groupBoxMain.Controls.Add(dateEditStart);
             groupBoxMain.Controls.Add(dateEditStop);
@@ -204,10 +203,11 @@
             groupBoxMain.Controls.Add(labelTaxnoSeller);
             groupBoxMain.Controls.Add(labelTaxNoBuyer);
             groupBoxMain.Controls.Add(labelSeller);
-            groupBoxMain.Location = new Point(3, 0);
+            groupBoxMain.Dock = DockStyle.Fill;
+            groupBoxMain.Location = new Point(0, 0);
             groupBoxMain.MinimumSize = new Size(740, 133);
             groupBoxMain.Name = "groupBoxMain";
-            groupBoxMain.Size = new Size(740, 133);
+            groupBoxMain.Size = new Size(746, 136);
             groupBoxMain.TabIndex = 16;
             groupBoxMain.TabStop = false;
             // 
@@ -220,7 +220,7 @@
             smartBoxCurrency.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBoxCurrency.ButtonsSettings.CustomButton.Icon"));
             smartBoxCurrency.ButtonsSettings.CustomButton.Visible = true;
             smartBoxCurrency.ButtonsSettings.ModalButton.Visible = true;
-            smartBoxCurrency.Location = new Point(639, 71);
+            smartBoxCurrency.Location = new Point(645, 71);
             smartBoxCurrency.ModalForm = null;
             smartBoxCurrency.Name = "smartBoxCurrency";
             smartBoxCurrency.NullEnable = true;
@@ -234,7 +234,7 @@
             dateEditStart.ButtonsSettings.UpDownButton.Visible = false;
             dateEditStart.EmptyAsNull = true;
             dateEditStart.FormatType = C1.Win.Input.FormatType.ShortDate;
-            dateEditStart.Location = new Point(304, 70);
+            dateEditStart.Location = new Point(310, 70);
             dateEditStart.Name = "dateEditStart";
             dateEditStart.Size = new Size(94, 23);
             dateEditStart.TabIndex = 4;
@@ -246,7 +246,7 @@
             dateEditStop.ButtonsSettings.UpDownButton.Visible = false;
             dateEditStop.EmptyAsNull = true;
             dateEditStop.FormatType = C1.Win.Input.FormatType.ShortDate;
-            dateEditStop.Location = new Point(435, 71);
+            dateEditStop.Location = new Point(441, 71);
             dateEditStop.Name = "dateEditStop";
             dateEditStop.Size = new Size(94, 23);
             dateEditStop.TabIndex = 5;
@@ -263,7 +263,7 @@
             companySeller.GetDataSourceFunc = null;
             companySeller.Location = new Point(121, 42);
             companySeller.Name = "companySeller";
-            companySeller.Size = new Size(408, 23);
+            companySeller.Size = new Size(414, 23);
             companySeller.TabIndex = 2;
             companySeller.Value = "";
             companySeller.ModalButtonClick += companySeller_ModalButtonClick;
@@ -279,7 +279,7 @@
             companyBuyer.GetDataSourceFunc = null;
             companyBuyer.Location = new Point(121, 13);
             companyBuyer.Name = "companyBuyer";
-            companyBuyer.Size = new Size(408, 23);
+            companyBuyer.Size = new Size(414, 23);
             companyBuyer.TabIndex = 1;
             companyBuyer.Value = "";
             companyBuyer.ModalButtonClick += companyBuyer_ModalButtonClick;
@@ -288,7 +288,7 @@
             // 
             labelCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             labelCurrency.AutoSize = true;
-            labelCurrency.Location = new Point(604, 75);
+            labelCurrency.Location = new Point(610, 75);
             labelCurrency.Name = "labelCurrency";
             labelCurrency.Size = new Size(29, 15);
             labelCurrency.TabIndex = 16;
