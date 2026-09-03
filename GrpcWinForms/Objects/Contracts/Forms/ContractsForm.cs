@@ -40,7 +40,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         private Loader loaderContracts = new Loader();
         private Loader loaderLines = new Loader();
         private BindingList<Contract> contracts;
-
+        private int rowCurrentContract;
 
         public ContractsForm()
         {
@@ -138,7 +138,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     smartGridLines1.DataSource = new BindingList<Line>();
                     return;
                 }
-
+/*
                 loaderLines.ShowLoader();
                 if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
                 {
@@ -158,6 +158,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 }
                 smartGridLines1.DataSource = lines;
                 loaderLines.HideLoader();
+*/
             }
             catch (Exception ex)
             {
@@ -194,7 +195,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         #endregion
 
 
-        #region Обработка событий общихкнопок контракта
+        #region Обработка событий общих кнопок контракта
 
         private void ToolStripMenuItemNewContract_Click(object sender, EventArgs e)
         {
@@ -362,7 +363,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private async void smartGridContracts_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
-            RefreshLines();
+            if (rowCurrentContract == smartGridContracts1.Row) return;
+            else rowCurrentContract = smartGridContracts1.Row;
+
+                RefreshLines();
             // Считать строки контракта
             BindingList<Line> lines = new BindingList<Line>();
             try
@@ -509,68 +513,77 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void HandleContractChange(ContractChangedEventArgs e)
         {
-            int row = smartGridContracts1.Row;
-            TreeContract treeContract = new TreeContract();
-            if (e.ChangeType == ContractChangeType.Updated)
-            {
-                treeContract.Id = ((TreeContract)smartGridContracts1.Rows[row].Node.Key).Id;
-                treeContract.ParentId = ((TreeContract)smartGridContracts1.Rows[row].Node.Key).ParentId;
-            }
-            if (e.ChangeType == ContractChangeType.Created)
-            {
-                treeContract.Id = e.Contract.Id * 1000 + 1;
-                treeContract.ParentId = 0;
-            }
+            int row = 0;
 
-            treeContract.Number = e.Contract.Number;
-            treeContract.Sum = MyConvert.ToDecimal(e.Contract.Sum);
-            treeContract.Buyer = e.Contract.Buyer?.Name;
-            treeContract.ContractDate = e.Contract.Date.ToDateTime();
-            treeContract.ContractId = e.Contract.Id;
-            treeContract.Contract_RootId = e.Contract.RootId;
-            treeContract.Currency = e.Contract.Currency?.Abbrev;
-            treeContract.Date = e.Contract.Date.ToDateTime();
-            treeContract.DateExpiried = e.Contract.ExpirationDate?.ToDateTime();
-            treeContract.Name = string.IsNullOrEmpty(e.Contract.Name) ? "Контракт " + e.Contract.Number : e.Contract.Name + " " + e.Contract.Number;
-            treeContract.Seller = e.Contract.Seller?.Name;
-            treeContract.State = "";
-            treeContract.Type = e.Contract.TypeContract?.Name;
-            treeContract.TypeCode = e.Contract.TypeContract?.Code;
-            treeContract.TypeForm = e.Contract.TypeContract?.Form;
-            treeContract.TypeId = e.Contract.TypeContract.Id;
+            TreeContract newTreeContract = new TreeContract() { ContractId = e.Contract.Id };
 
-            int a = 0;
+            // Запускаем поиск нужного нода и его замену на новый объект TreeContract
+            Node foundNode = FindAndReplace(smartGridContracts1.Nodes, newTreeContract);
+            TreeContract newtreeContract = new TreeContract();
 
             switch (e.ChangeType)
             {
                 case ContractChangeType.Updated:
-                    // Обновляем конкретный контракт в списке
-                    smartGridContracts1.Rows[row].Node.Data = treeContract.Name; // А рамочный контракт?
-                    smartGridContracts1.Rows[row].Node.Key = treeContract;
+                    if (foundNode == null) return; // ?????? Если нод не найден
+                    newTreeContract = foundNode.Key as TreeContract;
+                    newTreeContract.Currency = e.Contract.Currency?.Abbrev;
+                    newTreeContract.Date = e.Contract.Date.ToDateTime();
+                    newTreeContract.DateExpiried = e.Contract.ExpirationDate?.ToDateTime();
+                    newTreeContract.Number = e.Contract.Number;
+                    newTreeContract.Seller = e.Contract.Seller?.Name;
+                    newTreeContract.Buyer = e.Contract.Buyer?.Name;
+                    newTreeContract.Sum = MyConvert.ToDecimal(e.Contract.Sum);
+                    newTreeContract.State = e.Contract.State == 0 ? "" : // Новый
+                                      e.Contract.State == 1 ? "+" : // В работе
+                                      e.Contract.State == 2 ? ">" : // Есть операции
+                                      e.Contract.State == 3 ? "=" : // Баланс
+                                      e.Contract.State == 4 ? "*" : // Завершен
+                                      "?";
+
+                    row = foundNode.Row.Index;
                     break;
-
                 case ContractChangeType.Created:
-                    // Добавляем новый контракт
-                    smartGridContracts1.Rows.InsertNode(row, 0);
-                    smartGridContracts1.Rows[row].Node.Data = treeContract.Name; // А рамочный контракт?
-                    smartGridContracts1.Rows[row].Node.Key = treeContract;
+                    // Для нового контракта создаем новый нод
 
+                    newtreeContract.Id = e.Contract.Id * 1000 + 1;
+                    newtreeContract.ParentId = 0;
+                    newtreeContract.Number = e.Contract.Number;
+                    newtreeContract.Sum = MyConvert.ToDecimal(e.Contract.Sum);
+                    newtreeContract.Buyer = e.Contract.Buyer?.Name;
+                    newtreeContract.ContractDate = e.Contract.Date.ToDateTime();
+                    newtreeContract.ContractId = e.Contract.Id;
+                    newtreeContract.Contract_RootId = e.Contract.RootId;
+                    newtreeContract.Currency = e.Contract.Currency?.Abbrev;
+                    newtreeContract.Date = e.Contract.Date.ToDateTime();
+                    newtreeContract.DateExpiried = e.Contract.ExpirationDate?.ToDateTime();
+                    newtreeContract.Name = string.IsNullOrEmpty(e.Contract.Name) ? "Контракт " + e.Contract.Number : e.Contract.Name + " " + e.Contract.Number;
+                    newtreeContract.Seller = e.Contract.Seller?.Name;
+                    newtreeContract.State = "";
+                    newtreeContract.Type = e.Contract.TypeContract?.Name;
+                    newtreeContract.TypeCode = e.Contract.TypeContract?.Code;
+                    newtreeContract.TypeForm = e.Contract.TypeContract?.Form;
+                    newtreeContract.TypeId = e.Contract.TypeContract.Id;
+
+                    row = smartGridContracts1.Row;
+                    smartGridContracts1.Rows.InsertNode(row, 0);
+                    smartGridContracts1.Rows[row].Node.Data = newtreeContract.Name; // А рамочный контракт?
+                    smartGridContracts1.Rows[row].Node.Key = newtreeContract;
                     smartGridContracts1.Row -= 1;
 
                     break;
             }
-            // Обновляем данные
-            smartGridContracts1.Rows[row]["State"] = treeContract.State;
-            smartGridContracts1.Rows[row]["Date"] = treeContract.Date;
-            smartGridContracts1.Rows[row]["Sum"] = treeContract.Sum;
-            smartGridContracts1.Rows[row]["Currency"] = treeContract.Currency;
-            smartGridContracts1.Rows[row]["Seller"] = treeContract.Seller;
-            smartGridContracts1.Rows[row]["Buyer"] = treeContract.Buyer;
-            smartGridContracts1.Rows[row]["Type"] = treeContract.Type;
-            smartGridContracts1.Rows[row]["Paid"] = treeContract.Paid;
-            smartGridContracts1.Rows[row]["Shipped"] = treeContract.Shipped;
-            smartGridContracts1.Rows[row]["DateExpiried"] = treeContract.DateExpiried;
 
+            // Обновляем данные
+            smartGridContracts1.Rows[row]["State"] = newtreeContract.State;
+            smartGridContracts1.Rows[row]["Date"] = newtreeContract.Date;
+            smartGridContracts1.Rows[row]["Sum"] = newtreeContract.Sum;
+            smartGridContracts1.Rows[row]["Currency"] = newtreeContract.Currency;
+            smartGridContracts1.Rows[row]["Seller"] = newtreeContract.Seller;
+            smartGridContracts1.Rows[row]["Buyer"] = newtreeContract.Buyer;
+            smartGridContracts1.Rows[row]["Type"] = newtreeContract.Type;
+            smartGridContracts1.Rows[row]["Paid"] = newtreeContract.Paid;
+            smartGridContracts1.Rows[row]["Shipped"] = newtreeContract.Shipped;
+            smartGridContracts1.Rows[row]["DateExpiried"] = newtreeContract.DateExpiried;
         }
 
 
@@ -637,6 +650,29 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 }
             }
         }
+
+
+        // Рекурсивный метод для поиска и замены node
+        private Node FindAndReplace(Node[] nodes, TreeContract target)
+        {
+            foreach (Node node in nodes)
+            {
+                // Проверяем текущий узел
+                if (node.Key is TreeContract key && key.ContractId == target.ContractId)
+                {
+                    return node;
+                }
+
+                // Рекурсивно проверяем дочерние узлы
+                if (node.Nodes != null && node.Nodes.Length > 0)
+                {
+                    Node n = FindAndReplace(node.Nodes, target);
+                    if (n != null) return n;
+                }
+            }
+            return null;
+        }
+
 
     }
 

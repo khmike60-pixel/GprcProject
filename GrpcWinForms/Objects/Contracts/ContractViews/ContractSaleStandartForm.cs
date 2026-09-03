@@ -103,6 +103,13 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     sumContractControl1.ReadOnly = true;
                     buttonOk.Enabled = false;
                     toolStripButtonEdit.Enabled = true;
+                    toolStripButtonNewLine.Enabled = false;
+                    toolStripButtonDoubleLine.Enabled = false;
+                    toolStripButtonEditLine.Enabled = false;
+                    toolStripButtonDeleteLine.Enabled = false;
+                    toolStripButtonSetupSpecification.Enabled = false;
+
+
                 }
                 if (ViewMode == ViewMode.Edit)
                 {
@@ -110,6 +117,11 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     sumContractControl1.ReadOnly = false;
                     buttonOk.Enabled = true;
                     toolStripButtonEdit.Enabled = false;
+                    toolStripButtonNewLine.Enabled = true;
+                    toolStripButtonDoubleLine.Enabled = true;
+                    toolStripButtonEditLine.Enabled = true;
+                    toolStripButtonDeleteLine.Enabled = true;
+                    toolStripButtonSetupSpecification.Enabled = true;
                 }
                 if (ViewMode == ViewMode.New)
                 {
@@ -117,6 +129,11 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     sumContractControl1.ReadOnly = false;
                     buttonOk.Enabled = true;
                     toolStripButtonEdit.Enabled = true;
+                    toolStripButtonNewLine.Enabled = true;
+                    toolStripButtonDoubleLine.Enabled = true;
+                    toolStripButtonEditLine.Enabled = true;
+                    toolStripButtonDeleteLine.Enabled = true;
+                    toolStripButtonSetupSpecification.Enabled = true;
                 }
 
                 lines = new BindingList<Line>(contract.Lines);
@@ -169,8 +186,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
                 // Получаем дату контракта из headContractControl
                 contract.Date = headContractControl.dateEditStart.Value == DBNull.Value ?
-                    DateTime.MinValue.ToTimestamp() :
-                    Convert.ToDateTime(headContractControl.dateEditStart.Value).ToTimestamp();
+                    DateTime.MinValue.ToUniversalTime().ToTimestamp() :
+                    Convert.ToDateTime(headContractControl.dateEditStart.Value).ToUniversalTime().ToTimestamp();
 
                 // Получаем дату окончания контракта из headContractControl
                 contract.ExpirationDate = headContractControl.dateEditStop.Value == DBNull.Value ?
@@ -178,8 +195,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     Convert.ToDateTime(headContractControl.dateEditStop.Value).ToUniversalTime().ToTimestamp();
                 contract.Currency = new Currency()
                 {
-                    Id = headContractControl.smartBoxCurrency.SelectedItemBox.Id,
-                    Abbrev = headContractControl.smartBoxCurrency.SelectedItemBox.Name
+                    Id = headContractControl.smartBoxCurrency.SelectedItemBox== null ? 0 : headContractControl.smartBoxCurrency.SelectedItemBox.Id,
+                    Abbrev = headContractControl.smartBoxCurrency.SelectedItemBox == null ? "" : headContractControl.smartBoxCurrency.SelectedItemBox.Name
                 };
 
                 // Получаем наименование контракта из headContractControl
@@ -516,6 +533,18 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     int updatedRow = e.Row - smartGridLines1.Rows.Fixed;
                     lines[updatedRow] = response.Line;
                 }
+
+                GetContractRequest contractRequest = new GetContractRequest() { ContractId = contract.Id };
+                ContractResponse contractResponse = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.GetContractAsync(contractRequest).ResponseAsync);
+                if (contractResponse.Result.Status == Status.Ok)
+                {
+                    contract = contractResponse.Contract;
+                    sumContractControl1.textBoxSumContract.Text = MyConvert.ToDecimal(contract.Sum).ToString();
+
+                    ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);
+                }
+
             }
             catch (Exception ex)
             {

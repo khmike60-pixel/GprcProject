@@ -132,6 +132,7 @@ public class ContractRepository
 
     }
 
+
     public async Task<List<Contract>> GetListAsync(ListContractsRequest request)
     {
         try
@@ -318,9 +319,9 @@ public class ContractRepository
                 p.AddWithValue("@Id", contract.Id);
                 p.AddWithValue("@RootId", contract.RootId == 0 ? null : contract.RootId);
                 p.AddWithValue("@PrevId", contract.PreviousId == 0 ? null : contract.PreviousId);
-                p.AddWithValue("@SellerId", contract.Seller.Id);
+                p.AddWithValue("@SellerId", contract.Seller.Id == 0 ? null : contract.Seller.Id);
                 p.AddWithValue("@SellerName", contract.Seller.Name);
-                p.AddWithValue("@SellerSignId", contract.Seller.Entity?.Signatory.Id);
+                p.AddWithValue("@SellerSignId", contract.Seller.Entity?.Signatory.Id == 0 ? null : contract.Seller.Entity?.Signatory.Id);
                 p.AddWithValue("@SellerBAcctId", null);                         // _contract.SellerBAccountId 
                 p.AddWithValue("@BuyerId", contract.Buyer.Id == 0 ? null : contract.Buyer.Id);
                 p.AddWithValue("@BuyerName", contract.Buyer.Name);
@@ -334,8 +335,8 @@ public class ContractRepository
                 p.AddWithValue("@InitName", contract.Initiator?.Name);
                 p.AddWithValue("@ExecId", contract.Executor.Id == 0 ? null : contract.Executor.Id);
                 p.AddWithValue("@ExecName", contract.Executor?.Name);
-                p.AddWithValue("@CDate", contract.Date.ToDateTime() == DateTime.MinValue ? null : contract.Date.ToDateTime());
-                p.AddWithValue("@ExpDate", contract.ExpirationDate.ToDateTime() == DateTime.MinValue ? null: contract.ExpirationDate.ToDateTime()) ;
+                p.AddWithValue("@CDate", contract.Date.ToDateTime() < new DateTime(1990,1,1) ? null : contract.Date.ToDateTime().ToLocalTime());
+                p.AddWithValue("@ExpDate", contract.ExpirationDate.ToDateTime() < new DateTime(1990, 1, 1) ? null: contract.ExpirationDate.ToDateTime().ToLocalTime()) ;
                 p.AddWithValue("@CNumber", contract.Number);
                 p.AddWithValue("@CName", contract.Name);
                 p.AddWithValue("@DocName", contract.DocName);
@@ -357,7 +358,7 @@ public class ContractRepository
                 p.AddWithValue("@Comment", contract.Comment);
                 p.AddWithValue("@CreateAt", contract.Metadata?.CreateAt);
                 p.AddWithValue("@CreateBy", contract.Metadata?.CreateBy);
-                p.AddWithValue("@CreateUid", contract.Metadata?.CreateUserid);
+                p.AddWithValue("@CreateUid", contract.Metadata?.CreateUserid == 0 ? null : contract.Metadata?.CreateUserid);
                 p.AddWithValue("@SignPlaceId", contract.PlaceSigned?.Id);
 
                 using var rdr = await cmd.ExecuteReaderAsync();
@@ -444,7 +445,7 @@ public class ContractRepository
                 p.AddWithValue("@PrevId", contract.PreviousId == 0 ? null : contract.PreviousId);
                 p.AddWithValue("@SellerId", contract.Seller?.Id);
                 p.AddWithValue("@SellerName", contract.Seller?.Name);
-                p.AddWithValue("@SellerSignId", contract.Seller.Entity?.Signatory.Id);
+                p.AddWithValue("@SellerSignId", contract.Seller?.Entity?.Signatory.Id);
                 p.AddWithValue("@SellerBAcctId", null);                         // _contract.SellerBAccountId 
                 p.AddWithValue("@BuyerId", contract.Buyer?.Id);
                 p.AddWithValue("@BuyerName", contract.Buyer?.Name);
@@ -454,16 +455,16 @@ public class ContractRepository
                 p.AddWithValue("@ShipperName", contract.Shipper?.Name);
                 p.AddWithValue("@ConsigneeId", contract.Consignee?.Id);
                 p.AddWithValue("@ConsigneeName", contract.Consignee?.Name);
-                p.AddWithValue("@InitId", contract.Initiator?.Id);
+                p.AddWithValue("@InitId", contract.Initiator?.Id == 0 ? null : contract.Initiator?.Id);
                 p.AddWithValue("@InitName", contract.Initiator?.Name);
-                p.AddWithValue("@ExecId", contract.Executor?.Id);
+                p.AddWithValue("@ExecId", contract.Executor?.Id == 0 ? null : contract.Executor?.Id);
                 p.AddWithValue("@ExecName", contract.Executor?.Name);
                 p.AddWithValue("@CDate", contract.Date.ToDateTime() == DateTime.MinValue ? null : contract.Date.ToDateTime());
                 p.AddWithValue("@ExpDate", contract.ExpirationDate.ToDateTime() == DateTime.MinValue ? null : contract.ExpirationDate.ToDateTime());
                 p.AddWithValue("@CNumber", contract.Number);
                 p.AddWithValue("@CName", contract.Name);
                 p.AddWithValue("@DocName", contract.DocName);
-                p.AddWithValue("@CurrId", contract.Currency?.Id);
+                p.AddWithValue("@CurrId", contract.Currency?.Id == 0 ? null : contract.Currency?.Id);
                 p.AddWithValue("@CurrPayId", contract.CurrencyPayment?.Id);
                 p.AddWithValue("@Sum", MyConvert.ToDecimal(contract.Sum));
                 p.AddWithValue("@Amount", MyConvert.ToDecimal(contract.Amount));
@@ -481,7 +482,7 @@ public class ContractRepository
                 p.AddWithValue("@Comment", contract.Comment);
                 p.AddWithValue("@CreateAt", contract.Metadata?.CreateAt);
                 p.AddWithValue("@CreateBy", contract.Metadata?.CreateBy);
-                p.AddWithValue("@CreateUid", contract.Metadata?.CreateUserid);
+                p.AddWithValue("@CreateUid", contract.Metadata?.CreateUserid == 0 ? null : contract.Metadata?.CreateUserid);
                 p.AddWithValue("@SignPlaceId", contract.PlaceSigned?.Id);
 
                 using var rdr = await cmd.ExecuteReaderAsync();
@@ -678,9 +679,9 @@ public class ContractRepository
             string sql = 
                 $@"UPDATE cwatis.contractlines SET {string.Join(", ", updateFields)} WHERE contractline_id = {request.Line.Id}; "+ 
                 $@"SELECT
-                    l.contractline_id line_id, l.contractline_order line_order, l.operation,l.contract_id,
+                    l.contractline_id line_id, l.contractline_order line_order, l.operation,l.contract_id, l.contractline_PreviousId line_previousid,
                     l.contractline_Name line_Name, l.rfr_MGoodGroupId line_product_id, l.UnitId line_Unit_Id, u.Short line_Unit_Name,
-                    l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount,
+                    l.contractline_qty line_qty, l.contractline_price line_price, l.contractline_amount line_amount, l.IsVat IsVat,
                     l.contractline_vat_prc line_vat_per, l.contractline_sumvat line_sum_vat, l.contractline_sum line_sum,
                     l.comment, l.RoundForLine, l.Specification, l.Added_From, 
                     l.SupplierId, l.contractline_baseDiscount, l.DiscountAdditional, 
@@ -693,6 +694,10 @@ public class ContractRepository
                 WHERE 1 = 1
                     and l.contractline_id = {request.Line.Id}
                 ORDER BY contractline_order;
+                select 
+                    c.sum, c.sumvat, c.amount
+                from cwatis.contracts c
+                where c.contract_id = {request.Line.ContractId}
                 ";
 
             using var conn = new MySqlConnection(_connectionString);
@@ -708,6 +713,7 @@ public class ContractRepository
             if (await rdr.ReadAsync())
                 line = FillLine(rdr);
             else line = request.Line;
+
             return line;
         }
         catch (Exception ex)
@@ -821,8 +827,8 @@ public class ContractRepository
     public List<string> AllFieldsLine(Line line, List<MySqlParameter> parameters)
     {
         List<string> updateFields = new List<string>();
-        updateFields.Add("contractline_id = @previous_id");
-        parameters.Add(new MySqlParameter("@previous_id", line.Id));
+        updateFields.Add("contractline_previousid = @previous_id");
+        parameters.Add(new MySqlParameter("@previous_id", line.PreviousId));
         updateFields.Add("operation = @operation");
         parameters.Add(new MySqlParameter("@operation", line.Operation));
         updateFields.Add("rfr_MGoodGroupId = @product_id");
@@ -830,7 +836,7 @@ public class ContractRepository
         updateFields.Add("unit_id = @unit_id");
         parameters.Add(new MySqlParameter("@unit_id", line.Unit.Id));
         updateFields.Add("supplier_id = @supplier_id");
-        parameters.Add(new MySqlParameter("@supplier_id", line.Supplier.Id));
+        parameters.Add(new MySqlParameter("@supplier_id", line.Supplier?.Id));
         updateFields.Add("contractline_Name = @name");
         parameters.Add(new MySqlParameter("@name", line.Name));
         updateFields.Add("Added_From = @Added_From");
@@ -855,8 +861,8 @@ public class ContractRepository
         parameters.Add(new MySqlParameter("@amount", MyConvert.ToDecimal(line.Amount)));
         updateFields.Add("IsVat = @IsVat");
         parameters.Add(new MySqlParameter("@IsVat", line.IsVat));
-        updateFields.Add("contractline_vat_prc = @IsVat");
-        parameters.Add(new MySqlParameter("@IsVat", line.IsVat));
+        updateFields.Add("contractline_vat_prc = @VatPrc");
+        parameters.Add(new MySqlParameter("@VatPrc", line.VatPrc));
         updateFields.Add("contractline_sumvat = @SumVat");
         parameters.Add(new MySqlParameter("@SumVat", MyConvert.ToDecimal(line.SumVat)));
         updateFields.Add("contractline_sum = @Sum");
@@ -971,8 +977,8 @@ public class ContractRepository
             line.Operation = rdr["operation"] == DBNull.Value ? "" : rdr["operation"].ToString();
         if (HasColumn(rdr, "Comment"))
             line.Comment = rdr["comment"] == DBNull.Value ? "" : rdr["comment"].ToString();
-        if (HasColumn(rdr, "contractline_RootId"))
-            line.PreviousId = rdr["contractline_RootId"] == DBNull.Value ? null : Convert.ToInt32(rdr["contractline_RootId"]);
+        if (HasColumn(rdr, "line_previousid"))
+            line.PreviousId = rdr["line_previousid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["line_previousid"]);
         if (HasColumn(rdr, "create_at") && HasColumn(rdr, "create_by") && HasColumn(rdr, "create_userid"))
             line.Metadata = new Metadata()
             {
