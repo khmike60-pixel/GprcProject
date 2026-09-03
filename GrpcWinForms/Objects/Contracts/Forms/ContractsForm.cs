@@ -46,6 +46,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         {
             InitializeComponent();
 
+            if (DesignMode) return;
             // В конструкторе не выполняем runtime-логику при загрузке в дизайнере VS.
             // DesignMode в конструкторе ненадёжен, используем LicenseManager.UsageMode.
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
@@ -67,6 +68,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private async void RefreshContract()
         {
+            if (DesignMode) return;
             loaderContracts.ShowLoader();
             try
             {
@@ -113,8 +115,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 smartGridContracts1.Row = 0;
                 smartGridContracts1.Row = smartGridContracts1.Rows.Fixed;
 
-
-
             }
             catch (Exception ex)
             {
@@ -128,6 +128,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private async void RefreshLines()
         {
+            if (DesignMode) return;
             // Считать строки контракта
             BindingList<Line> lines = new BindingList<Line>();
             try
@@ -171,6 +172,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void ContractsForm_Load(object sender, EventArgs e)
         {
+            if (DesignMode) return;
             try
             {
                 period1.Period.From = new DateTime(DateTime.Now.Year, 1, 1);
@@ -350,12 +352,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     }
                 case "colState":
                     {
-                        e.Value = contract.State == 0 ? "" : // Новый
-                                  contract.State == 1 ? "+" : // В работе
-                                  contract.State == 2 ? ">" : // Есть операции
-                                  contract.State == 3 ? "=" : // Баланс
-                                  contract.State == 4 ? "*" : // Завершен
-                                  "?";
+                        e.Value = contract.State == ContractState.Draft        ? "":
+                                  contract.State == ContractState.SentToClient ? "на подписании":
+                                  contract.State == ContractState.Signed       ? "подписан" :
+                                  contract.State == ContractState.Active       ? "активен" :
+                                  contract.State == ContractState.Complited    ? "исполнен" : "";
                         break;
                     }
             }
@@ -525,20 +526,21 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             {
                 case ContractChangeType.Updated:
                     if (foundNode == null) return; // ?????? Если нод не найден
-                    newTreeContract = foundNode.Key as TreeContract;
-                    newTreeContract.Currency = e.Contract.Currency?.Abbrev;
-                    newTreeContract.Date = e.Contract.Date.ToDateTime();
-                    newTreeContract.DateExpiried = e.Contract.ExpirationDate?.ToDateTime();
-                    newTreeContract.Number = e.Contract.Number;
-                    newTreeContract.Seller = e.Contract.Seller?.Name;
-                    newTreeContract.Buyer = e.Contract.Buyer?.Name;
-                    newTreeContract.Sum = MyConvert.ToDecimal(e.Contract.Sum);
-                    newTreeContract.State = e.Contract.State == 0 ? "" : // Новый
-                                      e.Contract.State == 1 ? "+" : // В работе
-                                      e.Contract.State == 2 ? ">" : // Есть операции
-                                      e.Contract.State == 3 ? "=" : // Баланс
-                                      e.Contract.State == 4 ? "*" : // Завершен
-                                      "?";
+                    newtreeContract = foundNode.Key as TreeContract;
+                    newtreeContract.Currency = e.Contract.Currency?.Abbrev;
+                    newtreeContract.Date = e.Contract.Date.ToDateTime();
+                    newtreeContract.ContractDate = e.Contract.Date.ToDateTime();
+                    newtreeContract.DateExpiried = e.Contract.ExpirationDate?.ToDateTime();
+                    newtreeContract .Number = e.Contract.Number;
+                    newtreeContract.Seller = e.Contract.Seller?.Name;
+                    newtreeContract.Buyer = e.Contract.Buyer?.Name;
+                    newtreeContract.Sum = MyConvert.ToDecimal(e.Contract.Sum);
+                    newtreeContract.State = e.Contract.State == ContractState.Draft ? "" :                // Новый
+                                      e.Contract.State == ContractState.SentToClient ? "передан клиенту" : // В работе
+                                      e.Contract.State == ContractState.Signed       ? "подписан" :        // Есть операции
+                                      e.Contract.State == ContractState.Active       ? "активен" :         // Активен, есть операции
+                                      e.Contract.State == ContractState.Complited    ? "исполнен" :        // Исполнен / Завершен
+                                      "";
 
                     row = foundNode.Row.Index;
                     break;
@@ -555,6 +557,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     newtreeContract.Contract_RootId = e.Contract.RootId;
                     newtreeContract.Currency = e.Contract.Currency?.Abbrev;
                     newtreeContract.Date = e.Contract.Date.ToDateTime();
+                    newtreeContract.ContractDate = e.Contract.Date.ToDateTime();
                     newtreeContract.DateExpiried = e.Contract.ExpirationDate?.ToDateTime();
                     newtreeContract.Name = string.IsNullOrEmpty(e.Contract.Name) ? "Контракт " + e.Contract.Number : e.Contract.Name + " " + e.Contract.Number;
                     newtreeContract.Seller = e.Contract.Seller?.Name;

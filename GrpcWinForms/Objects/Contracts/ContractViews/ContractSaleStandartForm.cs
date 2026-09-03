@@ -35,12 +35,14 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         private Contract contract;
         private BindingList<Line> lines = new BindingList<Line>();
+        private int currentRow = 0;
 
         //public bool CurrentMode = false;
 
         public Contract Contract { get => contract; set => contract = value; }
 
         #endregion
+
 
         #region Конструкторы  и заполнение данных
         public ContractSaleStandartForm()
@@ -150,6 +152,55 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         #endregion
 
+
+        #region  Работа с вкладками
+
+        // Нет ссылок, по-моему не  работает
+        private void smartGridHistory_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
+        {
+            Contract _contract = (Contract)historyContractControl.smartGridHistory1.Rows[e.Row].DataSource;
+            switch (historyContractControl.smartGridHistory1.Cols[e.Col].Name)
+            {
+                case "colDate":
+                    {
+                        e.Value = _contract.Date == null ? "" : _contract.Date.ToDateTime();
+                        break;
+                    }
+                case "colAbbrev":
+                    {
+                        e.Value = _contract.Currency == null ? "" : _contract.Currency.Abbrev;
+                        break;
+                    }
+                case "colSum":
+                    {
+                        e.Value = _contract.Sum == null || _contract.Sum.Units == 0 ? "" : MyConvert.ToDecimal(_contract.Sum);
+                        break;
+                    }
+                case "colAmount":
+                    {
+                        e.Value = _contract.Amount == null || _contract.Amount.Units == 0 ? "" : MyConvert.ToDecimal(_contract.Amount);
+                        break;
+                    }
+                case "colSumVat":
+                    {
+                        e.Value = _contract.SumVat == null || _contract.SumVat.Units == 0 ? "" : MyConvert.ToDecimal(_contract.SumVat);
+                        break;
+                    }
+                case "colType":
+                    {
+                        if (_contract.RootId == 0)
+                            e.Value = "Основной контракт";
+                        else
+                            e.Value = "Дополнительное соглашение";
+                        break;
+                    }
+            }
+        }
+
+
+        #endregion
+
+
         #region Методы формы и кнопки формы
         private void ContractStandartForm_Load(object sender, EventArgs e)
         {
@@ -186,16 +237,16 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
                 // Получаем дату контракта из headContractControl
                 contract.Date = headContractControl.dateEditStart.Value == DBNull.Value ?
-                    DateTime.MinValue.ToUniversalTime().ToTimestamp() :
+                    null :
                     Convert.ToDateTime(headContractControl.dateEditStart.Value).ToUniversalTime().ToTimestamp();
 
                 // Получаем дату окончания контракта из headContractControl
                 contract.ExpirationDate = headContractControl.dateEditStop.Value == DBNull.Value ?
-                    DateTime.MinValue.ToUniversalTime().ToTimestamp() :
+                    null :
                     Convert.ToDateTime(headContractControl.dateEditStop.Value).ToUniversalTime().ToTimestamp();
                 contract.Currency = new Currency()
                 {
-                    Id = headContractControl.smartBoxCurrency.SelectedItemBox== null ? 0 : headContractControl.smartBoxCurrency.SelectedItemBox.Id,
+                    Id = headContractControl.smartBoxCurrency.SelectedItemBox == null ? 0 : headContractControl.smartBoxCurrency.SelectedItemBox.Id,
                     Abbrev = headContractControl.smartBoxCurrency.SelectedItemBox == null ? "" : headContractControl.smartBoxCurrency.SelectedItemBox.Name
                 };
 
@@ -272,6 +323,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         #endregion
 
+
         #region Методы smartGridLines
 
         private void smartGridLines1_OwnerDrawCell(object sender, C1.Win.FlexGrid.OwnerDrawCellEventArgs e)
@@ -302,7 +354,6 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             }
         }
 
-        // Обновление контракта делается одним запросом - быстрее.
         private void smartGridLines_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
             Line line = (Line)smartGridLines1.Rows[e.Row].DataSource;
@@ -346,73 +397,139 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             }
         }
 
-        /// <summary>
-        /// Валидация строки. Пока реализована тольео смена стиля для удаленных записей
-        /// </summary>
-        /// <param name="line"></param>
-        /// <returns></returns>
-        private bool Validate(Line line)
+        private void smartGridLines1_SetUnboundValue(object sender, UnboundValueEventArgs e)
         {
-            if (line == null) return true;
-            if (line.Operation == "удалена") return false;
-            return true;
-        }
-
-
-
-        #endregion
-
-        private void smartGridHistory_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
-        {
-            Contract _contract = (Contract)historyContractControl.smartGridHistory1.Rows[e.Row].DataSource;
-            switch (historyContractControl.smartGridHistory1.Cols[e.Col].Name)
+            try
             {
-                case "colDate":
-                    {
-                        e.Value = _contract.Date == null ? "" : _contract.Date.ToDateTime();
-                        break;
-                    }
-                case "colAbbrev":
-                    {
-                        e.Value = _contract.Currency == null ? "" : _contract.Currency.Abbrev;
-                        break;
-                    }
-                case "colSum":
-                    {
-                        e.Value = _contract.Sum == null || _contract.Sum.Units == 0 ? "" : MyConvert.ToDecimal(_contract.Sum);
-                        break;
-                    }
-                case "colAmount":
-                    {
-                        e.Value = _contract.Amount == null || _contract.Amount.Units == 0 ? "" : MyConvert.ToDecimal(_contract.Amount);
-                        break;
-                    }
-                case "colSumVat":
-                    {
-                        e.Value = _contract.SumVat == null || _contract.SumVat.Units == 0 ? "" : MyConvert.ToDecimal(_contract.SumVat);
-                        break;
-                    }
-                case "colType":
-                    {
-                        if (_contract.RootId == 0)
-                            e.Value = "Основной контракт";
-                        else
-                            e.Value = "Дополнительное соглашение";
-                        break;
-                    }
-            }
-        }
-
-        private void toolStripButtonSetupSpecification_Click(object sender, EventArgs e)
-        {
-            using (var setupSpecificationForm = new SetupSpecificationForm())
-            {
-                if (setupSpecificationForm.ShowDialog() == DialogResult.OK)
+                int row = e.Row;
+                switch (smartGridLines1.Cols[e.Col].Name)
                 {
-                    var str = setupSpecificationForm.StringJson;
-                    // Handle OK result if needed
+                    case "colQty":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].Qty = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colPrice":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].Price = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colAmount":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].Amount = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colVatPrc":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].VatPrc = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colSumVat":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].SumVat = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
+                    case "colSum":
+                        lines[e.Row - smartGridLines1.Rows.Fixed].Sum = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
+                        break;
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Join(Environment.NewLine, "Ошибка при редактировании.",
+                    ex.Message));
+            }
+        }
+
+        private async void smartGridLines1_AfterEdit(object sender, RowColEventArgs e)
+        {
+            Line line = smartGridLines1.Rows[e.Row].DataSource as Line;
+            UpdateContractLineRequest request = new UpdateContractLineRequest()
+            { Line = line, FieldMask = new FieldMask { Paths = { } } };
+            try
+            {
+
+                switch (smartGridLines1.Cols[e.Col].Name)
+                {
+                    case "Order":
+                        line.Order = Convert.ToInt32(smartGridLines1[e.Row, e.Col]);
+                        request.FieldMask.Paths.Add("order");
+                        break;
+                    case "Name":
+                        line.Name = smartGridLines1[e.Row, e.Col].ToString();
+                        request.FieldMask.Paths.Add("name");
+                        break;
+                    case "colQty":
+                        line.Qty = MyConvert.ToDecimalValue(smartGridLines1[e.Row, e.Col].ToString());
+                        request.FieldMask.Paths.Add("qty");
+                        break;
+                    case "colPrice":
+                        line.Price = MyConvert.ToDecimalValue(smartGridLines1[e.Row, e.Col].ToString());
+                        request.FieldMask.Paths.Add("price");
+                        break;
+                    case "colAmount":
+                        line.Amount = MyConvert.ToDecimalValue(smartGridLines1[e.Row, e.Col].ToString());
+                        request.FieldMask.Paths.Add("amount");
+                        break;
+                    case "colVatPrc":
+                        request.FieldMask.Paths.Add("vat_prc");
+                        break;
+                    case "colSumVat":
+                        request.FieldMask.Paths.Add("sum_vat");
+                        break;
+                    case "colSum":
+                        request.FieldMask.Paths.Add("sum");
+                        break;
+                }
+
+                request.Line = line;
+
+                //  Обновляем строку контракта на сервере   
+                ContractLineResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.UpdateContractLineAsync(request).ResponseAsync);
+                if (response.Result.Status == Status.Ok)
+                {
+                    int updatedRow = e.Row - smartGridLines1.Rows.Fixed;
+                    lines[updatedRow] = response.Line;
+                }
+
+                // Получаем обновленный контракт с сервера, чтобы обновить сумму контракта
+                GetContractRequest contractRequest = new GetContractRequest() { ContractId = contract.Id };
+                ContractResponse contractResponse = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.GetContractAsync(contractRequest).ResponseAsync);
+                if (contractResponse.Result.Status == Status.Ok)
+                {
+                    contract = contractResponse.Contract;
+                    sumContractControl1.textBoxSumContract.Text = MyConvert.ToDecimal(contract.Sum).ToString();
+
+                    // Уведомляем всех подписчиков об изменении контракта
+                    ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Join(Environment.NewLine, "Ошибка при редактировании.",
+                    ex.Message));
+            }
+        }
+
+        private void smartGridLines1_BeforeEdit(object sender, RowColEventArgs e)
+        {
+            Line line = smartGridLines1.Rows[e.Row].DataSource as Line;
+
+            // Получаем базовый шрифт
+            var baseFont = smartGridLines1.Styles.Normal.Font ?? smartGridLines1.Font ?? SystemFonts.DefaultFont;
+
+            if (!Validate(line))
+            {
+                // Добавляем Strikeout
+                if ((baseFont.Style & FontStyle.Strikeout) != FontStyle.Strikeout)
+                    smartGridLines1.Rows[e.Row].Style.Font = new Font(baseFont.FontFamily, baseFont.Size, baseFont.Style | FontStyle.Strikeout);
+            }
+            else
+            {
+                // Убираем Strikeout, если он был
+                if ((baseFont.Style & FontStyle.Strikeout) == FontStyle.Strikeout)
+                    smartGridLines1.Rows[e.Row].Style.Font = new Font(baseFont.FontFamily, baseFont.Size, baseFont.Style & ~FontStyle.Strikeout);
+            }
+        }
+
+        private void smartGridLines1_DoubleClick(object sender, EventArgs e)
+        {
+            int row = smartGridLines1.Row;
+            if (row < smartGridLines1.Rows.Fixed || row >= smartGridLines1.Rows.Count) return;
+
         }
 
         private async void toolStripButtonNewLine_Click(object sender, EventArgs e)
@@ -461,13 +578,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 {
                     throw new InvalidOperationException($"Ошибка создания строки контракта: {response.Result.Message}");
                 }
-                else
-                {
-                    int row = smartGridLines1.Row;
-                    Line currentLine = smartGridLines1.Rows[row].DataSource as Line;
-                    int l = row - smartGridLines1.Rows.Fixed;
-                    lines.Add(response.Line);
-                }
+
+                lines.Add(response.Line);
             }
             catch (Exception ex)
             {
@@ -476,115 +588,33 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             }
         }
 
-        private void smartGridLines1_DoubleClick(object sender, EventArgs e)
+        /// <summary>
+        /// Валидация строки. Пока реализована тольео смена стиля для удаленных записей
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        private bool Validate(Line line)
         {
-            int row = smartGridLines1.Row;
-            if (row < smartGridLines1.Rows.Fixed || row >= smartGridLines1.Rows.Count) return;
-
+            if (line == null) return true;
+            if (line.Operation == "удалена") return false;
+            return true;
         }
 
-        private async void smartGridLines1_AfterEdit(object sender, RowColEventArgs e)
+
+        #endregion
+
+        private void toolStripButtonSetupSpecification_Click(object sender, EventArgs e)
         {
-            Line line = smartGridLines1.Rows[e.Row].DataSource as Line;
-            UpdateContractLineRequest request = new UpdateContractLineRequest()
-            { Line = line, FieldMask = new FieldMask { Paths = { } } };
-            try
+            using (var setupSpecificationForm = new SetupSpecificationForm())
             {
-
-                switch (smartGridLines1.Cols[e.Col].Name)
+                if (setupSpecificationForm.ShowDialog() == DialogResult.OK)
                 {
-                    case "Order":
-                        line.Order = Convert.ToInt32(smartGridLines1[e.Row, e.Col]);
-                        request.FieldMask.Paths.Add("order");
-                        break;
-                    case "Name":
-                        line.Name = smartGridLines1[e.Row, e.Col].ToString();
-                        request.FieldMask.Paths.Add("name");
-                        break;
-                    case "colQty":
-                        line.Qty = MyConvert.ToDecimalValue(smartGridLines1[e.Row, e.Col].ToString());
-                        request.FieldMask.Paths.Add("qty");
-                        break;
-                    case "colPrice":
-                        line.Price = MyConvert.ToDecimalValue(smartGridLines1[e.Row, e.Col].ToString());
-                        request.FieldMask.Paths.Add("price");
-                        break;
-                    case "colAmount":
-                        line.Amount = MyConvert.ToDecimalValue(smartGridLines1[e.Row, e.Col].ToString());
-                        request.FieldMask.Paths.Add("amount");
-                        break;
-                    case "colVatPrc":
-                        request.FieldMask.Paths.Add("vat_prc");
-                        break;
-                    case "colSumVat":
-                        request.FieldMask.Paths.Add("sum_vat");
-                        break;
-                    case "colSum":
-                        request.FieldMask.Paths.Add("sum");
-                        break;
+                    var str = setupSpecificationForm.StringJson;
+                    // Handle OK result if needed
                 }
-
-                request.Line = line;
-
-                ContractLineResponse response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Contract.UpdateContractLineAsync(request).ResponseAsync);
-                if (response.Result.Status == Status.Ok)
-                {
-                    int updatedRow = e.Row - smartGridLines1.Rows.Fixed;
-                    lines[updatedRow] = response.Line;
-                }
-
-                GetContractRequest contractRequest = new GetContractRequest() { ContractId = contract.Id };
-                ContractResponse contractResponse = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Contract.GetContractAsync(contractRequest).ResponseAsync);
-                if (contractResponse.Result.Status == Status.Ok)
-                {
-                    contract = contractResponse.Contract;
-                    sumContractControl1.textBoxSumContract.Text = MyConvert.ToDecimal(contract.Sum).ToString();
-
-                    ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Join(Environment.NewLine, "Ошибка при редактировании.",
-                    ex.Message));
             }
         }
 
-        private void smartGridLines1_SetUnboundValue(object sender, UnboundValueEventArgs e)
-        {
-            try
-            {
-                int row = e.Row;
-                switch (smartGridLines1.Cols[e.Col].Name)
-                {
-                    case "colQty":
-                        lines[e.Row - smartGridLines1.Rows.Fixed].Qty = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
-                        break;
-                    case "colPrice":
-                        lines[e.Row - smartGridLines1.Rows.Fixed].Price = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
-                        break;
-                    case "colAmount":
-                        lines[e.Row - smartGridLines1.Rows.Fixed].Amount = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
-                        break;
-                    case "colVatPrc":
-                        lines[e.Row - smartGridLines1.Rows.Fixed].VatPrc = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
-                        break;
-                    case "colSumVat":
-                        lines[e.Row - smartGridLines1.Rows.Fixed].SumVat = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
-                        break;
-                    case "colSum":
-                        lines[e.Row - smartGridLines1.Rows.Fixed].Sum = MyConvert.ToDecimalValue(Convert.ToDecimal(e.Value));
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Join(Environment.NewLine, "Ошибка при редактировании.",
-                    ex.Message));
-            }
-        }
+
     }
 }

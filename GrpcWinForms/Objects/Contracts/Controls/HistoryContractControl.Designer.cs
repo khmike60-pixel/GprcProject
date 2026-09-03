@@ -48,14 +48,14 @@
             smartGridHistory1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 4;
+            aggregateDefinition1.Column = 2;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
             smartGridHistory1.Footers.Descriptions.Add(footerDescription1);
             smartGridHistory1.Footers.Fixed = true;
             smartGridHistory1.IdName = null;
             smartGridHistory1.Location = new Point(0, 0);
             smartGridHistory1.Name = "smartGridHistory1";
-            smartGridHistory1.Rows.Count = 51;
+            smartGridHistory1.Rows.Count = 10;
             smartGridHistory1.SelectedRows = (List<int>)resources.GetObject("smartGridHistory1.SelectedRows");
             smartGridHistory1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
             smartGridHistory1.Size = new Size(835, 184);

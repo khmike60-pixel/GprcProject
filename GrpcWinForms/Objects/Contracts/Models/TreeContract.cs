@@ -63,12 +63,12 @@ namespace GrpcWinForms.Objects.Contracts.Models
                 TypeCode = node.Contract.TypeContract.Code,
                 TypeForm = node.Contract.TypeContract.Form,
                 Contract_RootId = node.Contract.RootId,
-                State = node.Contract.State == 0 ? "" :  // Новый
-                                node.Contract.State == 1 ? "+" : // Подписан
-                                node.Contract.State == 2 ? ">" : // Есть операции
-                                node.Contract.State == 3 ? "=" : // Баланс
-                                node.Contract.State == 4 ? "*" : // Завершен
-                                "?"
+                State = node.Contract.State == ContractState.Draft ? "" :                // Новый
+                        node.Contract.State == ContractState.SentToClient ? "передан клиенту" : // В работе
+                        node.Contract.State == ContractState.Signed ? "подписан" :        // Есть операции
+                        node.Contract.State == ContractState.Active ? "активен" :         // Активен, есть операции
+                        node.Contract.State == ContractState.Complited ? "исполнен" :        // Исполнен / Завершен
+                        ""
             };
             return treeContract;
         }

@@ -101,6 +101,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
                 companySeller.Text = contract.Seller?.Name;
                 companyBuyer.Text = contract.Buyer?.Name;
+                tbDocName.Text = contract.DocName;
+
             }
             finally
             {

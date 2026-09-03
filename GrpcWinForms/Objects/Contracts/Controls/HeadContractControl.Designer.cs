@@ -52,6 +52,8 @@
             c1FlexGrid1 = new C1.Win.FlexGrid.C1FlexGrid();
             control1 = new Control();
             control2 = new Control();
+            tbDocName = new TextBox();
+            lDocName = new Label();
             ((System.ComponentModel.ISupportInitialize)comboBoxContractType).BeginInit();
             groupBoxMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)smartBoxCurrency).BeginInit();
@@ -125,8 +127,9 @@
             // 
             // ContractType
             // 
+            ContractType.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             ContractType.AutoSize = true;
-            ContractType.Location = new Point(28, 104);
+            ContractType.Location = new Point(447, 104);
             ContractType.Name = "ContractType";
             ContractType.Size = new Size(88, 15);
             ContractType.TabIndex = 8;
@@ -135,12 +138,12 @@
             // 
             // comboBoxContractType
             // 
-            comboBoxContractType.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            comboBoxContractType.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             comboBoxContractType.AutoSize = false;
-            comboBoxContractType.Location = new Point(121, 100);
+            comboBoxContractType.Location = new Point(544, 100);
             comboBoxContractType.Name = "comboBoxContractType";
             comboBoxContractType.ReadOnly = true;
-            comboBoxContractType.Size = new Size(284, 23);
+            comboBoxContractType.Size = new Size(195, 23);
             comboBoxContractType.TabIndex = 7;
             // 
             // labelNumber
@@ -185,6 +188,8 @@
             // 
             // groupBoxMain
             // 
+            groupBoxMain.Controls.Add(lDocName);
+            groupBoxMain.Controls.Add(tbDocName);
             groupBoxMain.Controls.Add(smartBoxCurrency);
             groupBoxMain.Controls.Add(dateEditStart);
             groupBoxMain.Controls.Add(dateEditStop);
@@ -319,6 +324,23 @@
             control2.TabIndex = 0;
             control2.Text = "control2";
             // 
+            // tbDocName
+            // 
+            tbDocName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbDocName.Location = new Point(121, 100);
+            tbDocName.Name = "tbDocName";
+            tbDocName.Size = new Size(283, 23);
+            tbDocName.TabIndex = 17;
+            // 
+            // lDocName
+            // 
+            lDocName.AutoSize = true;
+            lDocName.Location = new Point(10, 104);
+            lDocName.Name = "lDocName";
+            lDocName.Size = new Size(93, 15);
+            lDocName.TabIndex = 18;
+            lDocName.Text = "Наименование:";
+            // 
             // HeadContractControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -364,5 +386,7 @@
         public C1.Win.Calendar.C1DateEdit dateEditStop;
         public C1.Win.Calendar.C1DateEdit dateEditStart;
         public GrpcWinForms.Controls.SmartBox.SmartBox smartBoxCurrency;
+        private Label lDocName;
+        public TextBox tbDocName;
     }
 }

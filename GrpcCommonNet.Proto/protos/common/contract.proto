@@ -35,6 +35,13 @@ message Nomenclature {
 	Common.Unit unit = 3;
 }
 
+enum ContractState {
+	DRAFT  = 0;				// новый
+	SENT_TO_CLIENT = 1;		// Передан заказчику
+	SIGNED = 2;				// Подписан заказчиком
+	ACTIVE = 3;				// Активен, есть операции
+	COMPLITED = 4;			// Контракт исполнен
+}
 
 message Manager {
   google.protobuf.Int32Value id = 1;								// Идентификатор менеджера
@@ -83,7 +90,7 @@ message Contract {
   google.protobuf.Int32Value root_id = 3;									// Ссылка на Первичный контракт (основной) 
   google.protobuf.Int32Value previous_id = 4;								// Ссылка на Предыдущую запись, из которой "порождена" данная (цепочка допсоглашений)
   Common.DocumentType type_contract = 5;				// Тип контракта
-  int32 state = 6;										// Статус контракта (новый, выдан клиенту, заключен, в работе, завершен)
+  ContractState state = 6;										// Статус контракта (новый, выдан клиенту, заключен, в работе, завершен)
 
   // Контрагенты по контракту
   Common.Contragent seller = 7;							// Продавец (структура)
@@ -132,3 +139,4 @@ message NodeContract {
 	string node_type = 4;								// contract_without_agreements, root, agreement, first_contract
 	Contract contract = 5;
 }
+

@@ -335,8 +335,8 @@ public class ContractRepository
                 p.AddWithValue("@InitName", contract.Initiator?.Name);
                 p.AddWithValue("@ExecId", contract.Executor.Id == 0 ? null : contract.Executor.Id);
                 p.AddWithValue("@ExecName", contract.Executor?.Name);
-                p.AddWithValue("@CDate", contract.Date.ToDateTime() < new DateTime(1990,1,1) ? null : contract.Date.ToDateTime().ToLocalTime());
-                p.AddWithValue("@ExpDate", contract.ExpirationDate.ToDateTime() < new DateTime(1990, 1, 1) ? null: contract.ExpirationDate.ToDateTime().ToLocalTime()) ;
+                p.AddWithValue("@CDate", contract.Date ==  null ? null : contract.Date.ToDateTime().ToLocalTime());
+                p.AddWithValue("@ExpDate", contract.ExpirationDate == null ? null: contract.ExpirationDate.ToDateTime().ToLocalTime()) ;
                 p.AddWithValue("@CNumber", contract.Number);
                 p.AddWithValue("@CName", contract.Name);
                 p.AddWithValue("@DocName", contract.DocName);
@@ -902,7 +902,8 @@ public class ContractRepository
             Name = rdr["contract_shippername"] == DBNull.Value ? "" : rdr["contract_shippername"].ToString() ?? ""
         };
 
-        contract.Date = rdr["contract_date"] == DBNull.Value ? DateTime.MinValue.ToUniversalTime().ToTimestamp() : Convert.ToDateTime(rdr["contract_date"]).ToLocalTime().ToUniversalTime().ToTimestamp();
+        contract.Date = rdr["contract_date"] == DBNull.Value ? null : Convert.ToDateTime(rdr["contract_date"]).ToLocalTime().ToUniversalTime().ToTimestamp();
+        contract.ExpirationDate = rdr["contract_ExpirationDate"] == DBNull.Value ? null : Convert.ToDateTime(rdr["contract_ExpirationDate"]).ToLocalTime().ToUniversalTime().ToTimestamp();
         contract.Number = rdr["contract_number"] == DBNull.Value ? "" : rdr["contract_number"].ToString() ?? "";
 
         contract.Currency = new Currency()
@@ -942,7 +943,13 @@ public class ContractRepository
         };
 
         contract.ManagerType = rdr["ProjectTypes"] == DBNull.Value ? "" : rdr["ProjectTypes"].ToString();
-        contract.State = rdr["contract_State"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_State"]);
+        contract.State = Convert.ToInt16(rdr["contract_State"]) == 0 ? ContractState.Draft :
+                              Convert.ToInt16(rdr["contract_State"]) == 1 ? ContractState.SentToClient :
+                              Convert.ToInt16(rdr["contract_State"]) == 2 ? ContractState.Signed :
+                              Convert.ToInt16(rdr["contract_State"]) == 3 ? ContractState.Active :
+                              Convert.ToInt16(rdr["contract_State"]) == 4 ? ContractState.Complited :
+                              ContractState.Draft;
+
         contract.DocName = rdr["contract_DocName"] == DBNull.Value ? "" : rdr["contract_DocName"].ToString();
 
         return contract;
@@ -997,7 +1004,7 @@ public class ContractRepository
         if (HasColumn(rdr, "line_Unit_Name"))
             line.Unit.Short = rdr["line_Unit_Name"] == DBNull.Value ? "" : Convert.ToString(rdr["line_Unit_Name"]);
         if (HasColumn(rdr, "line_Unit_Code"))
-            line.Unit.Code = rdr["line_Unit_Code"] == DBNull.Value ? "" : Convert.ToString(rdr["line_Unit_Code"]);
+            line.Unit.Code = rdr["line_Unit_Code"] == DBNull.Value ? "" : Convert.ToString(rdr["line_Unit_Code"]); // ??????
         if  (HasColumn(rdr, "RoundForLine"))
             line.RoundForLine = rdr["RoundForLine"] == DBNull.Value ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["RoundForLine"]));
         if (HasColumn(rdr, "Specification"))
@@ -1050,7 +1057,12 @@ public class ContractRepository
         nodeContract.Contract.Amount = rdr["Amount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Amount"]), 2);
         nodeContract.Contract.SumVat = rdr["SumVat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["SumVat"]), 2);
         nodeContract.Contract.ManagerType = rdr["ProjectTypes"] == DBNull.Value ? "" : rdr["ProjectTypes"].ToString();
-        nodeContract.Contract.State = rdr["contract_State"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["contract_State"]);
+        nodeContract.Contract.State = Convert.ToInt16(rdr["contract_State"]) == 0 ? ContractState.Draft :
+                                      Convert.ToInt16(rdr["contract_State"]) == 1 ? ContractState.SentToClient :
+                                      Convert.ToInt16(rdr["contract_State"]) == 2 ? ContractState.Signed :
+                                      Convert.ToInt16(rdr["contract_State"]) == 3 ? ContractState.Active :
+                                      Convert.ToInt16(rdr["contract_State"]) == 4 ? ContractState.Complited :
+                                      ContractState.Draft;
 
         /*
 		root_date,

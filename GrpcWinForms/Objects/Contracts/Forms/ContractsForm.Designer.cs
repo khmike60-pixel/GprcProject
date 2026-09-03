@@ -100,7 +100,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1085, 93);
+            panel1.Size = new Size(1184, 93);
             panel1.TabIndex = 5;
             // 
             // chWithAdd
@@ -227,7 +227,7 @@
             c1SplitContainer1.Name = "c1SplitContainer1";
             c1SplitContainer1.Panels.Add(c1SplitterPanelContractLinesList);
             c1SplitContainer1.Panels.Add(c1SplitterPanelContractList);
-            c1SplitContainer1.Size = new Size(1085, 443);
+            c1SplitContainer1.Size = new Size(1184, 508);
             c1SplitContainer1.TabIndex = 6;
             // 
             // c1SplitterPanelContractLinesList
@@ -235,10 +235,10 @@
             c1SplitterPanelContractLinesList.Collapsible = true;
             c1SplitterPanelContractLinesList.Controls.Add(smartGridLines1);
             c1SplitterPanelContractLinesList.Dock = C1.Win.SplitContainer.PanelDockStyle.Bottom;
-            c1SplitterPanelContractLinesList.Height = 168;
-            c1SplitterPanelContractLinesList.Location = new Point(0, 282);
+            c1SplitterPanelContractLinesList.Height = 193;
+            c1SplitterPanelContractLinesList.Location = new Point(0, 322);
             c1SplitterPanelContractLinesList.Name = "c1SplitterPanelContractLinesList";
-            c1SplitterPanelContractLinesList.Size = new Size(1085, 161);
+            c1SplitterPanelContractLinesList.Size = new Size(1184, 186);
             c1SplitterPanelContractLinesList.SizeRatio = 38.363D;
             c1SplitterPanelContractLinesList.TabIndex = 0;
             // 
@@ -280,7 +280,7 @@
             smartGridLines1.Rows.Fixed = 2;
             smartGridLines1.SelectedRows = (List<int>)resources.GetObject("smartGridLines1.SelectedRows");
             smartGridLines1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridLines1.Size = new Size(1085, 161);
+            smartGridLines1.Size = new Size(1184, 186);
             smartGridLines1.SortingType = SmartLib.SortingType.Descending;
             smartGridLines1.StyleInfo = resources.GetString("smartGridLines1.StyleInfo");
             smartGridLines1.TabIndex = 1;
@@ -290,10 +290,10 @@
             // 
             c1SplitterPanelContractList.Controls.Add(smartGridContracts1);
             c1SplitterPanelContractList.Controls.Add(toolStrip1);
-            c1SplitterPanelContractList.Height = 271;
+            c1SplitterPanelContractList.Height = 311;
             c1SplitterPanelContractList.Location = new Point(0, 0);
             c1SplitterPanelContractList.Name = "c1SplitterPanelContractList";
-            c1SplitterPanelContractList.Size = new Size(1085, 271);
+            c1SplitterPanelContractList.Size = new Size(1184, 311);
             c1SplitterPanelContractList.TabIndex = 1;
             // 
             // smartGridContracts1
@@ -325,7 +325,7 @@
             smartGridContracts1.Rows.Fixed = 2;
             smartGridContracts1.SelectedRows = (List<int>)resources.GetObject("smartGridContracts1.SelectedRows");
             smartGridContracts1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridContracts1.Size = new Size(1085, 240);
+            smartGridContracts1.Size = new Size(1184, 280);
             smartGridContracts1.SortingType = SmartLib.SortingType.Descending;
             smartGridContracts1.StyleInfo = resources.GetString("smartGridContracts1.StyleInfo");
             smartGridContracts1.TabIndex = 6;
@@ -340,7 +340,7 @@
             toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1085, 31);
+            toolStrip1.Size = new Size(1184, 31);
             toolStrip1.TabIndex = 4;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -358,7 +358,7 @@
             // 
             ToolStripMenuItemNewContract.Image = Properties.Resources.icons8_документ_50;
             ToolStripMenuItemNewContract.Name = "ToolStripMenuItemNewContract";
-            ToolStripMenuItemNewContract.Size = new Size(247, 30);
+            ToolStripMenuItemNewContract.Size = new Size(239, 22);
             ToolStripMenuItemNewContract.Text = "Новый контракт";
             ToolStripMenuItemNewContract.Click += ToolStripMenuItemNewContract_Click;
             // 
@@ -366,7 +366,7 @@
             // 
             ToolStripMenuItemNewAgreement.Image = Properties.Resources.icons8_agreement_50;
             ToolStripMenuItemNewAgreement.Name = "ToolStripMenuItemNewAgreement";
-            ToolStripMenuItemNewAgreement.Size = new Size(247, 30);
+            ToolStripMenuItemNewAgreement.Size = new Size(239, 22);
             ToolStripMenuItemNewAgreement.Text = "Дополнительное соглашение";
             ToolStripMenuItemNewAgreement.Click += ToolStripMenuItemNewAgreement_Click;
             // 
@@ -417,7 +417,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1085, 536);
+            ClientSize = new Size(1184, 601);
             Controls.Add(c1SplitContainer1);
             Controls.Add(panel1);
             MinimumSize = new Size(1015, 575);
