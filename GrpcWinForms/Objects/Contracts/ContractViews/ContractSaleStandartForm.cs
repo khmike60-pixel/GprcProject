@@ -498,7 +498,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 if (contractResponse.Result.Status == Status.Ok)
                 {
                     contract = contractResponse.Contract;
-                    sumContractControl1.textBoxSumContract.Text = MyConvert.ToDecimal(contract.Sum).ToString();
+                    sumContractControl1.textBoxSumContract.Value= MyConvert.ToDecimal(contract.Sum);
 
                     // Уведомляем всех подписчиков об изменении контракта
                     ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);

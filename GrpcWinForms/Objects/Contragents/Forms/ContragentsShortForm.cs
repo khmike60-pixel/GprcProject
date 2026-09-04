@@ -31,6 +31,9 @@ namespace GrpcWinForms.Objects.Contragents.Forms
         public ContragentsShortForm()
         {
             InitializeComponent();
+            loaderContragent.Parent = smartGrid1;
+            loaderContragent.Size = smartGrid1.Size;
+
         }
 
         private async void RefreshContragents()

@@ -22,7 +22,7 @@ enum TypeRow {                      //  Тип  строки: 0 - Банковс
 
 message BankAccount {
     int32 id = 1;                               //    ID_M_BACCOUNT` int NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор счета в банке',
-    Common.Bank bank_id = 2;                       // `ID_M_BANK` int DEFAULT NULL COMMENT 'Идентификатор банка',
+    Common.Bank bank = 2;                       // `ID_M_BANK` int DEFAULT NULL COMMENT 'Идентификатор банка',
     string short = 3;                          //  `MCode` varchar(50) NOT NULL COMMENT 'Мнемокод',
     Common.Contragent contragent = 4;           // `ID_M_SUBJ` int DEFAULT NULL COMMENT 'Ссылка на субъект, которому принадлежит счет',
     string account = 5;                         // `Account` varchar(50) DEFAULT NULL COMMENT 'Счет',

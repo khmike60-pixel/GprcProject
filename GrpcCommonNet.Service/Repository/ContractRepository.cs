@@ -8,6 +8,7 @@ using MySql.Data.MySqlClient;
 using Mysqlx.Crud;
 using MySqlX.XDevAPI.Common;
 using Org.BouncyCastle.Asn1.Ocsp;
+using System;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.Contracts;
@@ -347,13 +348,13 @@ public class ContractRepository
                 p.AddWithValue("@SumVat", MyConvert.ToDecimal(contract.SumVat));
                 p.AddWithValue("@IsVat", contract.IsVat);
                 p.AddWithValue("@VatPrc", MyConvert.ToDecimal(contract.VatPrc));
-                p.AddWithValue("@CState", contract.State);
+                p.AddWithValue("@CState", contract.State.ToString());
                 p.AddWithValue("@CData", contract.Data?.ToString()); // JSON как строка
                 p.AddWithValue("@IsCont", null);                    // _contract.IsContract
                 p.AddWithValue("@IsOrd", null);        // _contract.IsOrder
                 p.AddWithValue("@DocTypeId", contract.TypeContract.Id);
                 p.AddWithValue("@SDid", contract.Department?.Id);
-                p.AddWithValue("@ProjTypes", contract.ManagerType.ToString()); // Enum в строку
+                p.AddWithValue("@ProjTypes", contract.ProjectType.ToString()); // Enum в строку
                 p.AddWithValue("@TemplDocId", null);               // _contract.TemplDocId
                 p.AddWithValue("@Comment", contract.Comment);
                 p.AddWithValue("@CreateAt", contract.Metadata?.CreateAt);
@@ -477,7 +478,7 @@ public class ContractRepository
                 p.AddWithValue("@IsOrd", null);        // _contract.IsOrder
                 p.AddWithValue("@DocTypeId", contract.TypeContract.Id);
                 p.AddWithValue("@SDid", contract.Department?.Id);
-                p.AddWithValue("@ProjTypes", contract.ManagerType.ToString()); // Enum в строку
+                p.AddWithValue("@ProjTypes", contract.ProjectType.ToString()); // Enum в строку
                 p.AddWithValue("@TemplDocId", null);               // _contract.TemplDocId
                 p.AddWithValue("@Comment", contract.Comment);
                 p.AddWithValue("@CreateAt", contract.Metadata?.CreateAt);
@@ -539,6 +540,59 @@ public class ContractRepository
         }
     }
 
+    public async Task<Contract> UpdateContractAsync(ContractRequest request)
+    {
+        try
+        {
+            List<string> updateFields = new List<string>();
+            var parameters = new List<MySqlParameter> { new MySqlParameter("@id", request.Contract.Id) };
+            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                updateFields = AllFieldsContract(request.Contract, parameters);
+            else
+                updateFields = MappingContract(request.Contract, parameters, request.FieldMask.Paths.ToList());
+
+            // Защита от ситуации, когда маска передана, но в ней нет валидных полей
+            if (updateFields.Count == 0)
+                throw new Exception(string.Join(Environment.NewLine, "UpdateMask пуста."));
+
+            string sql =
+                $@"UPDATE cwatis.contracts SET {string.Join(", ", updateFields)} WHERE contract_id = {request.Contract.Id}; " +
+                Environment.NewLine +
+                $@"SELECT
+                    c.* ,
+                    if (cd.ContractDoc_Id is not null, true, false) as haveDoc,
+                    cu.Abbrev, 
+                    t.DocumentType_Name as DocumentType_Name, 
+                    t.DocumentType_Code as DocumentType_Code,
+                    t.DocumentType_Form as DocumentType_Form
+                FROM cwatis.contracts c
+                    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+                    left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
+                    left join cwatis.contractdocs cd on cd.contract_id = c.contract_id
+                WHERE 1 = 1
+                    and c.contract_id = {request.Contract.Id};
+            ";
+
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+
+            cmd.CommandText = sql;
+            cmd.Parameters.AddRange(parameters.ToArray());
+
+            using var rdr = await cmd.ExecuteReaderAsync();
+
+            Contract contract = new Contract();
+            if (await rdr.ReadAsync())
+                contract = FillContract(rdr);
+            else contract = request.Contract;
+
+            return contract;
+        }  catch  (Exception ex)
+        {
+            throw new Exception("Ошибка при обновлении контракта.", ex);
+        }
+    }
 
     #endregion
 
@@ -824,6 +878,198 @@ public class ContractRepository
         return updateFields;
     }
 
+    public List<string> MappingContract(Contract contract, List<MySqlParameter> parameters,  List<string> Paths)
+    {
+        List<string> updateFields = new List<string>();
+        foreach (string path in Paths)
+        {
+            switch (path.ToLowerInvariant())
+            {
+                case "contract_RootId":
+                    updateFields.Add("contract_RootId = @contract_RootId");
+                    parameters.Add(new MySqlParameter("@contract_RootId", contract.RootId));
+                    break;
+                case "contract_PreviousId":
+                    updateFields.Add("contract_PreviousId = @contract_PreviousId");
+                    parameters.Add(new MySqlParameter("@contract_PreviousId", contract.PreviousId));
+                    break;
+                case "contract_SellerId":
+                    updateFields.Add("contract_SellerId = @contract_SellerId");
+                    parameters.Add(new MySqlParameter("@contract_SellerId", contract.Seller?.Id == 0 ?  null: contract.Seller?.Id));
+                    break;
+                case "contract_SellerName":
+                    updateFields.Add("contract_SellerName = @contract_SellerName");
+                    parameters.Add(new MySqlParameter("@contract_SellerName", contract.Seller?.Name));
+                    break;
+                case "contract_SellerSignId":
+                    updateFields.Add("contract_SellerSignId = @contract_SellerSignId");
+                    parameters.Add(new MySqlParameter("@contract_SellerSignId", contract.Seller?.Entity?.Signatory?.Id == 0? null: contract.Seller?.Entity?.Signatory?.Id));
+                    break;
+                case "contract_SellerBAccountId":
+                    updateFields.Add("contract_SellerBAccountId = @contract_SellerBAccountId");
+                    parameters.Add(new MySqlParameter("@contract_SellerBAccountId", contract.BankAccountSeller?.Id));
+                    break;
+                case "contract_BuyerId":
+                    updateFields.Add("contract_BuyerId = @contract_BuyerId");
+                    parameters.Add(new MySqlParameter("@contract_BuyerId", contract.Buyer?.Id ==  0? null : contract.Buyer?.Id));
+                    break;
+                case "contract_BuyerName":
+                    updateFields.Add("contract_BuyerName = @contract_BuyerName");
+                    parameters.Add(new MySqlParameter("@contract_BuyerName", contract.Buyer?.Name));
+                    break;
+                case "contract_BuyerSignId":
+                    updateFields.Add("contract_BuyerSignId = @contract_BuyerSignId");
+                    parameters.Add(new MySqlParameter("@contract_BuyerSignId", contract.Buyer?.Entity?.Signatory?.Id == 0?  null: contract.Buyer?.Entity?.Signatory?.Id));
+                    break;
+                case "contract_BuyerBAccountId":
+                    updateFields.Add("contract_BuyerBAccountId = @contract_BuyerBAccountId");
+                    parameters.Add(new MySqlParameter("@contract_BuyerBAccountId", contract.BankAccountBuyer?.Id == 0? null: contract.BankAccountBuyer?.Id));
+                    break;
+                case "contract_ShipperId":
+                    updateFields.Add("contract_ShipperId = @contract_ShipperId");
+                    parameters.Add(new MySqlParameter("@contract_ShipperId", contract.Shipper?.Id == 0 ? null : contract.Shipper?.Id));
+                    break;
+                case "contract_ShipperName":
+                    updateFields.Add("contract_ShipperName = @contract_ShipperName");
+                    parameters.Add(new MySqlParameter("@contract_ShipperName", contract.Shipper?.Name));
+                    break;
+                case "contract_ConsigneeId":
+                    updateFields.Add("contract_ConsigneeId = @contract_ConsigneeId");
+                    parameters.Add(new MySqlParameter("@contract_ConsigneeId", contract.Consignee?.Id == 0 ? null : contract.Consignee?.Id));
+                    break;
+                case "contract_ConsigneeName":
+                    updateFields.Add("contract_ConsigneeName = @contract_ConsigneeName");
+                    parameters.Add(new MySqlParameter("@contract_ConsigneeName", contract.Consignee?.Name));
+                    break;
+                case "Initiator_Id":
+                    updateFields.Add("Initiator_Id = @Initiator_Id");
+                    parameters.Add(new MySqlParameter("@Initiator_Id", contract.Initiator?.Id == 0 ? null : contract.Initiator?.Id));
+                    break;
+                case "Initiator_Name":
+                    updateFields.Add("Initiator_Name = @Initiator_Name");
+                    parameters.Add(new MySqlParameter("@Initiator_Name", contract.Initiator?.Name));
+                    break;
+                case "Executor_Id":
+                    updateFields.Add("Executor_Id = @Executor_Id");
+                    parameters.Add(new MySqlParameter("@Executor_Id", contract.Executor?.Id == 0 ? null : contract.Executor?.Id));
+                    break;
+                case "Executor_Name":
+                    updateFields.Add("Executor_Name = @Executor_Name");
+                    parameters.Add(new MySqlParameter("@Executor_Name", contract.Executor?.Name));
+                    break;
+                case "contract_Date":
+                    updateFields.Add("contract_Date = @contract_Date");
+                    parameters.Add(new MySqlParameter("@contract_Date", contract.Date?.ToDateTime().ToLocalTime()));
+                    break;
+                case "contract_ExpirationDate":
+                    updateFields.Add("contract_ExpirationDate = @contract_ExpirationDate");
+                    parameters.Add(new MySqlParameter("@contract_ExpirationDate", contract.ExpirationDate?.ToDateTime().ToLocalTime()));
+                    break;
+                case "contract_Number":
+                    updateFields.Add("contract_Number = @contract_Number");
+                    parameters.Add(new MySqlParameter("@contract_Number", contract.Number));
+                    break;
+                case "contract_Name":
+                    updateFields.Add("contract_Name = @contract_Name");
+                    parameters.Add(new MySqlParameter("@contract_Name", contract.Name));
+                    break;
+                case "contract_DocName":
+                    updateFields.Add("contract_DocName = @contract_DocName");
+                    parameters.Add(new MySqlParameter("@contract_DocName", contract.DocName));
+                    break;
+                case "CurrencyId":
+                    updateFields.Add("CurrencyId = @CurrencyId");
+                    parameters.Add(new MySqlParameter("@CurrencyId", contract.Currency?.Id == 0 ? null : contract.Currency?.Id));
+                    break;
+                case "CurrencyPaymentId":
+                    updateFields.Add("CurrencyPaymentId = @CurrencyPaymentId");
+                    parameters.Add(new MySqlParameter("@CurrencyPaymentId", contract.CurrencyPayment?.Id == 0 ? null : contract.CurrencyPayment?.Id));
+                    break;
+                case "Sum":
+                    updateFields.Add("Sum = @Sum");
+                    parameters.Add(new MySqlParameter("@Sum", MyConvert.ToDecimal(contract.Sum)));
+                    break;
+                case "Amount":
+                    updateFields.Add("Amount = @Amount");
+                    parameters.Add(new MySqlParameter("@Amount", MyConvert.ToDecimal(contract.Amount)));
+                    break;
+                case "SumVat":
+                    updateFields.Add("SumVat = @SumVat");
+                    parameters.Add(new MySqlParameter("@SumVat", MyConvert.ToDecimal(contract.SumVat)));
+                    break;
+                case "IsVat":
+                    updateFields.Add("IsVat = @IsVat");
+                    parameters.Add(new MySqlParameter("@IsVat", contract.IsVat));
+                    break;
+                case "VatPrc":
+                    updateFields.Add("VatPrc = @VatPrc");
+                    parameters.Add(new MySqlParameter("@VatPrc", MyConvert.ToDecimal(contract.VatPrc)));
+                    break;
+                case "contract_State":
+                    updateFields.Add("contract_State = @contract_State");
+                    parameters.Add(new MySqlParameter("@contract_State", contract.State));
+                    break;
+                case "contract_data":
+                    updateFields.Add("contract_data = @contract_data");
+                    parameters.Add(new MySqlParameter("@contract_data", contract.Data));
+                    break;
+                case "DocumentType_Id":
+                    updateFields.Add("DocumentType_Id = @DocumentType_Id");
+                    parameters.Add(new MySqlParameter("@DocumentType_Id", contract.TypeContract?.Id));
+                    break;
+                case "SDid":
+                    updateFields.Add("SDid = @SDid");
+                    parameters.Add(new MySqlParameter("@SDid", contract.Department?.Id ==  0?  null: contract.Department?.Id));
+                    break;
+                case "ProjectTypes":
+                    updateFields.Add("ProjectTypes = @ProjectTypes");
+                    parameters.Add(new MySqlParameter("@ProjectTypes", contract.ProjectType.ToString()));
+                    break;
+                case "TemplDoc_Id":
+                    updateFields.Add("TemplDoc_Id = @TemplDoc_Id");
+                    parameters.Add(new MySqlParameter("@TemplDoc_Id", contract.TempldocId== 0 ? null : contract.TempldocId));
+                    break;
+                case "Comment":
+                    updateFields.Add("Comment = @Comment");
+                    parameters.Add(new MySqlParameter("@Comment", contract.Comment));
+                    break;
+                case "create_at":
+                    updateFields.Add("create_at = @create_at");
+                    parameters.Add(new MySqlParameter("@create_at", contract.Metadata?.CreateAt.ToDateTime().ToLocalTime()));
+                    break;
+                case "create_by":
+                    updateFields.Add("create_by = @create_by");
+                    parameters.Add(new MySqlParameter("@create_by", contract.Metadata?.CreateBy));
+                    break;
+                case "create_userid":
+                    updateFields.Add("create_userid = @create_userid");
+                    parameters.Add(new MySqlParameter("@create_userid", contract.Metadata?.CreateUserid == 0? null: contract.Metadata?.CreateUserid));
+                    break;
+                case "update_at":
+                    updateFields.Add("update_at = @update_at");
+                    parameters.Add(new MySqlParameter("@update_at", contract.Metadata?.UpdateAt.ToDateTime().ToLocalTime()));
+                    break;
+                case "update_by":
+                    updateFields.Add("update_by = @update_by");
+                    parameters.Add(new MySqlParameter("@update_by", contract.Metadata?.UpdateBy));
+                    break;
+                case "update_userid":
+                    updateFields.Add("update_userid = @update_userid");
+                    parameters.Add(new MySqlParameter("@update_userid", contract.Metadata?.UpdateUserid == 0 ? null : contract.Metadata?.UpdateUserid));
+                    break;
+                case "Contract_SignPlaceId":
+                    updateFields.Add("Contract_SignPlaceId = @Contract_SignPlaceId");
+                    parameters.Add(new MySqlParameter("@Contract_SignPlaceId", contract.PlaceSigned?.Id == 0 ? null : contract.PlaceSigned?.Id));
+                    break;
+
+                default:
+                    // Игнорируем неизвестные или защищенные от изменения поля 
+                    break;
+            }
+        }
+        return updateFields;
+    }
+
     public List<string> AllFieldsLine(Line line, List<MySqlParameter> parameters)
     {
         List<string> updateFields = new List<string>();
@@ -870,6 +1116,100 @@ public class ContractRepository
         updateFields.Add("Comment = @comment");
         parameters.Add(new MySqlParameter("@comment", line.Comment));
 
+        return updateFields;
+    }
+
+    public List<string> AllFieldsContract(Contract contract, List<MySqlParameter> parameters)
+    {
+        List<string> updateFields = new List<string>();
+        updateFields.Add("contract_RootId = @contract_RootId");
+        parameters.Add(new MySqlParameter("@contract_RootId", contract.RootId));
+        updateFields.Add("contract_PreviousId = @contract_PreviousId");
+        parameters.Add(new MySqlParameter("@contract_PreviousId", contract.PreviousId));
+        updateFields.Add("contract_SellerId = @contract_SellerId");
+        parameters.Add(new MySqlParameter("@contract_SellerId", contract.Seller?.Id == 0 ? null : contract.Seller?.Id));
+        updateFields.Add("contract_SellerName = @contract_SellerName");
+        parameters.Add(new MySqlParameter("@contract_SellerName", contract.Seller?.Name));
+        updateFields.Add("contract_SellerSignId = @contract_SellerSignId");
+        parameters.Add(new MySqlParameter("@contract_SellerSignId", contract.Seller?.Entity?.Signatory?.Id == 0 ? null : contract.Seller?.Entity?.Signatory?.Id));
+        updateFields.Add("contract_SellerBAccountId = @contract_SellerBAccountId");
+        parameters.Add(new MySqlParameter("@contract_SellerBAccountId", contract.BankAccountSeller?.Id));
+        updateFields.Add("contract_BuyerId = @contract_BuyerId");
+        parameters.Add(new MySqlParameter("@contract_BuyerId", contract.Buyer?.Id == 0 ? null : contract.Buyer?.Id));
+        updateFields.Add("contract_BuyerName = @contract_BuyerName");
+        parameters.Add(new MySqlParameter("@contract_BuyerName", contract.Buyer?.Name));
+        updateFields.Add("contract_BuyerSignId = @contract_BuyerSignId");
+        parameters.Add(new MySqlParameter("@contract_BuyerSignId", contract.Buyer?.Entity?.Signatory?.Id == 0 ? null : contract.Buyer?.Entity?.Signatory?.Id));
+        updateFields.Add("contract_BuyerBAccountId = @contract_BuyerBAccountId");
+        parameters.Add(new MySqlParameter("@contract_BuyerBAccountId", contract.BankAccountBuyer?.Id == 0 ? null : contract.BankAccountBuyer?.Id));
+        updateFields.Add("contract_ShipperId = @contract_ShipperId");
+        parameters.Add(new MySqlParameter("@contract_ShipperId", contract.Shipper?.Id == 0 ? null : contract.Shipper?.Id));
+        updateFields.Add("contract_ShipperName = @contract_ShipperName");
+        parameters.Add(new MySqlParameter("@contract_ShipperName", contract.Shipper?.Name));
+        updateFields.Add("contract_ConsigneeId = @contract_ConsigneeId");
+        parameters.Add(new MySqlParameter("@contract_ConsigneeId", contract.Consignee?.Id == 0 ? null : contract.Consignee?.Id));
+        updateFields.Add("contract_ConsigneeName = @contract_ConsigneeName");
+        parameters.Add(new MySqlParameter("@contract_ConsigneeName", contract.Consignee?.Name));
+        updateFields.Add("Initiator_Id = @Initiator_Id");
+        parameters.Add(new MySqlParameter("@Initiator_Id", contract.Initiator?.Id == 0 ? null : contract.Initiator?.Id));
+        updateFields.Add("Initiator_Name = @Initiator_Name");
+        parameters.Add(new MySqlParameter("@Initiator_Name", contract.Initiator?.Name));
+        updateFields.Add("Executor_Id = @Executor_Id");
+        parameters.Add(new MySqlParameter("@Executor_Id", contract.Executor?.Id == 0 ? null : contract.Executor?.Id));
+        updateFields.Add("Executor_Name = @Executor_Name");
+        parameters.Add(new MySqlParameter("@Executor_Name", contract.Executor?.Name));
+        updateFields.Add("contract_Date = @contract_Date");
+        parameters.Add(new MySqlParameter("@contract_Date", contract.Date?.ToDateTime().ToLocalTime()));
+        updateFields.Add("contract_ExpirationDate = @contract_ExpirationDate");
+        parameters.Add(new MySqlParameter("@contract_ExpirationDate", contract.ExpirationDate?.ToDateTime().ToLocalTime()));
+        updateFields.Add("contract_Number = @contract_Number");
+        parameters.Add(new MySqlParameter("@contract_Number", contract.Number));
+        updateFields.Add("contract_Name = @contract_Name");
+        parameters.Add(new MySqlParameter("@contract_Name", contract.Name));
+        updateFields.Add("contract_DocName = @contract_DocName");
+        parameters.Add(new MySqlParameter("@contract_DocName", contract.DocName));
+        updateFields.Add("CurrencyId = @CurrencyId");
+        parameters.Add(new MySqlParameter("@CurrencyId", contract.Currency?.Id == 0 ? null : contract.Currency?.Id));
+        updateFields.Add("CurrencyPaymentId = @CurrencyPaymentId");
+        parameters.Add(new MySqlParameter("@CurrencyPaymentId", contract.CurrencyPayment?.Id == 0 ? null : contract.CurrencyPayment?.Id));
+        updateFields.Add("Sum = @Sum");
+        parameters.Add(new MySqlParameter("@Sum", MyConvert.ToDecimal(contract.Sum)));
+        updateFields.Add("Amount = @Amount");
+        parameters.Add(new MySqlParameter("@Amount", MyConvert.ToDecimal(contract.Amount)));
+        updateFields.Add("SumVat = @SumVat");
+        parameters.Add(new MySqlParameter("@SumVat", MyConvert.ToDecimal(contract.SumVat)));
+        updateFields.Add("IsVat = @IsVat");
+        parameters.Add(new MySqlParameter("@IsVat", contract.IsVat));
+        updateFields.Add("VatPrc = @VatPrc");
+        parameters.Add(new MySqlParameter("@VatPrc", MyConvert.ToDecimal(contract.VatPrc)));
+        updateFields.Add("contract_State = @contract_State");
+        parameters.Add(new MySqlParameter("@contract_State", contract.State));
+        updateFields.Add("contract_data = @contract_data");
+        parameters.Add(new MySqlParameter("@contract_data", contract.Data));
+        updateFields.Add("DocumentType_Id = @DocumentType_Id");
+        parameters.Add(new MySqlParameter("@DocumentType_Id", contract.TypeContract?.Id));
+        updateFields.Add("SDid = @SDid");
+        parameters.Add(new MySqlParameter("@SDid", contract.Department?.Id == 0 ? null : contract.Department?.Id));
+        updateFields.Add("ProjectTypes = @ProjectTypes");
+        parameters.Add(new MySqlParameter("@ProjectTypes", contract.ProjectType.ToString()));
+        updateFields.Add("TemplDoc_Id = @TemplDoc_Id");
+        parameters.Add(new MySqlParameter("@TemplDoc_Id", contract.TempldocId == 0 ? null : contract.TempldocId));
+        updateFields.Add("Comment = @Comment");
+        parameters.Add(new MySqlParameter("@Comment", contract.Comment));
+        updateFields.Add("create_at = @create_at");
+        parameters.Add(new MySqlParameter("@create_at", contract.Metadata?.CreateAt.ToDateTime().ToLocalTime()));
+        updateFields.Add("create_by = @create_by");
+        parameters.Add(new MySqlParameter("@create_by", contract.Metadata?.CreateBy));
+        updateFields.Add("create_userid = @create_userid");
+        parameters.Add(new MySqlParameter("@create_userid", contract.Metadata?.CreateUserid == 0 ? null : contract.Metadata?.CreateUserid));
+        updateFields.Add("update_at = @update_at");
+        parameters.Add(new MySqlParameter("@update_at", contract.Metadata?.UpdateAt.ToDateTime().ToLocalTime()));
+        updateFields.Add("update_by = @update_by");
+        parameters.Add(new MySqlParameter("@update_by", contract.Metadata?.UpdateBy));
+        updateFields.Add("update_userid = @update_userid");
+        parameters.Add(new MySqlParameter("@update_userid", contract.Metadata?.UpdateUserid == 0 ? null : contract.Metadata?.UpdateUserid));
+        updateFields.Add("Contract_SignPlaceId = @Contract_SignPlaceId");
+        parameters.Add(new MySqlParameter("@Contract_SignPlaceId", contract.PlaceSigned?.Id == 0 ? null : contract.PlaceSigned?.Id));
         return updateFields;
     }
 
@@ -942,13 +1282,19 @@ public class ContractRepository
             Name = rdr["Executor_Name"] == DBNull.Value ? "" : rdr["Executor_Name"].ToString()
         };
 
-        contract.ManagerType = rdr["ProjectTypes"] == DBNull.Value ? "" : rdr["ProjectTypes"].ToString();
-        contract.State = Convert.ToInt16(rdr["contract_State"]) == 0 ? ContractState.Draft :
-                              Convert.ToInt16(rdr["contract_State"]) == 1 ? ContractState.SentToClient :
-                              Convert.ToInt16(rdr["contract_State"]) == 2 ? ContractState.Signed :
-                              Convert.ToInt16(rdr["contract_State"]) == 3 ? ContractState.Active :
-                              Convert.ToInt16(rdr["contract_State"]) == 4 ? ContractState.Complited :
-                              ContractState.Draft;
+        contract.ProjectType =
+            rdr["ProjectTypes"].ToString() == ProjectTypes.Standart.ToString() ? ProjectTypes.Standart :
+            rdr["ProjectTypes"].ToString() == ProjectTypes.Project.ToString() ? ProjectTypes.Project :
+            rdr["ProjectTypes"].ToString() == ProjectTypes.Sale.ToString() ? ProjectTypes.Sale :
+            ProjectTypes.Standart;
+
+        contract.State = 
+            rdr["contract_State"].ToString() == ContractState.Draft.ToString() ? ContractState.Draft :
+            rdr["contract_State"].ToString() == ContractState.SentToClient.ToString() ? ContractState.SentToClient :
+            rdr["contract_State"].ToString() == ContractState.Signed.ToString() ? ContractState.Signed :
+            rdr["contract_State"].ToString() == ContractState.Active.ToString() ? ContractState.Active :
+            rdr["contract_State"].ToString() == ContractState.Complited.ToString() ? ContractState.Complited :
+            ContractState.Draft;
 
         contract.DocName = rdr["contract_DocName"] == DBNull.Value ? "" : rdr["contract_DocName"].ToString();
 
@@ -1056,13 +1402,18 @@ public class ContractRepository
         nodeContract.Contract.Sum = rdr["Sum"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Sum"]), 2);
         nodeContract.Contract.Amount = rdr["Amount"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Amount"]), 2);
         nodeContract.Contract.SumVat = rdr["SumVat"] == DBNull.Value ? MyConvert.ToDecimalValue(0, 2) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["SumVat"]), 2);
-        nodeContract.Contract.ManagerType = rdr["ProjectTypes"] == DBNull.Value ? "" : rdr["ProjectTypes"].ToString();
-        nodeContract.Contract.State = Convert.ToInt16(rdr["contract_State"]) == 0 ? ContractState.Draft :
-                                      Convert.ToInt16(rdr["contract_State"]) == 1 ? ContractState.SentToClient :
-                                      Convert.ToInt16(rdr["contract_State"]) == 2 ? ContractState.Signed :
-                                      Convert.ToInt16(rdr["contract_State"]) == 3 ? ContractState.Active :
-                                      Convert.ToInt16(rdr["contract_State"]) == 4 ? ContractState.Complited :
-                                      ContractState.Draft;
+        nodeContract.Contract.ProjectType =
+            rdr["ProjectTypes"].ToString() == ProjectTypes.Standart.ToString() ? ProjectTypes.Standart :
+            rdr["ProjectTypes"].ToString() == ProjectTypes.Project.ToString() ? ProjectTypes.Project :
+            rdr["ProjectTypes"].ToString() == ProjectTypes.Sale.ToString() ? ProjectTypes.Sale :
+            ProjectTypes.Standart;
+        nodeContract.Contract.State = 
+            rdr["contract_State"].ToString() == ContractState.Draft.ToString() ? ContractState.Draft:
+            rdr["contract_State"].ToString() == ContractState.SentToClient.ToString() ? ContractState.SentToClient :
+            rdr["contract_State"].ToString() == ContractState.Signed.ToString() ? ContractState.Signed :
+            rdr["contract_State"].ToString() == ContractState.Active.ToString() ? ContractState.Active :
+            rdr["contract_State"].ToString() == ContractState.Complited.ToString() ? ContractState.Complited :
+            ContractState.Draft;
 
         /*
 		root_date,

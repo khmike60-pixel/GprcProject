@@ -16,6 +16,7 @@ import "protos/common/currency.proto";
 import "protos/common/product.proto";
 import "protos/common/documenttype.proto";
 import "protos/common/geolocation.proto";
+import "protos/common/bankaccount.proto";
 
 
 
@@ -41,6 +42,12 @@ enum ContractState {
 	SIGNED = 2;				// Подписан заказчиком
 	ACTIVE = 3;				// Активен, есть операции
 	COMPLITED = 4;			// Контракт исполнен
+}
+
+enum ProjectTypes {
+	STANDART = 0;
+	PROJECT =  1;
+	SALE = 2;
 }
 
 message Manager {
@@ -94,42 +101,45 @@ message Contract {
 
   // Контрагенты по контракту
   Common.Contragent seller = 7;							// Продавец (структура)
-  Common.Contragent buyer = 8;							// Покупатель (структура)
-  Common.Contragent shipper = 9;						// Отправитель (структура)
-  Common.Contragent consignee = 10;						// Получатель (структура)
+  Common.BankAccount bank_account_seller = 8;
+  Common.Contragent buyer = 9;							// Покупатель (структура)
+  Common.BankAccount bank_account_buyer = 10;
+  Common.Contragent shipper = 11;						// Отправитель (структура)
+  Common.Contragent consignee = 12;						// Получатель (структура)
 
   // Даты и номера
-  google.protobuf.Timestamp date = 11;					// дата контракта (date -> Timestamp)
-  google.protobuf.Timestamp expiration_date = 12;		// Дата окончания действия
-  string number = 13;									// Номер контракта
-  string name = 14;										// Наименование контракта. Например, "продажа лицензий на ПО"
-  string doc_name = 15;									// Наименование документа. Например, "контракт" или "Договор"
-  Common.Geolocation place_signed = 16;
+  google.protobuf.Timestamp date = 13;					// дата контракта (date -> Timestamp)
+  google.protobuf.Timestamp expiration_date = 14;		// Дата окончания действия
+  string number = 15;									// Номер контракта
+  string name = 16;										// Наименование контракта. Например, "продажа лицензий на ПО"
+  string doc_name = 17;									// Наименование документа. Например, "контракт" или "Договор"
+  Common.Geolocation place_signed = 18;
 
   // Валюта и суммы (decimal храним как string для точности)
-  Common.Currency currency = 17;                        // Валюта контракта (структура)
-  Common.Currency currency_payment = 18;                        // Валюта контракта (структура)
-  Common.DecimalValue sum = 19;                         // сумма с НДС (decimal -> string)
-  Common.DecimalValue amount = 20;                      // сумма без НДС
-  bool is_vat = 21;                                     // С НДС или без НДС
-  Common.DecimalValue vat_prc = 22;                     // С НДС или без НДС
-  Common.DecimalValue sum_vat = 23;                     // сумма НДС
+  Common.Currency currency = 19;                       // Валюта контракта (структура)
+  Common.Currency currency_payment = 20;                        // Валюта контракта (структура)
+  Common.DecimalValue sum = 21;                         // сумма с НДС (decimal -> string)
+  Common.DecimalValue amount = 22;                      // сумма без НДС
+  bool is_vat = 23;                                     // С НДС или без НДС
+  Common.DecimalValue vat_prc = 24;                     // С НДС или без НДС
+  Common.DecimalValue sum_vat = 25;                     // сумма НДС
 
   // Свободные данные JSON
-  google.protobuf.Struct data = 24;
+  google.protobuf.Struct data = 26;
 
   // Дополнительные поля
-  Common.Department department = 25;					// Идентификатор подразделение
-  Manager initiator = 26;								// Инициатор 
-  Manager executor = 27;								// Исполнитель
-  string manager_type = 28;
+  Common.Department department = 27;					// Идентификатор подразделение
+  Manager initiator = 28;								// Инициатор 
+  Manager executor = 29;								// Исполнитель
+  ProjectTypes project_type =  30;
 
-  int64 templdoc_id = 29;								// Идентификатор шаблона
-  string comment = 30;									// Комментарий к контракту
-  Metadata metadata = 31;								// Метаданные аудита
+  int64 templdoc_id = 31;								// Идентификатор шаблона
+  string comment = 32;									// Комментарий к контракту
+  Metadata metadata = 33;								// Метаданные аудита
   
-  repeated Line lines = 32;
+  repeated Line lines = 34;
 }
+  
 
 // Класс для построения дерева контрактов
 message NodeContract {

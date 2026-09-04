@@ -67,12 +67,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
             // Менеджерский тип
             cbProjectType.Items.Clear();
             cbProjectType.Items.AddRange(projectTypes);
-            for (int i = 0; i < projectTypes.Length; i++)
+            switch (_contract.ProjectType)
             {
-                if (projectTypes[i] == _contract.ManagerType)
-                {
-                    cbProjectType.SelectedIndex = i; break;
-                }
+                case ProjectTypes.Standart: cbProjectType.SelectedIndex = 0; break;
+                case ProjectTypes.Project: cbProjectType.SelectedIndex = 1; break;
+                case ProjectTypes.Sale: cbProjectType.SelectedIndex = 2; break;
+                default: cbProjectType.SelectedIndex = 0; break;
             }
 
             // Описание
@@ -83,7 +83,12 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
         private void tbComment_TextChanged(object sender, EventArgs e)
         {
             _contract.Comment = tbComment.Text;
-            _contract.ManagerType = projectTypes[cbProjectType.SelectedIndex];
+            switch (cbProjectType.SelectedIndex)
+            {
+                case 0: _contract.ProjectType = ProjectTypes.Standart; break;
+                case 1: _contract.ProjectType = ProjectTypes.Project; break;
+                case 2: _contract.ProjectType = ProjectTypes.Sale; break;
+            }
         }
 
         private async void ManagerControl_Load(object sender, EventArgs e)

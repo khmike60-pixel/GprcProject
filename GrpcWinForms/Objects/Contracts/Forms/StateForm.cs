@@ -16,7 +16,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
     {
         private Contract contract = new Contract();
         public Contract Contract { get => contract; set => contract = value; }
-        
+
         public StateForm()
         {
             InitializeComponent();
@@ -104,14 +104,38 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            MessageBox.Show($"Статус документа: {contract.State}");
+            //MessageBox.Show($"Необходимо записаит статус : {contract.State}");
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void StateForm_Load(object sender, EventArgs e)
         {
             txDocName.Text = contract.DocName.ToString();
             tbNumber.Text = contract.Number.ToString();
-            cdtDate.Value = contract.Date;
+            cdtDate.Value = contract.Date.ToDateTime();
+
+            switch (contract.State)
+            {
+                case ContractState.Complited:
+                    chkComplited.Checked = true;
+                    break;
+                case ContractState.Active:
+                    chkActived.Checked = true;
+                    break;
+                case ContractState.Signed:
+                    chkSigned.Checked = true;
+                    break;
+                case ContractState.SentToClient:
+                    chkSentToClient.Checked = true;
+                    break;
+            }
+
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }
