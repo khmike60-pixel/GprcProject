@@ -83,6 +83,26 @@ namespace GrpcWinForms.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap icons8_checklist_50_2 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-checklist-50-2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_checklist_50_3 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-checklist-50-3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_clock_50 {
             get {
                 object obj = ResourceManager.GetObject("icons8-clock-50", resourceCulture);
@@ -186,6 +206,16 @@ namespace GrpcWinForms.Properties {
         internal static System.Drawing.Bitmap icons8_settings_50 {
             get {
                 object obj = ResourceManager.GetObject("icons8-settings-50", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_task_completed_50 {
+            get {
+                object obj = ResourceManager.GetObject("icons8-task-completed-50", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

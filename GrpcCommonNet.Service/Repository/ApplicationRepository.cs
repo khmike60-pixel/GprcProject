@@ -74,7 +74,7 @@ public class ApplicationRepository
             using var rdr = await cmd.ExecuteReaderAsync();
             while (await rdr.ReadAsync())
             {
-                Application app = await FillApplication(rdr);
+                Application app = FillApplication(rdr);
                 list.Add(app);
             }
         }
@@ -104,7 +104,7 @@ public class ApplicationRepository
             List<Application> list = new List<Application>();
             while (await rdr.ReadAsync())
             {
-                Application app = await FillApplication(rdr);
+                Application app = FillApplication(rdr);
                 list.Add(app);
             }
 
@@ -232,7 +232,7 @@ public class ApplicationRepository
         }
     }
 
-    private async Task<Application> FillApplication(DbDataReader rdr)
+    private Application FillApplication(DbDataReader rdr)
     {
         return new Application
         {

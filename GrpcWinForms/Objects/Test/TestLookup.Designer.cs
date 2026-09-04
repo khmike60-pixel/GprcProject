@@ -34,8 +34,10 @@
             textBox1 = new TextBox();
             smartBoxCurrency = new GrpcWinForms.Controls.SmartBox.SmartBox(components);
             smartBoxDepartment = new GrpcWinForms.Controls.SmartBox.SmartBox(components);
+            c1Button1 = new C1.Win.Input.C1Button();
             ((System.ComponentModel.ISupportInitialize)smartBoxCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)smartBoxDepartment).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)c1Button1).BeginInit();
             SuspendLayout();
             // 
             // buttonCancel
@@ -62,10 +64,11 @@
             smartBoxCurrency.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             smartBoxCurrency.AutoCompleteSource = AutoCompleteSource.ListItems;
             smartBoxCurrency.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
-            smartBoxCurrency.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBox1.ButtonsSettings.CustomButton.Icon"));
+            smartBoxCurrency.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBoxCurrency.ButtonsSettings.CustomButton.Icon"));
             smartBoxCurrency.ButtonsSettings.CustomButton.Visible = true;
             smartBoxCurrency.ButtonsSettings.ModalButton.Visible = true;
             smartBoxCurrency.Location = new Point(72, 37);
+            smartBoxCurrency.ModalForm = null;
             smartBoxCurrency.Name = "smartBoxCurrency";
             smartBoxCurrency.NullEnable = true;
             smartBoxCurrency.Size = new Size(100, 23);
@@ -77,21 +80,32 @@
             smartBoxDepartment.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             smartBoxDepartment.AutoCompleteSource = AutoCompleteSource.ListItems;
             smartBoxDepartment.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
-            smartBoxDepartment.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBox2.ButtonsSettings.CustomButton.Icon"));
+            smartBoxDepartment.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBoxDepartment.ButtonsSettings.CustomButton.Icon"));
             smartBoxDepartment.ButtonsSettings.CustomButton.Visible = true;
             smartBoxDepartment.ButtonsSettings.ModalButton.Visible = true;
             smartBoxDepartment.Location = new Point(72, 81);
+            smartBoxDepartment.ModalForm = null;
             smartBoxDepartment.Name = "smartBoxDepartment";
             smartBoxDepartment.NullEnable = true;
             smartBoxDepartment.Size = new Size(100, 23);
             smartBoxDepartment.TabIndex = 27;
             smartBoxDepartment.Value = "";
             // 
+            // c1Button1
+            // 
+            c1Button1.Location = new Point(296, 187);
+            c1Button1.Name = "c1Button1";
+            c1Button1.Size = new Size(75, 23);
+            c1Button1.TabIndex = 28;
+            c1Button1.Text = "Статус";
+            c1Button1.Click += c1Button1_Click;
+            // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(470, 294);
+            Controls.Add(c1Button1);
             Controls.Add(smartBoxDepartment);
             Controls.Add(smartBoxCurrency);
             Controls.Add(textBox1);
@@ -101,6 +115,7 @@
             Load += TestLookup_Load;
             ((System.ComponentModel.ISupportInitialize)smartBoxCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)smartBoxDepartment).EndInit();
+            ((System.ComponentModel.ISupportInitialize)c1Button1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -110,5 +125,6 @@
         private TextBox textBox1;
         private Controls.SmartBox.SmartBox smartBoxCurrency;
         private Controls.SmartBox.SmartBox smartBoxDepartment;
+        private C1.Win.Input.C1Button c1Button1;
     }
 }

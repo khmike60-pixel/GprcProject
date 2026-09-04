@@ -13,6 +13,7 @@ using GrpcWinForms.Controls.PeriodControl;
 using GrpcWinForms.Controls.SmartBox;
 using GrpcWinForms.Forms;
 using GrpcWinForms.GrpcUtils;
+using GrpcWinForms.Objects.Contracts.Forms;
 using GrpcWinForms.Objects.Contracts.Models;
 using GrpcWinForms.Objects.Departaments;
 using SmartLib;
@@ -41,7 +42,7 @@ namespace GrpcWinForms.Objects.Test
 
         private void buttonCancel_Click(object sender, EventArgs e) // Cancel
         {
-            MessageBox.Show(string.Join(Environment.NewLine, 
+            MessageBox.Show(string.Join(Environment.NewLine,
                 $"Валюта smartBoxCurrency  : Id = {smartBoxCurrency.SelectedItemBox.Id}, Name = {smartBoxCurrency.SelectedItemBox.Name}",
                 $"Валюта smartBoxDepartment: Id = {smartBoxDepartment.SelectedItemBox.Id}, Name = {smartBoxDepartment.SelectedItemBox.Name}"
                 ));
@@ -76,7 +77,15 @@ namespace GrpcWinForms.Objects.Test
             smartBoxDepartment.DataSourceList(responseDep.Departments, "symbol");
             smartBoxDepartment.SetSelectedItemBox(dep, "Id");
             smartBoxDepartment.AutoSuggestMode = AutoSuggestMode.StartsWith;
-            smartBoxDepartment.SetModalForm(new DepartamentsForm() {DialogMode = true });
+            smartBoxDepartment.SetModalForm(new DepartamentsForm() { DialogMode = true });
+        }
+
+        private void c1Button1_Click(object sender, EventArgs e)
+        {
+            StateForm form = new StateForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            { }
+
         }
     }
 

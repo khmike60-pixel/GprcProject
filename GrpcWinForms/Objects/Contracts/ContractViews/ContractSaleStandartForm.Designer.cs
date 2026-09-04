@@ -52,8 +52,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             toolStripButtonDouble = new ToolStripButton();
             toolStripButtonEdit = new ToolStripButton();
             toolStripButtonDelete = new ToolStripButton();
-            toolStripButtonRefresh = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
+            toolStripButtonState = new ToolStripButton();
             c1SplitterPanelSpecification = new C1.Win.SplitContainer.C1SplitterPanel();
             c1DockingTab1 = new C1.Win.Command.C1DockingTab();
             c1DockingTabPageSpecification = new C1.Win.Command.C1DockingTabPage();
@@ -63,7 +63,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             toolStripButtonDoubleLine = new ToolStripButton();
             toolStripButtonEditLine = new ToolStripButton();
             toolStripButtonDeleteLine = new ToolStripButton();
-            toolStripButton5 = new ToolStripButton();
+            toolStripButtonRefreshLines = new ToolStripButton();
             toolStripSeparator2 = new ToolStripSeparator();
             toolStripButtonSetupSpecification = new ToolStripButton();
             c1DockingTab2 = new C1.Win.Command.C1DockingTab();
@@ -113,7 +113,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             c1SplitterPanelMain.Controls.Add(managerControl1);
             c1SplitterPanelMain.Controls.Add(sumContractControl1);
             c1SplitterPanelMain.Controls.Add(toolStripHead);
-            c1SplitterPanelMain.Height = 313;
+            c1SplitterPanelMain.Height = 320;
             c1SplitterPanelMain.KeepRelativeSize = false;
             c1SplitterPanelMain.Location = new Point(0, 21);
             c1SplitterPanelMain.MinHeight = 320;
@@ -181,7 +181,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             // toolStripHead
             // 
             toolStripHead.ImageScalingSize = new Size(24, 24);
-            toolStripHead.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1 });
+            toolStripHead.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripSeparator1, toolStripButtonState });
             toolStripHead.Location = new Point(0, 0);
             toolStripHead.Name = "toolStripHead";
             toolStripHead.Size = new Size(1182, 31);
@@ -227,19 +227,19 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             toolStripButtonDelete.Size = new Size(28, 28);
             toolStripButtonDelete.Text = "Удалить";
             // 
-            // toolStripButtonRefresh
-            // 
-            toolStripButtonRefresh.Alignment = ToolStripItemAlignment.Right;
-            toolStripButtonRefresh.Image = Properties.Resources.icons8_refresh_50;
-            toolStripButtonRefresh.ImageTransparentColor = Color.Magenta;
-            toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            toolStripButtonRefresh.Size = new Size(89, 28);
-            toolStripButtonRefresh.Text = "Обновить";
-            // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(6, 31);
+            // 
+            // toolStripButtonState
+            // 
+            toolStripButtonState.Image = Properties.Resources.icons8_checklist_50_2;
+            toolStripButtonState.ImageTransparentColor = Color.Magenta;
+            toolStripButtonState.Name = "toolStripButtonState";
+            toolStripButtonState.Size = new Size(187, 28);
+            toolStripButtonState.Text = "Изменить статус документа";
+            toolStripButtonState.Click += toolStripButtonState_Click;
             // 
             // c1SplitterPanelSpecification
             // 
@@ -323,7 +323,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             // toolStripLines
             // 
             toolStripLines.ImageScalingSize = new Size(24, 24);
-            toolStripLines.Items.AddRange(new ToolStripItem[] { toolStripButtonNewLine, toolStripButtonDoubleLine, toolStripButtonEditLine, toolStripButtonDeleteLine, toolStripButton5, toolStripSeparator2, toolStripButtonSetupSpecification });
+            toolStripLines.Items.AddRange(new ToolStripItem[] { toolStripButtonNewLine, toolStripButtonDoubleLine, toolStripButtonEditLine, toolStripButtonDeleteLine, toolStripButtonRefreshLines, toolStripSeparator2, toolStripButtonSetupSpecification });
             toolStripLines.Location = new Point(0, 0);
             toolStripLines.Name = "toolStripLines";
             toolStripLines.Size = new Size(1180, 31);
@@ -366,15 +366,17 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             toolStripButtonDeleteLine.Name = "toolStripButtonDeleteLine";
             toolStripButtonDeleteLine.Size = new Size(28, 28);
             toolStripButtonDeleteLine.Text = "Удалить";
+            toolStripButtonDeleteLine.Click += toolStripButtonDeleteLine_Click;
             // 
-            // toolStripButton5
+            // toolStripButtonRefreshLines
             // 
-            toolStripButton5.Alignment = ToolStripItemAlignment.Right;
-            toolStripButton5.Image = Properties.Resources.icons8_refresh_50;
-            toolStripButton5.ImageTransparentColor = Color.Magenta;
-            toolStripButton5.Name = "toolStripButton5";
-            toolStripButton5.Size = new Size(89, 28);
-            toolStripButton5.Text = "Обновить";
+            toolStripButtonRefreshLines.Alignment = ToolStripItemAlignment.Right;
+            toolStripButtonRefreshLines.Image = Properties.Resources.icons8_refresh_50;
+            toolStripButtonRefreshLines.ImageTransparentColor = Color.Magenta;
+            toolStripButtonRefreshLines.Name = "toolStripButtonRefreshLines";
+            toolStripButtonRefreshLines.Size = new Size(89, 28);
+            toolStripButtonRefreshLines.Text = "Обновить";
+            toolStripButtonRefreshLines.Click += toolStripButtonRefreshLines_Click;
             // 
             // toolStripSeparator2
             // 
@@ -502,7 +504,6 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private ToolStripButton toolStripButtonDouble;
         private ToolStripButton toolStripButtonEdit;
         private ToolStripButton toolStripButtonDelete;
-        private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator1;
         private ManagerControl managerControl1;
         private Button buttonCancel;
@@ -512,7 +513,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private ToolStripButton toolStripButtonDoubleLine;
         private ToolStripButton toolStripButtonEditLine;
         private ToolStripButton toolStripButtonDeleteLine;
-        private ToolStripButton toolStripButton5;
+        private ToolStripButton toolStripButtonRefreshLines;
         private ToolStripSeparator toolStripSeparator2;
         private C1.Win.Command.C1DockingTab c1DockingTab1;
         private C1.Win.Command.C1DockingTabPage c1DockingTabPageSpecification;
@@ -526,5 +527,6 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private C1.Win.Command.C1DockingTabPage c1DockingTabPageHistory;
         private Contracts.Controls.HistoryContractControl historyContractControl;
         private SmartLib.SmartGrid smartGridLines1;
+        private ToolStripButton toolStripButtonState;
     }
 }

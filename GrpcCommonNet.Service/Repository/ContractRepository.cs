@@ -744,7 +744,7 @@ public class ContractRepository
                     parameters.Add(new MySqlParameter("@product_id", line.Product.Id));
                     break;
                 case "unit.id":
-                    updateFields.Add("unit_id = @unit_id");
+                    updateFields.Add("UnitId = @unit_id");
                     parameters.Add(new MySqlParameter("@unit_id", line.Unit.Id));
                     break;
                 case "supplier.id":
@@ -833,7 +833,7 @@ public class ContractRepository
         parameters.Add(new MySqlParameter("@operation", line.Operation));
         updateFields.Add("rfr_MGoodGroupId = @product_id");
         parameters.Add(new MySqlParameter("@product_id", line.Product.Id));
-        updateFields.Add("unit_id = @unit_id");
+        updateFields.Add("UnitId = @unit_id");
         parameters.Add(new MySqlParameter("@unit_id", line.Unit.Id));
         updateFields.Add("supplier_id = @supplier_id");
         parameters.Add(new MySqlParameter("@supplier_id", line.Supplier?.Id));

@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.Contracts;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Dynamic;
 using System.Linq;
@@ -36,6 +37,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private Contract contract;
         private BindingList<Line> lines = new BindingList<Line>();
         private int currentRow = 0;
+        private CellStyle cellStyleDeleted;
+        private CellStyle baseStyle;
 
         //public bool CurrentMode = false;
 
@@ -60,6 +63,19 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         {
             try
             {
+                // Установление стиля для изображения удаленных строк в гриде
+                cellStyleDeleted = this.smartGridLines1.Styles.Add("Deleted");
+                // Получаем базовый стиль
+                baseStyle = smartGridLines1.Styles.Normal;
+                // Получаем базовый шрифт
+                var baseFont = smartGridLines1.Font;
+
+                // Определяем базовые свойства
+                cellStyleDeleted.BackColor = baseStyle.BackColor;
+                cellStyleDeleted.ForeColor = baseStyle.ForeColor;
+                cellStyleDeleted.Font = new Font(baseFont.FontFamily, baseFont.Size, baseFont.Style | FontStyle.Strikeout);
+                // Apply custom style to row 
+
                 if (contract == null) return;
                 if (this.contract.Id == 0)
                 {
@@ -110,7 +126,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonEditLine.Enabled = false;
                     toolStripButtonDeleteLine.Enabled = false;
                     toolStripButtonSetupSpecification.Enabled = false;
-
+                    smartGridLines1.AllowEditing = false;
 
                 }
                 if (ViewMode == ViewMode.Edit)
@@ -124,6 +140,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonEditLine.Enabled = true;
                     toolStripButtonDeleteLine.Enabled = true;
                     toolStripButtonSetupSpecification.Enabled = true;
+                    smartGridLines1.AllowEditing = true;
+
                 }
                 if (ViewMode == ViewMode.New)
                 {
@@ -136,6 +154,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonEditLine.Enabled = true;
                     toolStripButtonDeleteLine.Enabled = true;
                     toolStripButtonSetupSpecification.Enabled = true;
+                    smartGridLines1.AllowEditing = true;
                 }
 
                 lines = new BindingList<Line>(contract.Lines);
@@ -330,27 +349,16 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         {
             int row = e.Row;
             Line line = smartGridLines1.Rows[row].DataSource as Line;
-            // Получаем базовый стиль
-            var baseStyle = e.Style ?? smartGridLines1.Styles.Normal;
-
-            // Получаем базовый шрифт
-            var baseFont = baseStyle?.Font ?? smartGridLines1.Font ?? SystemFonts.DefaultFont;
 
             if (!Validate(line))
             {
                 // Добавляем Strikeout
-                if ((baseFont.Style & FontStyle.Strikeout) != FontStyle.Strikeout)
-                    e.Style.Font = new Font(baseFont.FontFamily, baseFont.Size, baseFont.Style | FontStyle.Strikeout);
-                else
-                    e.Style.Font = baseFont;
+                smartGridLines1.Rows[e.Row].Style = cellStyleDeleted;
             }
             else
             {
                 // Убираем Strikeout, если он был
-                if ((baseFont.Style & FontStyle.Strikeout) == FontStyle.Strikeout)
-                    e.Style.Font = new Font(baseFont.FontFamily, baseFont.Size, baseFont.Style & ~FontStyle.Strikeout);
-                else
-                    e.Style.Font = baseFont;
+                smartGridLines1.Rows[e.Row].Style = baseStyle;
             }
         }
 
@@ -376,7 +384,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     }
                 case "colAmount":
                     {
-                        e.Value = line.Amount == null || line.Amount.Units == 0 ? "" : MyConvert.ToDecimal(line.Amount);
+                        e.Value = line.Operation == "удалена" ? "" : MyConvert.ToDecimal(line.Amount);
                         break;
                     }
                 case "colVatPrc":
@@ -386,12 +394,12 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     }
                 case "colSumVat":
                     {
-                        e.Value = line.SumVat == null || line.SumVat.Units == 0 ? "" : MyConvert.ToDecimal(line.SumVat);
+                        e.Value = line.Operation == "удалена" ? "" : MyConvert.ToDecimal(line.SumVat);
                         break;
                     }
                 case "colSum":
                     {
-                        e.Value = line.Sum == null || line.Sum.Units == 0 ? "" : MyConvert.ToDecimal(line.Sum);
+                        e.Value = line.Operation == "удалена" ? "" : MyConvert.ToDecimal(line.Sum);
                         break;
                     }
             }
@@ -506,29 +514,39 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         private void smartGridLines1_BeforeEdit(object sender, RowColEventArgs e)
         {
-            Line line = smartGridLines1.Rows[e.Row].DataSource as Line;
-
-            // Получаем базовый шрифт
-            var baseFont = smartGridLines1.Styles.Normal.Font ?? smartGridLines1.Font ?? SystemFonts.DefaultFont;
-
-            if (!Validate(line))
+            try
             {
-                // Добавляем Strikeout
-                if ((baseFont.Style & FontStyle.Strikeout) != FontStyle.Strikeout)
-                    smartGridLines1.Rows[e.Row].Style.Font = new Font(baseFont.FontFamily, baseFont.Size, baseFont.Style | FontStyle.Strikeout);
+                Line line = smartGridLines1.Rows[e.Row].DataSource as Line;
+
+                // Получаем базовый шрифт
+                var baseFont = smartGridLines1.Styles.Normal.Font ?? smartGridLines1.Font ?? SystemFonts.DefaultFont;
+
+                if (!Validate(line))
+                    smartGridLines1.Rows[e.Row].Style = cellStyleDeleted;
+                else
+                    // Убираем Strikeout, если он был
+                    smartGridLines1.Rows[e.Row].Style = baseStyle;
+
+                if (!Validate(line))
+                {
+                    smartGridLines1.Rows[e.Row].AllowEditing = false;
+                    MessageBox.Show(string.Join(Environment.NewLine, "Нельзя редактировать удаленную строку"));
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                // Убираем Strikeout, если он был
-                if ((baseFont.Style & FontStyle.Strikeout) == FontStyle.Strikeout)
-                    smartGridLines1.Rows[e.Row].Style.Font = new Font(baseFont.FontFamily, baseFont.Size, baseFont.Style & ~FontStyle.Strikeout);
+                MessageBox.Show(string.Join(Environment.NewLine, "Ошибка при смене стиля", ex.Message));
             }
         }
 
         private void smartGridLines1_DoubleClick(object sender, EventArgs e)
         {
+            if (ViewMode == ViewMode.View) return;
             int row = smartGridLines1.Row;
             if (row < smartGridLines1.Rows.Fixed || row >= smartGridLines1.Rows.Count) return;
+            Line line = smartGridLines1.Rows[row].DataSource as Line;
+
 
         }
 
@@ -588,6 +606,74 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             }
         }
 
+        private async void toolStripButtonDeleteLine_Click(object sender, EventArgs e)
+        {
+            int row = smartGridLines1.Row;
+            if (row < smartGridLines1.Rows.Fixed || row >= smartGridLines1.Rows.Count) return;
+            Line line = smartGridLines1.Rows[row].DataSource as Line;
+
+            switch (line.Operation)
+            {
+                case "новая":
+                    {
+                        // Просто помечаем как "удаленную", так как она добавлена именно здесь
+                        line.Operation = "удалена";
+                        break;
+                    }
+                case "удалена":
+                    {
+                        // Восстанавливаем строку:
+                        // Если PreviousId != null, то Operation = ""
+                        // Если PreviousId == null, то Operation = "новая"
+                        if (line.PreviousId != null)
+                            line.Operation = "";
+                        else
+                            line.Operation = "новая";
+                        break;
+                    }
+                case "изменена":
+                    {
+                        // Случай, когда строка "из предыдущего документа", но изменена в данном 
+                        // Operation = "удалена"
+                        line.Operation = "удалена";
+                        break;
+                    }
+                case "":
+                    {
+                        // Случай, когда строка "из предыдущего документа", и в данном документе не менялась
+                        // Operation = "удалена"
+                        line.Operation = "удалена";
+                        break;
+                    }
+                default:
+                    {
+                        // На всякий слуяай
+                        return;
+                    }
+            }
+            UpdateContractLineRequest request = new UpdateContractLineRequest
+            { Line = line, FieldMask = new FieldMask { Paths = { "operation" } } };
+
+            try
+            {
+                ContractLineResponse response = await GrpcRetry.Call(() =>
+                    GrpcClients.GrpcClients.Contract.UpdateContractLineAsync(request).ResponseAsync
+                );
+                if (response.Result.Status != Status.Ok)
+                {
+                    throw new InvalidOperationException($"Ошибка обновления строки контракта: {response.Result.Message}");
+                }
+                // Обновляем строку в BindingList
+                int updatedRow = row - smartGridLines1.Rows.Fixed;
+                lines[updatedRow] = response.Line;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Join(Environment.NewLine, "Ошибка при удалении строки контракта",
+                    ex.Message));
+            }
+        }
+
         /// <summary>
         /// Валидация строки. Пока реализована тольео смена стиля для удаленных записей
         /// </summary>
@@ -615,6 +701,19 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             }
         }
 
+        private void toolStripButtonRefreshLines_Click(object sender, EventArgs e)
+        {
+            RefreshContractFull();
+        }
 
+        private void toolStripButtonState_Click(object sender, EventArgs e)
+        {
+            StateForm form = new StateForm() { Contract = contract };
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                contract.State = form.Contract.State;
+                // должен быть обновлен только статус документа. Переписать UpdateContract
+            }
+        }
     }
 }
