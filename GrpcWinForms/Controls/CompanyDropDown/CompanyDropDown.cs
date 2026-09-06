@@ -70,7 +70,6 @@ namespace GrpcWinForms.Objects.Contragents.Components
             SmartLib.SmartGrid grid = ((CompanyDropDownForm)Control).smart1;
             CompanyDropDownForm userControl = ((CompanyDropDownForm)Control);
 
-
             if (GetDataSourceFunc != null)
             {
                 // Вызываем метод в форме и сразу получаем результат

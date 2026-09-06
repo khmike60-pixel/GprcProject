@@ -1,4 +1,5 @@
 ﻿using GrpcCommonNet.Library;
+using GrpcCommonNet.Library.Common;
 using MySql.Data.MySqlClient;
 
 public class AuthRepository
@@ -12,10 +13,12 @@ public class AuthRepository
         _connectionString = configuration.GetConnectionString("MySql");
     }
 
-    public async Task<bool> AuthToken(string login, string password, string app)
+    public async Task<User> AuthToken(string login, string password, string app)
     {
         try
         {
+            User user = new User ();
+
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
@@ -39,13 +42,21 @@ public class AuthRepository
             cmd.Parameters.AddWithValue("@app", app.ToUpper());
             cmd.Parameters.AddWithValue("@password", password);
 
-            object result = await cmd.ExecuteScalarAsync();
-            if (result == null)
+            using var reader = await cmd.ExecuteReaderAsync();
+            bool result =  false;
+            if (await reader.ReadAsync())
+            {
+                user.Id = reader["UserId"] == null ? 0 : Convert.ToInt32(reader["UserId"]);
+                user.UserSymbol = reader["UserAbbrev"] == null ? "" : reader["UserAbbrev"].ToString();
+                result = true;
+            }
+
+            if (result == null || !result)
             {
                 _logger.LogWarning("AuthToken: User not found or blocked. Login: {login}, App: {app}", login, app);
-                return false;
+                return user;
             }
-            return true;
+            return user;
         } catch (Exception ex)
         {
             throw new Exception("Ошибка в AuthToken: " + ex);

@@ -288,23 +288,30 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     Id = managerControl1.smartBoxExecutor.SelectedItemBox.Id,
                     Name = managerControl1.smartBoxExecutor.SelectedItemBox.Name
                 };
-                contract.Metadata.CreateUserid = managerControl1.smartBoxCreator.SelectedItemBox.Id;
-                contract.Metadata.CreateBy = managerControl1.smartBoxCreator.SelectedItemBox.Name;
 
                 ContractRequest request = new ContractRequest()
                 {
                     Contract = contract
                 };
 
+                
                 ContractResponse response = new ContractResponse();
                 if (ViewMode == ViewMode.Edit)  // Редактируем запись
                 {
+                    request.Contract.Metadata.UpdateBy = MainClass.User.UserSymbol;
+                    request.Contract.Metadata.UpdateAt = DateTime.Now.ToUniversalTime().ToTimestamp();
+                    request.Contract.Metadata.UpdateUserid = MainClass.User.Id;
+
                     response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Contract.UpdateContractAsync(request).ResponseAsync
                     );
                 }
                 if (ViewMode == ViewMode.New)  // Создаем новый контракт
                 {
+                    request.Contract.Metadata.CreateBy = MainClass.User.UserSymbol;
+                    request.Contract.Metadata.CreateAt = DateTime.Now.ToUniversalTime().ToTimestamp();
+                    request.Contract.Metadata.CreateUserid = MainClass.User.Id;
+
                     response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Contract.CreateContractAsync(request).ResponseAsync
                     );
@@ -610,50 +617,78 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         {
             int row = smartGridLines1.Row;
             if (row < smartGridLines1.Rows.Fixed || row >= smartGridLines1.Rows.Count) return;
-            Line line = smartGridLines1.Rows[row].DataSource as Line;
+            //Line line = smartGridLines1.Rows[row].DataSource as Line;
 
-            switch (line.Operation)
+            List<int> selectedList = new List<int>();
+            if (smartGridLines1.SelectedRows == null || smartGridLines1.SelectedRows.Count == 0)
+                selectedList.Add(smartGridLines1.Row);
+            else
+                selectedList.AddRange(smartGridLines1.SelectedRows);
+
+            List<int> canDelete = new List<int>();
+
+            Dictionary<int, string> canUpdate = new Dictionary<int, string>();
+
+            foreach (int index in selectedList)
             {
-                case "новая":
-                    {
-                        // Просто помечаем как "удаленную", так как она добавлена именно здесь
-                        line.Operation = "удалена";
-                        break;
-                    }
-                case "удалена":
-                    {
-                        // Восстанавливаем строку:
-                        // Если PreviousId != null, то Operation = ""
-                        // Если PreviousId == null, то Operation = "новая"
-                        if (line.PreviousId != null)
-                            line.Operation = "";
-                        else
-                            line.Operation = "новая";
-                        break;
-                    }
-                case "изменена":
-                    {
-                        // Случай, когда строка "из предыдущего документа", но изменена в данном 
-                        // Operation = "удалена"
-                        line.Operation = "удалена";
-                        break;
-                    }
-                case "":
-                    {
-                        // Случай, когда строка "из предыдущего документа", и в данном документе не менялась
-                        // Operation = "удалена"
-                        line.Operation = "удалена";
-                        break;
-                    }
-                default:
-                    {
-                        // На всякий слуяай
-                        return;
-                    }
+                Line line = smartGridLines1.Rows[index].DataSource as Line;
+                switch (line.Operation)
+                {
+                    case "новая":
+                        {
+                            // Просто можно удалить, так как она добавлена именно здесь
+                            line.Operation = "удалена";
+                            canDelete.Add(line.Id);      // Требуется удаление
+                            break;
+                        }
+                    case "удалена":
+                        {
+                            // Восстанавливаем строку:
+                            // Если PreviousId != null, то Operation = ""
+                            // Если PreviousId == null, то Operation = "новая"
+                            if (line.PreviousId != null)
+                                line.Operation = "";
+                            else
+                                line.Operation = "новая";
+                            canUpdate.Add(line.Id, line.Operation);
+                            break;
+                        }
+                    case "изменена":
+                        {
+                            // Случай, когда строка "из предыдущего документа", но изменена в данном 
+                            // Operation = "удалена"
+                            line.Operation = "удалена";
+                            canUpdate.Add(line.Id, line.Operation);
+                            break;
+                        }
+                    case "":
+                        {
+                            // Случай, когда строка "из предыдущего документа", и в данном документе не менялась
+                            // Operation = "удалена"
+                            line.Operation = "удалена";
+                            canUpdate.Add(line.Id, line.Operation);
+                            break;
+                        }
+                    default:
+                        {
+                            // На всякий слуяай
+                            return;
+                        }
+                }
             }
+
+            // Удаление доступных к удалению строк
+            DeleteIdsContractLineRequest requestDelete = new DeleteIdsContractLineRequest();
+            requestDelete.Ids.AddRange(canDelete);
+
+            UndeletedIdsContractLineResponse response = await GrpcRetry.Call(() =>
+                GrpcClients.GrpcClients.Contract.DeleteIdsContractLineAsync(requestDelete).ResponseAsync);
+
+            /*   Необходимо массовое редактирование поля Operation
+            
             UpdateContractLineRequest request = new UpdateContractLineRequest
             { Line = line, FieldMask = new FieldMask { Paths = { "operation" } } };
-
+            
             try
             {
                 ContractLineResponse response = await GrpcRetry.Call(() =>
@@ -672,6 +707,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 MessageBox.Show(String.Join(Environment.NewLine, "Ошибка при удалении строки контракта",
                     ex.Message));
             }
+            */
         }
 
         /// <summary>

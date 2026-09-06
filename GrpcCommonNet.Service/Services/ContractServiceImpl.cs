@@ -24,7 +24,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
     {
 
         UserData userData = new UserData().GetUserData(context);
-        _logger.LogDebug($"GetCurrency called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        _logger.LogDebug($"GetContract called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
         try
         {
@@ -42,7 +42,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in GetContractByIdAsync: " + ex.Message);
+            _logger.LogError(ex, "Error in GetContract: " + ex.Message);
             throw;
         }
     }
@@ -50,7 +50,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
     public override async Task<ContractResponse> GetContractFull(GetContractRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
-        _logger.LogDebug($"GetCurrency called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        _logger.LogDebug($"GetContractFull called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
         try
         {
@@ -68,7 +68,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in GetContractFullAsync: " + ex.Message);
+            _logger.LogError(ex, "Error in GetContractFull: " + ex.Message);
             throw;
         }
     }
@@ -100,7 +100,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
     public override async Task<ListContractsResponse> GetContractHistory(GetContractRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
-        _logger.LogDebug($"GetContractIerarch called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        _logger.LogDebug($"GetContractHistory called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
         try
         {
             var contractsHistory = await _repo.GetContractHistoryAsync(request.ContractId);
@@ -124,7 +124,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
     public override async Task<ContractResponse> UpdateContract(ContractRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
-        _logger.LogDebug($"GetListContractLines called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        _logger.LogDebug($"UpdateContract called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
         try
         {
@@ -141,7 +141,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
     public override async Task<ContractResponse> CreateContract(ContractRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
-        _logger.LogDebug($"GetListContractLines called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        _logger.LogDebug($"CreateContract called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
         try
         {
@@ -181,6 +181,30 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
         }
     }
 
+    public override async Task<UndeletedIdsContractResponse> DeleteIdsContract(DeleteIdsContractRequest request,  ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"DeleteIdsContract called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            UndeletedIdsContractResponse response = new UndeletedIdsContractResponse();
+            
+            List<int> undeletedList = await _repo.DeleteIdsContractAsync(request);
+            //if (undeletedList.Count ==  0) response.Result = new Result { Status = Status.NotFound};
+            response.UndeletedIds.AddRange(undeletedList);
+            response.Result = new Result { Status = Status.Ok };
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in DeleteIdsContract: " + ex.Message);
+            throw;
+        }
+
+    }
+
     #endregion
 
     #region работа со строками контракта
@@ -188,7 +212,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
     public override async Task<ContractLineResponse> CreateContractLine(CreateContractLineRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
-        _logger.LogDebug($"GetListContractLines called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        _logger.LogDebug($"CreateContractLine called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
         try
         {
@@ -206,7 +230,7 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
     public override async Task<ContractLineResponse> UpdateContractLine(UpdateContractLineRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
-        _logger.LogDebug($"GetListContractLines called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+        _logger.LogDebug($"UpdateContractLine called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
         try
         {
@@ -248,6 +272,29 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
 
     }
 
+    public override async Task<UndeletedIdsContractLineResponse> DeleteIdsContractLine(DeleteIdsContractLineRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"DeleteIdsContractLine called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            UndeletedIdsContractLineResponse response = new UndeletedIdsContractLineResponse();
+
+            List<int> undeletedList = await _repo.DeleteIdsContractLineAsync(request);
+            
+            response.UndeletedIds.AddRange(undeletedList);
+            response.Result = new Result { Status = Status.Ok };
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in DeleteIdsContractLine: " + ex.Message);
+            throw;
+        }
+
+    }
 
     #endregion
 }

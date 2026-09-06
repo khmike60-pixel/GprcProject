@@ -8,6 +8,7 @@ using MySql.Data.MySqlClient;
 using Mysqlx.Crud;
 using MySqlX.XDevAPI.Common;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Crypto;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -460,8 +461,8 @@ public class ContractRepository
                 p.AddWithValue("@InitName", contract.Initiator?.Name);
                 p.AddWithValue("@ExecId", contract.Executor?.Id == 0 ? null : contract.Executor?.Id);
                 p.AddWithValue("@ExecName", contract.Executor?.Name);
-                p.AddWithValue("@CDate", contract.Date.ToDateTime() == DateTime.MinValue ? null : contract.Date.ToDateTime());
-                p.AddWithValue("@ExpDate", contract.ExpirationDate.ToDateTime() == DateTime.MinValue ? null : contract.ExpirationDate.ToDateTime());
+                p.AddWithValue("@CDate", contract.Date == null ? null : contract.Date.ToDateTime());
+                p.AddWithValue("@ExpDate", contract.ExpirationDate == null ? null : contract.ExpirationDate.ToDateTime());
                 p.AddWithValue("@CNumber", contract.Number);
                 p.AddWithValue("@CName", contract.Name);
                 p.AddWithValue("@DocName", contract.DocName);
@@ -591,6 +592,44 @@ public class ContractRepository
         }  catch  (Exception ex)
         {
             throw new Exception("Ошибка при обновлении контракта.", ex);
+        }
+    }
+
+    public async Task<List<int>> DeleteIdsContractAsync(DeleteIdsContractRequest request)
+    {
+        List<int> undeletedIds = new List<int>();
+        try
+        {
+            var deleted = new List<int>();
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+            // Build parameters
+            var idx = 0;
+            var parts = new List<string>();
+            
+            cmd.CommandText =
+               $"DELETE IGNORE FROM cwatis.contracts WHERE Contract_Id IN ({string.Join(',', request.Ids)}); " +
+               $"SELECT GROUP_CONCAT(c.Contract_Id) FROM cwatis.contracts c WHERE c.Contract_Id IN ({string.Join(',', request.Ids)}); ";
+
+            var rdr = await cmd.ExecuteReaderAsync();
+
+            var listAffected = rdr.Read() ? rdr.GetValue(0) : String.Empty;
+
+            string[] numberStrings = { };
+            List<int> Affected = new List<int>();
+
+            if (listAffected != null && !listAffected.ToString().Equals(String.Empty))
+            {
+                numberStrings = ((string)listAffected).Split(',');
+                Affected = numberStrings.Select(s => int.Parse(s.Trim())).ToList();
+            }
+             return Affected;
+        } 
+        catch (Exception ex)  
+        {
+            throw new Exception("Ошибка в DeleteIdsContractAsync: " + ex.Message);
+
         }
     }
 
@@ -773,6 +812,44 @@ public class ContractRepository
         catch (Exception ex)
         {
             throw new Exception("Ошибка при обновлении строки контракта.", ex);
+        }
+    }
+
+    public async Task<List<int>> DeleteIdsContractLineAsync(DeleteIdsContractLineRequest request)
+    {
+        List<int> undeletedIds = new List<int>();
+        try
+        {
+            var deleted = new List<int>();
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+            // Build parameters
+            var idx = 0;
+            var parts = new List<string>();
+
+            cmd.CommandText =
+               $"DELETE IGNORE FROM cwatis.contractlines l WHERE ContractLine_Id IN ({string.Join(',', request.Ids)}); " +
+               $"SELECT GROUP_CONCAT(l.ContractLine_Id) FROM cwatis.contractlines l WHERE l.ContractLine_Id IN ({string.Join(',', request.Ids)}); ";
+
+            var rdr = await cmd.ExecuteReaderAsync();
+
+            var listAffected = rdr.Read() ? rdr.GetValue(0) : String.Empty;
+
+            string[] numberStrings = { };
+            List<int> Affected = new List<int>();
+
+            if (listAffected != null && !listAffected.ToString().Equals(String.Empty))
+            {
+                numberStrings = ((string)listAffected).Split(',');
+                Affected = numberStrings.Select(s => int.Parse(s.Trim())).ToList();
+            }
+            return Affected;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Ошибка в DeleteIdsContractLineAsync: " + ex.Message);
+
         }
     }
 

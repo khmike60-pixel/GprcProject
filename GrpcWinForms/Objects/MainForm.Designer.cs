@@ -19,10 +19,10 @@ namespace GrpcWinForms.Forms
             MainDictionariesToolStripMenuItem = new ToolStripMenuItem();
             контрагентыToolStripMenuItem = new ToolStripMenuItem();
             ContragentsToolStripMenuItem = new ToolStripMenuItem();
+            ContragentsShortToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripSeparator();
             OurCompanyToolStripMenuItem1 = new ToolStripMenuItem();
             BanksToolStripMenuItem = new ToolStripMenuItem();
-            ContragentsShortToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
             OurCompanyToolStripMenuItem = new ToolStripMenuItem();
             DepartmentsToolStripMenuItem = new ToolStripMenuItem();
@@ -54,6 +54,8 @@ namespace GrpcWinForms.Forms
             UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             тестоваяФормаToolStripMenuItem = new ToolStripMenuItem();
             taskBar = new GrpcWinForms.Controls.TaskBar.TaskBar(components);
+            toolStripSeparator6 = new ToolStripSeparator();
+            SalePurchaseTypesToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -108,6 +110,13 @@ namespace GrpcWinForms.Forms
             ContragentsToolStripMenuItem.Text = "Контрагенты";
             ContragentsToolStripMenuItem.Click += ContragentsToolStripMenuItem_Click;
             // 
+            // ContragentsShortToolStripMenuItem
+            // 
+            ContragentsShortToolStripMenuItem.Name = "ContragentsShortToolStripMenuItem";
+            ContragentsShortToolStripMenuItem.Size = new Size(239, 22);
+            ContragentsShortToolStripMenuItem.Text = "Контрагенты (краткая форма)";
+            ContragentsShortToolStripMenuItem.Click += ContragentsShortToolStripMenuItem_Click;
+            // 
             // toolStripMenuItem2
             // 
             toolStripMenuItem2.Name = "toolStripMenuItem2";
@@ -126,13 +135,6 @@ namespace GrpcWinForms.Forms
             BanksToolStripMenuItem.Size = new Size(239, 22);
             BanksToolStripMenuItem.Text = "Банки";
             BanksToolStripMenuItem.Click += BanksToolStripMenuItem_Click;
-            // 
-            // ContragentsShortToolStripMenuItem
-            // 
-            ContragentsShortToolStripMenuItem.Name = "ContragentsShortToolStripMenuItem";
-            ContragentsShortToolStripMenuItem.Size = new Size(239, 22);
-            ContragentsShortToolStripMenuItem.Text = "Контрагенты (краткая форма)";
-            ContragentsShortToolStripMenuItem.Click += ContragentsShortToolStripMenuItem_Click;
             // 
             // toolStripSeparator4
             // 
@@ -198,7 +200,7 @@ namespace GrpcWinForms.Forms
             // 
             // CurrenciesAndRatesToolStripMenuItem
             // 
-            CurrenciesAndRatesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { CurrenciesToolStripMenuItem, RatesToolStripMenuItem });
+            CurrenciesAndRatesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { CurrenciesToolStripMenuItem, RatesToolStripMenuItem, toolStripSeparator6, SalePurchaseTypesToolStripMenuItem });
             CurrenciesAndRatesToolStripMenuItem.Name = "CurrenciesAndRatesToolStripMenuItem";
             CurrenciesAndRatesToolStripMenuItem.Size = new Size(228, 22);
             CurrenciesAndRatesToolStripMenuItem.Text = "Валюты  и курсы";
@@ -206,14 +208,14 @@ namespace GrpcWinForms.Forms
             // CurrenciesToolStripMenuItem
             // 
             CurrenciesToolStripMenuItem.Name = "CurrenciesToolStripMenuItem";
-            CurrenciesToolStripMenuItem.Size = new Size(118, 22);
+            CurrenciesToolStripMenuItem.Size = new Size(198, 22);
             CurrenciesToolStripMenuItem.Text = "Валюты";
             CurrenciesToolStripMenuItem.Click += CurrenciesToolStripMenuItem_Click;
             // 
             // RatesToolStripMenuItem
             // 
             RatesToolStripMenuItem.Name = "RatesToolStripMenuItem";
-            RatesToolStripMenuItem.Size = new Size(118, 22);
+            RatesToolStripMenuItem.Size = new Size(198, 22);
             RatesToolStripMenuItem.Text = "Курсы";
             RatesToolStripMenuItem.Click += RatesToolStripMenuItem_Click;
             // 
@@ -338,6 +340,18 @@ namespace GrpcWinForms.Forms
             taskBar.TabIndex = 2;
             taskBar.Text = "taskBarComponent1";
             // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(195, 6);
+            // 
+            // SalePurchaseTypesToolStripMenuItem
+            // 
+            SalePurchaseTypesToolStripMenuItem.Name = "SalePurchaseTypesToolStripMenuItem";
+            SalePurchaseTypesToolStripMenuItem.Size = new Size(198, 22);
+            SalePurchaseTypesToolStripMenuItem.Text = "Типы продаж  и курсы";
+            SalePurchaseTypesToolStripMenuItem.Click += SalePurchaseTypesToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
             ClientSize = new Size(1100, 364);
@@ -395,5 +409,7 @@ namespace GrpcWinForms.Forms
         private ToolStripMenuItem EmployeeToolStripMenuItem;
         private ToolStripMenuItem UsersToolStripMenuItem;
         private ToolStripMenuItem ContragentsShortToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator6;
+        private ToolStripMenuItem SalePurchaseTypesToolStripMenuItem;
     }
 }

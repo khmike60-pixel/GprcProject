@@ -6,6 +6,7 @@ using Grpc.Core;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
+using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Forms;
@@ -139,27 +140,27 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     smartGridLines1.DataSource = new BindingList<Line>();
                     return;
                 }
-/*
-                loaderLines.ShowLoader();
-                if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
-                {
-                    //Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
-                    TreeContract _obj = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
+                /*
+                                loaderLines.ShowLoader();
+                                if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
+                                {
+                                    //Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
+                                    TreeContract _obj = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
 
-                    ContractLineRequest request = new ContractLineRequest()
-                    {
-                        Id = _obj.ContractId,
-                        All = false
-                    };
-                    ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
-                    );
+                                    ContractLineRequest request = new ContractLineRequest()
+                                    {
+                                        Id = _obj.ContractId,
+                                        All = false
+                                    };
+                                    ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
+                                        GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
+                                    );
 
-                    lines = new BindingList<Line>(response.Lines);
-                }
-                smartGridLines1.DataSource = lines;
-                loaderLines.HideLoader();
-*/
+                                    lines = new BindingList<Line>(response.Lines);
+                                }
+                                smartGridLines1.DataSource = lines;
+                                loaderLines.HideLoader();
+                */
             }
             catch (Exception ex)
             {
@@ -250,14 +251,92 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
             viewContract.Show();
 
-            //smartGridContracts_DoubleClick(sender, e);
-
         }
+        
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             RefreshContract();
         }
 
+        private async void toolStripButtonDelete_Click(object sender, EventArgs e)
+        {
+            int row = smartGridContracts1.Row;
+            try
+            {
+                List<int> ids = new List<int>();
+                List<int> indexList = new List<int>();
+                List<int> oldList = new List<int>();
+                List<int> newMarked = new List<int>();
+
+                DialogResult result;
+                if (smartGridContracts1.SelectedRows.Count == 0)
+                { // Удаляется одна запись
+                    result = MessageBox.Show(string.Join(Environment.NewLine,
+                        "Удалить данную строку данных?"), "Удаление", MessageBoxButtons.OKCancel);
+
+                    int i = (smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract).ContractId;
+                    ids.Add(i);
+                    indexList.Add(smartGridContracts1.Rows[smartGridContracts1.Row].Index);
+                    oldList.Add(smartGridContracts1.Rows[smartGridContracts1.Row].Index);
+                    newMarked.Add(smartGridContracts1.Rows[smartGridContracts1.Row].Index);
+                }
+                else
+                {
+                    result = MessageBox.Show(string.Join(Environment.NewLine,
+                        $"Вы отметили {smartGridContracts1.SelectedRows.Count} строк.",
+                        "Удалить отмеченные строки?"), "Удаление", MessageBoxButtons.OKCancel);
+
+                    oldList.AddRange(smartGridContracts1.SelectedRows);
+                    newMarked.AddRange(smartGridContracts1.SelectedRows);
+                    foreach (var index in smartGridContracts1.SelectedRows)
+                    {
+                        int i = (smartGridContracts1.Rows[index].Node.Key as TreeContract).ContractId;
+                        ids.Add(i);
+                    }
+                    indexList.AddRange(oldList);
+                }
+
+                if (result == DialogResult.OK)
+                {
+                    DeleteIdsContractRequest request = new DeleteIdsContractRequest();
+                    request.Ids.AddRange(ids);
+
+                    UndeletedIdsContractResponse response = new UndeletedIdsContractResponse();
+                    response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.DeleteIdsContractAsync(request).ResponseAsync);
+
+                    List<int> undelIds = new List<int>();
+                    foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
+
+                    smartGridContracts1.BeginUpdate();
+
+                    // Убираем и списка помеченных в гриде записей удаленные 
+                    smartGridContracts1.SelectedRows.Sort();
+                    if (undelIds.Count == 0) smartGridContracts1.SelectedRows.Clear();
+                    for (int i = undelIds.Count - 1; i >= 0; i--)
+                    {
+                        int index = smartGridContracts1.SelectedRows.Find(x => !x.Equals(undelIds[i]));
+                        smartGridContracts1.SelectedRows.Remove(index);
+                    }
+
+                    // Удаляем реально удаленные записи из данных
+                    indexList.Sort();
+                    for (int i = indexList.Count - 1; i >= 0; i--)
+                    {
+                        smartGridContracts1.Rows.Remove(indexList[i]);
+                    }
+                    smartGridContracts1.EndUpdate();
+                    if (response.UndeletedIds.Count > 0)
+                        MessageBox.Show("Данные, которые не удалось удалить остались выделенными.");
+                    smartGridContracts1.Row = row;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Join(Environment.NewLine, "Ошибка при удалении: ",
+                    ex.Message));
+            }
+        }
 
         private void smartGridContracts_DoubleClick(object sender, EventArgs e)
         {
@@ -352,11 +431,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     }
                 case "colState":
                     {
-                        e.Value = contract.State == ContractState.Draft        ? "":
-                                  contract.State == ContractState.SentToClient ? "на подписании":
-                                  contract.State == ContractState.Signed       ? "подписан" :
-                                  contract.State == ContractState.Active       ? "активен" :
-                                  contract.State == ContractState.Complited    ? "исполнен" : "";
+                        e.Value = contract.State == ContractState.Draft ? "" :
+                                  contract.State == ContractState.SentToClient ? "на подписании" :
+                                  contract.State == ContractState.Signed ? "подписан" :
+                                  contract.State == ContractState.Active ? "активен" :
+                                  contract.State == ContractState.Complited ? "исполнен" : "";
                         break;
                     }
             }
@@ -367,7 +446,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             if (rowCurrentContract == smartGridContracts1.Row) return;
             else rowCurrentContract = smartGridContracts1.Row;
 
-                RefreshLines();
+            RefreshLines();
             // Считать строки контракта
             BindingList<Line> lines = new BindingList<Line>();
             try
@@ -497,6 +576,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             return _contragents;
         }
 
+
         #region Обработка внешнего события об изменении данных
         private void OnContractChanged(object sender, ContractChangedEventArgs e)
         {
@@ -515,7 +595,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         private void HandleContractChange(ContractChangedEventArgs e)
         {
             int row = 0;
-
+            int currentRow = smartGridContracts1.Row;
             TreeContract newTreeContract = new TreeContract() { ContractId = e.Contract.Id };
 
             // Запускаем поиск нужного нода и его замену на новый объект TreeContract
@@ -531,18 +611,19 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     newtreeContract.Date = e.Contract.Date.ToDateTime();
                     newtreeContract.ContractDate = e.Contract.Date.ToDateTime();
                     newtreeContract.DateExpiried = e.Contract.ExpirationDate?.ToDateTime();
-                    newtreeContract .Number = e.Contract.Number;
+                    newtreeContract.Number = e.Contract.Number;
                     newtreeContract.Seller = e.Contract.Seller?.Name;
                     newtreeContract.Buyer = e.Contract.Buyer?.Name;
                     newtreeContract.Sum = MyConvert.ToDecimal(e.Contract.Sum);
                     newtreeContract.State = e.Contract.State == ContractState.Draft ? "" :                // Новый
                                       e.Contract.State == ContractState.SentToClient ? "передан клиенту" : // В работе
-                                      e.Contract.State == ContractState.Signed       ? "подписан" :        // Есть операции
-                                      e.Contract.State == ContractState.Active       ? "активен" :         // Активен, есть операции
-                                      e.Contract.State == ContractState.Complited    ? "исполнен" :        // Исполнен / Завершен
+                                      e.Contract.State == ContractState.Signed ? "подписан" :        // Есть операции
+                                      e.Contract.State == ContractState.Active ? "активен" :         // Активен, есть операции
+                                      e.Contract.State == ContractState.Complited ? "исполнен" :        // Исполнен / Завершен
                                       "";
 
                     row = foundNode.Row.Index;
+                    if (row == currentRow) smartGridContracts1.Row = row;
                     break;
                 case ContractChangeType.Created:
                     // Для нового контракта создаем новый нод
@@ -663,7 +744,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 // Проверяем текущий узел
                 if (node.Key is TreeContract key && key.ContractId == target.ContractId)
                 {
-                    return node;
+                    if (node.Children == 0)
+                        return node;
                 }
 
                 // Рекурсивно проверяем дочерние узлы

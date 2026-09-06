@@ -4,6 +4,7 @@ option csharp_namespace = "GrpcCommonNet.Library.Auth";
 
 //import "google/protobuf/field_mask.proto";
 import "protos/common/general.proto";
+import "protos/common/user.proto";
 
 package auth;
 
@@ -28,6 +29,7 @@ message Token {
 message AuthResponse {
 	Common.Result result = 1;
 	Token token = 2;
+	Common.User user = 3;  // Добавлено 2026-09-06
 }
 
 message NameHostRequest{

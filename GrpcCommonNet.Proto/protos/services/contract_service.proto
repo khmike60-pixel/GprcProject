@@ -19,7 +19,7 @@ service ContractServices {
   rpc CreateContract(ContractRequest) returns (ContractResponse);                   // Создать контракт (запрос без id или с id = 0, возвращает созданный контракт с заполненным id)
   rpc UpdateContract(ContractRequest) returns (ContractResponse);                   // Обновить контракт без строк контракта (поддержка partial update через FieldMask)
   rpc DeleteContract(DeleteContractRequest) returns (DeleteContractResponse);             // Удалить контракт по id
-  rpc DeleteIdsContract(DeleteIdsContractRequest) returns (UndeleteIdsContractResponse);        // Удалить контракты по массиву ids
+  rpc DeleteIdsContract(DeleteIdsContractRequest) returns (UndeletedIdsContractResponse);        // Удалить контракты по массиву ids
   rpc GetContractFull(GetContractRequest) returns (ContractResponse);						// Получить полный контракт по id (одним запросом)
   rpc GetTreeContracts(ListContractsRequest) returns (TreeNodeResponse);							// Получить дерево контрактов с допсоглашениями
 
@@ -31,8 +31,9 @@ service ContractServices {
   rpc GetListContractLines(ContractLineRequest) returns (ListContractLinesResponse);         // Список строк контракт без пагинацией
   rpc CreateContractLine(CreateContractLineRequest) returns (ContractLineResponse);       // Создать строку контракт ((запрос без id или с id = 0, возвращает созданную строку контракта с заполненным id)
   rpc UpdateContractLine(UpdateContractLineRequest) returns (ContractLineResponse);           // Обновить строку контракта (поддержка partial update через FieldMask)
+  rpc UpdateIdsContractLine(UpdateIdsContractLineRequest) returns (UpdatedIdsContractLineResponse);          // Обновить одно поле, но в указанных строках контракта 
   rpc DeleteContractLine(ContractLineRequest) returns (DeleteContractLineResponse);       // Удалить строку контракта по id
-  rpc DeleteIdsContractLine(DeleteIdsContractLineRequest) returns (UndeleteIdsContractLineResponse); // Удалить строки контракты по массиву ids
+  rpc DeleteIdsContractLine(DeleteIdsContractLineRequest) returns (UndeletedIdsContractLineResponse); // Удалить строки контракты по массиву ids
 
 // Дополнительные специфические запросы по строкам контрактам
   rpc GetContractLineChains(ContractLineRequest) returns (ListContractLinesResponse);      // Получить "цепочку" изменений по указанной строке контракта (от верха до низа)
@@ -66,7 +67,7 @@ message DeleteContractRequest {
 }
 
 message DeleteIdsContractRequest {
-  repeated int32 id = 1;               // массив contract_id для удаления
+  repeated int32 ids = 1;               // массив contract_id для удаления
 }
 
 message ContractRequest {
@@ -87,9 +88,9 @@ message DeleteContractResponse {
 }
 
 // Возвращается список id контрактов. Используется при удалении - список удаленных, используется при получении "цепочек".
-message UndeleteIdsContractResponse {
+message UndeletedIdsContractResponse {
   Common.Result result = 1;
-  repeated int32 ids = 2;              // массив номеров контрактов
+  repeated int32 undeleted_ids = 2;              // массив номеров контрактов
 }
 
 //
@@ -160,7 +161,7 @@ message UpdateContractLineRequest {
 }
 
 message ContractLineRequest {
-  int64 id = 1;
+  int32 id = 1;
   // true - Признак указывает, что доставляться будут все строки
   // false - Признак указывает, что доставляться будут только новые и измененные строки
   bool all = 2;								
@@ -168,7 +169,7 @@ message ContractLineRequest {
 }
 
 message DeleteIdsContractLineRequest {
-  repeated int32 id = 1;               // массив id для удаления
+  repeated int32 ids = 1;               // массив id для удаления
 }
 
 message DeleteContractLineResponse {
@@ -176,9 +177,9 @@ message DeleteContractLineResponse {
   int32 id = 2;                        // id удаленной строки контракта
 }
 
-message UndeleteIdsContractLineResponse {
+message UndeletedIdsContractLineResponse {
   Common.Result result = 1;
-  repeated int32 id = 2;              // массив удаленных id 
+  repeated int32 undeleted_ids = 2;              // массив удаленных id 
 }
 
 message ListContractLinesRequest {
@@ -194,4 +195,14 @@ message ListContractLinesResponse {
 message TreeNodeResponse {
   Common.Result result = 1;
   repeated NodeContract node_contracts = 2;
+}
+
+message UpdateIdsContractLineRequest {
+	string field  = 1;				// Наименование поля, которое будет редактироваться
+	map<int32, string>  values = 2;	// Список id строк котракта и значение в виде string
+}
+
+message UpdatedIdsContractLineResponse {
+  Common.Result result = 1;
+  map<int32, Line> updated_lines = 2;
 }

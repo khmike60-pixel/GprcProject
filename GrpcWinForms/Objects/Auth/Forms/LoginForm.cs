@@ -81,8 +81,8 @@ namespace GrpcWinForms.Forms
 
                     // сохраняем токен в фабрике клиента
                     MainClass.Token = token.AccessToken;
-
-                    //MessageBox.Show("Авторизация успешна!");
+                    MainClass.User = resp.User;
+                    
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }

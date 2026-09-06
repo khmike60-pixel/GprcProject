@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using GrpcCommonNet.Library.Auth;
+using GrpcCommonNet.Library.Common;
 using GrpcCurrencyNet.Service.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,7 +31,8 @@ public class AuthServiceImpl : AuthServices.AuthServicesBase
 
         try
         {
-            if (!await _repo.AuthToken(request.Username, cryptPassword, request.Application))
+            User user = await _repo.AuthToken(request.Username, cryptPassword, request.Application);
+            if (user ==  null  ||  user.Id == 0) 
             {
                 _logger.LogWarning("Invalid login attempt for {user}", request.Username);
                 return new AuthResponse { Result = new Result { Status = Status.NotFound } };
@@ -46,7 +48,7 @@ public class AuthServiceImpl : AuthServices.AuthServicesBase
             {
                 new Claim(ClaimTypes.Name, request.Username),
                 new Claim(ClaimTypes.UserData, request.Application)
-        };
+            };
 
             var token = new JwtSecurityToken(
                 issuer: _jwt.Issuer,
@@ -59,7 +61,7 @@ public class AuthServiceImpl : AuthServices.AuthServicesBase
             return new AuthResponse
             {
                 Result = new Result { Status = Status.Ok },
-
+                User = user,
                 Token = new Token()
                 {
                     AccessToken = new JwtSecurityTokenHandler().WriteToken(token),

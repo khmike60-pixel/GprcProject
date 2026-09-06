@@ -1,0 +1,68 @@
+﻿syntax = "proto3";
+
+package SalePurchaseType;
+
+option csharp_namespace = "GrpcCommonNet.Library.SalePurchaseType";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/wrappers.proto";
+
+import "protos/common/general.proto";
+import "protos/common/salepurchasetype.proto";
+import "protos/common/geolocation.proto";
+import "protos/common/currency.proto";
+
+
+service SalePurchaseTypeServices {
+// Контракты
+  rpc GetSalePurchaseType(SalePurchaseTypeRequest) returns (SalePurchaseTypeResponse);
+  rpc ListSalePurchaseType(ListSalePurchaseTypeRequest) returns (ListSalePurchaseTypeResponse);
+  rpc CreateSalePurchaseType(CreateSalePurchaseTypeRequest) returns (SalePurchaseTypeResponse);
+  rpc UpdateSalePurchaseType(UpdateSalePurchaseTypeRequest) returns (SalePurchaseTypeResponse);
+  rpc DeleteSalePurchaseType(DeleteSalePurchaseTypeRequest) returns (DeleteSalePurchaseTypeResponse);
+
+}
+
+message SalePurchaseTypeRequest {
+	int32 id= 1;
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message SalePurchaseTypeResponse {
+	Common.Result result = 1;
+	Common.SalePurchaseType sale_purchase_type = 2;
+}
+
+message ListSalePurchaseTypeRequest {
+	string name = 1;
+	Common.Geolocation country = 2;
+	google.protobuf.FieldMask field_mask = 3;
+}
+
+message ListSalePurchaseTypeResponse {
+	Common.Result result = 1;
+	repeated Common.SalePurchaseType sale_purchase_types = 2;
+	google.protobuf.FieldMask field_mask = 3;
+}
+
+message CreateSalePurchaseTypeRequest {
+	Common.SalePurchaseType sale_purchase_type = 1;
+	google.protobuf.FieldMask field_mask = 2;
+
+}
+
+message UpdateSalePurchaseTypeRequest {
+	Common.SalePurchaseType sale_purchase_type = 1;
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message DeleteSalePurchaseTypeRequest {
+	repeated int32 ids = 1;
+}
+
+message DeleteSalePurchaseTypeResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_ids = 2;
+}

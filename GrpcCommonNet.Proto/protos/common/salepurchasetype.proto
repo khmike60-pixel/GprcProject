@@ -1,0 +1,37 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+import "protos/common/geolocation.proto";
+import "protos/common/currency.proto";
+
+package Common;
+
+// Метаданные аудита
+message MetaConfirm {
+  google.protobuf.Timestamp confirmed_at = 1;   // Дата утверждения  
+  string confirmed_by = 2;                      // Аббревиатура утвердившего
+  int32 confirmed_userid = 3;                   // Идентификатор утвердившего (пользователя)
+  google.protobuf.Timestamp cheked_at = 4;      // Дата проверки   
+  string cheked_by = 5;                         // Аббревиатура проверившего
+  int32 cheked_userid = 6;						// Идентификатор проверевшего (пользователя)
+}
+
+message SalePurchaseType{
+	google.protobuf.Int32Value id = 1;
+	string name = 2;
+	Common.Geolocation country = 3;
+	Common.Currency currency =4;
+	Common.Currency currency_main = 5;
+	Common.Currency currency_salary = 6;
+	Common.Currency currency_cross = 7;
+	bool default =  8;
+	bool confirmed = 9;
+	MetaConfirm meta_confirm  = 10;
+	google.protobuf.Struct data = 11;
+	string comment =12;
+}

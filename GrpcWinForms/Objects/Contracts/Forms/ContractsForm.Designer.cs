@@ -397,6 +397,7 @@
             toolStripButtonDelete.Name = "toolStripButtonDelete";
             toolStripButtonDelete.Size = new Size(28, 28);
             toolStripButtonDelete.Text = "Удалить";
+            toolStripButtonDelete.Click += toolStripButtonDelete_Click;
             // 
             // toolStripButtonRefresh
             // 

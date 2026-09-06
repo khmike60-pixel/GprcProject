@@ -15,7 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Сервисы (Генерация клиента и сервера) -->
-    <Protobuf Include="protos\*.proto" GrpcServices="Both" />
+    <Protobuf Include="protos\services\*.proto" GrpcServices="Both" />
     <!-- Общие типы данных (Только классы, без сервисов) -->
     <Protobuf Include="protos\common\*.proto" GrpcServices="Both" />
   </ItemGroup>

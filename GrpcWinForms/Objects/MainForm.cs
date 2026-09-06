@@ -19,6 +19,7 @@ using GrpcWinForms.Objects.Banks.Forms;
 using GrpcWinForms.Controls.TaskBar;
 using GrpcWinForms.Objects.Employees.Forms;
 using GrpcWinForms.Objects.Users;
+using GrpcWinForms.Objects.SalePurchaseTypes.Forms;
 
 namespace GrpcWinForms.Forms
 {
@@ -228,6 +229,16 @@ namespace GrpcWinForms.Forms
             var f = new ContragentsShortForm { MdiParent = this };
             f.Show();
 
+        }
+
+        private void SalePurchaseTypesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is SalePurchaseTypesForm) { child.Activate(); return; }
+            }
+            var f = new SalePurchaseTypesForm { MdiParent = this };
+            f.Show();
         }
     }
 }
