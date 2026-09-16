@@ -615,11 +615,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     newtreeContract.Seller = e.Contract.Seller?.Name;
                     newtreeContract.Buyer = e.Contract.Buyer?.Name;
                     newtreeContract.Sum = MyConvert.ToDecimal(e.Contract.Sum);
-                    newtreeContract.State = e.Contract.State == ContractState.Draft ? "" :                // Новый
-                                      e.Contract.State == ContractState.SentToClient ? "передан клиенту" : // В работе
-                                      e.Contract.State == ContractState.Signed ? "подписан" :        // Есть операции
-                                      e.Contract.State == ContractState.Active ? "активен" :         // Активен, есть операции
-                                      e.Contract.State == ContractState.Complited ? "исполнен" :        // Исполнен / Завершен
+                    newtreeContract.State = e.Contract.State == ContractState.Draft ? "" :                  // Новый
+                                      e.Contract.State == ContractState.SentToClient ? "передан" :          // передан клиенту
+                                      e.Contract.State == ContractState.Signed ? "подписан" :               // подписан
+                                      e.Contract.State == ContractState.Active ? "активен" :                // Активен, есть операции
+                                      e.Contract.State == ContractState.Complited ? "исполнен" :            // Исполнен / Завершен
                                       "";
 
                     row = foundNode.Row.Index;

@@ -166,7 +166,7 @@
             chkSentToClient.Name = "chkSentToClient";
             chkSentToClient.Size = new Size(122, 19);
             chkSentToClient.TabIndex = 19;
-            chkSentToClient.Text = "Передан клиенту";
+            chkSentToClient.Text = "Передан";
             chkSentToClient.CheckedChanged += chkBox_CheckedChanged;
             // 
             // StateForm
