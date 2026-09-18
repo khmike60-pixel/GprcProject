@@ -303,6 +303,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             smartGridLines1.Headers.Add(stringItem1);
             smartGridLines1.Headers.Add(stringItem2);
             smartGridLines1.IdName = null;
+            smartGridLines1.KeyActionEnter = C1.Win.FlexGrid.KeyActionEnum.MoveAcross;
             smartGridLines1.Location = new Point(0, 31);
             smartGridLines1.Name = "smartGridLines1";
             smartGridLines1.Rows.Count = 51;

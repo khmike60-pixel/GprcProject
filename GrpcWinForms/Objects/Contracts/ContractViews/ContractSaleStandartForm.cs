@@ -39,6 +39,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private int currentRow = 0;
         private CellStyle cellStyleDeleted;
         private CellStyle baseStyle;
+        private bool contractEdited = false;
 
         //public bool CurrentMode = false;
 
@@ -125,6 +126,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonDoubleLine.Enabled = false;
                     toolStripButtonEditLine.Enabled = false;
                     toolStripButtonDeleteLine.Enabled = false;
+                    toolStripButtonState.Enabled = false;
+                    
                     toolStripButtonSetupSpecification.Enabled = false;
                     smartGridLines1.AllowEditing = false;
 
@@ -139,6 +142,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonDoubleLine.Enabled = true;
                     toolStripButtonEditLine.Enabled = true;
                     toolStripButtonDeleteLine.Enabled = true;
+                    toolStripButtonState.Enabled = true;
+
                     toolStripButtonSetupSpecification.Enabled = true;
                     smartGridLines1.AllowEditing = true;
 
@@ -153,6 +158,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonDoubleLine.Enabled = true;
                     toolStripButtonEditLine.Enabled = true;
                     toolStripButtonDeleteLine.Enabled = true;
+                    toolStripButtonState.Enabled = true;
+
                     toolStripButtonSetupSpecification.Enabled = true;
                     smartGridLines1.AllowEditing = true;
                 }
@@ -229,7 +236,12 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            Close();
+            if (contractEdited)
+            {
+                if (MessageBox.Show(String.Join(Environment.NewLine, "Основные данные документа были изменены.",
+                    "Записать изменения?"), "", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                    buttonOk_Click(sender, e);
+            } else Close();
         }
 
         private async void buttonOk_Click(object sender, EventArgs e)
@@ -298,6 +310,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 ContractResponse response = new ContractResponse();
                 if (ViewMode == ViewMode.Edit)  // Редактируем запись
                 {
+                    if (request.Contract.Metadata == null) request.Contract.Metadata = new GrpcCommonNet.Library.Contract.Metadata();
                     request.Contract.Metadata.UpdateBy = MainClass.User.UserSymbol;
                     request.Contract.Metadata.UpdateAt = DateTime.Now.ToUniversalTime().ToTimestamp();
                     request.Contract.Metadata.UpdateUserid = MainClass.User.Id;
@@ -308,6 +321,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 }
                 if (ViewMode == ViewMode.New)  // Создаем новый контракт
                 {
+                    if (request.Contract.Metadata == null) request.Contract.Metadata = new GrpcCommonNet.Library.Contract.Metadata();
                     request.Contract.Metadata.CreateBy = MainClass.User.UserSymbol;
                     request.Contract.Metadata.CreateAt = DateTime.Now.ToUniversalTime().ToTimestamp();
                     request.Contract.Metadata.CreateUserid = MainClass.User.Id;
@@ -448,6 +462,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         private async void smartGridLines1_AfterEdit(object sender, RowColEventArgs e)
         {
+            int row = smartGridLines1.Row;
+
             Line line = smartGridLines1.Rows[e.Row].DataSource as Line;
             UpdateContractLineRequest request = new UpdateContractLineRequest()
             { Line = line, FieldMask = new FieldMask { Paths = { } } };
@@ -492,6 +508,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 //  Обновляем строку контракта на сервере   
                 ContractLineResponse response = await GrpcRetry.CallAsync(() =>
                         GrpcClients.GrpcClients.Contract.UpdateContractLineAsync(request).ResponseAsync);
+
                 if (response.Result.Status == Status.Ok)
                 {
                     int updatedRow = e.Row - smartGridLines1.Rows.Fixed;
@@ -509,6 +526,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
                     // Уведомляем всех подписчиков об изменении контракта
                     ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);
+                    contractEdited = true;
+
                 }
 
             }
@@ -605,6 +624,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 }
 
                 lines.Add(response.Line);
+                contractEdited = true;
             }
             catch (Exception ex)
             {
@@ -683,6 +703,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
             UndeletedIdsContractLineResponse response = await GrpcRetry.Call(() =>
                 GrpcClients.GrpcClients.Contract.DeleteIdsContractLineAsync(requestDelete).ResponseAsync);
+            contractEdited = true;
 
             /*   Необходимо массовое редактирование поля Operation
             
@@ -744,11 +765,13 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         private void toolStripButtonState_Click(object sender, EventArgs e)
         {
-            StateForm form = new StateForm() { Contract = contract };
-            if (form.ShowDialog() == DialogResult.OK)
+            using (StateForm form = new StateForm() { Contract = contract })
             {
-                contract.State = form.Contract.State;
-                // должен быть обновлен только статус документа. Переписать UpdateContract
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    contract.State = form.Contract.State;
+                    // должен быть обновлен только статус документа. Переписать UpdateContract
+                }
             }
         }
     }

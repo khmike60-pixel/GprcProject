@@ -30,14 +30,14 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RatesForm));
+            C1.Win.FlexGrid.FooterDescription footerDescription3 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition3 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
             panel2 = new Panel();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanelRates = new C1.Win.SplitContainer.C1SplitterPanel();
-            smartGridRates1 = new SmartLib.SmartGrid(components);
+            gridRates = new SmartLib.SmartGrid(components);
             toolStripRates = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -46,7 +46,7 @@
             toolStripButtonRefreshRates = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
             c1SplitterPanelCurrencies = new C1.Win.SplitContainer.C1SplitterPanel();
-            smartGrid1 = new SmartLib.SmartGrid(components);
+            gridCurrencies = new SmartLib.SmartGrid(components);
             toolStripCurrencies = new ToolStrip();
             toolStripButton1 = new ToolStripButton();
             toolStripButton2 = new ToolStripButton();
@@ -64,10 +64,10 @@
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanelRates.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridRates1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridRates).BeginInit();
             toolStripRates.SuspendLayout();
             c1SplitterPanelCurrencies.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridCurrencies).BeginInit();
             toolStripCurrencies.SuspendLayout();
             panelFilter.SuspendLayout();
             SuspendLayout();
@@ -96,7 +96,7 @@
             // c1SplitterPanelRates
             // 
             c1SplitterPanelRates.Collapsible = true;
-            c1SplitterPanelRates.Controls.Add(smartGridRates1);
+            c1SplitterPanelRates.Controls.Add(gridRates);
             c1SplitterPanelRates.Controls.Add(toolStripRates);
             c1SplitterPanelRates.Dock = C1.Win.SplitContainer.PanelDockStyle.Right;
             c1SplitterPanelRates.Location = new Point(445, 0);
@@ -106,34 +106,34 @@
             c1SplitterPanelRates.TabIndex = 0;
             c1SplitterPanelRates.Width = 276;
             // 
-            // smartGridRates1
+            // gridRates
             // 
-            smartGridRates1.AllowEditing = false;
-            smartGridRates1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridRates1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridRates1.AllowNodeMove = false;
-            smartGridRates1.AutoGenerateColumns = false;
-            smartGridRates1.ColumnInfo = resources.GetString("smartGridRates1.ColumnInfo");
-            smartGridRates1.Dock = DockStyle.Fill;
-            smartGridRates1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 2;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGridRates1.Footers.Descriptions.Add(footerDescription1);
-            smartGridRates1.Footers.Fixed = true;
-            smartGridRates1.IdName = null;
-            smartGridRates1.Location = new Point(0, 31);
-            smartGridRates1.Name = "smartGridRates1";
-            smartGridRates1.Rows.Count = 51;
-            smartGridRates1.SelectedRows = (List<int>)resources.GetObject("smartGridRates1.SelectedRows");
-            smartGridRates1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridRates1.Size = new Size(269, 493);
-            smartGridRates1.SortingType = SmartLib.SortingType.Descending;
-            smartGridRates1.StyleInfo = resources.GetString("smartGridRates1.StyleInfo");
-            smartGridRates1.TabIndex = 2;
-            smartGridRates1.AfterFreezeColumn += smartGridRates_AfterFreezeColumn;
-            smartGridRates1.GetUnboundValue += smartGridRates_GetUnboundValue;
+            gridRates.AllowEditing = false;
+            gridRates.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridRates.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridRates.AllowNodeMove = false;
+            gridRates.AutoGenerateColumns = false;
+            gridRates.ColumnInfo = resources.GetString("gridRates.ColumnInfo");
+            gridRates.Dock = DockStyle.Fill;
+            gridRates.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition3.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition3.Caption = "Всего: ";
+            aggregateDefinition3.Column = 2;
+            footerDescription3.Aggregates.Add(aggregateDefinition3);
+            gridRates.Footers.Descriptions.Add(footerDescription3);
+            gridRates.Footers.Fixed = true;
+            gridRates.IdName = null;
+            gridRates.Location = new Point(0, 31);
+            gridRates.Name = "gridRates";
+            gridRates.Rows.Count = 51;
+            gridRates.SelectedRows = (List<int>)resources.GetObject("gridRates.SelectedRows");
+            gridRates.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gridRates.Size = new Size(269, 493);
+            gridRates.SortingType = SmartLib.SortingType.Descending;
+            gridRates.StyleInfo = resources.GetString("gridRates.StyleInfo");
+            gridRates.TabIndex = 2;
+            gridRates.AfterFreezeColumn += gridRates_AfterFreezeColumn;
+            gridRates.GetUnboundValue += gridRates_GetUnboundValue;
             // 
             // toolStripRates
             // 
@@ -198,7 +198,7 @@
             // 
             // c1SplitterPanelCurrencies
             // 
-            c1SplitterPanelCurrencies.Controls.Add(smartGrid1);
+            c1SplitterPanelCurrencies.Controls.Add(gridCurrencies);
             c1SplitterPanelCurrencies.Controls.Add(toolStripCurrencies);
             c1SplitterPanelCurrencies.Dock = C1.Win.SplitContainer.PanelDockStyle.Left;
             c1SplitterPanelCurrencies.Location = new Point(0, 0);
@@ -207,35 +207,35 @@
             c1SplitterPanelCurrencies.TabIndex = 1;
             c1SplitterPanelCurrencies.Width = 434;
             // 
-            // smartGrid1
+            // gridCurrencies
             // 
-            smartGrid1.AllowEditing = false;
-            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowNodeMove = false;
-            smartGrid1.AutoGenerateColumns = false;
-            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
-            smartGrid1.Dock = DockStyle.Fill;
-            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition2.Caption = "Всего: ";
-            aggregateDefinition2.Column = 3;
-            footerDescription2.Aggregates.Add(aggregateDefinition2);
-            smartGrid1.Footers.Descriptions.Add(footerDescription2);
-            smartGrid1.Footers.Fixed = true;
-            smartGrid1.IdName = null;
-            smartGrid1.Location = new Point(0, 31);
-            smartGrid1.Name = "smartGrid1";
-            smartGrid1.Rows.Count = 51;
-            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
-            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid1.Size = new Size(434, 493);
-            smartGrid1.SortingType = SmartLib.SortingType.Descending;
-            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
-            smartGrid1.TabIndex = 4;
-            smartGrid1.AfterFreezeColumn += smartGrid_AfterFreezeColumn;
-            smartGrid1.AfterSelChange += smartGrid_AfterSelChange;
-            smartGrid1.GetUnboundValue += smartGrid_GetUnboundValue;
+            gridCurrencies.AllowEditing = false;
+            gridCurrencies.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridCurrencies.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridCurrencies.AllowNodeMove = false;
+            gridCurrencies.AutoGenerateColumns = false;
+            gridCurrencies.ColumnInfo = resources.GetString("gridCurrencies.ColumnInfo");
+            gridCurrencies.Dock = DockStyle.Fill;
+            gridCurrencies.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 3;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            gridCurrencies.Footers.Descriptions.Add(footerDescription1);
+            gridCurrencies.Footers.Fixed = true;
+            gridCurrencies.IdName = null;
+            gridCurrencies.Location = new Point(0, 31);
+            gridCurrencies.Name = "gridCurrencies";
+            gridCurrencies.Rows.Count = 51;
+            gridCurrencies.SelectedRows = (List<int>)resources.GetObject("gridCurrencies.SelectedRows");
+            gridCurrencies.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gridCurrencies.Size = new Size(434, 493);
+            gridCurrencies.SortingType = SmartLib.SortingType.Descending;
+            gridCurrencies.StyleInfo = resources.GetString("gridCurrencies.StyleInfo");
+            gridCurrencies.TabIndex = 4;
+            gridCurrencies.AfterFreezeColumn += gridCurrencies_AfterFreezeColumn;
+            gridCurrencies.AfterSelChange += gridCurrencies_AfterSelChange;
+            gridCurrencies.GetUnboundValue += gridCurrencies_GetUnboundValue;
             // 
             // toolStripCurrencies
             // 
@@ -374,12 +374,12 @@
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanelRates.ResumeLayout(false);
             c1SplitterPanelRates.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridRates1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridRates).EndInit();
             toolStripRates.ResumeLayout(false);
             toolStripRates.PerformLayout();
             c1SplitterPanelCurrencies.ResumeLayout(false);
             c1SplitterPanelCurrencies.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridCurrencies).EndInit();
             toolStripCurrencies.ResumeLayout(false);
             toolStripCurrencies.PerformLayout();
             panelFilter.ResumeLayout(false);
@@ -413,7 +413,7 @@
         private ToolStripButton toolStripButton4;
         private ToolStripButton toolStripButtonCurrencies;
         private ToolStripSeparator toolStripSeparator2;
-        private SmartLib.SmartGrid smartGridRates1;
-        private SmartLib.SmartGrid smartGrid1;
+        private SmartLib.SmartGrid gridRates;
+        private SmartLib.SmartGrid gridCurrencies;
     }
 }

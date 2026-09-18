@@ -2,8 +2,8 @@
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Currency;
-using GrpcWinForms.Forms;
 using GrpcWinForms.GrpcUtils;
+using GrpcWinForms.Objects.Currencies.Forms;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -106,13 +106,15 @@ namespace GrpcWinForms.Controls.CurrencyBox
 
         private void CurrencyBox_ModalButtonClick(object sender, EventArgs e)
         {
-            CurrenciesForm form = new CurrenciesForm();
-            form.DialogMode = true;
-            if (DialogResult.OK == form.ShowDialog())
+            using (CurrenciesForm form = new CurrenciesForm())
             {
-                objectSelected = form.SelectedItem;
-                this.Text = CurrencySelected.Abbrev;
+                form.DialogMode = true;
+                if (DialogResult.OK == form.ShowDialog())
+                {
+                    objectSelected = form.SelectedItem;
+                    this.Text = CurrencySelected.Abbrev;
 
+                }
             }
         }
 

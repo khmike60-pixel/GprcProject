@@ -51,7 +51,7 @@ namespace GrpcWinForms.Forms
         {
             foreach (Form child in MdiChildren)
             {
-                if (child is CurrenciesForm) { child.Activate(); return; }
+                if (child is UnitsForm) { child.Activate(); return; }
             }
             var f = new UnitsForm { MdiParent = this };
             f.Show();

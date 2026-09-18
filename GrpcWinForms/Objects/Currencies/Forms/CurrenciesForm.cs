@@ -1,4 +1,3 @@
-
 using C1.Win.FlexGrid;
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Application;
@@ -7,211 +6,113 @@ using GrpcCommonNet.Library.Common;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Applications.Forms;
 using GrpcWinForms.Objects.Currencies.Forms;
+using GrpcWinForms.Objects.Currencies.Views;
+using GrpcWinForms.Objects.Currencies.Presenters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 using GrpcWinForms.GrpcUtils;
 
-namespace GrpcWinForms.Forms
+namespace GrpcWinForms.Objects.Currencies.Forms
 {
-    public partial class CurrenciesForm : Form
+    public partial class CurrenciesForm : Form, ICurrenciesView
     {
+        #region Свойства
+
         private BindingList<Currency> currencies;
         private Currency selectedItem = null;
+        private readonly CurrenciesPresenter _presenter;
 
         public Currency SelectedItem { get { return selectedItem; } }
         public bool DialogMode { get; set; }
+
+        // ICurrenciesView implementation
+        public bool IncludeInvisible => checkIncludeInvisible.Checked;
+        public string CurrencyAbbrev => textAbbrev.Text;
+        BindingList<Currency> ICurrenciesView.Currencies { get => currencies; set { currencies = value; gridCurrencies.DataSource = currencies; } }
+        public int RowSel => gridCurrencies.RowSel;
+        public IList<int> SelectedRows
+        {
+            get
+            {
+                var list = new List<int>();
+                foreach (var i in gridCurrencies.SelectedRows) list.Add(Convert.ToInt32(i));
+                return list;
+            }
+        }
+
+        #endregion
 
 
         public CurrenciesForm()
         {
             InitializeComponent();
+            _presenter = new CurrenciesPresenter(this);
         }
 
         private async void CurrenciesForm_Load(object sender, EventArgs e)
         {
-            RefreshCurrency(sender, e);
-            
+            await _presenter.RefreshAsync();
         }
 
         private async void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
-            RefreshCurrency(sender, e);
-        }
-
-        private async void RefreshCurrency(object sender, EventArgs e)
-        {
-            ListCurrencyRequest request = new ListCurrencyRequest()
-            {
-                IncludeInvisible = checkIncludeInvisible.Checked,
-                CurrencyAbbrev = string.IsNullOrWhiteSpace(textAbbrev.Text) ? String.Empty : textAbbrev.Text,
-            };
-            request.FieldMask = new FieldMask();
-            request.FieldMask.Paths.Add("name");
-            request.FieldMask.Paths.Add("code");
-            request.FieldMask.Paths.Add("id");
-            request.FieldMask.Paths.Add("abbrev");
-            request.FieldMask.Paths.Add("order_number");
-            request.FieldMask.Paths.Add("is_visible");
-
-            ListCurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                GrpcClients.GrpcClients.Currency.GetListCurrencyAsync(request).ResponseAsync
-            );
-            currencies = new BindingList<Currency>(response.Currencies);
-            smartGrid1.DataSource = currencies;
-
+            await _presenter.RefreshAsync();
         }
 
         private async void toolStripButtonNew_Click(object sender, EventArgs e)
         {
-            using (var form = new CurrencyForm())
-            {
-                form.IsNew = true;
-                form.Currency = new Currency();
-
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    CreateCurrencyRequest request = new CreateCurrencyRequest
-                    {
-                        Currency = form.Currency
-                    };
-
-                    CurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Currency.CreateCurrencyAsync(request).ResponseAsync
-                    );
-                    if (response.Result.Status != Status.Ok || response.Currency == null)
-                    {
-                        MessageBox.Show("Добавить данные не удалось.");
-                        return;
-                    }
-                    else
-                    {
-                        int rowsel = smartGrid1.RowSel;
-                        currencies.Insert(smartGrid1.RowSel - smartGrid1.Rows.Fixed, response.Currency);
-                        smartGrid1.Row = rowsel;
-                    }
-
-                }
-            }
+            await _presenter.NewAsync();
         }
 
         private async void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
-            using (var form = new CurrencyForm())
-            {
-                form.IsNew = false;
-                form.Currency = currencies[smartGrid1.RowSel - smartGrid1.Rows.Fixed];
-
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    UpdateCurrencyRequest request = new UpdateCurrencyRequest
-                    {
-                        Currency = form.Currency
-                    };
-
-                    CurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Currency.UpdateCurrencyAsync(request).ResponseAsync
-                    );
-                    if (response.Result.Status != Status.Ok || response.Currency == null)
-                    {
-                        MessageBox.Show("Изменить данные не удалось.");
-                        return;
-                    }
-                    else
-                    {
-                        int rowsel = smartGrid1.RowSel;
-                        currencies[rowsel - smartGrid1.Rows.Fixed] = response.Currency;
-                    }
-
-                }
-            }
-
+            await _presenter.EditAsync();
         }
 
         private async void toolStripButtonDelete_Click(object sender, EventArgs e)
         {
-            List<int> ids = new List<int>();
-            List<int> oldList = new List<int>();
-            List<int> newMarked = new List<int>();
-            if (smartGrid1.SelectedRows.Count == 0)
-            { // Удаляется одна запись
-                DialogResult result = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
-                if (result == DialogResult.OK)
-                {
-                    DeleteCurrencyRequest request = new DeleteCurrencyRequest()
-                    {
-                        Id = (int)smartGrid1.Rows[smartGrid1.RowSel]["Id"]
-                    };
-                    DeleteCurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Currency.DeleteCurrencyAsync(request).ResponseAsync
-                    );
-                    int i = smartGrid1.RowSel - smartGrid1.Rows.Fixed;
-                    if (response.Result.Status == Status.Ok)
-                    {
-                        smartGrid1.BeginUpdate();
-                        currencies.RemoveAt(i);
-                        smartGrid1.EndUpdate();
-                    }
-                    else
-                        MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
-                }
-            }
-            else
-            { // Был режим выделения
-
-                DialogResult result = MessageBox.Show($"Вы отметили {smartGrid1.SelectedRows.Count} строк." + Environment.NewLine + "Удалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
-
-                if (result == DialogResult.OK)
-                {
-
-                    oldList.AddRange(smartGrid1.SelectedRows);
-                    newMarked.AddRange(smartGrid1.SelectedRows);
-
-                    foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid1.Rows[index]["Id"]));
-
-                    DeleteIdsCurrencyRequest request = new DeleteIdsCurrencyRequest();
-                    request.Ids.AddRange(ids);
-
-                    UndeletedIdsCurrencyResponse response = new UndeletedIdsCurrencyResponse();
-                    response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Currency.DeleteIdsCurrencyAsync(request).ResponseAsync
-                    );
-
-                    List<int> undelIds = new List<int>();
-                    foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
-
-                    smartGrid1.BeginUpdate();
-                    List<int> testList = Utils.UndeleteList<Currency>((C1FlexGrid)smartGrid1, currencies, undelIds, smartGrid1.SelectedRows, "Id");
-                    smartGrid1.SelectedRows = testList;
-                    smartGrid1.EndUpdate();
-
-                    if (response.Result.Status != Status.Ok)
-                        MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
-                    else if (response.UndeletedIds.Count > 0)
-                        MessageBox.Show("Данные, которые не удалось удалить остались выделенными.");
-                }
-            }
-            return;
+            await _presenter.DeleteAsync();
         }
 
-        private void smartGrid_AfterResizeColumn(object sender, RowColEventArgs e)
+        private void gridCurrencies_AfterResizeColumn(object sender, RowColEventArgs e)
         {
-            smartGrid1.Cols["Name"].StarWidth = "*";
+            gridCurrencies.Cols["Name"].StarWidth = "*";
         }
 
-        private void smartGrid1_DoubleClick(object sender, EventArgs e)
+        private void gridCurrencies_DoubleClick(object sender, EventArgs e)
         {
-            int row = smartGrid1.Row;
-            if (row < smartGrid1.Rows.Fixed) return;
-            if (!DialogMode) return;
+            _presenter.OnItemDoubleClicked();
+        }
 
-            selectedItem = smartGrid1.Rows[smartGrid1.Row].DataSource as Currency;
+        // ICurrenciesView helper implementations
+        public DialogResult ShowCurrencyDialog(Form form)
+        {
+            return form.ShowDialog(this);
+        }
+
+        public void ShowMessage(string text, string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+        {
+            MessageBox.Show(text, caption, buttons);
+        }
+
+        public void CloseWithResult(Currency selected)
+        {
+            selectedItem = selected;
             DialogResult = DialogResult.OK;
             Close();
         }
-    }
 
+        public void BeginUpdate()
+        {
+            gridCurrencies.BeginUpdate();
+        }
+
+        public void EndUpdate()
+        {
+            gridCurrencies.EndUpdate();
+        }
+    }
 }

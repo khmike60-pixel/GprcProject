@@ -164,7 +164,7 @@
             chkSentToClient.AutoSize = true;
             chkSentToClient.Location = new Point(12, 85);
             chkSentToClient.Name = "chkSentToClient";
-            chkSentToClient.Size = new Size(122, 19);
+            chkSentToClient.Size = new Size(75, 19);
             chkSentToClient.TabIndex = 19;
             chkSentToClient.Text = "Передан";
             chkSentToClient.CheckedChanged += chkBox_CheckedChanged;
@@ -187,6 +187,7 @@
             Controls.Add(label1);
             Controls.Add(lDocName);
             Name = "StateForm";
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Статус документа";
             Load += StateForm_Load;
             ((System.ComponentModel.ISupportInitialize)cdtDate).EndInit();

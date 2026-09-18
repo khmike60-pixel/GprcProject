@@ -1,94 +1,88 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using GrpcCommonNet.Library.Common;
-using GrpcCommonNet.Library.Currency;
-using GrpcWinForms.GrpcUtils;
+﻿using GrpcCommonNet.Library.Common;
 using GrpcWinForms.Models;
+using GrpcWinForms.Objects.Currencies.Presenters;
+using GrpcWinForms.Objects.Currencies.Views;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GrpcWinForms.Objects.Currencies.Forms
 {
-    public partial class RatesForm : Form
+    public partial class RatesForm : Form, IRatesView
     {
         private BindingList<CurrencyRate> currencyRates;
         private BindingList<Rate> rates;
         private Loader loaderRates = new Loader();
         private int currentRow = -1;
+        private readonly RatesPresenter _presenter;
 
         public RatesForm()
         {
             InitializeComponent();
 
-            loaderRates.Parent = smartGridRates1;
+            loaderRates.Parent = gridRates;
             loaderRates.Location = new Point(0, 0);
-            loaderRates.Size = smartGridRates1.Size;
+            loaderRates.Size = gridRates.Size;
 
             dateTimePickerDateRates.Value = DateTime.Now;
+
+            _presenter = new RatesPresenter(this);
         }
 
-        private async Task<BindingList<CurrencyRate>> RefreshCurrencyRates(object sender, EventArgs e)
+        // IRatesView implementation
+        public bool IncludeInvisible => checkIncludeInvisible.Checked;
+        public string Abbrev => string.IsNullOrWhiteSpace(textAbbrev.Text) ? string.Empty : textAbbrev.Text;
+        public DateTime DateRates => dateTimePickerDateRates.Value;
+
+        public BindingList<CurrencyRate> CurrencyRates
         {
-            GetListCurrencyRateDateRequest request = new GetListCurrencyRateDateRequest()
+            get => currencyRates;
+            set
             {
-                IncludeInvisible = checkIncludeInvisible.Checked,
-                Abbrev = string.IsNullOrWhiteSpace(textAbbrev.Text) ? String.Empty : textAbbrev.Text,
-                Date = dateTimePickerDateRates.Value.ToLocalTime().ToUniversalTime().ToTimestamp()
-            };
-
-            GetListCurrencyRateDateResponse response = await GrpcRetry.CallAsync(() =>
-                GrpcClients.GrpcClients.Currency.GetListCurrencyRateDateAsync(request).ResponseAsync
-            );
-
-            currencyRates = new BindingList<CurrencyRate>(response.CurrencyRates);
-            smartGrid1.DataSource = currencyRates;
-            return currencyRates;
+                currencyRates = value;
+                gridCurrencies.DataSource = currencyRates;
+            }
         }
 
-        private async Task<BindingList<Rate>> RefreshRates(object sender, EventArgs e)
+        public BindingList<Rate> Rates
         {
-            loaderRates.ShowLoader();
-            rates = new BindingList<Rate>();
-            CurrencyRate currencyRate = (CurrencyRate)(smartGrid1.Rows[smartGrid1.Row].DataSource);
-            if (currencyRate == null) return rates;
-            ListCurrencyRateRequest request = new ListCurrencyRateRequest()
+            get => rates;
+            set
             {
-                CurrencyId = currencyRate.Id,
-                StartDate = Timestamp.FromDateTime(DateTime.UnixEpoch),
-                EndDate = dateTimePickerDateRates.Value.ToLocalTime().ToUniversalTime().ToTimestamp()
-            };
-
-            ListCurrencyRateResponse response = await GrpcRetry.CallAsync(() =>
-                GrpcClients.GrpcClients.Currency.GetListCurrencyRateAsync(request).ResponseAsync
-            );
-            rates = new BindingList<Rate>(response.Rates);
-            smartGridRates1.DataSource = rates;
-            loaderRates.HideLoader();
-            return rates;
+                rates = value;
+                gridRates.DataSource = rates;
+            }
         }
+
+        public int RowSel => gridCurrencies.RowSel;
+
+        public CurrencyRate GetSelectedCurrencyRate()
+        {
+            if (gridCurrencies.Row < gridCurrencies.Rows.Fixed) return null;
+            return gridCurrencies.Rows[gridCurrencies.Row].DataSource as CurrencyRate;
+        }
+
+        public void ShowLoader() => loaderRates.ShowLoader();
+        public void HideLoader() => loaderRates.HideLoader();
+
+        public void ShowMessage(string text, string caption = "") => MessageBox.Show(this, text, caption);
 
         private async void RatesForm_Load(object sender, EventArgs e)
         {
-
-            await RefreshCurrencyRates(sender, e);
+            await _presenter.RefreshCurrencyRatesAsync();
         }
 
         private async void toolStripButtonCurrencies_Click(object sender, EventArgs e)
         {
-            await RefreshCurrencyRates(sender, e);
+            await _presenter.RefreshCurrencyRatesAsync();
         }
 
-
-        private void smartGrid_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
+        private void gridCurrencies_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            CurrencyRate currencyRate = (CurrencyRate)(smartGrid1.Rows[e.Row].DataSource);
-            switch (smartGrid1.Cols[e.Col].Name)
+            CurrencyRate currencyRate = (CurrencyRate)(gridCurrencies.Rows[e.Row].DataSource);
+            switch (gridCurrencies.Cols[e.Col].Name)
             {
                 case "DecimalRate":
                     if (currencyRate.Rate == null) e.Value = null;
@@ -99,29 +93,26 @@ namespace GrpcWinForms.Objects.Currencies.Forms
                     if (currencyRate.Rate == null) e.Value = null;
                     else
                         e.Value = currencyRate.Date.ToDateTime().ToLocalTime();
-                    //                    e.Value = date;
                     break;
             }
-
         }
 
-        private async void smartGrid_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
+        private async void gridCurrencies_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
         {
-            if (smartGrid1.RowSel == currentRow) return;
-            else currentRow = smartGrid1.RowSel;
-            if (smartGrid1.RowSel <= smartGrid1.Rows.Fixed - 1) return;
-            await RefreshRates(sender, e);
-
+            if (gridCurrencies.RowSel == currentRow) return;
+            currentRow = gridCurrencies.RowSel;
+            if (gridCurrencies.RowSel <= gridCurrencies.Rows.Fixed - 1) return;
+            await _presenter.RefreshRatesAsync();
         }
 
-        private void smartGridRates_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
+        private void gridRates_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-            Rate rate = (Rate)(smartGridRates1.Rows[e.Row].DataSource);
-            switch (smartGridRates1.Cols[e.Col].Name)
+            Rate rate = (Rate)(gridRates.Rows[e.Row].DataSource);
+            switch (gridRates.Cols[e.Col].Name)
             {
                 case "Rate":
                     if (rate.Rate_ == null) e.Value = null;
-                    e.Value = (decimal)(rate.Rate_.Units / (Math.Pow(10, rate.Rate_.Scale)));
+                    else e.Value = (decimal)(rate.Rate_.Units / (Math.Pow(10, rate.Rate_.Scale)));
                     break;
                 case "DateRate":
                     DateTime date = rate.Date.ToDateTime();
@@ -130,45 +121,15 @@ namespace GrpcWinForms.Objects.Currencies.Forms
             }
         }
 
-        private void smartGrid_AfterFreezeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
+        private void gridCurrencies_AfterFreezeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
-            smartGrid1.Cols["Name"].StarWidth = "*";
+            gridCurrencies.Cols["Name"].StarWidth = "*";
         }
 
-        private void smartGridRates_AfterFreezeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
+        private void gridRates_AfterFreezeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
-            smartGridRates1.Cols["DateRate"].StarWidth = "*";
-            smartGridRates1.Cols["Rate"].StarWidth = "*";
+            gridRates.Cols["DateRate"].StarWidth = "*";
+            gridRates.Cols["Rate"].StarWidth = "*";
         }
-
-        //#region LoaderControl
-
-        //private PictureBox loaderControl;
-
-        //private void InitLoader()
-        //{
-        //    // Инициализация контрола программно
-        //    loaderControl = new PictureBox
-        //    {
-        //        Image = Properties.Resources.icons8_loader, // Ваш GIF из ресурсов
-        //        SizeMode = PictureBoxSizeMode.CenterImage,
-        //        BackColor = Color.Transparent, // Или Color.White, если нужно перекрыть фон
-        //        Visible = false,
-        //        Dock = DockStyle.Fill // Растягиваем на всю форму или поверх грида
-        //    };
-
-        //    // Добавляем поверх всех элементов
-        //    this.Controls.Add(loaderControl);
-        //    loaderControl.BringToFront();
-        //}
-
-        //// Методы управления
-        //private void ShowLoader() => loaderControl.Visible = true;
-        //private void HideLoader() => loaderControl.Visible = false;
-
-
-        //#endregion
     }
-
-
 }

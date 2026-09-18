@@ -50,6 +50,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Objects\Currencies\Forms\CurrenciesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
