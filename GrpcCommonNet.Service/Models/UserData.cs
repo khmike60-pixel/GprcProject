@@ -7,7 +7,9 @@ namespace GrpcCommonNet.Service.Models
     {
         public string User { get; set; } = "";
         public string Application { get; set; } = "";   
-        public string Token { get; set; } = ""; 
+        public string Token { get; set; } = "";
+        public string UserCode { get; set; } = "";
+        public string UserId { get; set; } = "";
 
         public UserData GetUserData(ServerCallContext context)
         {
@@ -15,7 +17,9 @@ namespace GrpcCommonNet.Service.Models
             UserData userData = new UserData()
             {
                 User = user.FindFirst(ClaimTypes.Name)?.Value,
-                Application = user.FindFirst(ClaimTypes.UserData)?.Value
+                Application = user.FindFirst(ClaimTypes.UserData)?.Value,
+                UserCode = user.FindFirst(ClaimTypes.Surname)?.Value,
+                UserId = user.FindFirst(ClaimTypes.NameIdentifier).Value
             };
             return userData;
         }

@@ -47,7 +47,9 @@ public class AuthServiceImpl : AuthServices.AuthServicesBase
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, request.Username),
-                new Claim(ClaimTypes.UserData, request.Application)
+                new Claim(ClaimTypes.UserData, request.Application),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Surname, user.UserSymbol)
             };
 
             var token = new JwtSecurityToken(

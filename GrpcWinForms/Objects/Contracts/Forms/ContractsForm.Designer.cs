@@ -321,7 +321,7 @@
             smartGridContracts1.IdName = null;
             smartGridContracts1.Location = new Point(0, 31);
             smartGridContracts1.Name = "smartGridContracts1";
-            smartGridContracts1.Rows.Count = 51;
+            smartGridContracts1.Rows.Count = 5;
             smartGridContracts1.Rows.Fixed = 2;
             smartGridContracts1.SelectedRows = (List<int>)resources.GetObject("smartGridContracts1.SelectedRows");
             smartGridContracts1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
@@ -329,8 +329,7 @@
             smartGridContracts1.SortingType = SmartLib.SortingType.Descending;
             smartGridContracts1.StyleInfo = resources.GetString("smartGridContracts1.StyleInfo");
             smartGridContracts1.TabIndex = 6;
-            smartGridContracts1.GridChanged += smartGridContracts1_GridChanged;
-            smartGridContracts1.AfterSelChange += smartGridContracts_AfterSelChange;
+            smartGridContracts1.RowColChange += smartGridContracts1_RowColChange;
             smartGridContracts1.GetUnboundValue += smartGridContracts_GetUnboundValue;
             smartGridContracts1.DoubleClick += smartGridContracts_DoubleClick;
             // 

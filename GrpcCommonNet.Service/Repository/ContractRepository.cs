@@ -1375,6 +1375,12 @@ public class ContractRepository
 
         contract.DocName = rdr["contract_DocName"] == DBNull.Value ? "" : rdr["contract_DocName"].ToString();
 
+        contract.Metadata = new Metadata();
+        contract.Metadata.CreateAt = rdr["create_at"] == DBNull.Value ? Timestamp.FromDateTime(DateTime.MinValue) : Timestamp.FromDateTime(Convert.ToDateTime(rdr["create_at"]));
+        contract.Metadata.CreateBy = rdr["create_by"] == DBNull.Value ? "" : rdr["create_by"].ToString();
+        contract.Metadata.CreateUserid = rdr["create_userid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["create_userid"]);
+
+
         return contract;
     }
 

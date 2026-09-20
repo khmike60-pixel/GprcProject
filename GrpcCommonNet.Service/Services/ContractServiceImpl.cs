@@ -1,8 +1,10 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Service.Models;
 using Microsoft.AspNetCore.Authorization;
+using Metadata = GrpcCommonNet.Library.Contract.Metadata;
 using Status = GrpcCommonNet.Library.Common.Status;
 
 
@@ -145,6 +147,12 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
 
         try
         {
+            request.Contract.Metadata = new Metadata()
+            { 
+                 CreateAt = DateTime.Now.ToUniversalTime().ToTimestamp(),
+                 CreateBy = userData.UserCode,
+                 CreateUserid = userData.UserId == String.Empty ? 0 : Convert.ToInt32(userData.UserId)
+            };
             Contract _contract = await _repo.CreateContractAsync(request.Contract);
             return new ContractResponse() { Contract = _contract, Result = new Result { Status = Status.Ok } };
 

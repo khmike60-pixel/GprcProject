@@ -30,13 +30,13 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DocumentTypesForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
             panel1 = new Panel();
             textBoxContractTypeName = new TextBox();
             labelName = new Label();
             panel2 = new Panel();
-            smartGridDocumentTypes1 = new SmartLib.SmartGrid(components);
+            gridDocumentTypes = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -48,7 +48,7 @@
             toolStripButtonPath = new ToolStripButton();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridDocumentTypes1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridDocumentTypes).BeginInit();
             toolStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -80,7 +80,7 @@
             // 
             // panel2
             // 
-            panel2.Controls.Add(smartGridDocumentTypes1);
+            panel2.Controls.Add(gridDocumentTypes);
             panel2.Controls.Add(toolStrip1);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 34);
@@ -88,36 +88,36 @@
             panel2.Size = new Size(800, 416);
             panel2.TabIndex = 2;
             // 
-            // smartGridDocumentTypes1
+            // gridDocumentTypes
             // 
-            smartGridDocumentTypes1.AllowEditing = false;
-            smartGridDocumentTypes1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridDocumentTypes1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridDocumentTypes1.AllowNodeMove = false;
-            smartGridDocumentTypes1.AutoGenerateColumns = false;
-            smartGridDocumentTypes1.ColumnInfo = resources.GetString("smartGridDocumentTypes1.ColumnInfo");
-            smartGridDocumentTypes1.Dock = DockStyle.Fill;
-            smartGridDocumentTypes1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 1;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGridDocumentTypes1.Footers.Descriptions.Add(footerDescription1);
-            smartGridDocumentTypes1.Footers.Fixed = true;
-            smartGridDocumentTypes1.IdName = null;
-            smartGridDocumentTypes1.Location = new Point(0, 31);
-            smartGridDocumentTypes1.Name = "smartGridDocumentTypes1";
-            smartGridDocumentTypes1.Rows.Count = 51;
-            smartGridDocumentTypes1.SelectedRows = (List<int>)resources.GetObject("smartGridDocumentTypes1.SelectedRows");
-            smartGridDocumentTypes1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridDocumentTypes1.Size = new Size(800, 385);
-            smartGridDocumentTypes1.SortingType = SmartLib.SortingType.Descending;
-            smartGridDocumentTypes1.StyleInfo = resources.GetString("smartGridDocumentTypes1.StyleInfo");
-            smartGridDocumentTypes1.TabIndex = 3;
-            smartGridDocumentTypes1.Tree.Column = 1;
-            smartGridDocumentTypes1.BeforeNodeMove += smartGridDocumentTypes_BeforeNodeMove;
-            smartGridDocumentTypes1.AfterNodeMove += smartGridDocumentTypes_AfterNodeMove;
-            smartGridDocumentTypes1.DoubleClick += smartGridDocumentTypes1_DoubleClick;
+            gridDocumentTypes.AllowEditing = false;
+            gridDocumentTypes.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridDocumentTypes.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridDocumentTypes.AllowNodeMove = false;
+            gridDocumentTypes.AutoGenerateColumns = false;
+            gridDocumentTypes.ColumnInfo = resources.GetString("gridDocumentTypes.ColumnInfo");
+            gridDocumentTypes.Dock = DockStyle.Fill;
+            gridDocumentTypes.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition2.Caption = "Всего: ";
+            aggregateDefinition2.Column = 1;
+            footerDescription2.Aggregates.Add(aggregateDefinition2);
+            gridDocumentTypes.Footers.Descriptions.Add(footerDescription2);
+            gridDocumentTypes.Footers.Fixed = true;
+            gridDocumentTypes.IdName = null;
+            gridDocumentTypes.Location = new Point(0, 31);
+            gridDocumentTypes.Name = "gridDocumentTypes";
+            gridDocumentTypes.Rows.Count = 51;
+            gridDocumentTypes.SelectedRows = (List<int>)resources.GetObject("gridDocumentTypes.SelectedRows");
+            gridDocumentTypes.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gridDocumentTypes.Size = new Size(800, 385);
+            gridDocumentTypes.SortingType = SmartLib.SortingType.Descending;
+            gridDocumentTypes.StyleInfo = resources.GetString("gridDocumentTypes.StyleInfo");
+            gridDocumentTypes.TabIndex = 3;
+            gridDocumentTypes.Tree.Column = 1;
+            gridDocumentTypes.BeforeNodeMove += smartGridDocumentTypes_BeforeNodeMove;
+            gridDocumentTypes.AfterNodeMove += smartGridDocumentTypes_AfterNodeMove;
+            gridDocumentTypes.DoubleClick += smartGridDocumentTypes1_DoubleClick;
             // 
             // toolStrip1
             // 
@@ -218,7 +218,7 @@
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridDocumentTypes1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridDocumentTypes).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             ResumeLayout(false);
@@ -239,6 +239,6 @@
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSplitButton toolStripButtonLevels;
         private ToolStripButton toolStripButtonPath;
-        private SmartLib.SmartGrid smartGridDocumentTypes1;
+        private SmartLib.SmartGrid gridDocumentTypes;
     }
 }

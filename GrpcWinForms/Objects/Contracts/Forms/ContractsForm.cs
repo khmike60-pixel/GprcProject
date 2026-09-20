@@ -41,6 +41,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         private Loader loaderContracts = new Loader();
         private Loader loaderLines = new Loader();
         private BindingList<Contract> contracts;
+        private BindingList<Line> lines;
         private int rowCurrentContract;
 
         public ContractsForm()
@@ -113,8 +114,9 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 foreach (Node node in smartGridContracts1.Nodes)
                     node.Collapsed = true;
 
-                smartGridContracts1.Row = 0;
+                //smartGridContracts1.Row = 0;
                 smartGridContracts1.Row = smartGridContracts1.Rows.Fixed;
+                RefreshLines();
 
             }
             catch (Exception ex)
@@ -130,37 +132,37 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         private async void RefreshLines()
         {
             if (DesignMode) return;
-            // Считать строки контракта
-            BindingList<Line> lines = new BindingList<Line>();
+
             try
             {
+                if (!smartGridContracts1.Rows[smartGridContracts1.Row].IsNode) return;
+                /*
                 if (smartGridContracts1.Row < smartGridContracts1.Rows.Fixed) return;
                 if (smartGridContracts1.Rows[smartGridContracts1.Row].Node == null)
                 {
-                    smartGridLines1.DataSource = new BindingList<Line>();
+                    lines = new BindingList<Line>();
+                    smartGridLines1.DataSource = lines;
                     return;
                 }
-                /*
-                                loaderLines.ShowLoader();
-                                if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
-                                {
-                                    //Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
-                                    TreeContract _obj = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
-
-                                    ContractLineRequest request = new ContractLineRequest()
-                                    {
-                                        Id = _obj.ContractId,
-                                        All = false
-                                    };
-                                    ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
-                                        GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
-                                    );
-
-                                    lines = new BindingList<Line>(response.Lines);
-                                }
-                                smartGridLines1.DataSource = lines;
-                                loaderLines.HideLoader();
                 */
+                loaderLines.ShowLoader();
+                if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
+                {
+                    TreeContract _obj = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
+
+                    ContractLineRequest request = new ContractLineRequest()
+                    {
+                        Id = _obj.ContractId,
+                        All = false
+                    };
+                    ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
+                        GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync);
+
+                    lines = new BindingList<Line>(response.Lines);
+                }
+                smartGridLines1.DataSource = lines;
+                loaderLines.HideLoader();
+
             }
             catch (Exception ex)
             {
@@ -208,26 +210,30 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         private void toolStripButtonNew_Click(object sender, EventArgs e)
         {
-            DocumentTypesForm form = new DocumentTypesForm();
-            form.DialogMode = true;
-            form.HeadCode = "ContractSale";
-
-            if (form.ShowDialog() == DialogResult.OK)
+            using (DocumentTypesForm form = new DocumentTypesForm())
             {
-                DocumentType documentType = form.DocumentType;
-                Contract _contract = new Contract()
+                form.DialogMode = true;
+                form.HeadCode = "ContractSale";
+
+                if (form.ShowDialog() == DialogResult.OK)
                 {
-                    Id = 0,
-                    Number = "",
-                    Date = DateTime.Now.ToUniversalTime().ToTimestamp(),
-                    RootId = 0,
-                    TypeContract = new DocumentType() { Id = documentType.Id, Code = documentType.Code, Form = documentType.Form, Name = documentType.Name }
-                };
+                    DocumentType documentType = form.DocumentType;
+                    Contract _contract = new Contract()
+                    {
+                        Id = 0,
+                        Number = "",
+                        Date = DateTime.Now.ToUniversalTime().ToTimestamp(),
+                        RootId = 0,
+                        TypeContract = new DocumentType() { Id = documentType.Id, Code = documentType.Code, Form = documentType.Form, Name = documentType.Name },
+                        Data = documentType.Data
 
-                ViewContract viewContract = new ViewContract(_contract);
-                viewContract.ViewMode = ViewMode.New;
+                    };
 
-                viewContract.Show();
+                    ViewContract viewContract = new ViewContract(_contract);
+                    viewContract.ViewMode = ViewMode.New;
+
+                    viewContract.Show();
+                }
             }
 
         }
@@ -252,7 +258,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             viewContract.Show();
 
         }
-        
+
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             RefreshContract();
@@ -329,6 +335,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     if (response.UndeletedIds.Count > 0)
                         MessageBox.Show("Данные, которые не удалось удалить остались выделенными.");
                     smartGridContracts1.Row = row;
+                    RefreshLines();
                 }
             }
             catch (Exception ex)
@@ -336,32 +343,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                 MessageBox.Show(String.Join(Environment.NewLine, "Ошибка при удалении: ",
                     ex.Message));
             }
-        }
-
-        private void smartGridContracts_DoubleClick(object sender, EventArgs e)
-        {
-            Point pt = smartGridContracts1.PointToClient(Control.MousePosition);
-            HitTestInfo hit = smartGridContracts1.HitTest(pt);
-
-            if (hit.Row + 1 > smartGridContracts1.Rows.Count - smartGridContracts1.Footers.Descriptions.Count) return;
-            if (hit.Row < smartGridContracts1.Rows.Fixed) return;
-
-            TreeContract rowNode = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
-
-            Contract _contract = new Contract()
-            {
-                Id = rowNode.ContractId,
-                Number = rowNode.Number,
-                Date = rowNode.Date.ToUniversalTime().ToTimestamp(),
-                RootId = rowNode.Contract_RootId ?? 0,
-                TypeContract = new DocumentType() { Id = rowNode.TypeId, Code = rowNode.TypeCode, Form = rowNode.TypeForm, Name = rowNode.Type }
-            };
-
-            ViewContract viewContract = new ViewContract(_contract, smartGridContracts1.Rows[smartGridContracts1.Row].Node.Children > 0);
-            viewContract.ViewMode = ViewMode.View;
-
-            viewContract.Show();
-
         }
 
         private void ToolStripMenuItemNewAgreement_Click(object sender, EventArgs e)
@@ -382,7 +363,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         /// <param name="e"></param>
         private void smartGridContracts_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
-
+            /*
             Contract contract = (Contract)smartGridContracts1.Rows[e.Row].DataSource;
             TreeContract treeContract = smartGridContracts1.Rows[e.Row].Node.Key as TreeContract;
 
@@ -439,53 +420,53 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                         break;
                     }
             }
+            */
         }
 
-        private async void smartGridContracts_AfterSelChange(object sender, C1.Win.FlexGrid.RangeEventArgs e)
+        private void smartGridContracts1_RowColChange(object sender, EventArgs e)
         {
-            if (rowCurrentContract == smartGridContracts1.Row) return;
-            else rowCurrentContract = smartGridContracts1.Row;
+            if (smartGridContracts1.Row < smartGridContracts1.Rows.Fixed || !smartGridContracts1.Rows[smartGridContracts1.Row].IsNode) return;
+            //if (rowCurrentContract == smartGridContracts1.Row) return;
+            //else rowCurrentContract = smartGridContracts1.Row;
 
-            RefreshLines();
-            // Считать строки контракта
-            BindingList<Line> lines = new BindingList<Line>();
             try
             {
-                if (smartGridContracts1.Row < smartGridContracts1.Rows.Fixed) return;
-                if (smartGridContracts1.Rows[smartGridContracts1.Row].Node == null)
-                {
-                    smartGridLines1.DataSource = new BindingList<Line>();
-                    return;
-                }
-                loaderLines.ShowLoader();
-                if (smartGridContracts1.Row >= smartGridContracts1.Rows.Fixed)
-                {
-                    //Contract contract = (Contract)smartGridContracts1.Rows[smartGridContracts1.Row].DataSource;
-                    TreeContract _obj = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
-
-                    //treeContract = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
-
-                    ContractLineRequest request = new ContractLineRequest()
-                    {
-                        Id = _obj.ContractId
-                    };
-                    ListContractLinesResponse response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Contract.GetListContractLinesAsync(request).ResponseAsync
-                    );
-
-                    lines = new BindingList<Line>(response.Lines);
-                }
-                smartGridLines1.DataSource = lines;
-                loaderLines.HideLoader();
+                RefreshLines();
             }
             catch (Exception ex)
             {
-                loaderLines.HideLoader();
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
 
             }
         }
+
+        private void smartGridContracts_DoubleClick(object sender, EventArgs e)
+        {
+            Point pt = smartGridContracts1.PointToClient(Control.MousePosition);
+            HitTestInfo hit = smartGridContracts1.HitTest(pt);
+
+            if (hit.Row + 1 > smartGridContracts1.Rows.Count - smartGridContracts1.Footers.Descriptions.Count) return;
+            if (hit.Row < smartGridContracts1.Rows.Fixed) return;
+
+            TreeContract rowNode = smartGridContracts1.Rows[smartGridContracts1.Row].Node.Key as TreeContract;
+
+            Contract _contract = new Contract()
+            {
+                Id = rowNode.ContractId,
+                Number = rowNode.Number,
+                Date = rowNode.Date.ToUniversalTime().ToTimestamp(),
+                RootId = rowNode.Contract_RootId ?? 0,
+                TypeContract = new DocumentType() { Id = rowNode.TypeId, Code = rowNode.TypeCode, Form = rowNode.TypeForm, Name = rowNode.Type }
+            };
+
+            ViewContract viewContract = new ViewContract(_contract, smartGridContracts1.Rows[smartGridContracts1.Row].Node.Children > 0);
+            viewContract.ViewMode = ViewMode.View;
+
+            viewContract.Show();
+
+        }
+
 
         #endregion
 
@@ -536,13 +517,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
         }
 
-        private void smartGridContracts1_GridChanged(object sender, C1.Win.FlexGrid.GridChangedEventArgs e)
-        {
-
-        }
-
-
-
         #endregion
 
 
@@ -575,6 +549,8 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             }
             return _contragents;
         }
+
+        #endregion
 
 
         #region Обработка внешнего события об изменении данных
@@ -653,7 +629,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     smartGridContracts1.Rows[row].Node.Data = newtreeContract.Name; // А рамочный контракт?
                     smartGridContracts1.Rows[row].Node.Key = newtreeContract;
                     smartGridContracts1.Row -= 1;
-
+                    RefreshLines();
                     break;
             }
 
@@ -668,6 +644,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             smartGridContracts1.Rows[row]["Paid"] = newtreeContract.Paid;
             smartGridContracts1.Rows[row]["Shipped"] = newtreeContract.Shipped;
             smartGridContracts1.Rows[row]["DateExpiried"] = newtreeContract.DateExpiried;
+
         }
 
 
@@ -677,9 +654,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             ContractEventService.Instance.ContractChanged -= OnContractChanged;
             base.OnFormClosed(e);
         }
-
-        #endregion
-
 
         #endregion
 
@@ -757,7 +731,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             }
             return null;
         }
-
 
     }
 

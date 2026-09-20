@@ -1,25 +1,127 @@
 ﻿using GrpcCommonNet.Library.Common;
+using GrpcWinForms.Objects.DocumentTypes.Presenters;
+using GrpcWinForms.Objects.DocumentTypes.Views;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GrpcWinForms.Objects.DocumentTypes.Forms
 {
-    public partial class DocumentTypeForm : Form
+    public partial class DocumentTypeForm : Form, IDocumentTypeView
     {
+        private readonly DocumentTypePresenter _presenter;
+
         public DocumentType DocumentType { get; set; } = new DocumentType();
         public bool EditMode { get; set; } = false;
 
         public DocumentTypeForm()
         {
             InitializeComponent();
+            _presenter = new DocumentTypePresenter(this);
         }
+
+        #region IDocumentTypeView реализация (связь с контролами формы)
+
+        public string NameText
+        {
+            get => tbName.Text;
+            set => tbName.Text = value;
+        }
+
+        public string CodeText
+        {
+            get => tbCode.Text;
+            set => tbCode.Text = value;
+        }
+
+        public string FormText
+        {
+            get => tbForm.Text;
+            set => tbForm.Text = value;
+        }
+
+        public string ViewDetailText
+        {
+            get => tbViewDetail.Text;
+            set => tbViewDetail.Text = value;
+        }
+
+        public string ViewMasterText
+        {
+            get => tbViewMaster.Text;
+            set => tbViewMaster.Text = value;
+        }
+
+        public int CurrencyTypeValue
+        {
+            get
+            {
+                try
+                {
+                    if (cbCurrency.SelectedItem != null)
+                        return Convert.ToInt32(cbCurrency.SelectedItem.Value);
+                }
+                catch { }
+                return 0;
+            }
+            set
+            {
+                try
+                {
+                    // попытка выбрать по индексу как в исходном коде
+                    if (value >= 0 && value < cbCurrency.Items.Count)
+                    {
+                        cbCurrency.SelectedItem = cbCurrency.Items[value];
+                        return;
+                    }
+                    // иначе — искать по Value
+                    for (int i = 0; i < cbCurrency.Items.Count; i++)
+                    {
+                        var item = cbCurrency.Items[i];
+                        try
+                        {
+                            if (Convert.ToInt32(item.Value) == value)
+                            {
+                                cbCurrency.SelectedItem = item;
+                                return;
+                            }
+                        }
+                        catch { }
+                    }
+                }
+                catch { }
+            }
+        }
+
+        public int CountryCurrencyIndex
+        {
+            get => cbCountryCurrency.SelectedIndex;
+            set
+            {
+                if (value >= 0 && value < cbCountryCurrency.Items.Count)
+                    cbCountryCurrency.SelectedIndex = value;
+            }
+        }
+
+        public bool IsDefault
+        {
+            get => chkDefault.Checked;
+            set => chkDefault.Checked = value;
+        }
+
+        public bool IsContract
+        {
+            get => chkIsContract.Checked;
+            set => chkIsContract.Checked = value;
+        }
+
+        public DialogResult ShowDocumentTypeDialog(Form form) => form.ShowDialog(this);
+
+        public void ShowMessage(string text, string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+        {
+            MessageBox.Show(text, caption, buttons);
+        }
+
+        #endregion
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
@@ -29,7 +131,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
 
         private void DocumentTypeForm_Load(object sender, EventArgs e)
         {
-            // Инициализация ComboBox для выбора типа валюты
+            // Заполняем список типов валют — UI-деталь оставлена в форме
             cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "Базовая", Value = 0 });
             cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "Иная", Value = 1 });
             cbCurrency.Items.Add(new C1.Win.Input.ComboBoxItem { DisplayText = "УЕ/ЦБ", Value = 2 });
@@ -37,24 +139,11 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             cbCurrency.AutoCompleteMode = AutoCompleteMode.Suggest;
             cbCurrency.AutoCompleteSource = AutoCompleteSource.ListItems;
             cbCurrency.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.StartsWith;
-            cbCurrency.SelectedItem = cbCurrency.Items[DocumentType.CurrencyType];
 
-            // Инициализация ComboBox для выбора валюты страны
-            if (DocumentType.CountryCurrencyId == 0) DocumentType.CountryCurrencyId = 1; // Установка значения по умолчанию, если оно равно 0
-            cbCountryCurrency.SelectedItem = cbCountryCurrency.Items[DocumentType.CountryCurrencyId - 1 ];
+            // Инициализация представления через презентер
+            _presenter.Initialize();
 
-            // Установка значений полей формы на основе объекта documentType
-            tbName.Text = DocumentType.Name.ToString();
-            tbCode.Text = DocumentType.Code.ToString();
-            tbForm.Text = DocumentType.Form.ToString();
-            tbViewDetail.Text = DocumentType.ViewDetail.ToString();
-            tbViewMaster.Text = DocumentType.ViewMaster.ToString();
-            tbParent.Text = DocumentType.Parent.Name.ToString();
-
-            // Установка значения флажка по умолчанию
-            chkDefault.Checked = DocumentType.IsDefault;
-            chkIsContract.Checked = DocumentType.IsContract;
-
+            // Установка ReadOnly/Enabled в зависимости от EditMode
             if (!EditMode)
             {
                 tbName.ReadOnly = tbCode.ReadOnly = tbForm.ReadOnly = tbViewDetail.ReadOnly = tbViewMaster.ReadOnly = true;
@@ -62,27 +151,26 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 chkDefault.Enabled = chkIsContract.Enabled = false;
                 btnOk.Enabled = false;
             }
-
         }
 
         private void cbCurrency_SelectedItemChanged(object sender, EventArgs e)
         {
-            cbCurrency.Text = cbCurrency.SelectedItem.DisplayText;
-            DocumentType.CurrencyType = Convert.ToInt32(cbCurrency.SelectedItem.Value);
-
+            // синхронизируем выбор с моделью через свойство
+            try
+            {
+                if (cbCurrency.SelectedItem != null)
+                    CurrencyTypeValue = Convert.ToInt32(cbCurrency.SelectedItem.Value);
+            }
+            catch { }
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            DocumentType.Name = tbName.Text;
-            DocumentType.Code = tbCode.Text;
-            DocumentType.Form = tbForm.Text;
-            DocumentType.ViewDetail = tbViewDetail.Text;
-            DocumentType.ViewMaster = tbViewMaster.Text;
-            DocumentType.CurrencyType = Convert.ToInt32(cbCurrency.SelectedItem.Value);
-            DocumentType.IsContract = chkIsContract.Checked;
-            DialogResult = DialogResult.OK;
-            Close();
+            if (_presenter.ApplyChanges())
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
         }
     }
 }
