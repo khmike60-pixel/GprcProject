@@ -21,7 +21,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
 
             _view.IdText = _view.Currency.Id.ToString();
             _view.Code = _view.Currency.Code ?? string.Empty;
-            _view.Name = _view.Currency.Name ?? string.Empty;
+            _view.CurrencyName = _view.Currency.Name ?? string.Empty;
             _view.Abbrev = _view.Currency.Abbrev ?? string.Empty;
             _view.IsVisible = _view.Currency.IsVisible;
         }
@@ -30,7 +30,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
         public bool OnOk()
         {
             // Валидация (простая): обязательно имя
-            if (string.IsNullOrWhiteSpace(_view.Name))
+            if (string.IsNullOrWhiteSpace(_view.CurrencyName))
             {
                 _view.ShowMessage("Введите наименование валюты.", "Валидация");
                 return false;
@@ -51,7 +51,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
 
             _view.Currency.Abbrev = _view.Abbrev ?? string.Empty;
             _view.Currency.Code = _view.Code ?? string.Empty;
-            _view.Currency.Name = _view.Name ?? string.Empty;
+            _view.Currency.Name = _view.CurrencyName ?? string.Empty;
             _view.Currency.IsVisible = _view.IsVisible;
 
             return true;

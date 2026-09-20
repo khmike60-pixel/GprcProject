@@ -1,4 +1,4 @@
-﻿namespace GrpcWinForms.Objects.Departaments
+﻿namespace GrpcWinForms.Objects.Departaments.Forms
 {
     partial class DepartamentsForm
     {
@@ -30,10 +30,10 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DepartamentsForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
             panel2 = new Panel();
-            smartGrid1 = new SmartLib.SmartGrid(components);
+            gridDepartments = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -45,14 +45,14 @@
             lShort = new Label();
             tShort = new TextBox();
             panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridDepartments).BeginInit();
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel2
             // 
-            panel2.Controls.Add(smartGrid1);
+            panel2.Controls.Add(gridDepartments);
             panel2.Controls.Add(toolStrip1);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 34);
@@ -60,33 +60,33 @@
             panel2.Size = new Size(678, 416);
             panel2.TabIndex = 3;
             // 
-            // smartGrid1
+            // gridDepartments
             // 
-            smartGrid1.AllowEditing = false;
-            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowNodeMove = false;
-            smartGrid1.AutoGenerateColumns = false;
-            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
-            smartGrid1.Dock = DockStyle.Fill;
-            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 3;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid1.Footers.Descriptions.Add(footerDescription1);
-            smartGrid1.Footers.Fixed = true;
-            smartGrid1.IdName = null;
-            smartGrid1.Location = new Point(0, 31);
-            smartGrid1.Name = "smartGrid1";
-            smartGrid1.Rows.Count = 51;
-            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
-            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid1.Size = new Size(678, 385);
-            smartGrid1.SortingType = SmartLib.SortingType.Descending;
-            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
-            smartGrid1.TabIndex = 3;
-            smartGrid1.DoubleClick += smartGrid_DoubleClick;
+            gridDepartments.AllowEditing = false;
+            gridDepartments.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridDepartments.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridDepartments.AllowNodeMove = false;
+            gridDepartments.AutoGenerateColumns = false;
+            gridDepartments.ColumnInfo = resources.GetString("gridDepartments.ColumnInfo");
+            gridDepartments.Dock = DockStyle.Fill;
+            gridDepartments.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition2.Caption = "Всего: ";
+            aggregateDefinition2.Column = 3;
+            footerDescription2.Aggregates.Add(aggregateDefinition2);
+            gridDepartments.Footers.Descriptions.Add(footerDescription2);
+            gridDepartments.Footers.Fixed = true;
+            gridDepartments.IdName = null;
+            gridDepartments.Location = new Point(0, 31);
+            gridDepartments.Name = "gridDepartments";
+            gridDepartments.Rows.Count = 51;
+            gridDepartments.SelectedRows = (List<int>)resources.GetObject("gridDepartments.SelectedRows");
+            gridDepartments.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gridDepartments.Size = new Size(678, 385);
+            gridDepartments.SortingType = SmartLib.SortingType.Descending;
+            gridDepartments.StyleInfo = resources.GetString("gridDepartments.StyleInfo");
+            gridDepartments.TabIndex = 3;
+            gridDepartments.DoubleClick += smartGrid_DoubleClick;
             // 
             // toolStrip1
             // 
@@ -191,7 +191,7 @@
             Load += DepartamentsForm_Load;
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridDepartments).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             panel1.ResumeLayout(false);
@@ -212,6 +212,6 @@
         private Panel panel1;
         private Label lShort;
         private TextBox tShort;
-        private SmartLib.SmartGrid smartGrid1;
+        private SmartLib.SmartGrid gridDepartments;
     }
 }

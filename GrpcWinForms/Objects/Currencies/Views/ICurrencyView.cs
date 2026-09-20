@@ -11,7 +11,7 @@ namespace GrpcWinForms.Objects.Currencies.Views
         // Поля формы (представление предоставляет доступ к значениям)
         string IdText { get; set; }
         string Code { get; set; }
-        string Name { get; set; }
+        string CurrencyName { get; set; }
         string Abbrev { get; set; }
         bool IsVisible { get; set; }
 

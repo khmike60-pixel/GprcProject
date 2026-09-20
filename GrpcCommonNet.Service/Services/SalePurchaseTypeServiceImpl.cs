@@ -5,12 +5,15 @@ using GrpcCommonNet.Service.Models;
 using GrpcCommonNet.Service.Repository;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics.Contracts;
+using Status = GrpcCommonNet.Library.Common.Status;
 
 [Authorize]
 public class SalePurchaseTypeServiceImpl : SalePurchaseTypeServices.SalePurchaseTypeServicesBase
 {
     private readonly SalePurchaseTypeRepository _repo;
     private readonly ILogger<SalePurchaseTypeServiceImpl> _logger;
+
+    #region Методы типов продаж/покупок
 
     public SalePurchaseTypeServiceImpl(SalePurchaseTypeRepository repo, ILogger<SalePurchaseTypeServiceImpl> logger)
     {
@@ -145,9 +148,131 @@ public class SalePurchaseTypeServiceImpl : SalePurchaseTypeServices.SalePurchase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in DeleteSalePurchaseTypeResponse: " + ex.Message);
+            _logger.LogError(ex, "Error in DeleteSalePurchaseType: " + ex.Message);
             throw;
         }
 
     }
+
+    #endregion
+
+    #region Методы курсов валют в типах продаж/покупок
+
+    public override async Task<SalePurchaseRateResponse> GetSalePurchaseRate(SalePurchaseRateRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetSalePurchaseRate called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            SalePurchaseRateResponse response = new SalePurchaseRateResponse();
+            response.Rate = await _repo.GetSalePurchaseRateAsync(request, userData);
+            if (response.Rate == null || response.Rate.Id == null || response.Rate.Id == 0)
+                return new SalePurchaseRateResponse() { 
+                    Result = { Status = Status.NotFound } 
+                };
+
+            response.Result = new Result { Status = Status.Ok};
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetSalePurchaseRate: " + ex.Message);
+            throw;
+        }
+    }
+
+    public override async Task<ListSalePurchaseRateResponse> ListSalePurchaseRate(ListSalePurchaseRateRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"ListSalePurchaseRate called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            ListSalePurchaseRateResponse response = new ListSalePurchaseRateResponse();
+
+            List<SalePurchaseRate> rates = await _repo.ListSalePurchaseRateAsync(request, userData);
+            if (rates == null )
+                return new ListSalePurchaseRateResponse() { Result = { Status = Status.NotFound } };
+
+            response.Rates.AddRange(rates);
+            response.Result = new Result { Status = Status.Ok };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in ListSalePurchaseRate: " + ex.Message);
+            throw;
+        }
+    }
+
+    public override async Task<SalePurchaseRateResponse> CreateSalePurchaseRate(CreateSalePurchaseRateRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetSalePurchaseRate called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            SalePurchaseRateResponse response = new SalePurchaseRateResponse();
+            SalePurchaseRate rate = await _repo.CreateSalePurchaseRateAsync(request, userData);
+            if (rate == null || rate.Id == null || rate.Id == 0)
+                return new SalePurchaseRateResponse() { Result = { Status = Status.NotFound } };
+
+            response.Rate = rate;
+            response.Result = new Result { Status = Status.Ok };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in GetSalePurchaseRate: " + ex.Message);
+            throw;
+        }
+    }
+
+    public override async Task<SalePurchaseRateResponse> UpdateSalePurchaseRate(UpdateSalePurchaseRateRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"UpdateSalePurchaseRate called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            SalePurchaseRateResponse response = new SalePurchaseRateResponse();
+            SalePurchaseRate rate = await _repo.UpdateSalePurchaseRateAsync(request, userData);
+            if (rate == null || rate.Id == null || rate.Id == 0)
+                return new SalePurchaseRateResponse() { Result = { Status = Status.NotFound } };
+
+            response.Rate = rate;
+            response.Result = new Result { Status = Status.Ok };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in UpdateSalePurchaseRate: " + ex.Message);
+            throw;
+        }
+    }
+
+    public override async Task<UndeletedSalePurchaseRateResponse> DeleteSalePurchaseRate(DeleteSalePurchaseRateRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"DeleteSalePurchaseRate called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            UndeletedSalePurchaseRateResponse response = new UndeletedSalePurchaseRateResponse();
+            List<int> undeleted_ids = await _repo.DeleteSalePurchaseRateAsync(request, userData);
+
+            response.UndeletedIds.AddRange(undeleted_ids);
+            response.Result = new Result { Status = Status.Ok };
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error in DeleteSalePurchaseRate: " + ex.Message);
+            throw;
+        }
+    }
+
+
+    #endregion
 }

@@ -298,7 +298,8 @@ public class ContractRepository
                                         contract_State = @CState, contract_data = @CData, IsContract = @IsCont, IsOrder = @IsOrd, DocumentType_Id = @DocTypeId, 
                                         SDid = @SDid,
                                         ProjectTypes = @ProjTypes, TemplDoc_Id = @TemplDocId, Comment = @Comment, 
-                                        create_at = @CreateAt, create_by = @CreateBy, create_userid = @CreateUid, 
+--                                        create_at = @CreateAt, create_by = @CreateBy, create_userid = @CreateUid, 
+                                        update_at = @UpdateAt, update_by = @UpdateBy, update_userid = @UpdateUid, 
                                         Contract_SignPlaceId = @SignPlaceId
                                     where contract_id = @Id;
 
@@ -358,9 +359,9 @@ public class ContractRepository
                 p.AddWithValue("@ProjTypes", contract.ProjectType.ToString()); // Enum в строку
                 p.AddWithValue("@TemplDocId", null);               // _contract.TemplDocId
                 p.AddWithValue("@Comment", contract.Comment);
-                p.AddWithValue("@CreateAt", contract.Metadata?.CreateAt);
-                p.AddWithValue("@CreateBy", contract.Metadata?.CreateBy);
-                p.AddWithValue("@CreateUid", contract.Metadata?.CreateUserid == 0 ? null : contract.Metadata?.CreateUserid);
+                p.AddWithValue("@UpdateAt", SetDateTime(contract.Metadata?.UpdateAt));
+                p.AddWithValue("@UpdateBy", contract.Metadata?.UpdateBy);
+                p.AddWithValue("@UpdateUid", contract.Metadata?.UpdateUserid == 0 ? null : contract.Metadata?.UpdateUserid);
                 p.AddWithValue("@SignPlaceId", contract.PlaceSigned?.Id);
 
                 using var rdr = await cmd.ExecuteReaderAsync();
@@ -482,7 +483,7 @@ public class ContractRepository
                 p.AddWithValue("@ProjTypes", contract.ProjectType.ToString()); // Enum в строку
                 p.AddWithValue("@TemplDocId", null);               // _contract.TemplDocId
                 p.AddWithValue("@Comment", contract.Comment);
-                p.AddWithValue("@CreateAt", contract.Metadata?.CreateAt);
+                p.AddWithValue("@CreateAt", SetDateTime(contract.Metadata?.CreateAt));
                 p.AddWithValue("@CreateBy", contract.Metadata?.CreateBy);
                 p.AddWithValue("@CreateUid", contract.Metadata?.CreateUserid == 0 ? null : contract.Metadata?.CreateUserid);
                 p.AddWithValue("@SignPlaceId", contract.PlaceSigned?.Id);
@@ -1375,10 +1376,26 @@ public class ContractRepository
 
         contract.DocName = rdr["contract_DocName"] == DBNull.Value ? "" : rdr["contract_DocName"].ToString();
 
+
+        var createAtObj = GetDateTime(rdr, "create_at");
+        var updateAtObj = GetDateTime(rdr, "update_at");
+
         contract.Metadata = new Metadata();
-        contract.Metadata.CreateAt = rdr["create_at"] == DBNull.Value ? Timestamp.FromDateTime(DateTime.MinValue) : Timestamp.FromDateTime(Convert.ToDateTime(rdr["create_at"]));
-        contract.Metadata.CreateBy = rdr["create_by"] == DBNull.Value ? "" : rdr["create_by"].ToString();
-        contract.Metadata.CreateUserid = rdr["create_userid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["create_userid"]);
+        var createBy = rdr["create_by"] == DBNull.Value ? "" : rdr["create_by"].ToString();
+        if (string.IsNullOrEmpty(createBy))
+        {
+            contract.Metadata.CreateAt = createAtObj.ToUniversalTime().ToTimestamp();
+            contract.Metadata.CreateBy = createBy;
+            contract.Metadata.CreateUserid = rdr["create_userid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["create_userid"]);
+        }
+
+        var updateBy = rdr["update_by"] == DBNull.Value ? "" : rdr["update_by"].ToString();
+        if (string.IsNullOrEmpty(updateBy))
+        {
+            contract.Metadata.UpdateAt = updateAtObj < createAtObj ? createAtObj.ToUniversalTime().ToTimestamp() : updateAtObj.ToUniversalTime().ToTimestamp();
+            contract.Metadata.UpdateBy = updateBy;
+            contract.Metadata.UpdateUserid = rdr["update_userid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["update_userid"]);
+        }
 
 
         return contract;
@@ -1529,6 +1546,29 @@ public class ContractRepository
         {
             result = false;
         }
+
+        return result;
+    }
+
+    private DateTime GetDateTime(DbDataReader rdr, string field)
+    {
+        DateTime result = DateTime.UnixEpoch;
+        int createAtIndex = rdr.GetOrdinal(field);
+
+        MySqlDataReader mySqlRdr = (MySqlDataReader)rdr;
+        if (mySqlRdr[createAtIndex] != DBNull.Value)
+        {
+            var mySqlDt = mySqlRdr.GetMySqlDateTime(createAtIndex);
+            if (mySqlDt.IsValidDateTime)
+                result = mySqlRdr.GetDateTime(field);
+        }
+        return result;
+    }
+    private DateTime SetDateTime(Timestamp value)
+    {
+        DateTime result;
+        Timestamp min = Timestamp.FromDateTime(DateTime.UnixEpoch);
+        result = value <= min ? min.ToDateTime().ToLocalTime() : value.ToDateTime().ToLocalTime();
 
         return result;
     }

@@ -16,6 +16,7 @@ using GrpcWinForms.Objects.Contracts.Forms;
 using GrpcWinForms.Objects.Contracts.Models;
 using GrpcWinForms.Objects.Currencies.Forms;
 using GrpcWinForms.Objects.Departaments;
+using GrpcWinForms.Objects.Departaments.Forms;
 using SmartLib;
 using System;
 using System.Collections.Generic;

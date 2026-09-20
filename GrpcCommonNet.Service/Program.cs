@@ -138,6 +138,7 @@ try
     builder.Services.AddSingleton<UserRepository>();
     builder.Services.AddSingleton<DocumentTypeRepository>();
     builder.Services.AddSingleton<EmployeeRepository>();
+    builder.Services.AddSingleton<SalePurchaseTypeRepository>();
 
     // Register gRPC service classes if they have constructor dependencies (DI will resolve them).
     // Note: you don't "Add" the service classes here; MapGrpcService will resolve them from DI.
@@ -177,6 +178,7 @@ try
     app.MapGrpcService<UserServiceImpl>().RequireAuthorization("DefaultPolicy");
     app.MapGrpcService<DocumentTypeServiceImpl>().RequireAuthorization("DefaultPolicy");
     app.MapGrpcService<EmployeeServiceImpl>().RequireAuthorization("DefaultPolicy");
+    app.MapGrpcService<SalePurchaseTypeServiceImpl>().RequireAuthorization("DefaultPolicy");
 
     // If you also expose REST controllers (e.g. AuthController), enable mapping
 

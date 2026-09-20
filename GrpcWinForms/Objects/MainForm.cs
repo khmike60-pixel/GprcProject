@@ -20,6 +20,8 @@ using GrpcWinForms.Controls.TaskBar;
 using GrpcWinForms.Objects.Employees.Forms;
 using GrpcWinForms.Objects.Users;
 using GrpcWinForms.Objects.SalePurchaseTypes.Forms;
+using GrpcWinForms.Objects.Departaments.Forms;
+using GrpcWinForms.Objects.Units.Forms;
 
 namespace GrpcWinForms.Forms
 {

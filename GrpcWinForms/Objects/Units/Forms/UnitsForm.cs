@@ -4,60 +4,67 @@ using GrpcCommonNet.Library.Unit;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Units.Forms;
+using GrpcWinForms.Objects.Units.Presenters;
+using GrpcWinForms.Objects.Units.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Forms
+namespace GrpcWinForms.Objects.Units.Forms
 {
-    public partial class UnitsForm : Form
+    public partial class UnitsForm : Form, IUnitsView
     {
         private BindingList<Unit> units;
+        private readonly UnitsPresenter _presenter;
 
         public UnitsForm()
         {
             InitializeComponent();
+            _presenter = new UnitsPresenter(this);
         }
 
         private async void UnitsForm_Load(object sender, EventArgs e)
         {
-            bool result = await RefreshUnit(sender, e);
-
+            await _presenter.RefreshUnitAsync();
         }
 
-        private async Task<bool> RefreshUnit(object sender, EventArgs e)
+        public string FilterName => textBoxName.Text;
+        public bool ShowAll => checkBoxAll.Checked;
+
+        public BindingList<Unit> Units
         {
-            try
-            {
-                ListUnitRequest request = new ListUnitRequest()
-                {
-                    Short = textBoxName.Text,
-                    IsArchive = checkBoxAll.Checked ? true : false
-                };
-                ListUnitResponse response = await GrpcRetry.CallAsync(() => 
-                    GrpcClients.GrpcClients.Unit.GetListUnitAsync(request).ResponseAsync);
-                units = new BindingList<Unit>(response.Units);
-                smartGrid.DataSource = units; 
-                //smartGrid1.DataSource = units;
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ошибка получения данных: " + ex.Message);
-                return false;
-            }
-
+            get => units;
+            set => units = value;
         }
+
+        public void SetUnitsSource(BindingList<Unit> units)
+        {
+            this.units = units;
+            smartGrid.DataSource = units;
+        }
+
+        public void ShowMessage(string message) => MessageBox.Show(message);
+
+        public int GetCurrentRowSelRaw() => smartGrid.RowSel;
+        public int GetRowsFixed() => smartGrid.Rows.Fixed;
+        public IList<int> GetSelectedRows()
+        {
+            var list = new List<int>();
+            foreach (var i in smartGrid.SelectedRows) list.Add(Convert.ToInt32(i));
+            return list;
+        }
+        public void BeginGridUpdate() => smartGrid.BeginUpdate();
+        public void EndGridUpdate() => smartGrid.EndUpdate();
+        public void SetSelectedRows(IList<int> rows) => smartGrid.SelectedRows = rows is List<int> list ? list : new List<int>(rows);
+        public void RemoveAt(int index) => units.RemoveAt(index);
+        public void InsertAt(int index, Unit unit) => units.Insert(index, unit);
+        public void UpdateAt(int index, Unit unit) => units[index] = unit;
 
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
-            RefreshUnit(sender, e);
+            _ = _presenter.RefreshUnitAsync();
         }
 
         private async void toolStripButtonNew_Click(object sender, EventArgs e)
@@ -68,81 +75,28 @@ namespace GrpcWinForms.Forms
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    CreateUnitRequest request = new CreateUnitRequest()
-                    {
-                        Unit = new Unit()
-                        {
-                            Id = form.EditUnit.Id,
-                            Short = form.EditUnit.Short,
-                            IsArchive = form.EditUnit.IsArchive,
-                            Code = form.EditUnit.Code,
-                            Comment = form.EditUnit.Comment,
-                            Rem = form.EditUnit.Rem,
-                            RwsCode = form.EditUnit.RwsCode,
-                            RwsMcode = form.EditUnit.RwsMcode
-                        }
-                    };
-                    UnitResponse response = await GrpcRetry.CallAsync(() => 
-                        GrpcClients.GrpcClients.Unit.CreateUnitAsync(request).ResponseAsync);
-                    if (response.Result.Status != Status.Ok || response.Unit == null)
-                    {
-                        MessageBox.Show("Добавить данные не удалось.");
-                        return;
-                    }
-                    else
-                    {
-                        //int rowsel = smartGrid1.RowSel;
-                        //units.Insert(smartGrid1.RowSel - smartGrid1.Rows.Fixed, response.Unit);
-                        int rowsel = smartGrid.RowSel;
-                        units.Insert(smartGrid.RowSel - smartGrid.Rows.Fixed, response.Unit);
-                        smartGrid.Row = rowsel;
-                        //smartGrid1.Row = rowsel;
-                    }
+                    int insertIndex = smartGrid.RowSel - smartGrid.Rows.Fixed;
+                    await _presenter.CreateUnitAsync(form.EditUnit, insertIndex);
+                    // восстановление выбора
+                    smartGrid.Row = smartGrid.RowSel;
                 }
                 else form.Close();
-
             }
         }
 
         private async void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
-            Unit unit = units[smartGrid.RowSel - smartGrid.Rows.Fixed];
-            //Unit unit = units[smartGrid1.RowSel - smartGrid1.Rows.Fixed];
+            int rowselIndex = smartGrid.RowSel - smartGrid.Rows.Fixed;
+            Unit unit = units[rowselIndex];
+
             using (var form = new UnitForm())
             {
                 form.IsTypeInsert = false;
-
                 form.EditUnit = unit;
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    UpdateUnitRequest request = new UpdateUnitRequest()
-                    {
-                        Unit = new Unit()
-                        {
-                            Id = form.EditUnit.Id,
-                            Short = form.EditUnit.Short,
-                            IsArchive = form.EditUnit.IsArchive,
-                            Code = form.EditUnit.Code,
-                            Comment = form.EditUnit.Comment,
-                            Rem = form.EditUnit.Rem,
-                            RwsCode = form.EditUnit.RwsCode,
-                            RwsMcode = form.EditUnit.RwsMcode
-                        }
-                    };
-                    UnitResponse response = await GrpcRetry.CallAsync(() => 
-                        GrpcClients.GrpcClients.Unit.UpdateUnitAsync(request).ResponseAsync);
-                    if (response.Result.Status != Status.Ok || response.Unit == null)
-                    {
-                        MessageBox.Show("Добавить данные не удалось.");
-                        return;
-                    }
-                    else
-                    {
-                        int rowsel = smartGrid.RowSel - smartGrid.Rows.Fixed;
-                        //int rowsel = smartGrid1.RowSel - smartGrid1.Rows.Fixed;
-                        units[rowsel] = response.Unit;
-                    }
+                    await _presenter.UpdateUnitAsync(form.EditUnit, rowselIndex);
                 }
                 else form.Close();
             }
@@ -150,88 +104,57 @@ namespace GrpcWinForms.Forms
 
         private async void toolStripButtonDelete_Click(object sender, EventArgs e)
         {
-            Unit unit = units[smartGrid.RowSel - smartGrid.Rows.Fixed];
-            //Unit unit = units[smartGrid1.RowSel - smartGrid1.Rows.Fixed];
-
-            List<int> ids = new List<int>();
-            List<int> oldList = new List<int>();
-            List<int> newMarked = new List<int>();
+            int rowselIndex = smartGrid.RowSel - smartGrid.Rows.Fixed;
+            Unit unit = units[rowselIndex];
 
             if (smartGrid.SelectedRows.Count == 0)
-            //if (smartGrid1.SelectedRows.Count == 0)
             {
                 var result = MessageBox.Show("Удалить запись?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
-                    DeleteUnitRequest request = new DeleteUnitRequest()
+                    var response = await _presenter.DeleteUnitAsync(unit.Id, rowselIndex);
+                    if (response == null || response.Result.Status != Status.Ok)
                     {
-                        Id = unit.Id
-                    };
-                    DeleteUnitResponse response = await GrpcRetry.CallAsync(() => 
-                        GrpcClients.GrpcClients.Unit.DeleteUnitAsync(request).ResponseAsync);
-                    if (response.Result.Status != Status.Ok)
-                    {
-                        MessageBox.Show("Удалить данные не удалось.");
+                        // сообщение уже показывается презентером
                         return;
                     }
+
+                    // скорректировать позицию курсора
+                    int rowsel = smartGrid.RowSel;
+                    if (smartGrid.Rows.Count - 1 - smartGrid.Footers.Descriptions.Count > rowsel)
+                        smartGrid.Row = rowsel;
                     else
-                    {
-                        int rowsel = smartGrid.RowSel;
-                        units.RemoveAt(smartGrid.RowSel - smartGrid.Rows.Fixed);
-                        //int rowsel = smartGrid1.RowSel;
-                        //units.RemoveAt(smartGrid1.RowSel - smartGrid1.Rows.Fixed);
-                        if (smartGrid.Rows.Count - 1 - smartGrid.Footers.Descriptions.Count > rowsel)
-                            smartGrid.Row = rowsel;
-                        else
-                            smartGrid.Row = smartGrid.Rows.Count - 1 - smartGrid.Footers.Descriptions.Count;
-                        //if (smartGrid1.Rows.Count - 1 - smartGrid1.Footers.Descriptions.Count > rowsel)
-                        //    smartGrid1.Row = rowsel;
-                        //else
-                        //    smartGrid1.Row = smartGrid1.Rows.Count - 1 - smartGrid1.Footers.Descriptions.Count;
-                    }
+                        smartGrid.Row = smartGrid.Rows.Count - 1 - smartGrid.Footers.Descriptions.Count;
                 }
             }
             else
-            { 
-                var result = MessageBox.Show($"Удалить все отмеченные записи ({smartGrid1.SelectedRows.Count})?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            {
+                var result = MessageBox.Show($"Удалить все отмеченные записи ({smartGrid.SelectedRows.Count})?", "Подтверждение", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
-                    //oldList.AddRange(smartGrid1.SelectedRows);
-                    //newMarked.AddRange(smartGrid1.SelectedRows);
+                    var oldList = new List<int>();
                     oldList.AddRange(smartGrid.SelectedRows);
-                    newMarked.AddRange(smartGrid.SelectedRows);
-
-                    //foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid1.Rows[index]["Id"]));
+                    var ids = new List<int>();
                     foreach (var index in oldList) ids.Add(Convert.ToInt32(smartGrid.Rows[index]["Id"]));
 
-                    DeleteIdsUnitRequest request = new DeleteIdsUnitRequest();
-                    request.Ids.AddRange(ids);
+                    var response = await _presenter.DeleteIdsUnitAsync(ids);
+                    if (response == null)
+                        return;
 
-                    UndeleteIdsUnitResponse response = new UndeleteIdsUnitResponse();
-                    response = await GrpcRetry.CallAsync(() => 
-                        GrpcClients.GrpcClients.Unit.DeleteIdsUnitAsync(request).ResponseAsync);
-
-                    List<int> undelIds = new List<int>();
+                    var undelIds = new List<int>();
                     foreach (var item in response.UndeletedIds) undelIds.Add(Convert.ToInt32(item));
 
-                    //smartGrid1.BeginUpdate();
-                    //List<int> testList = Utils.UndeleteList<Unit>((C1FlexGrid)smartGrid1, units, undelIds, smartGrid1.SelectedRows, "Id");
-                    //smartGrid1.SelectedRows = testList;
-                    //smartGrid1.EndUpdate();
-                    smartGrid.BeginUpdate();
+                    BeginGridUpdate();
                     List<int> testList = Utils.UndeleteList<Unit>((C1FlexGrid)smartGrid, units, undelIds, smartGrid.SelectedRows, "Id");
-                    smartGrid.SelectedRows = testList;
-                    smartGrid.EndUpdate();
+                    SetSelectedRows(testList);
+                    EndGridUpdate();
 
                     if (response.Result.Status != Status.Ok)
-                        MessageBox.Show("Ошибка при удалении: " + response.Result.Message);
+                        ShowMessage("Ошибка при удалении: " + response.Result.Message);
                     else if (response.UndeletedIds.Count > 0)
-                        MessageBox.Show("Данные, которые не удалось удалить остались выделенными.");
-
+                        ShowMessage("Данные, которые не удалось удалить остались выделенными.");
                 }
             }
         }
-
-
     }
 }

@@ -4,7 +4,6 @@ option csharp_namespace = "GrpcCommonNet.Library.Employee";
 
 import "google/protobuf/field_mask.proto";
 import "protos/common/general.proto";
-import "protos/common/user.proto";
 import "protos/common/employee.proto";
 
 package employee;

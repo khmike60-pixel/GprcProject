@@ -30,10 +30,10 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BanksForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
             panel2 = new Panel();
-            smartGrid1 = new SmartLib.SmartGrid(components);
+            gridBanks = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -45,14 +45,14 @@
             lShort = new Label();
             tShort = new TextBox();
             panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridBanks).BeginInit();
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel2
             // 
-            panel2.Controls.Add(smartGrid1);
+            panel2.Controls.Add(gridBanks);
             panel2.Controls.Add(toolStrip1);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 34);
@@ -60,33 +60,33 @@
             panel2.Size = new Size(800, 416);
             panel2.TabIndex = 5;
             // 
-            // smartGrid1
+            // gridBanks
             // 
-            smartGrid1.AllowEditing = false;
-            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowNodeMove = false;
-            smartGrid1.AutoGenerateColumns = false;
-            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
-            smartGrid1.Dock = DockStyle.Fill;
-            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 3;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid1.Footers.Descriptions.Add(footerDescription1);
-            smartGrid1.Footers.Fixed = true;
-            smartGrid1.IdName = null;
-            smartGrid1.Location = new Point(0, 31);
-            smartGrid1.Name = "smartGrid1";
-            smartGrid1.Rows.Count = 51;
-            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
-            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid1.Size = new Size(800, 385);
-            smartGrid1.SortingType = SmartLib.SortingType.Descending;
-            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
-            smartGrid1.TabIndex = 3;
-            smartGrid1.GetUnboundValue += smartGrid_GetUnboundValue;
+            gridBanks.AllowEditing = false;
+            gridBanks.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridBanks.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridBanks.AllowNodeMove = false;
+            gridBanks.AutoGenerateColumns = false;
+            gridBanks.ColumnInfo = resources.GetString("gridBanks.ColumnInfo");
+            gridBanks.Dock = DockStyle.Fill;
+            gridBanks.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition2.Caption = "Всего: ";
+            aggregateDefinition2.Column = 3;
+            footerDescription2.Aggregates.Add(aggregateDefinition2);
+            gridBanks.Footers.Descriptions.Add(footerDescription2);
+            gridBanks.Footers.Fixed = true;
+            gridBanks.IdName = null;
+            gridBanks.Location = new Point(0, 31);
+            gridBanks.Name = "gridBanks";
+            gridBanks.Rows.Count = 51;
+            gridBanks.SelectedRows = (List<int>)resources.GetObject("gridBanks.SelectedRows");
+            gridBanks.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gridBanks.Size = new Size(800, 385);
+            gridBanks.SortingType = SmartLib.SortingType.Descending;
+            gridBanks.StyleInfo = resources.GetString("gridBanks.StyleInfo");
+            gridBanks.TabIndex = 3;
+            gridBanks.GetUnboundValue += smartGrid_GetUnboundValue;
             // 
             // toolStrip1
             // 
@@ -191,7 +191,7 @@
             Load += BanksForm_Load;
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridBanks).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             panel1.ResumeLayout(false);
@@ -212,6 +212,6 @@
         private Panel panel1;
         private Label lShort;
         private TextBox tShort;
-        private SmartLib.SmartGrid smartGrid1;
+        private SmartLib.SmartGrid gridBanks;
     }
 }

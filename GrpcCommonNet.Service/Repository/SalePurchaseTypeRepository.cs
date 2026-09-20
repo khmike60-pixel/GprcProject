@@ -2,6 +2,7 @@
 using GrpcCommonNet.Library.SalePurchaseType;
 using GrpcCommonNet.Service.Models;
 using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Data.Common;
 
 public class SalePurchaseTypeRepository
@@ -9,6 +10,7 @@ public class SalePurchaseTypeRepository
     private readonly string _connectionString = "";
     private readonly ILogger<SalePurchaseTypeRepository> _logger;
 
+    #region  Таблица типов продаж/покупок
     public SalePurchaseTypeRepository(ILogger<SalePurchaseTypeRepository> logger, IConfiguration configuration)
     {
         _logger = logger;
@@ -146,14 +148,50 @@ WHERE 1 = 1
         return new List<int>();
     }
 
+    #endregion
 
 
+    #region Таблица валют курсов в типах продаж/покупок
 
-    private SalePurchaseType FillSalePurchaseType(DbDataReader rdr)
+    public async Task<SalePurchaseRate> GetSalePurchaseRateAsync(SalePurchaseRateRequest request, UserData userData)
+    {
+        return new SalePurchaseRate();
+    }
+
+    public async Task<List<SalePurchaseRate>> ListSalePurchaseRateAsync(ListSalePurchaseRateRequest request, UserData userData)
+    {
+
+        return new List<SalePurchaseRate>();
+    }
+
+    public async Task<SalePurchaseRate> CreateSalePurchaseRateAsync(CreateSalePurchaseRateRequest request, UserData userData)
+    {
+        return new SalePurchaseRate();
+    }
+
+    public async Task<SalePurchaseRate> UpdateSalePurchaseRateAsync(UpdateSalePurchaseRateRequest request, UserData userData)
+    {
+        return new SalePurchaseRate();
+    }
+
+    public async Task<List<int>> DeleteSalePurchaseRateAsync(DeleteSalePurchaseRateRequest request, UserData userData)
+    {
+        List<int> undeleted_ids = new List<int>();
+
+        return undeleted_ids;
+    }
+
+
+    #endregion
+
+
+    #region Внутренние технические методы
+
+    public SalePurchaseType FillSalePurchaseType(DbDataReader rdr)
     {
         SalePurchaseType salePurchaseType = new SalePurchaseType();
         if (HasColumn(rdr, "id")) { salePurchaseType.Id = rdr["id"] == DBNull.Value ? null : Convert.ToInt32(rdr["id"]); }
-        if (HasColumn(rdr, "comment")) { salePurchaseType.Comment = rdr["comment"].ToString(); }
+        if (HasColumn(rdr, "comment")) { salePurchaseType.Name = rdr["comment"].ToString(); }
         if (HasColumn(rdr, "ID_M_COUNTRY"))
         {
             if (salePurchaseType.Country == null) salePurchaseType.Country = new Geolocation();
@@ -227,4 +265,7 @@ WHERE 1 = 1
 
         return result;
     }
+
+    #endregion
+
 }

@@ -1,51 +1,64 @@
 ﻿using GrpcCommonNet.Library.Common;
+using GrpcWinForms.Objects.Users.Presenters;
+using GrpcWinForms.Objects.Users.Views;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace GrpcWinForms.Objects.Users.Forms
 {
-    public partial class UserForm : Form
+    public partial class UserForm : Form, IUserView
     {
+        private readonly UserPresenter presenter;
         public User User { get; set; } = new User();
 
         public UserForm()
         {
             InitializeComponent();
+            presenter = new UserPresenter(this);
         }
 
-        private void buttonOk_Click(object sender, EventArgs e)
-        {
-            User.UserSymbol = textBoxSymbol.Text;
-            User.UserLogin = textBoxLogin.Text;
-            User.UserPassword = textBoxPassword.Text;
-            User.UserName = textBoxShortName.Text;
-            User.UserIsBlocked = checkBoxIsBlocked.Checked;
+        // IUserView — свойства отображения
+        string IUserView.UserSymbol => textBoxSymbol.Text;
+        string IUserView.UserLogin => textBoxLogin.Text;
+        string IUserView.UserPassword => textBoxPassword.Text;
+        string IUserView.UserName => textBoxShortName.Text;
+        bool IUserView.UserIsBlocked => checkBoxIsBlocked.Checked;
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
-        }
+        // Явная реализация событий интерфейса — маппинг на локальные события
+        event EventHandler IUserView.OkClicked { add => OkClicked += value; remove => OkClicked -= value; }
+        event EventHandler IUserView.CancelClicked { add => CancelClicked += value; remove => CancelClicked -= value; }
+        event EventHandler IUserView.ViewLoaded { add => ViewLoaded += value; remove => ViewLoaded -= value; }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
-        }
+        User IUserView.User { get => User; set => User = value; }
+        void IUserView.CloseWithResult(DialogResult result) { DialogResult = result; Close(); }
+
+        // Локальные события (Presenter подписывается на них через явную реализацию интерфейса)
+        private event EventHandler OkClicked;
+        private event EventHandler CancelClicked;
+        private event EventHandler ViewLoaded;
 
         private void UserForm_Load(object sender, EventArgs e)
         {
+            // Инициализация полей формы из модели
             textBoxSymbol.Text = User.UserSymbol;
             textBoxLogin.Text = User.UserLogin;
             textBoxPassword.Text = User.UserPassword;
             textBoxShortName.Text = User.UserName;
             checkBoxIsBlocked.Checked = User.UserIsBlocked;
+
+            ViewLoaded?.Invoke(this, EventArgs.Empty);
+        }
+
+        // Эти методы обязаны существовать — Designer ссылается на них
+        private void buttonOk_Click(object sender, EventArgs e)
+        {
+            // Передаём событие презентеру
+            OkClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            CancelClicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace GrpcWinForms.Objects.Departaments
+﻿namespace GrpcWinForms.Objects.Departaments.Forms
 {
     partial class DepartmentForm
     {

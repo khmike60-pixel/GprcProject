@@ -599,7 +599,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                                       "";
 
                     row = foundNode.Row.Index;
-                    if (row == currentRow) smartGridContracts1.Row = row;
+                    if (row == currentRow)
+                    {
+                        smartGridContracts1.Row = row;
+                        RefreshLines();
+                    }
                     break;
                 case ContractChangeType.Created:
                     // Для нового контракта создаем новый нод

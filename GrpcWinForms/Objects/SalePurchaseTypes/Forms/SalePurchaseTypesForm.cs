@@ -13,8 +13,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
     public partial class SalePurchaseTypesForm : Form
     {
         public bool DialogMode = false;
-        private object  selectedItem =  new object ();  
-
+        private object selectedItem =  new object ();  
 
         public SalePurchaseTypesForm()
         {

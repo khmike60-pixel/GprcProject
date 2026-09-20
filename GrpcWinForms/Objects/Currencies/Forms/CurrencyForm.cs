@@ -26,7 +26,7 @@ namespace GrpcWinForms.Objects.Currencies.Forms
             set => textBoxCode.Text = value;
         }
 
-        public string Name
+        public string CurrencyName
         {
             get => textBoxName.Text;
             set => textBoxName.Text = value;

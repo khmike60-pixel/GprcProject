@@ -8,6 +8,7 @@ import "google/protobuf/struct.proto";
 
 import "protos/common/geolocation.proto";
 import "protos/common/currency.proto";
+import "protos/common/general.proto";
 
 package Common;
 
@@ -15,23 +16,37 @@ package Common;
 message MetaConfirm {
   google.protobuf.Timestamp confirmed_at = 1;   // Дата утверждения  
   string confirmed_by = 2;                      // Аббревиатура утвердившего
-  int32 confirmed_userid = 3;                   // Идентификатор утвердившего (пользователя)
+  google.protobuf.Int32Value confirmed_userid = 3;                   // Идентификатор утвердившего (пользователя)
   google.protobuf.Timestamp cheked_at = 4;      // Дата проверки   
   string cheked_by = 5;                         // Аббревиатура проверившего
-  int32 cheked_userid = 6;						// Идентификатор проверевшего (пользователя)
+  google.protobuf.Int32Value cheked_userid = 6;						// Идентификатор проверевшего (пользователя)
 }
 
 message SalePurchaseType{
+	google.protobuf.Int32Value id = 1;			
+	string name = 2;							// Комментарий с описанием записи 
+	Common.Geolocation country = 3;				// Страна продажи/покупки
+	Common.Currency currency =4;				// Валюта страны продажи/покупки
+	Common.Currency currency_main = 5;			// Основная валюта
+	Common.Currency currency_salary = 6;		// Валюта учета при выдаче
+	Common.Currency currency_cross = 7;			// Валюта кросс-курса
+	bool default =  8;							// Признак записи по умолчанию
+	bool confirmed = 9;							// Признак утверждения записи
+	MetaConfirm meta_confirm  = 10;				// Мета данные подтверждения/проверки
+	google.protobuf.Struct data = 11;			// Перечень валют, по которым хранятся утвержденные курсы (json)
+}
+
+message SalePurchaseRate {
 	google.protobuf.Int32Value id = 1;
-	string name = 2;
-	Common.Geolocation country = 3;
-	Common.Currency currency =4;
-	Common.Currency currency_main = 5;
-	Common.Currency currency_salary = 6;
-	Common.Currency currency_cross = 7;
-	bool default =  8;
-	bool confirmed = 9;
-	MetaConfirm meta_confirm  = 10;
-	google.protobuf.Struct data = 11;
-	string comment =12;
+	google.protobuf.Timestamp date = 2;				// Дата установки параметров
+	google.protobuf.Struct json = 3;				// JSON-объект с валютами и курсами (id - id валюты, code - аббревиатура валюты, rate1 - курс прайс-листа, rate2 - курс конвертации)
+	Common.DecimalValue salary_rate =4;				// Курс валюты учета для выдачи наличных
+	Common.DecimalValue bank_to_cash_res = 5;		// Коэффициент (%) при конвертации безнал. в нал. (резидент)
+	Common.DecimalValue bank_to_cash_nonres = 6;	// Коэффициент (%) при конвертации безнал. в нал. (нерезидент)
+	Common.DecimalValue cash_to_bank = 7;			// Коэффициент (%) при конвертации нал. в безнал.
+	Common.DecimalValue vat = 8;					// Процент НДС на указанную дату
+	Common.DecimalValue on_cost = 9;				// Накладные расходы (%)
+	Common.DecimalValue max_profit = 10;			// Максимальная рентабельность (%)
+	MetaConfirm meta_confirm = 11;					// Мета-данные
+
 }

@@ -1,4 +1,4 @@
-﻿namespace GrpcWinForms.Forms
+﻿namespace GrpcWinForms.Objects.Units.Forms
 {
     partial class UnitsForm
     {

@@ -48,7 +48,7 @@
             textAbbrev = new TextBox();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanel2 = new C1.Win.SplitContainer.C1SplitterPanel();
-            c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
+            smartGridRates = new SmartLib.SmartGrid(components);
             toolStrip2 = new ToolStrip();
             toolStripButton2 = new ToolStripButton();
             toolStripButton3 = new ToolStripButton();
@@ -56,16 +56,16 @@
             toolStripButton5 = new ToolStripButton();
             toolStripButton6 = new ToolStripButton();
             toolStripSeparator2 = new ToolStripSeparator();
-            smartGridRates = new SmartLib.SmartGrid(components);
+            c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
             ((System.ComponentModel.ISupportInitialize)smartGridSalePurchase).BeginInit();
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanel2.SuspendLayout();
-            c1SplitterPanel1.SuspendLayout();
-            toolStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)smartGridRates).BeginInit();
+            toolStrip2.SuspendLayout();
+            c1SplitterPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // smartGridSalePurchase
@@ -228,19 +228,24 @@
             c1SplitterPanel2.Text = "Валюты и курсы";
             c1SplitterPanel2.Width = 280;
             // 
-            // c1SplitterPanel1
+            // smartGridRates
             // 
-            c1SplitterPanel1.Collapsible = true;
-            c1SplitterPanel1.Controls.Add(smartGridSalePurchase);
-            c1SplitterPanel1.Controls.Add(toolStrip1);
-            c1SplitterPanel1.Dock = C1.Win.SplitContainer.PanelDockStyle.Left;
-            c1SplitterPanel1.Location = new Point(0, 21);
-            c1SplitterPanel1.Name = "c1SplitterPanel1";
-            c1SplitterPanel1.Size = new Size(470, 395);
-            c1SplitterPanel1.SizeRatio = 34.602D;
-            c1SplitterPanel1.TabIndex = 0;
-            c1SplitterPanel1.Text = "Типы продаж (покупок)";
-            c1SplitterPanel1.Width = 470;
+            smartGridRates.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridRates.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGridRates.AllowNodeMove = false;
+            smartGridRates.ColumnInfo = resources.GetString("smartGridRates.ColumnInfo");
+            smartGridRates.Dock = DockStyle.Fill;
+            smartGridRates.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            smartGridRates.IdName = null;
+            smartGridRates.Location = new Point(0, 31);
+            smartGridRates.Name = "smartGridRates";
+            smartGridRates.Rows.Count = 5;
+            smartGridRates.SelectedRows = (List<int>)resources.GetObject("smartGridRates.SelectedRows");
+            smartGridRates.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGridRates.Size = new Size(273, 364);
+            smartGridRates.SortingType = SmartLib.SortingType.Descending;
+            smartGridRates.StyleInfo = resources.GetString("smartGridRates.StyleInfo");
+            smartGridRates.TabIndex = 2;
             // 
             // toolStrip2
             // 
@@ -303,24 +308,19 @@
             toolStripSeparator2.Name = "toolStripSeparator2";
             toolStripSeparator2.Size = new Size(6, 31);
             // 
-            // smartGridRates
+            // c1SplitterPanel1
             // 
-            smartGridRates.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridRates.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridRates.AllowNodeMove = false;
-            smartGridRates.ColumnInfo = resources.GetString("smartGridRates.ColumnInfo");
-            smartGridRates.Dock = DockStyle.Fill;
-            smartGridRates.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            smartGridRates.IdName = null;
-            smartGridRates.Location = new Point(0, 31);
-            smartGridRates.Name = "smartGridRates";
-            smartGridRates.Rows.Count = 5;
-            smartGridRates.SelectedRows = (List<int>)resources.GetObject("smartGridRates.SelectedRows");
-            smartGridRates.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridRates.Size = new Size(273, 364);
-            smartGridRates.SortingType = SmartLib.SortingType.Descending;
-            smartGridRates.StyleInfo = resources.GetString("smartGridRates.StyleInfo");
-            smartGridRates.TabIndex = 2;
+            c1SplitterPanel1.Collapsible = true;
+            c1SplitterPanel1.Controls.Add(smartGridSalePurchase);
+            c1SplitterPanel1.Controls.Add(toolStrip1);
+            c1SplitterPanel1.Dock = C1.Win.SplitContainer.PanelDockStyle.Left;
+            c1SplitterPanel1.Location = new Point(0, 21);
+            c1SplitterPanel1.Name = "c1SplitterPanel1";
+            c1SplitterPanel1.Size = new Size(470, 395);
+            c1SplitterPanel1.SizeRatio = 34.602D;
+            c1SplitterPanel1.TabIndex = 0;
+            c1SplitterPanel1.Text = "Типы продаж (покупок)";
+            c1SplitterPanel1.Width = 470;
             // 
             // SalePurchaseTypesForm
             // 
@@ -340,11 +340,11 @@
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanel2.ResumeLayout(false);
             c1SplitterPanel2.PerformLayout();
-            c1SplitterPanel1.ResumeLayout(false);
-            c1SplitterPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)smartGridRates).EndInit();
             toolStrip2.ResumeLayout(false);
             toolStrip2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridRates).EndInit();
+            c1SplitterPanel1.ResumeLayout(false);
+            c1SplitterPanel1.PerformLayout();
             ResumeLayout(false);
         }
 
