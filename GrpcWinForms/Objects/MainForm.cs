@@ -233,7 +233,7 @@ namespace GrpcWinForms.Forms
 
         }
 
-        private void SalePurchaseTypesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SalePurchaseTypesToolStripMenuItem_Click_2(object sender, EventArgs e)
         {
             foreach (Form child in MdiChildren)
             {
@@ -241,6 +241,7 @@ namespace GrpcWinForms.Forms
             }
             var f = new SalePurchaseTypesForm { MdiParent = this };
             f.Show();
+
         }
     }
 }

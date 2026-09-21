@@ -36,6 +36,8 @@ namespace GrpcWinForms.Forms
             CurrenciesAndRatesToolStripMenuItem = new ToolStripMenuItem();
             CurrenciesToolStripMenuItem = new ToolStripMenuItem();
             RatesToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator6 = new ToolStripSeparator();
+            SalePurchaseToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             GeographAndPlacesToolStripMenuItem = new ToolStripMenuItem();
             GeolocationsToolStripMenuItem = new ToolStripMenuItem();
@@ -54,8 +56,8 @@ namespace GrpcWinForms.Forms
             UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             тестоваяФормаToolStripMenuItem = new ToolStripMenuItem();
             taskBar = new GrpcWinForms.Controls.TaskBar.TaskBar(components);
-            toolStripSeparator6 = new ToolStripSeparator();
             SalePurchaseTypesToolStripMenuItem = new ToolStripMenuItem();
+            SalePurchaseRatesToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -78,14 +80,14 @@ namespace GrpcWinForms.Forms
             // ToolStripMenuItemContrtacts
             // 
             ToolStripMenuItemContrtacts.Name = "ToolStripMenuItemContrtacts";
-            ToolStripMenuItemContrtacts.Size = new Size(168, 22);
+            ToolStripMenuItemContrtacts.Size = new Size(180, 22);
             ToolStripMenuItemContrtacts.Text = "Контракты";
             ToolStripMenuItemContrtacts.Click += ToolStripMenuItemContrtacts_Click;
             // 
             // ContractTypesToolStripMenuItem
             // 
             ContractTypesToolStripMenuItem.Name = "ContractTypesToolStripMenuItem";
-            ContractTypesToolStripMenuItem.Size = new Size(168, 22);
+            ContractTypesToolStripMenuItem.Size = new Size(180, 22);
             ContractTypesToolStripMenuItem.Text = "Типы контрактов";
             ContractTypesToolStripMenuItem.Click += ContractTypesToolStripMenuItem_Click;
             // 
@@ -200,7 +202,7 @@ namespace GrpcWinForms.Forms
             // 
             // CurrenciesAndRatesToolStripMenuItem
             // 
-            CurrenciesAndRatesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { CurrenciesToolStripMenuItem, RatesToolStripMenuItem, toolStripSeparator6, SalePurchaseTypesToolStripMenuItem });
+            CurrenciesAndRatesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { CurrenciesToolStripMenuItem, RatesToolStripMenuItem, toolStripSeparator6, SalePurchaseToolStripMenuItem });
             CurrenciesAndRatesToolStripMenuItem.Name = "CurrenciesAndRatesToolStripMenuItem";
             CurrenciesAndRatesToolStripMenuItem.Size = new Size(228, 22);
             CurrenciesAndRatesToolStripMenuItem.Text = "Валюты  и курсы";
@@ -208,16 +210,28 @@ namespace GrpcWinForms.Forms
             // CurrenciesToolStripMenuItem
             // 
             CurrenciesToolStripMenuItem.Name = "CurrenciesToolStripMenuItem";
-            CurrenciesToolStripMenuItem.Size = new Size(198, 22);
+            CurrenciesToolStripMenuItem.Size = new Size(219, 22);
             CurrenciesToolStripMenuItem.Text = "Валюты";
             CurrenciesToolStripMenuItem.Click += CurrenciesToolStripMenuItem_Click;
             // 
             // RatesToolStripMenuItem
             // 
             RatesToolStripMenuItem.Name = "RatesToolStripMenuItem";
-            RatesToolStripMenuItem.Size = new Size(198, 22);
+            RatesToolStripMenuItem.Size = new Size(219, 22);
             RatesToolStripMenuItem.Text = "Курсы";
             RatesToolStripMenuItem.Click += RatesToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(216, 6);
+            // 
+            // SalePurchaseToolStripMenuItem
+            // 
+            SalePurchaseToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { SalePurchaseTypesToolStripMenuItem, SalePurchaseRatesToolStripMenuItem });
+            SalePurchaseToolStripMenuItem.Name = "SalePurchaseToolStripMenuItem";
+            SalePurchaseToolStripMenuItem.Size = new Size(219, 22);
+            SalePurchaseToolStripMenuItem.Text = "Валюты продаж и закупок";
             // 
             // toolStripSeparator2
             // 
@@ -340,17 +354,18 @@ namespace GrpcWinForms.Forms
             taskBar.TabIndex = 2;
             taskBar.Text = "taskBarComponent1";
             // 
-            // toolStripSeparator6
-            // 
-            toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new Size(195, 6);
-            // 
             // SalePurchaseTypesToolStripMenuItem
             // 
             SalePurchaseTypesToolStripMenuItem.Name = "SalePurchaseTypesToolStripMenuItem";
-            SalePurchaseTypesToolStripMenuItem.Size = new Size(198, 22);
-            SalePurchaseTypesToolStripMenuItem.Text = "Типы продаж  и курсы";
-            SalePurchaseTypesToolStripMenuItem.Click += SalePurchaseTypesToolStripMenuItem_Click;
+            SalePurchaseTypesToolStripMenuItem.Size = new Size(230, 22);
+            SalePurchaseTypesToolStripMenuItem.Text = "Валюты продаж и закупок";
+            SalePurchaseTypesToolStripMenuItem.Click += SalePurchaseTypesToolStripMenuItem_Click_2;
+            // 
+            // SalePurchaseRatesToolStripMenuItem
+            // 
+            SalePurchaseRatesToolStripMenuItem.Name = "SalePurchaseRatesToolStripMenuItem";
+            SalePurchaseRatesToolStripMenuItem.Size = new Size(230, 22);
+            SalePurchaseRatesToolStripMenuItem.Text = "Курсы используемых валют";
             // 
             // MainForm
             // 
@@ -410,6 +425,8 @@ namespace GrpcWinForms.Forms
         private ToolStripMenuItem UsersToolStripMenuItem;
         private ToolStripMenuItem ContragentsShortToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator6;
+        private ToolStripMenuItem SalePurchaseToolStripMenuItem;
         private ToolStripMenuItem SalePurchaseTypesToolStripMenuItem;
+        private ToolStripMenuItem SalePurchaseRatesToolStripMenuItem;
     }
 }

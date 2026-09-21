@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrpcWinForms.Controls.CompanyDropDown
+namespace GrpcWinForms.Objects.SalePurchaseTypes.Models
 {
-    public class Company
+    public class SalePurchaseCurrency
     {
         public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string TaxNo { get; set; } = "";
+        public string Code { get; set; }
     }
 }

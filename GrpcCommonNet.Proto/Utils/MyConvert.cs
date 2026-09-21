@@ -39,16 +39,17 @@ namespace GrpcCommonNet.Proto.Utils
         public static DecimalValue ToDecimalValueField(DbDataReader rdr, string fieldName, DataTable? schema = null)
         {
             if (string.IsNullOrEmpty(fieldName)) return new DecimalValue { };
-            if (schema == null) schema = rdr.GetSchemaTable();
-            
-            for (int i = 0; i < schema.Rows.Count; i++) 
+            schema ??= rdr.GetSchemaTable();
+            if (schema == null) return new DecimalValue { };
+
+            for (int i = 0; i < schema.Rows.Count; i++)
             {
                 DataRow row = schema.Rows[i];
                 if (row["ColumnName"].ToString() == fieldName)
                 {
-                    if (rdr[i] == null) break;
+                    if (rdr.IsDBNull(i)) break;
                     int scale = Convert.ToInt32(row["NumericScale"].ToString());
-                    return new DecimalValue { Units = (long)(rdr.GetDouble(i) * Math.Pow(10, scale)), Scale = scale};
+                    return new DecimalValue { Units = (long)(rdr.GetDouble(i) * Math.Pow(10, scale)), Scale = scale };
                 }
             }
             return new DecimalValue { };

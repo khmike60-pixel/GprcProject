@@ -74,17 +74,16 @@ select
     cu.Abbrev,  -- валюта страны
     mcu.Abbrev, -- основная валюта
     scu.Abbrev, -- валюта выдачи з/п
-    scu.Abbrev, -- кросс-валюта
+    ccu.Abbrev, -- кросс-валюта
     g.GeoLocation_MCode
 FROM global_db.rfr_country_currency spc 
     left join global_db.rfr_currency cu on cu.currencyId = spc.currencyId
-    left join global_db.rfr_currency mcu on mcu.main_currencyId = spc.currencyId
-    left join global_db.rfr_currency scu on scu.salary_currencyId = spc.currencyId
-    left join global_db.rfr_currency ccu on ccu.cross_rate_currency_id = spc.currencyId
-    left join global_db.rfr_currency cu on cu.currencyId = spc.currencyId
-    left join global_db.geolocations g on g.geolocation_id = spc.geolocation_id
+    left join global_db.rfr_currency mcu on spc.main_currency_Id = mcu.currencyId
+    left join global_db.rfr_currency scu on spc.salary_currency_Id = scu.currencyId
+    left join global_db.rfr_currency ccu on spc.cross_rate_currency_id = ccu.currencyId
+    left join global_db.geolocations g on g.geolocation_id = spc.ID_M_GEOCOUNTRY
 WHERE 1 = 1
-    and (ifnull(@name,'') = '' or spc like CONCAT('%',@name,'%'))
+    and (ifnull(@name,'') = '' or spc.comment like CONCAT('%',@name,'%'))
 ";
             cmd.Parameters.AddWithValue("@name", request.Name);
             using var reader = await cmd.ExecuteReaderAsync();
@@ -98,8 +97,7 @@ WHERE 1 = 1
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in ListSalePurchaseType: " + ex.Message);
-            throw;
+            throw new Exception("Ошибка в ListSalePurchaseTypeAsync: " + ex.Message);
         }
     }
 
@@ -202,10 +200,10 @@ WHERE 1 = 1
             if (salePurchaseType.Country == null) salePurchaseType.Country = new Geolocation();
             salePurchaseType.Country.Name = rdr["GeoLocation_MCode"].ToString();
         }
-        if (HasColumn(rdr, "currency_id"))
+        if (HasColumn(rdr, "currencyId"))
         {
             if (salePurchaseType.Currency == null) salePurchaseType.Currency = new Currency();
-            salePurchaseType.Currency.Id = rdr["currency_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["currency_id"]);
+            salePurchaseType.Currency.Id = rdr["currencyId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["currencyId"]);
         }
         if (HasColumn(rdr, "main_currency_id")) 
         {
@@ -224,6 +222,10 @@ WHERE 1 = 1
         }
         if (HasColumn(rdr, "currency_in_use")) 
         {
+            string str = rdr["currency_in_use"].ToString() ?? "";
+            salePurchaseType.Data = 
+
+
             salePurchaseType.Data = Google.Protobuf.WellKnownTypes.Struct.Parser.ParseJson(rdr["currency_in_use"].ToString() ?? "");
         }
         if (HasColumn(rdr, "confirmed")) 

@@ -12,10 +12,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Views
     public interface ISalePurchaseTypesView
     {
         BindingList<SalePurchaseType> SalePurchaseTypes { get; set; }
-        BindingList<SalePurchaseGridRate> SalePurchaseGridRates { get; set; }
-
-        SalePurchaseGridRate GetSelectedSalePurchaseRate();
-
+        BindingList<SalePurchaseCurrency> SalePurchaseCurrencies { get; set; }
 
     }
 }

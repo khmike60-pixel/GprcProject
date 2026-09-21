@@ -1,4 +1,5 @@
-﻿using GrpcCommonNet.Library.Common;
+﻿using Google.Protobuf;
+using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.SalePurchaseType;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Currencies.Views;
@@ -10,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
 namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
@@ -33,30 +35,19 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
                     GrpcClients.GrpcClients.SalePurchaseType.ListSalePurchaseTypeAsync(request).ResponseAsync);
 
             _view.SalePurchaseTypes = new BindingList<SalePurchaseType>(response.SalePurchaseTypes);
-
         }
 
-        public async Task RefreshSalePurchaseGridRateAsync()
+        public async Task RefreshSalePurchaseCurrenciesAsync(SalePurchaseType type)
         {
-            ListSalePurchaseRateRequest request = new ListSalePurchaseRateRequest()
-            {
-                DateStart = null,
-                DateEnd = null
-            };
-            var response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.SalePurchaseType.ListSalePurchaseRateAsync(request).ResponseAsync);
-            List<SalePurchaseGridRate> rates = new List<SalePurchaseGridRate>();
-            foreach(SalePurchaseRate rate in response.Rates)
-            {
-                SalePurchaseGridRate rowRate = new SalePurchaseGridRate();
-                rowRate.Id = rate.Id;
-                rowRate.Date = rate.Date.ToDateTime();
-                rates.Add(rowRate); 
-            }
+            string jsonString = JsonFormatter.Default.Format(type.Data);
 
-            _view.SalePurchaseGridRates = new BindingList<SalePurchaseGridRate>(rates);
-
+            // 2. Десериализуем строку в список объектов C#
+            List<SalePurchaseCurrency> currencies = 
+                JsonSerializer.Deserialize<List<SalePurchaseCurrency>>(jsonString, 
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true});
+            _view.SalePurchaseCurrencies = new BindingList<SalePurchaseCurrency>(currencies);
         }
+
 
     }
 }

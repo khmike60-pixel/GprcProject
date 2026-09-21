@@ -34,7 +34,7 @@
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
             SmartLib.StringItem stringItem2 = new SmartLib.StringItem();
-            smartGridSalePurchase = new SmartLib.SmartGrid(components);
+            gridSalePurchaseTypes = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -48,7 +48,7 @@
             textAbbrev = new TextBox();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanel2 = new C1.Win.SplitContainer.C1SplitterPanel();
-            smartGridRates = new SmartLib.SmartGrid(components);
+            gridSalePurchaseCurrencies = new SmartLib.SmartGrid(components);
             toolStrip2 = new ToolStrip();
             toolStripButton2 = new ToolStripButton();
             toolStripButton3 = new ToolStripButton();
@@ -57,50 +57,51 @@
             toolStripButton6 = new ToolStripButton();
             toolStripSeparator2 = new ToolStripSeparator();
             c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
-            ((System.ComponentModel.ISupportInitialize)smartGridSalePurchase).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridSalePurchaseTypes).BeginInit();
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridRates).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridSalePurchaseCurrencies).BeginInit();
             toolStrip2.SuspendLayout();
             c1SplitterPanel1.SuspendLayout();
             SuspendLayout();
             // 
-            // smartGridSalePurchase
+            // gridSalePurchaseTypes
             // 
-            smartGridSalePurchase.AllowEditing = false;
-            smartGridSalePurchase.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridSalePurchase.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridSalePurchase.AllowNodeMove = false;
-            smartGridSalePurchase.AutoGenerateColumns = false;
-            smartGridSalePurchase.ColumnInfo = resources.GetString("smartGridSalePurchase.ColumnInfo");
-            smartGridSalePurchase.Dock = DockStyle.Fill;
-            smartGridSalePurchase.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            gridSalePurchaseTypes.AllowEditing = false;
+            gridSalePurchaseTypes.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridSalePurchaseTypes.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridSalePurchaseTypes.AllowNodeMove = false;
+            gridSalePurchaseTypes.AutoGenerateColumns = false;
+            gridSalePurchaseTypes.ColumnInfo = resources.GetString("gridSalePurchaseTypes.ColumnInfo");
+            gridSalePurchaseTypes.Dock = DockStyle.Fill;
+            gridSalePurchaseTypes.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
             aggregateDefinition1.Column = 4;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGridSalePurchase.Footers.Descriptions.Add(footerDescription1);
-            smartGridSalePurchase.Footers.Fixed = true;
+            gridSalePurchaseTypes.Footers.Descriptions.Add(footerDescription1);
+            gridSalePurchaseTypes.Footers.Fixed = true;
             stringItem1.Name = "Заголовок 1";
             stringItem1.Value = "...;Id; ;Наименование;Страна;Используемые валюты;Используемые валюты;Используемые валюты";
             stringItem2.Name = "Заголовок  2";
             stringItem2.Value = "...;Id; ;Наименование;Страна;Базовая;Выдача;Кросс-курс";
-            smartGridSalePurchase.Headers.Add(stringItem1);
-            smartGridSalePurchase.Headers.Add(stringItem2);
-            smartGridSalePurchase.IdName = null;
-            smartGridSalePurchase.Location = new Point(0, 31);
-            smartGridSalePurchase.Name = "smartGridSalePurchase";
-            smartGridSalePurchase.Rows.Count = 5;
-            smartGridSalePurchase.Rows.Fixed = 2;
-            smartGridSalePurchase.SelectedRows = (List<int>)resources.GetObject("smartGridSalePurchase.SelectedRows");
-            smartGridSalePurchase.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridSalePurchase.Size = new Size(470, 364);
-            smartGridSalePurchase.SortingType = SmartLib.SortingType.Descending;
-            smartGridSalePurchase.StyleInfo = resources.GetString("smartGridSalePurchase.StyleInfo");
-            smartGridSalePurchase.TabIndex = 3;
+            gridSalePurchaseTypes.Headers.Add(stringItem1);
+            gridSalePurchaseTypes.Headers.Add(stringItem2);
+            gridSalePurchaseTypes.IdName = null;
+            gridSalePurchaseTypes.Location = new Point(0, 31);
+            gridSalePurchaseTypes.Name = "gridSalePurchaseTypes";
+            gridSalePurchaseTypes.Rows.Count = 5;
+            gridSalePurchaseTypes.Rows.Fixed = 2;
+            gridSalePurchaseTypes.SelectedRows = (List<int>)resources.GetObject("gridSalePurchaseTypes.SelectedRows");
+            gridSalePurchaseTypes.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gridSalePurchaseTypes.Size = new Size(470, 364);
+            gridSalePurchaseTypes.SortingType = SmartLib.SortingType.Descending;
+            gridSalePurchaseTypes.StyleInfo = resources.GetString("gridSalePurchaseTypes.StyleInfo");
+            gridSalePurchaseTypes.TabIndex = 3;
+            gridSalePurchaseTypes.RowColChange += gridSalePurchaseTypes_RowColChange;
             // 
             // toolStrip1
             // 
@@ -216,7 +217,7 @@
             // c1SplitterPanel2
             // 
             c1SplitterPanel2.Collapsible = true;
-            c1SplitterPanel2.Controls.Add(smartGridRates);
+            c1SplitterPanel2.Controls.Add(gridSalePurchaseCurrencies);
             c1SplitterPanel2.Controls.Add(toolStrip2);
             c1SplitterPanel2.Dock = C1.Win.SplitContainer.PanelDockStyle.Right;
             c1SplitterPanel2.Height = 416;
@@ -225,27 +226,27 @@
             c1SplitterPanel2.Size = new Size(273, 395);
             c1SplitterPanel2.SizeRatio = 37.398D;
             c1SplitterPanel2.TabIndex = 1;
-            c1SplitterPanel2.Text = "Валюты и курсы";
+            c1SplitterPanel2.Text = "Используемые валюты";
             c1SplitterPanel2.Width = 280;
             // 
-            // smartGridRates
+            // gridSalePurchaseCurrencies
             // 
-            smartGridRates.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridRates.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGridRates.AllowNodeMove = false;
-            smartGridRates.ColumnInfo = resources.GetString("smartGridRates.ColumnInfo");
-            smartGridRates.Dock = DockStyle.Fill;
-            smartGridRates.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            smartGridRates.IdName = null;
-            smartGridRates.Location = new Point(0, 31);
-            smartGridRates.Name = "smartGridRates";
-            smartGridRates.Rows.Count = 5;
-            smartGridRates.SelectedRows = (List<int>)resources.GetObject("smartGridRates.SelectedRows");
-            smartGridRates.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGridRates.Size = new Size(273, 364);
-            smartGridRates.SortingType = SmartLib.SortingType.Descending;
-            smartGridRates.StyleInfo = resources.GetString("smartGridRates.StyleInfo");
-            smartGridRates.TabIndex = 2;
+            gridSalePurchaseCurrencies.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridSalePurchaseCurrencies.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridSalePurchaseCurrencies.AllowNodeMove = false;
+            gridSalePurchaseCurrencies.ColumnInfo = resources.GetString("gridSalePurchaseCurrencies.ColumnInfo");
+            gridSalePurchaseCurrencies.Dock = DockStyle.Fill;
+            gridSalePurchaseCurrencies.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            gridSalePurchaseCurrencies.IdName = null;
+            gridSalePurchaseCurrencies.Location = new Point(0, 31);
+            gridSalePurchaseCurrencies.Name = "gridSalePurchaseCurrencies";
+            gridSalePurchaseCurrencies.Rows.Count = 5;
+            gridSalePurchaseCurrencies.SelectedRows = (List<int>)resources.GetObject("gridSalePurchaseCurrencies.SelectedRows");
+            gridSalePurchaseCurrencies.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gridSalePurchaseCurrencies.Size = new Size(273, 364);
+            gridSalePurchaseCurrencies.SortingType = SmartLib.SortingType.Descending;
+            gridSalePurchaseCurrencies.StyleInfo = resources.GetString("gridSalePurchaseCurrencies.StyleInfo");
+            gridSalePurchaseCurrencies.TabIndex = 2;
             // 
             // toolStrip2
             // 
@@ -311,7 +312,7 @@
             // c1SplitterPanel1
             // 
             c1SplitterPanel1.Collapsible = true;
-            c1SplitterPanel1.Controls.Add(smartGridSalePurchase);
+            c1SplitterPanel1.Controls.Add(gridSalePurchaseTypes);
             c1SplitterPanel1.Controls.Add(toolStrip1);
             c1SplitterPanel1.Dock = C1.Win.SplitContainer.PanelDockStyle.Left;
             c1SplitterPanel1.Location = new Point(0, 21);
@@ -331,7 +332,8 @@
             Controls.Add(panel1);
             Name = "SalePurchaseTypesForm";
             Text = "Типы  продаж (покупок)";
-            ((System.ComponentModel.ISupportInitialize)smartGridSalePurchase).EndInit();
+            Load += SalePurchaseTypesForm_Load;
+            ((System.ComponentModel.ISupportInitialize)gridSalePurchaseTypes).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             panel1.ResumeLayout(false);
@@ -340,7 +342,7 @@
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanel2.ResumeLayout(false);
             c1SplitterPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGridRates).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridSalePurchaseCurrencies).EndInit();
             toolStrip2.ResumeLayout(false);
             toolStrip2.PerformLayout();
             c1SplitterPanel1.ResumeLayout(false);
@@ -349,7 +351,7 @@
         }
 
         #endregion
-        private SmartLib.SmartGrid smartGridSalePurchase;
+        private SmartLib.SmartGrid gridSalePurchaseTypes;
         private ToolStrip toolStrip1;
         private ToolStripButton toolStripButtonNew;
         private ToolStripButton toolStripButtonDouble;
@@ -364,7 +366,7 @@
         private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel2;
-        private SmartLib.SmartGrid smartGridRates;
+        private SmartLib.SmartGrid gridSalePurchaseCurrencies;
         private ToolStrip toolStrip2;
         private ToolStripButton toolStripButton2;
         private ToolStripButton toolStripButton3;
