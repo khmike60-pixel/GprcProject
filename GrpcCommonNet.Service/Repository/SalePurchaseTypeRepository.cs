@@ -71,11 +71,11 @@ WHERE 1 = 1
             cmd.CommandText = @$"
 select 
     spc.*,
-    cu.Abbrev,  -- валюта страны
-    mcu.Abbrev, -- основная валюта
-    scu.Abbrev, -- валюта выдачи з/п
-    ccu.Abbrev, -- кросс-валюта
-    g.GeoLocation_MCode
+    cu.Abbrev  CurrencyCode,  -- валюта страны
+    mcu.Abbrev CurrencyMainCode, -- основная валюта
+    scu.Abbrev CurrencySalaryCode, -- валюта выдачи з/п
+    ccu.Abbrev CurrencyCrossCode, -- кросс-валюта
+    g.GeoLocation_MCode, g.GeoLocation_Code2
 FROM global_db.rfr_country_currency spc 
     left join global_db.rfr_currency cu on cu.currencyId = spc.currencyId
     left join global_db.rfr_currency mcu on spc.main_currency_Id = mcu.currencyId
@@ -200,33 +200,64 @@ WHERE 1 = 1
             if (salePurchaseType.Country == null) salePurchaseType.Country = new Geolocation();
             salePurchaseType.Country.Name = rdr["GeoLocation_MCode"].ToString();
         }
+        if (HasColumn(rdr, "GeoLocation_Code2"))
+        {
+            if (salePurchaseType.Country == null) salePurchaseType.Country = new Geolocation();
+            salePurchaseType.Country.Code2 = rdr["GeoLocation_Code2"].ToString();
+        }
         if (HasColumn(rdr, "currencyId"))
         {
             if (salePurchaseType.Currency == null) salePurchaseType.Currency = new Currency();
             salePurchaseType.Currency.Id = rdr["currencyId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["currencyId"]);
+        }
+        if (HasColumn(rdr, "CurrencyCode"))
+        {
+            if (salePurchaseType.Currency == null) salePurchaseType.Currency = new Currency();
+            salePurchaseType.Currency.Abbrev = rdr["CurrencyCode"].ToString();
         }
         if (HasColumn(rdr, "main_currency_id")) 
         {
             if (salePurchaseType.CurrencyMain == null) salePurchaseType.CurrencyMain = new Currency();
             salePurchaseType.CurrencyMain.Id = rdr["main_currency_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["main_currency_id"]);
         }
+        if (HasColumn(rdr, "CurrencyMainCode"))
+        {
+            if (salePurchaseType.CurrencyMain == null) salePurchaseType.CurrencyMain = new Currency();
+            salePurchaseType.CurrencyMain.Abbrev = rdr["CurrencyMainCode"].ToString();
+        }
+
         if (HasColumn(rdr, "salary_currency_id")) 
         {
             if (salePurchaseType.CurrencySalary == null) salePurchaseType.CurrencySalary = new Currency();
             salePurchaseType.CurrencySalary.Id = rdr["salary_currency_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["salary_currency_id"]);
         }
+        if (HasColumn(rdr, "CurrencySalaryCode"))
+        {
+            if (salePurchaseType.CurrencySalary == null) salePurchaseType.CurrencySalary = new Currency();
+            salePurchaseType.CurrencySalary.Abbrev = rdr["CurrencySalaryCode"].ToString();
+        }
+
         if (HasColumn(rdr, "cross_rate_currency_id"))
         {
             if (salePurchaseType.CurrencyCross== null) salePurchaseType.CurrencyCross = new Currency();
             salePurchaseType.CurrencyCross.Id = rdr["cross_rate_currency_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["cross_rate_currency_id"]);
         }
+        if (HasColumn(rdr, "CurrencyCrossCode"))
+        {
+            if (salePurchaseType.CurrencyCross == null) salePurchaseType.CurrencyCross = new Currency();
+            salePurchaseType.CurrencyCross.Abbrev = rdr["CurrencyCrossCode"].ToString();
+        }
+
         if (HasColumn(rdr, "currency_in_use")) 
         {
-            string str = rdr["currency_in_use"].ToString() ?? "";
-            salePurchaseType.Data = 
-
-
-            salePurchaseType.Data = Google.Protobuf.WellKnownTypes.Struct.Parser.ParseJson(rdr["currency_in_use"].ToString() ?? "");
+            string json = rdr["currency_in_use"].ToString() ?? "";
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                var value = Google.Protobuf.WellKnownTypes.Value.Parser.ParseJson(json);
+                var st = new Google.Protobuf.WellKnownTypes.Struct();
+                st.Fields["currency_in_use"] = value;
+                salePurchaseType.Data = st;
+            }
         }
         if (HasColumn(rdr, "confirmed")) 
             salePurchaseType.Confirmed = rdr["confirmed"] == DBNull.Value ? false : Convert.ToBoolean(rdr["confirmed"]);
@@ -249,7 +280,7 @@ WHERE 1 = 1
         }
 
 
-        return new SalePurchaseType();
+        return salePurchaseType;
     }
 
     private bool HasColumn(DbDataReader reader, string columnName)

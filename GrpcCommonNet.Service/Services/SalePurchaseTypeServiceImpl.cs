@@ -1,5 +1,6 @@
 ﻿using Grpc.Core;
 using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Library.SalePurchaseType;
 using GrpcCommonNet.Service.Models;
 using GrpcCommonNet.Service.Repository;
@@ -62,7 +63,7 @@ public class SalePurchaseTypeServiceImpl : SalePurchaseTypeServices.SalePurchase
             {
                 Result = new Result { Status =  GrpcCommonNet.Library.Common.Status.Ok }
             };
-            foreach (var salePurchaseType in response.SalePurchaseTypes)
+            foreach (var salePurchaseType in salePurchaseTypes)
             {
                 SalePurchaseType maskSalePurchaseType = new SalePurchaseType();
                 if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
@@ -75,8 +76,8 @@ public class SalePurchaseTypeServiceImpl : SalePurchaseTypeServices.SalePurchase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in ListSalePurchaseType: " + ex.Message);
-            throw;
+            _logger.LogError(ex, ex.Message);
+            return new ListSalePurchaseTypeResponse { Result = new Result { Status = Status.BadRequest } };
         }
     }
 

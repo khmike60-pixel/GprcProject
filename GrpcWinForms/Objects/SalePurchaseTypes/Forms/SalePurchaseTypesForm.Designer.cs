@@ -85,9 +85,9 @@
             gridSalePurchaseTypes.Footers.Descriptions.Add(footerDescription1);
             gridSalePurchaseTypes.Footers.Fixed = true;
             stringItem1.Name = "Заголовок 1";
-            stringItem1.Value = "...;Id; ;Наименование;Страна;Используемые валюты;Используемые валюты;Используемые валюты";
+            stringItem1.Value = "...;Id; ;Наименование;Страна;Валюта;Учетные валюты;Учетные валюты;Учетные валюты";
             stringItem2.Name = "Заголовок  2";
-            stringItem2.Value = "...;Id; ;Наименование;Страна;Базовая;Выдача;Кросс-курс";
+            stringItem2.Value = "...;Id; ;Наименование;Страна;Валюта;Базовая;Выдача;Кросс-курс";
             gridSalePurchaseTypes.Headers.Add(stringItem1);
             gridSalePurchaseTypes.Headers.Add(stringItem2);
             gridSalePurchaseTypes.IdName = null;
@@ -97,11 +97,12 @@
             gridSalePurchaseTypes.Rows.Fixed = 2;
             gridSalePurchaseTypes.SelectedRows = (List<int>)resources.GetObject("gridSalePurchaseTypes.SelectedRows");
             gridSalePurchaseTypes.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            gridSalePurchaseTypes.Size = new Size(470, 364);
+            gridSalePurchaseTypes.Size = new Size(567, 364);
             gridSalePurchaseTypes.SortingType = SmartLib.SortingType.Descending;
             gridSalePurchaseTypes.StyleInfo = resources.GetString("gridSalePurchaseTypes.StyleInfo");
             gridSalePurchaseTypes.TabIndex = 3;
             gridSalePurchaseTypes.RowColChange += gridSalePurchaseTypes_RowColChange;
+            gridSalePurchaseTypes.GetUnboundValue += gridSalePurchaseTypes_GetUnboundValue;
             // 
             // toolStrip1
             // 
@@ -109,7 +110,7 @@
             toolStrip1.Items.AddRange(new ToolStripItem[] { toolStripButtonNew, toolStripButtonDouble, toolStripButtonEdit, toolStripButtonDelete, toolStripButtonRefresh, toolStripSeparator1 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(470, 31);
+            toolStrip1.Size = new Size(567, 31);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -172,7 +173,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(754, 34);
+            panel1.Size = new Size(831, 34);
             panel1.TabIndex = 2;
             // 
             // checkIncludeInvisible
@@ -211,7 +212,7 @@
             c1SplitContainer1.Name = "c1SplitContainer1";
             c1SplitContainer1.Panels.Add(c1SplitterPanel2);
             c1SplitContainer1.Panels.Add(c1SplitterPanel1);
-            c1SplitContainer1.Size = new Size(754, 416);
+            c1SplitContainer1.Size = new Size(831, 416);
             c1SplitContainer1.TabIndex = 4;
             // 
             // c1SplitterPanel2
@@ -221,19 +222,20 @@
             c1SplitterPanel2.Controls.Add(toolStrip2);
             c1SplitterPanel2.Dock = C1.Win.SplitContainer.PanelDockStyle.Right;
             c1SplitterPanel2.Height = 416;
-            c1SplitterPanel2.Location = new Point(481, 21);
+            c1SplitterPanel2.Location = new Point(578, 21);
             c1SplitterPanel2.Name = "c1SplitterPanel2";
-            c1SplitterPanel2.Size = new Size(273, 395);
-            c1SplitterPanel2.SizeRatio = 37.398D;
+            c1SplitterPanel2.Size = new Size(253, 395);
+            c1SplitterPanel2.SizeRatio = 31.447D;
             c1SplitterPanel2.TabIndex = 1;
             c1SplitterPanel2.Text = "Используемые валюты";
-            c1SplitterPanel2.Width = 280;
+            c1SplitterPanel2.Width = 260;
             // 
             // gridSalePurchaseCurrencies
             // 
             gridSalePurchaseCurrencies.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             gridSalePurchaseCurrencies.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             gridSalePurchaseCurrencies.AllowNodeMove = false;
+            gridSalePurchaseCurrencies.AutoGenerateColumns = false;
             gridSalePurchaseCurrencies.ColumnInfo = resources.GetString("gridSalePurchaseCurrencies.ColumnInfo");
             gridSalePurchaseCurrencies.Dock = DockStyle.Fill;
             gridSalePurchaseCurrencies.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
@@ -243,7 +245,7 @@
             gridSalePurchaseCurrencies.Rows.Count = 5;
             gridSalePurchaseCurrencies.SelectedRows = (List<int>)resources.GetObject("gridSalePurchaseCurrencies.SelectedRows");
             gridSalePurchaseCurrencies.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            gridSalePurchaseCurrencies.Size = new Size(273, 364);
+            gridSalePurchaseCurrencies.Size = new Size(253, 364);
             gridSalePurchaseCurrencies.SortingType = SmartLib.SortingType.Descending;
             gridSalePurchaseCurrencies.StyleInfo = resources.GetString("gridSalePurchaseCurrencies.StyleInfo");
             gridSalePurchaseCurrencies.TabIndex = 2;
@@ -254,7 +256,7 @@
             toolStrip2.Items.AddRange(new ToolStripItem[] { toolStripButton2, toolStripButton3, toolStripButton4, toolStripButton5, toolStripButton6, toolStripSeparator2 });
             toolStrip2.Location = new Point(0, 0);
             toolStrip2.Name = "toolStrip2";
-            toolStrip2.Size = new Size(273, 31);
+            toolStrip2.Size = new Size(253, 31);
             toolStrip2.TabIndex = 1;
             toolStrip2.Text = "toolStrip2";
             // 
@@ -317,17 +319,17 @@
             c1SplitterPanel1.Dock = C1.Win.SplitContainer.PanelDockStyle.Left;
             c1SplitterPanel1.Location = new Point(0, 21);
             c1SplitterPanel1.Name = "c1SplitterPanel1";
-            c1SplitterPanel1.Size = new Size(470, 395);
+            c1SplitterPanel1.Size = new Size(567, 395);
             c1SplitterPanel1.SizeRatio = 34.602D;
             c1SplitterPanel1.TabIndex = 0;
             c1SplitterPanel1.Text = "Типы продаж (покупок)";
-            c1SplitterPanel1.Width = 470;
+            c1SplitterPanel1.Width = 567;
             // 
             // SalePurchaseTypesForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(754, 450);
+            ClientSize = new Size(831, 450);
             Controls.Add(c1SplitContainer1);
             Controls.Add(panel1);
             Name = "SalePurchaseTypesForm";

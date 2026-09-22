@@ -1,4 +1,5 @@
-﻿using GrpcCommonNet.Library.Common;
+﻿using C1.Win.FlexGrid;
+using GrpcCommonNet.Library.Common;
 using GrpcWinForms.Objects.Currencies.Presenters;
 using GrpcWinForms.Objects.Currencies.Views;
 using GrpcWinForms.Objects.SalePurchaseTypes.Models;
@@ -23,12 +24,12 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
         private readonly SalePurchaseTypePresenter _presenter;
         private int _row = 0;
         private BindingList<SalePurchaseType> _types = [];
-        private BindingList<SalePurchaseCurrency> _currencies = [];
+        private BindingList<Currency> _currencies = [];
 
 
         BindingList<SalePurchaseType> ISalePurchaseTypesView.SalePurchaseTypes
         { get => _types; set { _types = value; gridSalePurchaseTypes.DataSource = _types; } }
-        BindingList<SalePurchaseCurrency> ISalePurchaseTypesView.SalePurchaseCurrencies
+        BindingList<Currency> ISalePurchaseTypesView.Currencies
         { get => _currencies; set { _currencies = value; gridSalePurchaseCurrencies.DataSource = _currencies; } }
 
         public SalePurchaseTypesForm()
@@ -39,7 +40,8 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
 
         private async void SalePurchaseTypesForm_Load(object sender, EventArgs e)
         {
-            await _presenter.RefreshSalePurchaseTypesAsync();
+            _types = await _presenter.RefreshSalePurchaseTypesAsync();
+            gridSalePurchaseTypes.DataSource = _types;
         }
 
         private async void gridSalePurchaseTypes_RowColChange(object sender, EventArgs e)
@@ -47,8 +49,51 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
             int row = gridSalePurchaseTypes.Row;
             if (row < gridSalePurchaseTypes.Rows.Fixed) return;
             if (row != _row) { _row = row; }
+
             SalePurchaseType _type = gridSalePurchaseTypes.Rows[row].DataSource as SalePurchaseType;
-            await _presenter.RefreshSalePurchaseCurrenciesAsync(_type);
+            _currencies = await _presenter.RefreshSalePurchaseCurrenciesAsync(_type);
+//            gridSalePurchaseCurrencies.DataSource = _currencies;
+        }
+
+        private void gridSalePurchaseTypes_GetUnboundValue(object sender, UnboundValueEventArgs e)
+        {
+            string field = gridSalePurchaseTypes.Cols[e.Col].Name;
+            SalePurchaseType type = gridSalePurchaseTypes.Rows[e.Row].DataSource as SalePurchaseType;
+            try
+            {
+                switch (field)
+                {
+                    case "Name":
+                        e.Value = type.Name;
+                        break;
+                    case "Confirmed":
+                        e.Value = type.Confirmed;
+                        break;
+                    case "Id":
+                        e.Value = type.Id;
+                        break;
+                    case "CountryCode":
+                        e.Value = type.Country.Code2;
+                        break;
+                    case "colCurrency":
+                        e.Value = type.Currency.Abbrev;
+                        break;
+                    case "colCurrencyMain":
+                        e.Value = type.CurrencyMain.Abbrev;
+                        break;
+                    case "colCurrencySalary":
+                        e.Value = type.CurrencySalary.Abbrev;
+                        break;
+                    case "colCurrencyCross":
+                        e.Value = type.CurrencyCross.Abbrev;
+                        break;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
