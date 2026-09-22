@@ -104,10 +104,9 @@ public class SalePurchaseTypeServiceImpl : SalePurchaseTypeServices.SalePurchase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in CreateSalePurchaseType: " + ex.Message);
-            throw;
-
-        }
+            _logger.LogError(ex, $"CreateSalePurchaseType called: " + ex.Message);
+            return new SalePurchaseTypeResponse { Result = new Result { Status = Status.BadRequest } };
+       }
     }
 
     public override async Task<SalePurchaseTypeResponse> UpdateSalePurchaseType(UpdateSalePurchaseTypeRequest request, ServerCallContext context)

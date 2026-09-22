@@ -5,6 +5,7 @@ using GrpcWinForms.Objects.Currencies.Views;
 using GrpcWinForms.Objects.SalePurchaseTypes.Models;
 using GrpcWinForms.Objects.SalePurchaseTypes.Presenters;
 using GrpcWinForms.Objects.SalePurchaseTypes.Views;
+using SmartLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,25 +20,36 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
 {
     public partial class SalePurchaseTypesForm : Form, ISalePurchaseTypesView
     {
-        public bool DialogMode = false;
-        private object selectedItem = new object();
         private readonly SalePurchaseTypePresenter _presenter;
         private int _row = 0;
+
+        public bool DialogMode = false;
+
+        private List<int> selectedIds = [];
+        List<int> ISalePurchaseTypesView.SelectedIds { get => selectedIds; set => selectedIds = value; }
+
         private BindingList<SalePurchaseType> _types = [];
-        private BindingList<Currency> _currencies = [];
-
-
         BindingList<SalePurchaseType> ISalePurchaseTypesView.SalePurchaseTypes
         { get => _types; set { _types = value; gridSalePurchaseTypes.DataSource = _types; } }
+
+        private BindingList<Currency> _currencies = [];
         BindingList<Currency> ISalePurchaseTypesView.Currencies
         { get => _currencies; set { _currencies = value; gridSalePurchaseCurrencies.DataSource = _currencies; } }
 
+        public SmartGrid GridTypes { get => gridSalePurchaseTypes; set => gridSalePurchaseTypes = value; }
+        public SmartGrid GridCurrencies { get => gridSalePurchaseCurrencies; set => gridSalePurchaseCurrencies = value; }
+
+        #region Конструктор
         public SalePurchaseTypesForm()
         {
             InitializeComponent();
             _presenter = new SalePurchaseTypePresenter(this);
         }
 
+        #endregion
+
+
+        #region Основные методы
         private async void SalePurchaseTypesForm_Load(object sender, EventArgs e)
         {
             _types = await _presenter.RefreshSalePurchaseTypesAsync();
@@ -52,7 +64,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
 
             SalePurchaseType _type = gridSalePurchaseTypes.Rows[row].DataSource as SalePurchaseType;
             _currencies = await _presenter.RefreshSalePurchaseCurrenciesAsync(_type);
-//            gridSalePurchaseCurrencies.DataSource = _currencies;
+            gridSalePurchaseCurrencies.DataSource = _currencies;
         }
 
         private void gridSalePurchaseTypes_GetUnboundValue(object sender, UnboundValueEventArgs e)
@@ -95,5 +107,19 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void toolStripButtonNew_Click(object sender, EventArgs e)
+        {
+            _presenter.OnClick_NewAsync();
+        }
+
+        private async void toolStripButtonDelete_Click(object sender, EventArgs e)
+        {
+            await _presenter.OnClick_DeleteAsync(gridSalePurchaseTypes.SelectedRows);
+
+        }
+
+        #endregion
+
     }
 }

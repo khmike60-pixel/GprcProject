@@ -43,9 +43,6 @@
             toolStripButtonRefresh = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
             panel1 = new Panel();
-            checkIncludeInvisible = new CheckBox();
-            labelAbbrev = new Label();
-            textAbbrev = new TextBox();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanel2 = new C1.Win.SplitContainer.C1SplitterPanel();
             gridSalePurchaseCurrencies = new SmartLib.SmartGrid(components);
@@ -59,7 +56,6 @@
             c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
             ((System.ComponentModel.ISupportInitialize)gridSalePurchaseTypes).BeginInit();
             toolStrip1.SuspendLayout();
-            panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
             c1SplitterPanel2.SuspendLayout();
@@ -122,6 +118,7 @@
             toolStripButtonNew.Name = "toolStripButtonNew";
             toolStripButtonNew.Size = new Size(28, 28);
             toolStripButtonNew.Text = "Новый";
+            toolStripButtonNew.Click += toolStripButtonNew_Click;
             // 
             // toolStripButtonDouble
             // 
@@ -150,6 +147,7 @@
             toolStripButtonDelete.Name = "toolStripButtonDelete";
             toolStripButtonDelete.Size = new Size(28, 28);
             toolStripButtonDelete.Text = "Удалить";
+            toolStripButtonDelete.Click += toolStripButtonDelete_Click;
             // 
             // toolStripButtonRefresh
             // 
@@ -167,41 +165,11 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(checkIncludeInvisible);
-            panel1.Controls.Add(labelAbbrev);
-            panel1.Controls.Add(textAbbrev);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
             panel1.Size = new Size(831, 34);
             panel1.TabIndex = 2;
-            // 
-            // checkIncludeInvisible
-            // 
-            checkIncludeInvisible.AutoSize = true;
-            checkIncludeInvisible.CheckAlign = ContentAlignment.MiddleRight;
-            checkIncludeInvisible.Location = new Point(117, 9);
-            checkIncludeInvisible.Name = "checkIncludeInvisible";
-            checkIncludeInvisible.Size = new Size(45, 19);
-            checkIncludeInvisible.TabIndex = 2;
-            checkIncludeInvisible.Text = "Все";
-            checkIncludeInvisible.UseVisualStyleBackColor = true;
-            // 
-            // labelAbbrev
-            // 
-            labelAbbrev.AutoSize = true;
-            labelAbbrev.Location = new Point(20, 9);
-            labelAbbrev.Name = "labelAbbrev";
-            labelAbbrev.Size = new Size(48, 15);
-            labelAbbrev.TabIndex = 1;
-            labelAbbrev.Text = "Валюта";
-            // 
-            // textAbbrev
-            // 
-            textAbbrev.Location = new Point(74, 6);
-            textAbbrev.Name = "textAbbrev";
-            textAbbrev.Size = new Size(37, 23);
-            textAbbrev.TabIndex = 0;
             // 
             // c1SplitContainer1
             // 
@@ -232,6 +200,7 @@
             // 
             // gridSalePurchaseCurrencies
             // 
+            gridSalePurchaseCurrencies.AllowEditing = false;
             gridSalePurchaseCurrencies.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             gridSalePurchaseCurrencies.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             gridSalePurchaseCurrencies.AllowNodeMove = false;
@@ -338,8 +307,6 @@
             ((System.ComponentModel.ISupportInitialize)gridSalePurchaseTypes).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
             c1SplitContainer1.ResumeLayout(false);
             c1SplitterPanel2.ResumeLayout(false);
@@ -362,9 +329,6 @@
         private ToolStripButton toolStripButtonRefresh;
         private ToolStripSeparator toolStripSeparator1;
         private Panel panel1;
-        private CheckBox checkIncludeInvisible;
-        private Label labelAbbrev;
-        private TextBox textAbbrev;
         private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel2;
