@@ -64,7 +64,7 @@
             // lblName
             // 
             lblName.AutoSize = true;
-            lblName.Location = new Point(38, 16);
+            lblName.Location = new Point(38, 13);
             lblName.Name = "lblName";
             lblName.Size = new Size(127, 21);
             lblName.TabIndex = 1;
@@ -75,7 +75,7 @@
             txtName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtName.Location = new Point(171, 12);
             txtName.Name = "txtName";
-            txtName.Size = new Size(423, 23);
+            txtName.Size = new Size(437, 23);
             txtName.TabIndex = 2;
             txtName.Value = "";
             // 
@@ -94,21 +94,21 @@
             cbCountry.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             cbCountry.AutoCompleteSource = AutoCompleteSource.ListItems;
             cbCountry.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
-            cbCountry.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBox1.ButtonsSettings.CustomButton.Icon"));
+            cbCountry.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("cbCountry.ButtonsSettings.CustomButton.Icon"));
             cbCountry.ButtonsSettings.CustomButton.Visible = true;
             cbCountry.ButtonsSettings.ModalButton.Visible = true;
-            cbCountry.Location = new Point(171, 41);
+            cbCountry.Location = new Point(171, 42);
             cbCountry.ModalForm = null;
             cbCountry.Name = "cbCountry";
             cbCountry.NullEnable = true;
-            cbCountry.Size = new Size(210, 23);
+            cbCountry.Size = new Size(212, 23);
             cbCountry.TabIndex = 4;
             cbCountry.Value = "";
             // 
             // txtCountryCode
             // 
             txtCountryCode.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txtCountryCode.Location = new Point(391, 41);
+            txtCountryCode.Location = new Point(394, 42);
             txtCountryCode.Name = "txtCountryCode";
             txtCountryCode.ReadOnly = true;
             txtCountryCode.Size = new Size(28, 23);
@@ -119,7 +119,7 @@
             // txtCurrency
             // 
             txtCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txtCurrency.Location = new Point(525, 39);
+            txtCurrency.Location = new Point(539, 42);
             txtCurrency.Name = "txtCurrency";
             txtCurrency.ReadOnly = true;
             txtCurrency.Size = new Size(69, 23);
@@ -131,16 +131,16 @@
             // 
             lblCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblCurrency.AutoSize = true;
-            lblCurrency.Location = new Point(462, 41);
+            lblCurrency.Location = new Point(433, 43);
             lblCurrency.Name = "lblCurrency";
-            lblCurrency.Size = new Size(57, 21);
+            lblCurrency.Size = new Size(100, 21);
             lblCurrency.TabIndex = 7;
-            lblCurrency.Text = "Валюта:";
+            lblCurrency.Text = "Валюта страны:";
             // 
             // lblCurrencyMain
             // 
             lblCurrencyMain.AutoSize = true;
-            lblCurrencyMain.Location = new Point(58, 74);
+            lblCurrencyMain.Location = new Point(58, 76);
             lblCurrencyMain.Name = "lblCurrencyMain";
             lblCurrencyMain.Size = new Size(107, 15);
             lblCurrencyMain.TabIndex = 8;
@@ -150,7 +150,7 @@
             // 
             lblCurrencySalary.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblCurrencySalary.AutoSize = true;
-            lblCurrencySalary.Location = new Point(243, 71);
+            lblCurrencySalary.Location = new Point(246, 73);
             lblCurrencySalary.Name = "lblCurrencySalary";
             lblCurrencySalary.Size = new Size(101, 21);
             lblCurrencySalary.TabIndex = 9;
@@ -160,7 +160,7 @@
             // 
             lblCurrencyCross.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblCurrencyCross.AutoSize = true;
-            lblCurrencyCross.Location = new Point(425, 71);
+            lblCurrencyCross.Location = new Point(439, 73);
             lblCurrencyCross.Name = "lblCurrencyCross";
             lblCurrencyCross.Size = new Size(94, 21);
             lblCurrencyCross.TabIndex = 10;
@@ -171,11 +171,11 @@
             sbCurrencyMain.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             sbCurrencyMain.AutoCompleteSource = AutoCompleteSource.ListItems;
             sbCurrencyMain.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
-            sbCurrencyMain.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBox1.ButtonsSettings.CustomButton.Icon1"));
+            sbCurrencyMain.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("sbCurrencyMain.ButtonsSettings.CustomButton.Icon"));
             sbCurrencyMain.ButtonsSettings.CustomButton.Visible = true;
             sbCurrencyMain.ButtonsSettings.DropDownButton.Visible = false;
             sbCurrencyMain.ButtonsSettings.ModalButton.Visible = true;
-            sbCurrencyMain.Location = new Point(171, 70);
+            sbCurrencyMain.Location = new Point(171, 72);
             sbCurrencyMain.ModalForm = null;
             sbCurrencyMain.Name = "sbCurrencyMain";
             sbCurrencyMain.NullEnable = true;
@@ -189,11 +189,11 @@
             sbCurrencySalary.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             sbCurrencySalary.AutoCompleteSource = AutoCompleteSource.ListItems;
             sbCurrencySalary.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
-            sbCurrencySalary.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBox1.ButtonsSettings.CustomButton.Icon2"));
+            sbCurrencySalary.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("sbCurrencySalary.ButtonsSettings.CustomButton.Icon"));
             sbCurrencySalary.ButtonsSettings.CustomButton.Visible = true;
             sbCurrencySalary.ButtonsSettings.DropDownButton.Visible = false;
             sbCurrencySalary.ButtonsSettings.ModalButton.Visible = true;
-            sbCurrencySalary.Location = new Point(350, 70);
+            sbCurrencySalary.Location = new Point(353, 72);
             sbCurrencySalary.ModalForm = null;
             sbCurrencySalary.Name = "sbCurrencySalary";
             sbCurrencySalary.NullEnable = true;
@@ -207,11 +207,11 @@
             sbCurrencyCross.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             sbCurrencyCross.AutoCompleteSource = AutoCompleteSource.ListItems;
             sbCurrencyCross.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
-            sbCurrencyCross.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("smartBox1.ButtonsSettings.CustomButton.Icon3"));
+            sbCurrencyCross.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("sbCurrencyCross.ButtonsSettings.CustomButton.Icon"));
             sbCurrencyCross.ButtonsSettings.CustomButton.Visible = true;
             sbCurrencyCross.ButtonsSettings.DropDownButton.Visible = false;
             sbCurrencyCross.ButtonsSettings.ModalButton.Visible = true;
-            sbCurrencyCross.Location = new Point(525, 70);
+            sbCurrencyCross.Location = new Point(539, 72);
             sbCurrencyCross.ModalForm = null;
             sbCurrencyCross.Name = "sbCurrencyCross";
             sbCurrencyCross.NullEnable = true;
@@ -222,7 +222,7 @@
             // btnCancel
             // 
             btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnCancel.Location = new Point(519, 110);
+            btnCancel.Location = new Point(533, 110);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(75, 23);
             btnCancel.TabIndex = 17;
@@ -231,7 +231,7 @@
             // btnOk
             // 
             btnOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnOk.Location = new Point(425, 110);
+            btnOk.Location = new Point(439, 110);
             btnOk.Name = "btnOk";
             btnOk.Size = new Size(75, 23);
             btnOk.TabIndex = 18;
@@ -241,7 +241,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(606, 141);
+            ClientSize = new Size(620, 141);
             Controls.Add(btnOk);
             Controls.Add(btnCancel);
             Controls.Add(sbCurrencyCross);
@@ -257,7 +257,7 @@
             Controls.Add(lblCountry);
             Controls.Add(txtName);
             Controls.Add(lblName);
-            MinimumSize = new Size(622, 180);
+            MinimumSize = new Size(636, 180);
             Name = "SalePurchaseTypeForm";
             Text = "Тип продажи/покупки";
             ((System.ComponentModel.ISupportInitialize)lblName).EndInit();

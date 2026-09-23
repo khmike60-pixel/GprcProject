@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+
+    Example:
+
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+
+    There are any number of "resheader" rows that contain simple
+    name/value pairs.
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
+    mimetype set.
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
+    extensible. For a given mimetype the value must be set accordingly:
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
+    read any of the formats listed below.
+
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="gridRates.ColumnInfo" xml:space="preserve">
+    <value>18,1,3,0,0,-1,Columns:0{Caption:"...";AllowMerging:True;StyleFixed:"TextAlign:CenterCenter;";}	1{Width:50;Name:"Status";Caption:"Статус";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	2{Width:70;Name:"Date";Caption:"Дата";AllowMerging:True;Style:"Format:""d"";DataType:System.DateTime;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	3{Width:75;Name:"CurrencyRate";Caption:"Курс ЦБ";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	4{Width:75;Name:"PriceRate1";Caption:"Валютная пара";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	5{Width:75;Name:"Convert1";Caption:"Валютная пара";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	6{Width:75;Name:"SalaryRate";Caption:"Курс выдачи";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	7{Width:75;Name:"ResidentBanKToCashCoeff";Caption:"Коэффициенты (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	8{Width:75;Name:"NonResidentBanKToCashCoeff";Caption:"Коэффициенты (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	9{Width:75;Name:"CashToBankCoeff";Caption:"Коэффициенты (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	10{Width:75;Name:"VatPercent";Caption:"НДС (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	11{Width:75;Name:"OverheadsPercent";Caption:"Накладные расходы (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	12{Width:75;Name:"RentabilityPercent";Caption:"Рентаб. (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	13{Width:40;Name:"ConfirmedBy";Caption:"Утвердил";AllowMerging:True;Style:"DataType:System.String;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	14{Width:70;Name:"ConfirmedAt";Caption:"Утвердил";AllowMerging:True;Style:"Format:""d"";DataType:System.DateTime;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	15{Width:40;Name:"CheckedBy";Caption:"Проверил";AllowMerging:True;Style:"DataType:System.String;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	16{Width:70;Name:"CheckedAt";Caption:"Проверил";AllowMerging:True;Style:"Format:""d"";DataType:System.DateTime;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	17{Name:"Comment";Caption:"Комментарий";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";StyleFixed:"TextAlign:CenterCenter;";}	</value>
+  </data>
+  <data name="stringItem1.Value" xml:space="preserve">
+    <value>...;Статус;Дата;Курс ЦБ;Валютная пара;Валютная пара;Курс выдачи;Коэффициенты (%);Коэффициенты (%);Коэффициенты (%);НДС (%);Накладные расходы (%);Рентаб. (%);Утвердил;Утвердил;Проверил;Проверил;Комментарий</value>
+  </data>
+  <data name="gridRates.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
+    <value>
+        AAEAAAD/////AQAAAAAAAAAEAQAAAH5TeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYy5MaXN0YDFbW1N5
+        c3RlbS5JbnQzMiwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJs
+        aWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5XV0DAAAABl9pdGVtcwVfc2l6ZQhfdmVyc2lvbgcAAAgI
+        CAkCAAAAAAAAAAAAAAAPAgAAAAAAAAAICw==
+</value>
+  </data>
+  <data name="gridRates.StyleInfo" xml:space="preserve">
+    <value>Normal{}	Alternate{}	Hover{}	Fixed{BackColor:Control;ForeColor:ControlText;TextAlign:CenterCenter;WordWrap:True;BackgroundImageLayout:Hide;}	Highlight{BackColor:Info;ForeColor:ControlText;SearchBackColor:Orange;}	Focus{BackColor:Info;ForeColor:ControlText;}	Editor{}	Search{BackColor:Highlight;ForeColor:HighlightText;}	Frozen{BackColor:Window;}	FrozenAlternate{}	NewRow{ForeColor:GrayText;}	EmptyArea{BackColor:AppWorkspace;Border:None,1,Black,Both;BorderHorz:1,Black;BorderVert:1,Black;}	SelectedColumnHeader{}	SelectedRowHeader{}	GrandTotal{BackColor:Black;ForeColor:White;}	Subtotal0{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal1{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal2{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal3{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal4{BackColor:ControlDarkDark;ForeColor:White;}	Subtotal5{BackColor:ControlDarkDark;ForeColor:White;}	FilterEditor{}	Footer{BackColor:Window;ForeColor:ControlText;BackgroundImageLayout:Hide;}	FirstCustomStyle{}	</value>
+  </data>
+  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnView.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEISURBVEhL3ZErDsJAGIR7DlA47oArV8CDR9RiSDAQPBcA
+        Qx1BgUMQBEk1ooJAKE0I4Wlqf5gmu1n6oqW7hiZfthkx33aqeZ5HKvEFpmmSYRhSQScXINB1XSroDAke
+        96cUpAmupyPZsx7Z8x4drAnPpQmsgU7LdoHDJNIEYjnAlyBXJ3jPhVyaYLca8nLMhX+CPJXAOT+ouTj5
+        p5in4asApdWpS8XRwT+zShIFG/fOyxlZJbGC9f5G5bHzUf6LJFJQqTViyxlxEmRiHhLUW10qDbeRpUGC
+        ErwjE/OQoG9dIsviYGWsXMwxc24BYLcO5pgZc+cWJIG5MbsyAUDnHwlUAkFHJZraR9NeMVq3zi+WF/0A
+        AAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="cbCountry.ButtonsSettings.CustomButton.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DwAACw8BkvkDpQAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
+        RQZQ7IU7QIysAcQGiY0C6gMGBgBzORJ7p2197QAAAABJRU5ErkJggg==
+</value>
+  </data>
+</root>
