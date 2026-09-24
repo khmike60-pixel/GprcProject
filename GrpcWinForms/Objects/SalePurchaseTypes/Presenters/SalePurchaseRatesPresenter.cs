@@ -266,6 +266,8 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
 
         private void ReplaceOrAdd(RateRow original, RateRow created)
         {
+            int indexGridRow = _view.Grid.Row;                      // текущий номер строки в гриде
+            int indexRow = indexGridRow - _view.Grid.Rows.Fixed;    // текущий номер строки данных
             var existing = _rates.FirstOrDefault(r => ReferenceEquals(r, original));
             if (existing != null)
             {
@@ -274,7 +276,9 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
             }
             else
             {
-                _rates.Add(created);
+                _rates.Insert(indexRow, created);
+                _view.Grid.Row = indexGridRow;
+                //_rates.Add(created);
             }
         }
 
