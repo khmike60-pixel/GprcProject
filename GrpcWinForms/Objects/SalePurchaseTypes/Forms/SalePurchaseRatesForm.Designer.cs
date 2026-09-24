@@ -30,11 +30,11 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SalePurchaseRatesForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
-            SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
-            SmartLib.StringItem stringItem2 = new SmartLib.StringItem();
-            SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
+            SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem5 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem6 = new SmartLib.StringItem();
             panel2 = new Panel();
             gridRates = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
@@ -49,7 +49,7 @@
             btnCoefficients = new ToolStripMenuItem();
             panel1 = new Panel();
             lblPeriod = new C1.Win.Input.C1Label();
-            periodBox1 = new SmartLib.PeriodBox(components);
+            periodBox = new SmartLib.PeriodBox(components);
             lblCurrency = new C1.Win.Input.C1Label();
             txtCurrency = new C1.Win.Input.C1TextBox();
             txtCountryCode = new C1.Win.Input.C1TextBox();
@@ -60,7 +60,7 @@
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)lblPeriod).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)periodBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)periodBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lblCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtCountryCode).BeginInit();
@@ -88,21 +88,21 @@
             gridRates.ColumnInfo = resources.GetString("gridRates.ColumnInfo");
             gridRates.Dock = DockStyle.Fill;
             gridRates.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 4;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            gridRates.Footers.Descriptions.Add(footerDescription1);
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition2.Caption = "Всего: ";
+            aggregateDefinition2.Column = 4;
+            footerDescription2.Aggregates.Add(aggregateDefinition2);
+            gridRates.Footers.Descriptions.Add(footerDescription2);
             gridRates.Footers.Fixed = true;
-            stringItem1.Name = "Заголовок 1";
-            stringItem1.Value = resources.GetString("stringItem1.Value");
-            stringItem2.Name = "Заголовок 2";
-            stringItem2.Value = "...;Статус;Дата;Курс ЦБ;Прайс-лист;Конверт.;Курс выдачи;БН -> Нал;БН -> Нал;Нал -> БН;НДС (%);Накладные расходы (%);Рентаб. (%);ФИО;Дата;ФИО;Дата;Комментарий";
-            stringItem3.Name = "Заголовок 3";
-            stringItem3.Value = "...;Статус;Дата;Курс ЦБ;Прайс-лист;Конверт.;Курс выдачи;Резидент;Нерезидент;Нал -> БН;НДС (%);Накладные расходы (%);Рентаб. (%);ФИО;Дата;ФИО;Дата;Комментарий";
-            gridRates.Headers.Add(stringItem1);
-            gridRates.Headers.Add(stringItem2);
-            gridRates.Headers.Add(stringItem3);
+            stringItem4.Name = "Заголовок 1";
+            stringItem4.Value = resources.GetString("stringItem4.Value");
+            stringItem5.Name = "Заголовок 2";
+            stringItem5.Value = "...;Статус;Дата;Курс ЦБ;Прайс-лист;Конверт.;Курс выдачи;БН -> Нал;БН -> Нал;Нал -> БН;НДС (%);Накладные расходы (%);Рентаб. (%);ФИО;Дата;ФИО;Дата;Комментарий";
+            stringItem6.Name = "Заголовок 3";
+            stringItem6.Value = "...;Статус;Дата;Курс ЦБ;Прайс-лист;Конверт.;Курс выдачи;Резидент;Нерезидент;Нал -> БН;НДС (%);Накладные расходы (%);Рентаб. (%);ФИО;Дата;ФИО;Дата;Комментарий";
+            gridRates.Headers.Add(stringItem4);
+            gridRates.Headers.Add(stringItem5);
+            gridRates.Headers.Add(stringItem6);
             gridRates.IdName = null;
             gridRates.Location = new Point(0, 31);
             gridRates.Name = "gridRates";
@@ -201,7 +201,7 @@
             // panel1
             // 
             panel1.Controls.Add(lblPeriod);
-            panel1.Controls.Add(periodBox1);
+            panel1.Controls.Add(periodBox);
             panel1.Controls.Add(lblCurrency);
             panel1.Controls.Add(txtCurrency);
             panel1.Controls.Add(txtCountryCode);
@@ -222,12 +222,12 @@
             lblPeriod.TabIndex = 13;
             lblPeriod.Text = "Период:";
             // 
-            // periodBox1
+            // periodBox
             // 
-            periodBox1.Location = new Point(206, 4);
-            periodBox1.Name = "periodBox1";
-            periodBox1.Period.From = new DateTime(2026, 6, 25, 13, 40, 0, 543);
-            periodBox1.Period.To = new DateTime(2026, 9, 23, 13, 40, 0, 543);
+            periodBox.Location = new Point(206, 4);
+            periodBox.Name = "periodBox";
+            periodBox.Period.From = new DateTime(2026, 6, 25, 13, 40, 0, 543);
+            periodBox.Period.To = new DateTime(2026, 9, 23, 13, 40, 0, 543);
             // 
             // lblCurrency
             // 
@@ -304,7 +304,7 @@
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)lblPeriod).EndInit();
-            ((System.ComponentModel.ISupportInitialize)periodBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)periodBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)lblCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtCountryCode).EndInit();
@@ -334,6 +334,6 @@
         private ToolStripMenuItem btnRates;
         private ToolStripMenuItem btnCoefficients;
         private C1.Win.Input.C1Label lblPeriod;
-        private SmartLib.PeriodBox periodBox1;
+        private SmartLib.PeriodBox periodBox;
     }
 }

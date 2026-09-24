@@ -12,13 +12,21 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Views
     {
         // События: презентер подписывается, view только вызывает
         event Func<CancellationToken, Task> OnLoadAsync;
-        event Func<SalePurchaseGridRate, CancellationToken, Task> OnCommitEditAsync; // создаёт/обновляет запись после редактирования в строке
+        event Func<RateRow, CancellationToken, Task> OnCommitEditAsync; // создаёт/обновляет запись после редактирования в строке
         event Func<IReadOnlyList<int>, CancellationToken, Task> OnDeleteAsync;
-        event Func<SalePurchaseGridRate, CancellationToken, Task> OnAppendAsync;
+        event Func<RateRow, CancellationToken, Task> OnAppendAsync;
+
+        // UI объекты
+        DateTime DateStart { get; }
+        DateTime DateEnd { get; }
+        string CountryCode { get; set; }
+        string CurrencyCode { get; set; }
+        int SalePurchaseTypeId { get; }
+
         // UI утилиты
         void SetBusy(bool busy);
         void ShowError(string message);
-        void ShowRates(BindingList<SalePurchaseGridRate> rates);
+        void ShowRates(BindingList<RateRow> rates);
         SmartGrid Grid { get; }
         BindingSource RatesBindingSource { get; }
     }

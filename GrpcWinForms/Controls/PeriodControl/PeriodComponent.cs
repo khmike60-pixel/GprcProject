@@ -55,14 +55,16 @@ namespace GrpcWinForms.Controls.PeriodControl
             if (_form != null) return;
             if (DesignMode) return;
 
-            _form = new PeriodForm(this);
-            var s = _startDate == default ? DateTime.Now.AddDays(-90) : _startDate;
-            var e = _endDate == default ? DateTime.Now : _endDate;
-            _form.SetPeriod(s, e);
+            using (_form = new PeriodForm(this))
+            {
+                var s = _startDate == default ? DateTime.Now.AddDays(-90) : _startDate;
+                var e = _endDate == default ? DateTime.Now : _endDate;
+                _form.SetPeriod(s, e);
 
-            this.DropDownWidth = _form.Width;
-            this.Control = _form;
-            ensureForm = true;
+                this.DropDownWidth = _form.Width;
+                this.Control = _form;
+                ensureForm = true;
+            }
         }
 
         private void PeriodComponent_DropDownButtonClick(object sender, EventArgs e)

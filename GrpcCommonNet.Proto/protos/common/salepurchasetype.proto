@@ -13,13 +13,13 @@ import "protos/common/general.proto";
 package Common;
 
 // Метаданные аудита
-message MetaConfirm {
-  google.protobuf.Timestamp confirmed_at = 1;   // Дата утверждения  
-  string confirmed_by = 2;                      // Аббревиатура утвердившего
-  google.protobuf.Int32Value confirmed_userid = 3;                   // Идентификатор утвердившего (пользователя)
-  google.protobuf.Timestamp cheked_at = 4;      // Дата проверки   
-  string cheked_by = 5;                         // Аббревиатура проверившего
-  google.protobuf.Int32Value cheked_userid = 6;						// Идентификатор проверевшего (пользователя)
+message MetaData {
+  google.protobuf.Timestamp confirmed_at = 1;		// Дата утверждения  
+  string confirmed_by = 2;							// Аббревиатура утвердившего
+  google.protobuf.Int32Value confirmed_userid = 3;  // Идентификатор утвердившего (пользователя)
+  google.protobuf.Timestamp cheked_at = 4;			// Дата проверки   
+  string cheked_by = 5;								// Аббревиатура проверившего
+  google.protobuf.Int32Value cheked_userid = 6;		// Идентификатор проверевшего (пользователя)
 }
 
 message SalePurchaseType{
@@ -32,7 +32,7 @@ message SalePurchaseType{
 	Common.Currency currency_cross = 7;			// Валюта кросс-курса
 	bool default =  8;							// Признак записи по умолчанию
 	bool confirmed = 9;							// Признак утверждения записи
-	MetaConfirm meta_confirm  = 10;				// Мета данные подтверждения/проверки
+	MetaData meta_data  = 10;					// Мета данные подтверждения/проверки
 	google.protobuf.Struct data = 11;			// Перечень валют, по которым хранятся утвержденные курсы (json)
 }
 
@@ -47,6 +47,7 @@ message SalePurchaseRate {
 	Common.DecimalValue vat = 8;					// Процент НДС на указанную дату
 	Common.DecimalValue on_cost = 9;				// Накладные расходы (%)
 	Common.DecimalValue max_profit = 10;			// Максимальная рентабельность (%)
-	MetaConfirm meta_confirm = 11;					// Мета-данные
+	MetaData meta_data = 11;						// Мета-данные
+	
 
 }

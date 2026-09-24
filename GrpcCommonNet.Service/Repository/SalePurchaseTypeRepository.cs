@@ -265,8 +265,8 @@ WHERE 1 = 1
             salePurchaseType.Default = rdr["by_default"] == DBNull.Value ? false : Convert.ToBoolean(rdr["by_default"]);
         if (HasColumn(rdr, "conf_id")) 
         { 
-            if (salePurchaseType.MetaConfirm == null) salePurchaseType.MetaConfirm = new MetaConfirm();
-            salePurchaseType.MetaConfirm.ConfirmedUserid = rdr["conf_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["conf_id"]);
+            if (salePurchaseType.MetaData == null) salePurchaseType.MetaData = new MetaData();
+            salePurchaseType.MetaData.ConfirmedUserid = rdr["conf_id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["conf_id"]);
         }
         if (HasColumn(rdr, "ID_M_GEOCOUNTRY")) 
         {

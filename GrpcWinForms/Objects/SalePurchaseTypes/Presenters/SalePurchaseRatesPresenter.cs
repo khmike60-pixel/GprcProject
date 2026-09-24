@@ -11,13 +11,14 @@ using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.GrpcClients;
 using GrpcWinForms.Objects.SalePurchaseTypes.Views;
 using GrpcWinForms.Objects.SalePurchaseTypes.Models;
+using GrpcWinForms.Objects.SalePurchaseTypes.Mapping;
 
 namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
 {
     public class SalePurchaseRatesPresenter
     {
         private readonly ISalePurchaseRatesView _view;
-        private BindingList<SalePurchaseGridRate> _rates = new BindingList<SalePurchaseGridRate>();
+        private BindingList<RateRow> _rates = new BindingList<RateRow>();
 
         public SalePurchaseRatesPresenter(ISalePurchaseRatesView view)
         {
@@ -42,29 +43,42 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
             {
                 _view.SetBusy(true);
 
-                var request = new ListSalePurchaseRateRequest();
+                var requestType = new SalePurchaseTypeRequest() { Id = 1 };
+                var responseType = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.SalePurchaseType.GetSalePurchaseTypeAsync(requestType).ResponseAsync
+                ).ConfigureAwait(false);
+
+                if (responseType.Result.Status == Status.Ok)
+                {
+                    _view.CountryCode = responseType.SalePurchaseType.Country.Code2;
+                    _view.CurrencyCode = responseType.SalePurchaseType.Currency.Abbrev;
+                }
+                else return;
+
+                var request = new ListSalePurchaseRateRequest()
+                {
+                    DateStart = _view.DateStart.ToUniversalTime().ToTimestamp(),
+                    DateEnd = _view.DateEnd.ToUniversalTime().ToTimestamp(),
+                    SalePurchaseType = new SalePurchaseType() { Id = _view.SalePurchaseTypeId }
+                };
+
                 var response = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.SalePurchaseType.ListSalePurchaseRateAsync(request).ResponseAsync
                 ).ConfigureAwait(false);
 
-                var list = new List<SalePurchaseGridRate>();
+                var list = new List<RateRow>();
                 if (response?.Rates != null)
                 {
                     foreach (var r in response.Rates)
                     {
                         var a = r.Json.Fields;
-
-                        list.Add(new SalePurchaseGridRate
-                        {
-                            Id = r.Id == 0 ? (int?)null : r.Id,
-                            Date = r.Date?.ToDateTime().ToLocalTime() ?? DateTime.MinValue,
-                            RatePL = 0,
-                            RateConvert = 0
-                        });
+                        RateRow row = new RateRow();
+                        row = SalePurchaseRateToRateRowMapper.Map(r);
+                        list.Add(row);
                     }
                 }
 
-                _rates = new BindingList<SalePurchaseGridRate>(list);
+                _rates = new BindingList<RateRow>(list);
                 _view.ShowRates(_rates);
             }
             catch (Exception ex)
@@ -78,7 +92,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
         }
 
         // Если view передаёт объект, реализующий ITrackChanges, сделаем частичное обновление FieldMask; иначе - полное обновление.
-        private async Task HandleCommitEditAsync(SalePurchaseGridRate model, CancellationToken ct)
+        private async Task HandleCommitEditAsync(RateRow model, CancellationToken ct)
         {
             if (model == null) return;
 
@@ -100,7 +114,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
                 {
                     var updateReq = new UpdateSalePurchaseRateRequest
                     {
-                        Rate = new SalePurchaseRate { Id = model.Id ?? 0 }
+                        Rate = new SalePurchaseRate { Id = model.Id }
                     };
                     var mask = new FieldMask();
 
@@ -154,13 +168,13 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
             }
         }
 
-        private async Task FullUpdate(SalePurchaseGridRate model, CancellationToken ct)
+        private async Task FullUpdate(RateRow model, CancellationToken ct)
         {
             var req = new UpdateSalePurchaseRateRequest
             {
                 Rate = new SalePurchaseRate
                 {
-                    Id = model.Id ?? 0,
+                    Id = model.Id,
                     Date = Timestamp.FromDateTime(model.Date.ToUniversalTime())
                 }
             };
@@ -175,7 +189,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
             }
         }
 
-        private async Task HandleAppendAsync(SalePurchaseGridRate model, CancellationToken ct)
+        private async Task HandleAppendAsync(RateRow model, CancellationToken ct)
         {
             if (model == null) return;
 
@@ -196,7 +210,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
             }
         }
 
-        private async Task<SalePurchaseGridRate> CreateRateAsync(SalePurchaseGridRate model, CancellationToken ct)
+        private async Task<RateRow> CreateRateAsync(RateRow model, CancellationToken ct)
         {
             var req = new CreateSalePurchaseRateRequest
             {
@@ -212,13 +226,8 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
 
             if (resp?.Rate == null) return null;
 
-            return new SalePurchaseGridRate
-            {
-                Id = resp.Rate.Id == 0 ? (int?)null : resp.Rate.Id,
-                Date = resp.Rate.Date?.ToDateTime().ToLocalTime() ?? model.Date,
-                RatePL = 0,
-                RateConvert = 0
-            };
+            RateRow rateRow = SalePurchaseRateToRateRowMapper.Map(resp.Rate);
+            return rateRow;
         }
 
         private async Task HandleDeleteAsync(IReadOnlyList<int> ids, CancellationToken ct)
@@ -237,8 +246,8 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
                 ).ConfigureAwait(false);
 
                 var undeleted = resp?.UndeletedIds?.ToList() ?? new List<int>();
-                var toRemove = _rates.Where(r => r.Id.HasValue && !undeleted.Contains(r.Id.Value) && ids.Contains(r.Id.Value)).ToList();
-                foreach (var r in toRemove) _rates.Remove(r);
+                //var toRemove = _rates.Where(r => r.Id..HasValue && !undeleted.Contains(r.Id.Value) && ids.Contains(r.Id.Value)).ToList();
+                //foreach (var r in toRemove) _rates.Remove(r);
 
                 if (undeleted.Count > 0)
                     _view.ShowError("Некоторые элементы не удалось удалить: " + string.Join(", ", undeleted));
@@ -255,7 +264,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
             }
         }
 
-        private void ReplaceOrAdd(SalePurchaseGridRate original, SalePurchaseGridRate created)
+        private void ReplaceOrAdd(RateRow original, RateRow created)
         {
             var existing = _rates.FirstOrDefault(r => ReferenceEquals(r, original));
             if (existing != null)
@@ -274,9 +283,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
             var existing = _rates.FirstOrDefault(r => r.Id == proto.Id);
             if (existing != null)
             {
-                existing.Date = proto.Date?.ToDateTime().ToLocalTime() ?? existing.Date;
-                existing.RatePL = 0;
-                existing.RateConvert = 0;
+                existing = SalePurchaseRateToRateRowMapper.Map(proto);
             }
         }
     }

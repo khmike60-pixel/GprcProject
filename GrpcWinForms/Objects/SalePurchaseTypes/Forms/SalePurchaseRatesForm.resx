@@ -117,10 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <data name="gridRates.ColumnInfo" xml:space="preserve">
     <value>18,1,3,0,0,-1,Columns:0{Caption:"...";AllowMerging:True;StyleFixed:"TextAlign:CenterCenter;";}	1{Width:50;Name:"Status";Caption:"Статус";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	2{Width:70;Name:"Date";Caption:"Дата";AllowMerging:True;Style:"Format:""d"";DataType:System.DateTime;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	3{Width:75;Name:"CurrencyRate";Caption:"Курс ЦБ";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	4{Width:75;Name:"PriceRate1";Caption:"Валютная пара";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	5{Width:75;Name:"Convert1";Caption:"Валютная пара";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	6{Width:75;Name:"SalaryRate";Caption:"Курс выдачи";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;ImageAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	7{Width:75;Name:"ResidentBanKToCashCoeff";Caption:"Коэффициенты (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	8{Width:75;Name:"NonResidentBanKToCashCoeff";Caption:"Коэффициенты (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	9{Width:75;Name:"CashToBankCoeff";Caption:"Коэффициенты (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	10{Width:75;Name:"VatPercent";Caption:"НДС (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	11{Width:75;Name:"OverheadsPercent";Caption:"Накладные расходы (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	12{Width:75;Name:"RentabilityPercent";Caption:"Рентаб. (%)";AllowMerging:True;Style:"Format:""N2"";DataType:System.Decimal;TextAlign:GeneralCenter;";StyleFixed:"TextAlign:CenterCenter;";}	13{Width:40;Name:"ConfirmedBy";Caption:"Утвердил";AllowMerging:True;Style:"DataType:System.String;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	14{Width:70;Name:"ConfirmedAt";Caption:"Утвердил";AllowMerging:True;Style:"Format:""d"";DataType:System.DateTime;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	15{Width:40;Name:"CheckedBy";Caption:"Проверил";AllowMerging:True;Style:"DataType:System.String;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	16{Width:70;Name:"CheckedAt";Caption:"Проверил";AllowMerging:True;Style:"Format:""d"";DataType:System.DateTime;TextAlign:CenterCenter;";StyleFixed:"TextAlign:CenterCenter;";}	17{Name:"Comment";Caption:"Комментарий";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";StyleFixed:"TextAlign:CenterCenter;";}	</value>
   </data>
-  <data name="stringItem1.Value" xml:space="preserve">
+  <data name="stringItem4.Value" xml:space="preserve">
     <value>...;Статус;Дата;Курс ЦБ;Валютная пара;Валютная пара;Курс выдачи;Коэффициенты (%);Коэффициенты (%);Коэффициенты (%);НДС (%);Накладные расходы (%);Рентаб. (%);Утвердил;Утвердил;Проверил;Проверил;Комментарий</value>
   </data>
   <data name="gridRates.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
@@ -152,7 +155,7 @@
   <data name="cbName.ButtonsSettings.CustomButton.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DgAACw4BQL7hQQAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
+        DQAACw0B7QfALAAAAEJJREFUOE9jGAW0A3eBuADCBAMQGyRGNABp+AfEhVAMYiMbSBQAafgPxRUgAVIB
         RQZQ7IU7QIysAcQGiY0C6gMGBgBzORJ7p2197QAAAABJRU5ErkJggg==
 </value>
   </data>

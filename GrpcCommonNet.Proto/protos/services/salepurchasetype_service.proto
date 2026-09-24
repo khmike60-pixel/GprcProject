@@ -71,9 +71,10 @@ message SalePurchaseRateResponse {
 	Common.SalePurchaseRate rate = 2;
 }
 message ListSalePurchaseRateRequest {
-	google.protobuf.Timestamp date_start = 1;
-	google.protobuf.Timestamp date_end = 2;
-	google.protobuf.FieldMask field_mask = 3;
+	Common.SalePurchaseType sale_purchase_type = 1;
+	google.protobuf.Timestamp date_start = 2;
+	google.protobuf.Timestamp date_end = 3;
+	google.protobuf.FieldMask field_mask = 4;
 }
 message ListSalePurchaseRateResponse {
 	Common.Result result = 1;
