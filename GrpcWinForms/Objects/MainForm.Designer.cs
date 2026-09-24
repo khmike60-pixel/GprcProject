@@ -38,6 +38,8 @@ namespace GrpcWinForms.Forms
             RatesToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator6 = new ToolStripSeparator();
             SalePurchaseToolStripMenuItem = new ToolStripMenuItem();
+            SalePurchaseTypesToolStripMenuItem = new ToolStripMenuItem();
+            SalePurchaseRatesToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             GeographAndPlacesToolStripMenuItem = new ToolStripMenuItem();
             GeolocationsToolStripMenuItem = new ToolStripMenuItem();
@@ -56,8 +58,6 @@ namespace GrpcWinForms.Forms
             UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             тестоваяФормаToolStripMenuItem = new ToolStripMenuItem();
             taskBar = new GrpcWinForms.Controls.TaskBar.TaskBar(components);
-            SalePurchaseTypesToolStripMenuItem = new ToolStripMenuItem();
-            SalePurchaseRatesToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -80,14 +80,14 @@ namespace GrpcWinForms.Forms
             // ToolStripMenuItemContrtacts
             // 
             ToolStripMenuItemContrtacts.Name = "ToolStripMenuItemContrtacts";
-            ToolStripMenuItemContrtacts.Size = new Size(180, 22);
+            ToolStripMenuItemContrtacts.Size = new Size(168, 22);
             ToolStripMenuItemContrtacts.Text = "Контракты";
             ToolStripMenuItemContrtacts.Click += ToolStripMenuItemContrtacts_Click;
             // 
             // ContractTypesToolStripMenuItem
             // 
             ContractTypesToolStripMenuItem.Name = "ContractTypesToolStripMenuItem";
-            ContractTypesToolStripMenuItem.Size = new Size(180, 22);
+            ContractTypesToolStripMenuItem.Size = new Size(168, 22);
             ContractTypesToolStripMenuItem.Text = "Типы контрактов";
             ContractTypesToolStripMenuItem.Click += ContractTypesToolStripMenuItem_Click;
             // 
@@ -233,6 +233,20 @@ namespace GrpcWinForms.Forms
             SalePurchaseToolStripMenuItem.Size = new Size(219, 22);
             SalePurchaseToolStripMenuItem.Text = "Валюты продаж и закупок";
             // 
+            // SalePurchaseTypesToolStripMenuItem
+            // 
+            SalePurchaseTypesToolStripMenuItem.Name = "SalePurchaseTypesToolStripMenuItem";
+            SalePurchaseTypesToolStripMenuItem.Size = new Size(230, 22);
+            SalePurchaseTypesToolStripMenuItem.Text = "Валюты продаж и закупок";
+            SalePurchaseTypesToolStripMenuItem.Click += SalePurchaseTypesToolStripMenuItem_Click_2;
+            // 
+            // SalePurchaseRatesToolStripMenuItem
+            // 
+            SalePurchaseRatesToolStripMenuItem.Name = "SalePurchaseRatesToolStripMenuItem";
+            SalePurchaseRatesToolStripMenuItem.Size = new Size(230, 22);
+            SalePurchaseRatesToolStripMenuItem.Text = "Курсы используемых валют";
+            SalePurchaseRatesToolStripMenuItem.Click += SalePurchaseRatesToolStripMenuItem_Click;
+            // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
@@ -353,19 +367,6 @@ namespace GrpcWinForms.Forms
             taskBar.Size = new Size(1100, 25);
             taskBar.TabIndex = 2;
             taskBar.Text = "taskBarComponent1";
-            // 
-            // SalePurchaseTypesToolStripMenuItem
-            // 
-            SalePurchaseTypesToolStripMenuItem.Name = "SalePurchaseTypesToolStripMenuItem";
-            SalePurchaseTypesToolStripMenuItem.Size = new Size(230, 22);
-            SalePurchaseTypesToolStripMenuItem.Text = "Валюты продаж и закупок";
-            SalePurchaseTypesToolStripMenuItem.Click += SalePurchaseTypesToolStripMenuItem_Click_2;
-            // 
-            // SalePurchaseRatesToolStripMenuItem
-            // 
-            SalePurchaseRatesToolStripMenuItem.Name = "SalePurchaseRatesToolStripMenuItem";
-            SalePurchaseRatesToolStripMenuItem.Size = new Size(230, 22);
-            SalePurchaseRatesToolStripMenuItem.Text = "Курсы используемых валют";
             // 
             // MainForm
             // 

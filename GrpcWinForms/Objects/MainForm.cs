@@ -243,5 +243,15 @@ namespace GrpcWinForms.Forms
             f.Show();
 
         }
+
+        private void SalePurchaseRatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is SalePurchaseRatesForm) { child.Activate(); return; }
+            }
+            var f = new SalePurchaseRatesForm { MdiParent = this };
+            f.Show();
+        }
     }
 }

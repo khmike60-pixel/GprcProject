@@ -44,28 +44,28 @@
             btnDelete = new ToolStripButton();
             btnRefresh = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
+            btnView = new ToolStripDropDownButton();
+            btnRates = new ToolStripMenuItem();
+            btnCoefficients = new ToolStripMenuItem();
             panel1 = new Panel();
-            lblName = new C1.Win.Input.C1Label();
+            lblPeriod = new C1.Win.Input.C1Label();
+            periodBox1 = new SmartLib.PeriodBox(components);
             lblCurrency = new C1.Win.Input.C1Label();
             txtCurrency = new C1.Win.Input.C1TextBox();
             txtCountryCode = new C1.Win.Input.C1TextBox();
             cbName = new GrpcWinForms.Controls.SmartBox.SmartBox(components);
-            btnView = new ToolStripDropDownButton();
-            btnRates = new ToolStripMenuItem();
-            btnCoefficients = new ToolStripMenuItem();
-            periodBox1 = new SmartLib.PeriodBox(components);
-            lblPeriod = new C1.Win.Input.C1Label();
+            lblName = new C1.Win.Input.C1Label();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridRates).BeginInit();
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)lblName).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lblPeriod).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)periodBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lblCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)txtCountryCode).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cbName).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)periodBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)lblPeriod).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lblName).BeginInit();
             SuspendLayout();
             // 
             // panel2
@@ -176,6 +176,28 @@
             toolStripSeparator1.Name = "toolStripSeparator1";
             toolStripSeparator1.Size = new Size(6, 31);
             // 
+            // btnView
+            // 
+            btnView.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            btnView.DropDownItems.AddRange(new ToolStripItem[] { btnRates, btnCoefficients });
+            btnView.Image = (Image)resources.GetObject("btnView.Image");
+            btnView.ImageTransparentColor = Color.Magenta;
+            btnView.Name = "btnView";
+            btnView.Size = new Size(122, 28);
+            btnView.Text = "Режим просмотра";
+            // 
+            // btnRates
+            // 
+            btnRates.Name = "btnRates";
+            btnRates.Size = new Size(160, 22);
+            btnRates.Text = "Курсы";
+            // 
+            // btnCoefficients
+            // 
+            btnCoefficients.Name = "btnCoefficients";
+            btnCoefficients.Size = new Size(160, 22);
+            btnCoefficients.Text = "Коэффициенты";
+            // 
             // panel1
             // 
             panel1.Controls.Add(lblPeriod);
@@ -191,15 +213,21 @@
             panel1.Size = new Size(959, 65);
             panel1.TabIndex = 2;
             // 
-            // lblName
+            // lblPeriod
             // 
-            lblName.AutoSize = true;
-            lblName.Location = new Point(18, 34);
-            lblName.Name = "lblName";
-            lblName.Size = new Size(182, 21);
-            lblName.TabIndex = 0;
-            lblName.Text = "Тип продажи/покупки, страна:";
-            lblName.Click += lblName_Click;
+            lblPeriod.AutoSize = true;
+            lblPeriod.Location = new Point(142, 6);
+            lblPeriod.Name = "lblPeriod";
+            lblPeriod.Size = new Size(58, 21);
+            lblPeriod.TabIndex = 13;
+            lblPeriod.Text = "Период:";
+            // 
+            // periodBox1
+            // 
+            periodBox1.Location = new Point(206, 4);
+            periodBox1.Name = "periodBox1";
+            periodBox1.Period.From = new DateTime(2026, 6, 25, 13, 40, 0, 543);
+            periodBox1.Period.To = new DateTime(2026, 9, 23, 13, 40, 0, 543);
             // 
             // lblCurrency
             // 
@@ -239,7 +267,7 @@
             cbName.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             cbName.AutoCompleteSource = AutoCompleteSource.ListItems;
             cbName.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.Contains;
-            cbName.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("cbCountry.ButtonsSettings.CustomButton.Icon"));
+            cbName.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("cbName.ButtonsSettings.CustomButton.Icon"));
             cbName.ButtonsSettings.CustomButton.Visible = true;
             cbName.ButtonsSettings.ModalButton.Visible = true;
             cbName.Location = new Point(206, 33);
@@ -250,43 +278,14 @@
             cbName.TabIndex = 8;
             cbName.Value = "";
             // 
-            // btnView
+            // lblName
             // 
-            btnView.DisplayStyle = ToolStripItemDisplayStyle.Text;
-            btnView.DropDownItems.AddRange(new ToolStripItem[] { btnRates, btnCoefficients });
-            btnView.Image = (Image)resources.GetObject("btnView.Image");
-            btnView.ImageTransparentColor = Color.Magenta;
-            btnView.Name = "btnView";
-            btnView.Size = new Size(122, 28);
-            btnView.Text = "Режим просмотра";
-            // 
-            // btnRates
-            // 
-            btnRates.Name = "btnRates";
-            btnRates.Size = new Size(160, 22);
-            btnRates.Text = "Курсы";
-            // 
-            // btnCoefficients
-            // 
-            btnCoefficients.Name = "btnCoefficients";
-            btnCoefficients.Size = new Size(160, 22);
-            btnCoefficients.Text = "Коэффициенты";
-            // 
-            // periodBox1
-            // 
-            periodBox1.Location = new Point(206, 4);
-            periodBox1.Name = "periodBox1";
-            periodBox1.Period.From = new DateTime(2026, 6, 25, 13, 40, 0, 543);
-            periodBox1.Period.To = new DateTime(2026, 9, 23, 13, 40, 0, 543);
-            // 
-            // lblPeriod
-            // 
-            lblPeriod.AutoSize = true;
-            lblPeriod.Location = new Point(142, 6);
-            lblPeriod.Name = "lblPeriod";
-            lblPeriod.Size = new Size(58, 21);
-            lblPeriod.TabIndex = 13;
-            lblPeriod.Text = "Период:";
+            lblName.AutoSize = true;
+            lblName.Location = new Point(18, 34);
+            lblName.Name = "lblName";
+            lblName.Size = new Size(182, 21);
+            lblName.TabIndex = 0;
+            lblName.Text = "Тип продажи/покупки, страна:";
             // 
             // SalePurchaseRatesForm
             // 
@@ -304,13 +303,13 @@
             toolStrip1.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)lblName).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lblPeriod).EndInit();
+            ((System.ComponentModel.ISupportInitialize)periodBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)lblCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtCountryCode).EndInit();
             ((System.ComponentModel.ISupportInitialize)cbName).EndInit();
-            ((System.ComponentModel.ISupportInitialize)periodBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)lblPeriod).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lblName).EndInit();
             ResumeLayout(false);
         }
 

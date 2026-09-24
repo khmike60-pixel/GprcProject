@@ -10,9 +10,10 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Models
     public class SalePurchaseGridRate
     {
         public int? Id {  get; set; }
+        public string Status {  get; set; } 
         public DateTime Date { get; set; }
-        public int Rate { get; set; }
-        public Currency Currency { get; set; }
-
+        public decimal CurrencyRate {  get; set; }
+        public decimal RatePL { get; set; }
+        public decimal RateConvert { get; set; }
     }
 }
