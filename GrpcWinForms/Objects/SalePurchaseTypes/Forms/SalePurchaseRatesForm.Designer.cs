@@ -30,11 +30,11 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SalePurchaseRatesForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
-            SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
-            SmartLib.StringItem stringItem5 = new SmartLib.StringItem();
-            SmartLib.StringItem stringItem6 = new SmartLib.StringItem();
+            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
+            SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem2 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
             panel2 = new Panel();
             gridRates = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
@@ -75,7 +75,7 @@
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 65);
             panel2.Name = "panel2";
-            panel2.Size = new Size(959, 385);
+            panel2.Size = new Size(1056, 385);
             panel2.TabIndex = 3;
             // 
             // gridRates
@@ -88,21 +88,21 @@
             gridRates.ColumnInfo = resources.GetString("gridRates.ColumnInfo");
             gridRates.Dock = DockStyle.Fill;
             gridRates.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition2.Caption = "Всего: ";
-            aggregateDefinition2.Column = 4;
-            footerDescription2.Aggregates.Add(aggregateDefinition2);
-            gridRates.Footers.Descriptions.Add(footerDescription2);
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 4;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            gridRates.Footers.Descriptions.Add(footerDescription1);
             gridRates.Footers.Fixed = true;
-            stringItem4.Name = "Заголовок 1";
-            stringItem4.Value = resources.GetString("stringItem4.Value");
-            stringItem5.Name = "Заголовок 2";
-            stringItem5.Value = "...;Статус;Дата;Курс ЦБ;Прайс-лист;Конверт.;Курс выдачи;БН -> Нал;БН -> Нал;Нал -> БН;НДС (%);Накладные расходы (%);Рентаб. (%);ФИО;Дата;ФИО;Дата;Комментарий";
-            stringItem6.Name = "Заголовок 3";
-            stringItem6.Value = "...;Статус;Дата;Курс ЦБ;Прайс-лист;Конверт.;Курс выдачи;Резидент;Нерезидент;Нал -> БН;НДС (%);Накладные расходы (%);Рентаб. (%);ФИО;Дата;ФИО;Дата;Комментарий";
-            gridRates.Headers.Add(stringItem4);
-            gridRates.Headers.Add(stringItem5);
-            gridRates.Headers.Add(stringItem6);
+            stringItem1.Name = "Заголовок 1";
+            stringItem1.Value = resources.GetString("stringItem1.Value");
+            stringItem2.Name = "Заголовок 2";
+            stringItem2.Value = "...;Статус;Дата;Курс ЦБ;Прайс-лист;Конверт.;Прайс-лист;Конверт.;Прайс-лист;Конверт.;Курс выдачи;БН -> Нал;БН -> Нал;Нал -> БН;НДС (%);Накладные расходы (%);Рентаб. (%);ФИО;Дата;ФИО;Дата;Комментарий";
+            stringItem3.Name = "Заголовок 3";
+            stringItem3.Value = "...;Статус;Дата;Курс ЦБ;Прайс-лист;Конверт.;Прайс-лист;Конверт.;Прайс-лист;Конверт.;Курс выдачи;Резидент;Нерезидент;Нал -> БН;НДС (%);Накладные расходы (%);Рентаб. (%);ФИО;Дата;ФИО;Дата;Комментарий";
+            gridRates.Headers.Add(stringItem1);
+            gridRates.Headers.Add(stringItem2);
+            gridRates.Headers.Add(stringItem3);
             gridRates.IdName = null;
             gridRates.Location = new Point(0, 31);
             gridRates.Name = "gridRates";
@@ -110,7 +110,7 @@
             gridRates.Rows.Fixed = 3;
             gridRates.SelectedRows = (List<int>)resources.GetObject("gridRates.SelectedRows");
             gridRates.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            gridRates.Size = new Size(959, 354);
+            gridRates.Size = new Size(1056, 354);
             gridRates.SortingType = SmartLib.SortingType.Descending;
             gridRates.StyleInfo = resources.GetString("gridRates.StyleInfo");
             gridRates.TabIndex = 3;
@@ -121,7 +121,7 @@
             toolStrip1.Items.AddRange(new ToolStripItem[] { btnNew, btnDouble, btnEdit, btnDelete, btnRefresh, toolStripSeparator1, btnView });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(959, 31);
+            toolStrip1.Size = new Size(1056, 31);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -210,7 +210,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(959, 65);
+            panel1.Size = new Size(1056, 65);
             panel1.TabIndex = 2;
             // 
             // lblPeriod
@@ -233,7 +233,7 @@
             // 
             lblCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblCurrency.AutoSize = true;
-            lblCurrency.Location = new Point(529, 34);
+            lblCurrency.Location = new Point(626, 34);
             lblCurrency.Name = "lblCurrency";
             lblCurrency.Size = new Size(100, 21);
             lblCurrency.TabIndex = 11;
@@ -242,7 +242,7 @@
             // txtCurrency
             // 
             txtCurrency.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txtCurrency.Location = new Point(635, 33);
+            txtCurrency.Location = new Point(732, 33);
             txtCurrency.Name = "txtCurrency";
             txtCurrency.ReadOnly = true;
             txtCurrency.Size = new Size(69, 23);
@@ -253,7 +253,7 @@
             // txtCountryCode
             // 
             txtCountryCode.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txtCountryCode.Location = new Point(490, 33);
+            txtCountryCode.Location = new Point(587, 33);
             txtCountryCode.Name = "txtCountryCode";
             txtCountryCode.ReadOnly = true;
             txtCountryCode.Size = new Size(28, 23);
@@ -274,7 +274,7 @@
             cbName.ModalForm = null;
             cbName.Name = "cbName";
             cbName.NullEnable = true;
-            cbName.Size = new Size(276, 23);
+            cbName.Size = new Size(373, 23);
             cbName.TabIndex = 8;
             cbName.Value = "";
             // 
@@ -291,7 +291,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(959, 450);
+            ClientSize = new Size(1056, 450);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "SalePurchaseRatesForm";

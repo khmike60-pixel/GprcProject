@@ -2,7 +2,6 @@
 using GrpcCommonNet.Library.SalePurchaseType;
 using GrpcWinForms.Objects.SalePurchaseTypes.Models;
 using GrpcWinForms.Objects.SalePurchaseTypes.Presenters;
-using GrpcWinForms.Objects.SalePurchaseTypes.Services;
 using GrpcWinForms.Objects.SalePurchaseTypes.Views;
 using SmartLib;
 using System;
@@ -24,6 +23,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
         public event Func<RateRow, CancellationToken, Task> OnCommitEditAsync;
         public event Func<IReadOnlyList<int>, CancellationToken, Task> OnDeleteAsync;
         public event Func<RateRow, CancellationToken, Task> OnAppendAsync;
+        public event Func<CancellationToken, Task> OnRefreshAsync;
 
         #endregion
 
@@ -52,6 +52,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
 
             // Привязка binding source
             gridRates.DataSource = RatesBindingSource;
+            periodBox.Period.SetPeriod(DateTime.Now.AddDays(-90), DateTime.Now);
 
             // Подписываем событие загрузки формы
             this.Load += async (s, e) =>
@@ -82,6 +83,11 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
                     item = gridRates.Rows[gridRates.Row].DataSource as RateRow;
                 if (item == null) return;
                 if (OnAppendAsync != null) await OnAppendAsync(item, CancellationToken.None);
+            };
+
+            btnRefresh.Click += async (s, e) =>
+            {
+                if (OnRefreshAsync != null) await OnRefreshAsync(CancellationToken.None);
             };
         }
 

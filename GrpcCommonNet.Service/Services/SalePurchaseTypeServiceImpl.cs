@@ -40,7 +40,7 @@ public class SalePurchaseTypeServiceImpl : SalePurchaseTypeServices.SalePurchase
                     request.FieldMask.Merge(response.SalePurchaseType, maskSalePurchaseType);
                 return new SalePurchaseTypeResponse() { Result = { Status = GrpcCommonNet.Library.Common.Status.NotFound } };
             }
-
+            response.Result = new Result() { Status = GrpcCommonNet.Library.Common.Status.Ok };
             return response;
         }
         catch (Exception ex)

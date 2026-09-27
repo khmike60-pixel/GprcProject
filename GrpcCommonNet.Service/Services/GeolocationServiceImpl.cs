@@ -57,7 +57,7 @@ public class GeolocationServiceImpl : GeolocationServices.GeolocationServicesBas
         try
         {
             TreeGeoResponse response = new TreeGeoResponse();
-            List<Geolocation> geo = await _repo.GetTreeGeoAsync(request.Id);
+            List<Geolocation> geo = await _repo.GetTreeGeoAsync(request, userData);
             if (geo == null) return new TreeGeoResponse { Result = new Result { Status = Status.NotFound} };
 
             if(request.FieldMask != null && request.FieldMask.Paths.Count > 0)

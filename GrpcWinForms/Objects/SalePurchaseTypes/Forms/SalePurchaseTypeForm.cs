@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GrpcCommonNet.Library.Common;
+using GrpcWinForms.Objects.Geolocations.GeoForms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +14,24 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
 {
     public partial class SalePurchaseTypeForm : Form
     {
+
+
         public SalePurchaseTypeForm()
         {
             InitializeComponent();
+        }
+
+        private void cbCountry_ModalButtonClick(object sender, EventArgs e)
+        {
+            using (GeolocationsForm geolocationForm = new GeolocationsForm())
+            {
+
+                if (geolocationForm.DialogResult == DialogResult.OK)
+                { 
+                    Geolocation country = geolocationForm.SelectedItem as Geolocation;
+
+                }
+            }
         }
     }
 }

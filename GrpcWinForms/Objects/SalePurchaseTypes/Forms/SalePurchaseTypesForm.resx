@@ -135,7 +135,7 @@
     <value>17, 17</value>
   </metadata>
   <data name="gridSalePurchaseCurrencies.ColumnInfo" xml:space="preserve">
-    <value>3,1,0,0,0,-1,Columns:0{AllowMerging:True;}	1{Width:50;Name:"Id";Caption:"Id";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	2{Width:165;StarWidth:"*";Name:"Abbrev";Caption:"Валюты";AllowMerging:True;}	</value>
+    <value>3,1,0,0,0,-1,Columns:0{AllowMerging:True;}	1{Width:50;Name:"Id";Caption:"Id";AllowMerging:True;Style:"DataType:System.Int32;TextAlign:GeneralCenter;";}	2{Width:165;StarWidth:"*";Name:"Code";Caption:"Валюты";AllowMerging:True;Style:"DataType:System.String;TextAlign:LeftCenter;";}	</value>
   </data>
   <data name="gridSalePurchaseCurrencies.SelectedRows" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>

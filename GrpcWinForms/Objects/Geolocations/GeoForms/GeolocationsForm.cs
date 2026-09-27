@@ -3,6 +3,7 @@ using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Geolocation;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
+using GrpcWinForms.Objects.Currencies.Presenters;
 using GrpcWinForms.Objects.Geolocations.Models;
 using System;
 using System.Collections.Generic;
@@ -20,14 +21,18 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
     {
         private BindingList<Geolocation> geo;
         private Loader loader = new Loader();
+        private Geolocation selectedItem = null;
 
+        public Geolocation SelectedItem { get { return selectedItem; } }
+        public bool DialogMode { get; set; }
+        public GeoType GeoType { get; set; } = GeoType.All;
 
         public GeolocationsForm()
         {
             InitializeComponent();
 
-            loader.Parent = smartGrid1;
-            loader.Size = smartGrid1.Size;
+            loader.Parent = gridGeo;
+            loader.Size = gridGeo.Size;
 
         }
 
@@ -40,14 +45,15 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                 TreeGeoRequest request = new TreeGeoRequest()
                 {
                     Id = 0,
-                    Name = textBoxGeoName.Text
+                    Name = textBoxGeoName.Text,
+                    GeoType = GeoType
                 };
 
-                TreeGeoResponse response = await GrpcRetry.CallAsync(() => 
+                TreeGeoResponse response = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.Geolocation.GetTreeGeoAsync(request).ResponseAsync);
                 geo = new BindingList<Geolocation>(response.Geolocations);
                 List<GeoTree> geoTree = new List<GeoTree>();
-                
+
                 //// Добавляем головной нод
                 //GeoTree root = new GeoTree() { Id = -1, Name = "Все" };
                 //geoTree.Add(root);
@@ -59,17 +65,17 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                         Name = item.Name,
                         ParentId = item.ParentId,
                         Code2 = item.Code2,
-                        JsonCode = item.JsonCodes,
+                        //JsonCode = item.JsonCodes,
                         Lock = item.Lock == 0 ? false : true,
                         PhoneCode = item.PhoneCode
                     });
 
                 var g = geoTree.AsEnumerable();
-                smartGrid1.BeginUpdate();
-                smartGrid1.BuildTree(g);
+                gridGeo.BeginUpdate();
+                gridGeo.BuildTree(g);
 
                 // Находим максимальный уровень среди всех строк, которые являются узлами
-                int maxLevel = smartGrid1.GetDepth();
+                int maxLevel = gridGeo.GetDepth();
 
                 for (int i = 1; i <= maxLevel; i++)
                 {
@@ -77,27 +83,27 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                     int level = i; // Локальная копия для замыкания
                     levelItem.Click += (s, e) =>
                     {
-                        smartGrid1.BeginUpdate();
-                        smartGrid1.ExpandByLevel(level);
-                        smartGrid1.EndUpdate();
+                        gridGeo.BeginUpdate();
+                        gridGeo.ExpandByLevel(level);
+                        gridGeo.EndUpdate();
                     };
                     toolStripSplitButtonLevels.DropDownItems.Add(levelItem);
                 }
 
                 toolStripSplitButtonLevels.Click += (s, e) =>
                 {
-                    smartGrid1.BeginUpdate();
-                    smartGrid1.ExpandByLevel(1);
-                    smartGrid1.EndUpdate();
+                    gridGeo.BeginUpdate();
+                    gridGeo.ExpandByLevel(1);
+                    gridGeo.EndUpdate();
                 };
 
-                smartGrid1.EndUpdate();
+                gridGeo.EndUpdate();
                 loader.HideLoader();
 
             }
             catch (Exception ex)
             {
-                smartGrid1.EndUpdate();
+                gridGeo.EndUpdate();
                 loader.HideLoader();
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -117,21 +123,21 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         private void smartGrid_AfterResizeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
-            smartGrid1.Cols["Name"].StarWidth = "*";
+            gridGeo.Cols["Name"].StarWidth = "*";
         }
 
         private void toolStripButtonPath_Click(object sender, EventArgs e)
         {
             if (!toolStripButtonPath.Checked)
             {
-                smartGrid1.BeginUpdate();
-                foreach (var row in smartGrid1.Rows.Cast<Row>())
+                gridGeo.BeginUpdate();
+                foreach (var row in gridGeo.Rows.Cast<Row>())
                     if (row.IsNode) row.Visible = true;
-                smartGrid1.EndUpdate();
+                gridGeo.EndUpdate();
             }
             else
             {
-                IsolateCurrentBranch(smartGrid1);
+                IsolateCurrentBranch(gridGeo);
             }
 
         }
@@ -188,6 +194,38 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
             }
         }
 
+        private void smartGrid1_DoubleClick(object sender, EventArgs e)
+        {
+            int row = gridGeo.Row;
+            if (row < gridGeo.Rows.Fixed) return;
+            if (DialogMode)
+            {
+                selectedItem = gridGeo.Rows[gridGeo.Row].DataSource as Geolocation;
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+        }
 
+        private void toolStripButtonNew_Click(object sender, EventArgs e)
+        {
+            int row = gridGeo.Row;
+            if (row < gridGeo.Rows.Fixed) return;
+            Node node = gridGeo.Rows[row].Node;
+            GeoTree geoItem = node.Key as GeoTree;
+            using (GeolocationForm geoForm = new GeolocationForm())
+            {
+                geoForm.GeoParentObject = new Geolocation()
+                {
+                    Id = geoItem.Id,
+                    Name = geoItem.Name
+                    
+                };
+                if(geoForm.ShowDialog() == DialogResult.OK)
+                {
+
+                }
+            }
+        }
     }
+
 }

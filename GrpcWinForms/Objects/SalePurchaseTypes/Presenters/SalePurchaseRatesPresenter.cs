@@ -29,11 +29,17 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
             _view.OnCommitEditAsync += HandleCommitEditAsync;
             _view.OnAppendAsync += HandleAppendAsync;
             _view.OnDeleteAsync += HandleDeleteAsync;
+            _view.OnRefreshAsync += HandleRefreshAsync;
         }
 
         private async Task HandleLoadAsync(CancellationToken ct)
         {
             // Прочитать головную запись типа
+            await RefreshAsync(ct).ConfigureAwait(false);
+        }
+
+        private async Task HandleRefreshAsync(CancellationToken ct)
+        {
             await RefreshAsync(ct).ConfigureAwait(false);
         }
 
@@ -71,7 +77,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
                 {
                     foreach (var r in response.Rates)
                     {
-                        var a = r.Json.Fields;
+                        var a = r.Json?.Fields;
                         RateRow row = new RateRow();
                         row = SalePurchaseRateToRateRowMapper.Map(r);
                         list.Add(row);

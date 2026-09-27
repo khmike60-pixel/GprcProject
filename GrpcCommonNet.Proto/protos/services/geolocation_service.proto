@@ -58,7 +58,8 @@ message ListGeoResponse {
 message TreeGeoRequest  {
 	int32 id = 1;
 	string name = 2;
-	google.protobuf.FieldMask field_mask  = 3;
+	Common.GeoType geo_type = 3;
+	google.protobuf.FieldMask field_mask  = 4;
 
 }
 

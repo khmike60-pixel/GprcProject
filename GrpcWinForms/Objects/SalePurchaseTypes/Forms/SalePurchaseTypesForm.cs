@@ -20,7 +20,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
 {
     public partial class SalePurchaseTypesForm : Form, ISalePurchaseTypesView
     {
-        private readonly SalePurchaseTypePresenter _presenter;
+        private readonly SalePurchaseTypesPresenter _presenter;
         private int _row = 0;
 
         public bool DialogMode = false;
@@ -32,18 +32,35 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
         BindingList<SalePurchaseType> ISalePurchaseTypesView.SalePurchaseTypes
         { get => _types; set { _types = value; gridSalePurchaseTypes.DataSource = _types; } }
 
-        private BindingList<Currency> _currencies = [];
-        BindingList<Currency> ISalePurchaseTypesView.Currencies
+        private BindingList<CurrencyUsing> _currencies = [];
+        BindingList<CurrencyUsing> ISalePurchaseTypesView.Currencies
         { get => _currencies; set { _currencies = value; gridSalePurchaseCurrencies.DataSource = _currencies; } }
 
         public SmartGrid GridTypes { get => gridSalePurchaseTypes; set => gridSalePurchaseTypes = value; }
         public SmartGrid GridCurrencies { get => gridSalePurchaseCurrencies; set => gridSalePurchaseCurrencies = value; }
 
+        #region Вызываемые события для типов продаж
+        public event Func<CancellationToken, Task> OnLoadTypesAsync;
+        public event Func<IReadOnlyList<int>, CancellationToken, Task> OnDeleteTypesAsync;
+        public event Func<SalePurchaseType, CancellationToken, Task> OnAppendTypesAsync;
+        public event Func<CancellationToken, Task> OnRefreshTypesAsync;
+
+        #endregion
+
+        #region Вызываемые события для используемых валют
+        public event Func<CancellationToken, Task> OnLoadCurrenciesAsync;
+        public event Func<IReadOnlyList<int>, CancellationToken, Task> OnDeleteCurrenciesAsync;
+        public event Func<CurrencyUsing, CancellationToken, Task> OnAppendCurrenciesAsync;
+        public event Func<CancellationToken, Task> OnRefreshCurrenciesAsync;
+
+        #endregion
+
+
         #region Конструктор
         public SalePurchaseTypesForm()
         {
             InitializeComponent();
-            _presenter = new SalePurchaseTypePresenter(this);
+            _presenter = new SalePurchaseTypesPresenter(this);
         }
 
         #endregion
@@ -108,9 +125,14 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
             }
         }
 
-        private void toolStripButtonNew_Click(object sender, EventArgs e)
+        private async void toolStripButtonNew_Click(object sender, EventArgs e)
         {
-            _presenter.OnClick_NewAsync();
+            SalePurchaseType item = new SalePurchaseType();
+            if (gridSalePurchaseTypes.Row >= gridSalePurchaseTypes.Rows.Fixed)
+                item = gridSalePurchaseTypes.Rows[gridSalePurchaseTypes.Row].DataSource as SalePurchaseType;
+            if (item == null) return;
+            if (OnAppendTypesAsync != null) await OnAppendTypesAsync(item, CancellationToken.None);
+
         }
 
         private async void toolStripButtonDelete_Click(object sender, EventArgs e)

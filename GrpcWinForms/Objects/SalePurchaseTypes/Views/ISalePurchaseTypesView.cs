@@ -12,9 +12,15 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Views
 {
     public interface ISalePurchaseTypesView
     {
+        // События: презентер подписывается, view только вызывает
+        event Func<CancellationToken, Task> OnLoadTypesAsync;
+        event Func<IReadOnlyList<int>, CancellationToken, Task> OnDeleteTypesAsync;
+        event Func<SalePurchaseType, CancellationToken, Task> OnAppendTypesAsync;
+        event Func<CancellationToken, Task> OnRefreshTypesAsync;
+
         List<int> SelectedIds { get; set; }
         BindingList<SalePurchaseType> SalePurchaseTypes { get; set; }
-        BindingList<Currency> Currencies {  get; set; }
+        BindingList<CurrencyUsing> Currencies {  get; set; }
 
         SmartGrid GridTypes { get; set; }
         SmartGrid GridCurrencies { get; set; }

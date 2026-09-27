@@ -33,7 +33,7 @@
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             panel2 = new Panel();
-            smartGrid1 = new SmartLib.SmartGrid(components);
+            gridGeo = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
             toolStripButtonNew = new ToolStripButton();
             toolStripButtonDouble = new ToolStripButton();
@@ -47,14 +47,14 @@
             textBoxGeoName = new TextBox();
             labelName = new Label();
             panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)gridGeo).BeginInit();
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel2
             // 
-            panel2.Controls.Add(smartGrid1);
+            panel2.Controls.Add(gridGeo);
             panel2.Controls.Add(toolStrip1);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 34);
@@ -62,34 +62,35 @@
             panel2.Size = new Size(800, 416);
             panel2.TabIndex = 3;
             // 
-            // smartGrid1
+            // gridGeo
             // 
-            smartGrid1.AllowEditing = false;
-            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
-            smartGrid1.AllowNodeMove = false;
-            smartGrid1.AutoGenerateColumns = false;
-            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
-            smartGrid1.Dock = DockStyle.Fill;
-            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            gridGeo.AllowEditing = false;
+            gridGeo.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridGeo.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gridGeo.AllowNodeMove = false;
+            gridGeo.AutoGenerateColumns = false;
+            gridGeo.ColumnInfo = resources.GetString("gridGeo.ColumnInfo");
+            gridGeo.Dock = DockStyle.Fill;
+            gridGeo.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
             aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
             aggregateDefinition1.Caption = "Всего: ";
             aggregateDefinition1.Column = 2;
             footerDescription1.Aggregates.Add(aggregateDefinition1);
-            smartGrid1.Footers.Descriptions.Add(footerDescription1);
-            smartGrid1.Footers.Fixed = true;
-            smartGrid1.IdName = null;
-            smartGrid1.Location = new Point(0, 31);
-            smartGrid1.Name = "smartGrid1";
-            smartGrid1.Rows.Count = 51;
-            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
-            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            smartGrid1.Size = new Size(800, 385);
-            smartGrid1.SortingType = SmartLib.SortingType.Descending;
-            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
-            smartGrid1.TabIndex = 3;
-            smartGrid1.Tree.Column = 2;
-            smartGrid1.AfterResizeColumn += smartGrid_AfterResizeColumn;
+            gridGeo.Footers.Descriptions.Add(footerDescription1);
+            gridGeo.Footers.Fixed = true;
+            gridGeo.IdName = null;
+            gridGeo.Location = new Point(0, 31);
+            gridGeo.Name = "gridGeo";
+            gridGeo.Rows.Count = 51;
+            gridGeo.SelectedRows = (List<int>)resources.GetObject("gridGeo.SelectedRows");
+            gridGeo.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gridGeo.Size = new Size(800, 385);
+            gridGeo.SortingType = SmartLib.SortingType.Descending;
+            gridGeo.StyleInfo = resources.GetString("gridGeo.StyleInfo");
+            gridGeo.TabIndex = 3;
+            gridGeo.Tree.Column = 2;
+            gridGeo.AfterResizeColumn += smartGrid_AfterResizeColumn;
+            gridGeo.DoubleClick += smartGrid1_DoubleClick;
             // 
             // toolStrip1
             // 
@@ -109,6 +110,7 @@
             toolStripButtonNew.Name = "toolStripButtonNew";
             toolStripButtonNew.Size = new Size(28, 28);
             toolStripButtonNew.Text = "Новый";
+            toolStripButtonNew.Click += toolStripButtonNew_Click;
             // 
             // toolStripButtonDouble
             // 
@@ -211,7 +213,7 @@
             Load += GeolocationsForm_Load;
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)gridGeo).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             panel1.ResumeLayout(false);
@@ -234,6 +236,6 @@
         private Label labelName;
         private ToolStripSplitButton toolStripSplitButtonLevels;
         private ToolStripButton toolStripButtonPath;
-        private SmartLib.SmartGrid smartGrid1;
+        private SmartLib.SmartGrid gridGeo;
     }
 }

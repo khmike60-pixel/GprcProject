@@ -104,6 +104,7 @@
             cbCountry.Size = new Size(212, 23);
             cbCountry.TabIndex = 4;
             cbCountry.Value = "";
+            cbCountry.ModalButtonClick += cbCountry_ModalButtonClick;
             // 
             // txtCountryCode
             // 

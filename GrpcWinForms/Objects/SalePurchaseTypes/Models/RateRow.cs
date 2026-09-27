@@ -91,7 +91,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Models
         /// <summary>
         /// Накладные расходы
         /// </summary>
-        public decimal? Oncost { get; set; }
+        public decimal? OnCost { get; set; }
 
         /// <summary>
         /// Максимальная рентабельность

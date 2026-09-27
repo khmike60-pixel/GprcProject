@@ -15,6 +15,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Views
         event Func<RateRow, CancellationToken, Task> OnCommitEditAsync; // создаёт/обновляет запись после редактирования в строке
         event Func<IReadOnlyList<int>, CancellationToken, Task> OnDeleteAsync;
         event Func<RateRow, CancellationToken, Task> OnAppendAsync;
+        event Func<CancellationToken, Task> OnRefreshAsync;
 
         // UI объекты
         DateTime DateStart { get; }

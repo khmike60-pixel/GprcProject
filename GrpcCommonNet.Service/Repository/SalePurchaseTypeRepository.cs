@@ -1,9 +1,17 @@
-﻿using GrpcCommonNet.Library.Common;
+﻿using Google.Protobuf.WellKnownTypes;
+using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.SalePurchaseType;
+using GrpcCommonNet.Proto.Utils;
 using GrpcCommonNet.Service.Models;
 using MySql.Data.MySqlClient;
+using Mysqlx.Crud;
+using MySqlX.XDevAPI.Common;
 using Org.BouncyCastle.Asn1.Ocsp;
+using System.Data;
 using System.Data.Common;
+using System.Net.NetworkInformation;
+using System.Text.Json;
+using ZstdSharp.Unsafe;
 
 public class SalePurchaseTypeRepository
 {
@@ -29,18 +37,17 @@ public class SalePurchaseTypeRepository
             cmd.CommandText = @$"
 select 
     spc.*,
-    cu.Abbrev,  -- валюта страны
-    mcu.Abbrev, -- основная валюта
-    scu.Abbrev, -- валюта выдачи з/п
-    scu.Abbrev, -- кросс-валюта
-    g.GeoLocation_MCode
+    cu.Abbrev  CurrencyCode,  -- валюта страны
+    mcu.Abbrev CurrencyMainCode, -- основная валюта
+    scu.Abbrev CurrencySalaryCode, -- валюта выдачи з/п
+    ccu.Abbrev CurrencyCrossCode, -- кросс-валюта
+    g.GeoLocation_MCode, g.GeoLocation_Code2
 FROM global_db.rfr_country_currency spc 
     left join global_db.rfr_currency cu on cu.currencyId = spc.currencyId
-    left join global_db.rfr_currency mcu on mcu.main_currencyId = spc.currencyId
-    left join global_db.rfr_currency scu on scu.salary_currencyId = spc.currencyId
-    left join global_db.rfr_currency ccu on ccu.cross_rate_currency_id = spc.currencyId
-    left join global_db.rfr_currency cu on cu.currencyId = spc.currencyId
-    left join global_db.geolocations g on g.geolocation_id = spc.geolocation_id
+    left join global_db.rfr_currency mcu on spc.main_currency_Id = mcu.currencyId
+    left join global_db.rfr_currency scu on spc.salary_currency_Id = scu.currencyId
+    left join global_db.rfr_currency ccu on spc.cross_rate_currency_id = ccu.currencyId
+    left join global_db.geolocations g on g.geolocation_id = spc.ID_M_COUNTRY
 WHERE 1 = 1
     and spc.id = {request.Id};"
             ;
@@ -158,8 +165,37 @@ WHERE 1 = 1
 
     public async Task<List<SalePurchaseRate>> ListSalePurchaseRateAsync(ListSalePurchaseRateRequest request, UserData userData)
     {
+        DateTime dateStart = request.DateStart.ToDateTime();
+        DateTime dateEnd = request.DateEnd.ToDateTime();
+        int id = Convert.ToInt32(request.SalePurchaseType.Id);
+        int main_id = 5;
+        int cross_id = 31;
 
-        return new List<SalePurchaseRate>();
+        List<SalePurchaseRate> list = new List<SalePurchaseRate>();
+        try
+        {
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using (MySqlCommand cmd = new MySqlCommand("global_db.refresh_priceparams", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("_CountryCurrId", id);
+                cmd.Parameters.AddWithValue("_MainCurrId", main_id);
+                cmd.Parameters.AddWithValue("_PerCrossRate", cross_id);
+                cmd.Parameters.AddWithValue("_BeginDate", dateStart);
+                cmd.Parameters.AddWithValue("_EndDate", dateEnd);
+
+                using var rdr = await cmd.ExecuteReaderAsync();
+
+                while (await rdr.ReadAsync())
+                    list.Add(FillSalePurchaseRate(rdr));
+            }
+        } catch (Exception ex) {
+            throw new Exception("Ошибка в ListSalePurchaseRateAsync: " + ex.Message);
+        }
+
+        return list;
     }
 
     public async Task<SalePurchaseRate> CreateSalePurchaseRateAsync(CreateSalePurchaseRateRequest request, UserData userData)
@@ -188,33 +224,17 @@ WHERE 1 = 1
     public SalePurchaseType FillSalePurchaseType(DbDataReader rdr)
     {
         SalePurchaseType salePurchaseType = new SalePurchaseType();
+        salePurchaseType.Country = new Geolocation();
+        salePurchaseType.Currency = new Currency();
+
         if (HasColumn(rdr, "id")) { salePurchaseType.Id = rdr["id"] == DBNull.Value ? null : Convert.ToInt32(rdr["id"]); }
         if (HasColumn(rdr, "comment")) { salePurchaseType.Name = rdr["comment"].ToString(); }
-        if (HasColumn(rdr, "ID_M_COUNTRY"))
-        {
-            if (salePurchaseType.Country == null) salePurchaseType.Country = new Geolocation();
-            salePurchaseType.Country.Id = rdr["ID_M_COUNTRY"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["ID_M_COUNTRY"]);
-        }
-        if (HasColumn(rdr, "GeoLocation_MCode"))
-        {
-            if (salePurchaseType.Country == null) salePurchaseType.Country = new Geolocation();
-            salePurchaseType.Country.Name = rdr["GeoLocation_MCode"].ToString();
-        }
-        if (HasColumn(rdr, "GeoLocation_Code2"))
-        {
-            if (salePurchaseType.Country == null) salePurchaseType.Country = new Geolocation();
-            salePurchaseType.Country.Code2 = rdr["GeoLocation_Code2"].ToString();
-        }
-        if (HasColumn(rdr, "currencyId"))
-        {
-            if (salePurchaseType.Currency == null) salePurchaseType.Currency = new Currency();
-            salePurchaseType.Currency.Id = rdr["currencyId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["currencyId"]);
-        }
-        if (HasColumn(rdr, "CurrencyCode"))
-        {
-            if (salePurchaseType.Currency == null) salePurchaseType.Currency = new Currency();
-            salePurchaseType.Currency.Abbrev = rdr["CurrencyCode"].ToString();
-        }
+        if (HasColumn(rdr, "ID_M_COUNTRY")) { salePurchaseType.Country.Id = rdr["ID_M_COUNTRY"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["ID_M_COUNTRY"]); }
+        if (HasColumn(rdr, "GeoLocation_MCode")) { salePurchaseType.Country.Name = rdr["GeoLocation_MCode"].ToString(); }
+        if (HasColumn(rdr, "GeoLocation_Code2")) { salePurchaseType.Country.Code2 = rdr["GeoLocation_Code2"].ToString(); }
+        if (HasColumn(rdr, "currencyId")) { salePurchaseType.Currency.Id = rdr["currencyId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["currencyId"]); }
+        if (HasColumn(rdr, "CurrencyCode")) { salePurchaseType.Currency.Abbrev = rdr["CurrencyCode"].ToString(); }
+
         if (HasColumn(rdr, "main_currency_id")) 
         {
             if (salePurchaseType.CurrencyMain == null) salePurchaseType.CurrencyMain = new Currency();
@@ -247,7 +267,7 @@ WHERE 1 = 1
             if (salePurchaseType.CurrencyCross == null) salePurchaseType.CurrencyCross = new Currency();
             salePurchaseType.CurrencyCross.Abbrev = rdr["CurrencyCrossCode"].ToString();
         }
-
+        // Неправильный вариант - к удалению
         if (HasColumn(rdr, "currency_in_use")) 
         {
             string json = rdr["currency_in_use"].ToString() ?? "";
@@ -259,6 +279,21 @@ WHERE 1 = 1
                 salePurchaseType.Data = st;
             }
         }
+
+        if (HasColumn(rdr, "currency_in_use"))
+        {
+            if (!rdr.IsDBNull("currency_in_use"))
+            {
+                //string jsonString = rdr["currency_in_use"].ToString();
+                List<CurrencyUsing> list = JsonSerializer.Deserialize<List<CurrencyUsing>>(rdr["currency_in_use"].ToString(), new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true // Чтобы id смапился на Id, а code на Code
+                });
+
+                salePurchaseType.CurrenciesUsing.AddRange(list);
+            }
+        }
+
         if (HasColumn(rdr, "confirmed")) 
             salePurchaseType.Confirmed = rdr["confirmed"] == DBNull.Value ? false : Convert.ToBoolean(rdr["confirmed"]);
         if (HasColumn(rdr, "by_default"))
@@ -283,6 +318,45 @@ WHERE 1 = 1
         return salePurchaseType;
     }
 
+    public SalePurchaseRate FillSalePurchaseRate(DbDataReader rdr)
+    {
+        SalePurchaseRate s = new SalePurchaseRate();
+        s.SalePurchaseType = new SalePurchaseType();
+        s.MetaData = new MetaData();
+
+        if (HasColumn(rdr, "id")) { s.Id = Convert.ToInt32(rdr["id"]); }
+        if (HasColumn(rdr, "CountryCurrId")) { s.SalePurchaseType.Id = Convert.ToInt32(rdr["CountryCurrId"]); }
+        if (HasColumn(rdr, "date")) { s.Date = Convert.ToDateTime(rdr["date"]).ToUniversalTime().ToTimestamp(); }
+        if (HasColumn(rdr, "CBRate")) { s.RateCb = rdr.IsDBNull("CBRate") ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["CBRate"])); }
+
+        if (HasColumn(rdr, "Rates")) { 
+            var jsonRates = rdr["Rates"]; 
+        }
+
+        if (HasColumn(rdr, "SalaryRate")) { s.SalaryRate = rdr.IsDBNull("SalaryRate") ? MyConvert.ToDecimalValue(0): MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["SalaryRate"])); }
+        if (HasColumn(rdr, "BankToCashRes")) { s.BankToCashRes = rdr.IsDBNull("BankToCashRes") ? MyConvert.ToDecimalValue(0): MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["BankToCashRes"])); }
+        if (HasColumn(rdr, "BankToCashNonres")) { s.BankToCashNonres = s.BankToCashRes = rdr.IsDBNull("BankToCashNonres") ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["BankToCashNonres"])); }
+        if (HasColumn(rdr, "CashToBank")) { s.CashToBank = rdr.IsDBNull("CashToBank") ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["CashToBank"])); }
+        if (HasColumn(rdr, "Vat")) { s.Vat = rdr.IsDBNull("Vat") ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Vat"])); }
+        if (HasColumn(rdr, "Oncost")) { s.OnCost = rdr.IsDBNull("Oncost") ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["Oncost"])); }
+        if (HasColumn(rdr, "MaxProfit")) { s.MaxProfit = rdr.IsDBNull("MaxProfit") ? MyConvert.ToDecimalValue(0) : MyConvert.ToDecimalValue(Convert.ToDecimal(rdr["MaxProfit"])); }
+
+        if (HasColumn(rdr, "Checked")) { s.Checked = rdr.IsDBNull("Checked") ? false: Convert.ToBoolean(rdr["Checked"]); }
+        if (HasColumn(rdr, "Confirmed")) { s.Confirmed = rdr.IsDBNull("Confirmed") ? false : Convert.ToBoolean(rdr["Confirmed"]); }
+
+        if (HasColumn(rdr, "CheckDate")) { s.MetaData.CheckedAt = rdr.IsDBNull("CheckDate")? null: Convert.ToDateTime(rdr["CheckDate"]).ToUniversalTime().ToTimestamp(); }
+        if (HasColumn(rdr, "CheckerId")) { s.MetaData.CheckedUserid = rdr.IsDBNull("CheckerId")? null: Convert.ToInt32(rdr["CheckerId"]); }
+        if (HasColumn(rdr, "CheckName")) { s.MetaData.CheckedBy = Convert.ToString(rdr["CheckName"]); }
+        if (HasColumn(rdr, "CheckUserName")) { s.MetaData.CheckedName = Convert.ToString(rdr["CheckUserName"]); }
+
+        if (HasColumn(rdr, "ConfDate")) { s.MetaData.ConfirmedAt = rdr.IsDBNull("ConfDate") ? null : Convert.ToDateTime(rdr["ConfDate"]).ToUniversalTime().ToTimestamp(); }
+        if (HasColumn(rdr, "ConfirmerId")) { s.MetaData.ConfirmedUserid = rdr.IsDBNull("ConfirmerId") ? null: Convert.ToInt32(rdr["ConfirmerId"]); }
+        if (HasColumn(rdr, "ConfName")) { s.MetaData.ConfirmedBy = Convert.ToString(rdr["ConfName"]); }
+        if (HasColumn(rdr, "ConfUserName")) { s.MetaData.ConfirmedName = Convert.ToString(rdr["ConfUserName"]); }
+
+        return s;
+    }
+
     private bool HasColumn(DbDataReader reader, string columnName)
     {
         bool result = true;
@@ -300,5 +374,5 @@ WHERE 1 = 1
     }
 
     #endregion
-
+   
 }

@@ -17,13 +17,19 @@ using System.Threading.Tasks;
 
 namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
 {
-    public class SalePurchaseTypePresenter
+    public class SalePurchaseTypesPresenter
     {
         private readonly ISalePurchaseTypesView _view;
 
-        public SalePurchaseTypePresenter(ISalePurchaseTypesView view)
+        public SalePurchaseTypesPresenter(ISalePurchaseTypesView view)
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
+
+            // Подписываемся на события View
+            _view.OnLoadTypesAsync += HandleLoadTypesAsync;
+            _view.OnAppendTypesAsync += HandleAppendTypesAsync;
+            _view.OnDeleteTypesAsync += HandleDeleteTypesAsync;
+            _view.OnRefreshTypesAsync += HandleRefreshTypesAsync;
 
         }
 
@@ -39,34 +45,42 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Presenters
             return _view.SalePurchaseTypes;
         }
 
-        public async Task<BindingList<Currency>> RefreshSalePurchaseCurrenciesAsync(SalePurchaseType type)
+        public async Task HandleLoadTypesAsync(CancellationToken ct)
         {
-            string jsonString = JsonFormatter.Default.Format(type.Data);
 
-            // 2. Десериализуем строку в список объектов C#
-            var parser = new Google.Protobuf.JsonParser(Google.Protobuf.JsonParser.Settings.Default.WithIgnoreUnknownFields(true));
-            
-            var structObject = parser.Parse<Google.Protobuf.WellKnownTypes.Struct>(jsonString);
+        }
 
-            var currencyList = parser.Parse<Google.Protobuf.WellKnownTypes.Struct>(jsonString).Fields["currency_in_use"].ListValue;
-            List<Currency> currencies = new List<Currency>();
-            foreach (var item in currencyList.Values)
+        private async Task HandleAppendTypesAsync(SalePurchaseType model, CancellationToken ct)
+        {
+            CreateSalePurchaseTypeRequest request = new CreateSalePurchaseTypeRequest()
             {
-                var fields = item.StructValue.Fields;
-
-                currencies.Add(new Currency
+                SalePurchaseType = new SalePurchaseType()
                 {
-                    Id = (int)fields["id"].NumberValue,
-                    Abbrev = fields["code"].StringValue
-                });
-            }
+                }
+            };
+            SalePurchaseTypeResponse response = new SalePurchaseTypeResponse();
+            response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.SalePurchaseType.CreateSalePurchaseTypeAsync(request).ResponseAsync).ConfigureAwait(false);
+            return;
+        }
 
+        private async Task HandleDeleteTypesAsync(IReadOnlyList<int> ids, CancellationToken ct)
+        {
 
-            _view.Currencies = new BindingList<Currency>(currencies);
+        }
+
+        private async Task HandleRefreshTypesAsync(CancellationToken ct)
+        {
+            await RefreshAsync(ct).ConfigureAwait(false);
+        }
+
+        public async Task<BindingList<CurrencyUsing>> RefreshSalePurchaseCurrenciesAsync(SalePurchaseType type)
+        {
+            _view.Currencies = new BindingList<CurrencyUsing>(type.CurrenciesUsing);
             return _view.Currencies;
         }
 
-        public async Task OnClick_NewAsync()
+        public async Task RefreshAsync(CancellationToken ct)
         {
             //CreateSalePurchaseTypeRequest request = new CreateSalePurchaseTypeRequest()
             //{

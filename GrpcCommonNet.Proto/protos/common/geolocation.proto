@@ -4,21 +4,40 @@ option csharp_namespace = "GrpcCommonNet.Library.Common";
 
 package Common;
 
+enum GeoType {
+	ALL = 0;				// Все			
+	COUNTRY = 1;			// Только страны
+}
+
+message CountryJson {
+	string Code2 = 1;
+	string Code3 = 2;
+	string CodeDigit = 3;
+}
+
+message RegionJson {
+	optional string Code2 = 1;
+	optional string SOATO = 2;
+}
+
 message Geolocation {
 	int32  id = 1;								// Идентификатор географического местоположения
-	optional int32  parent_id = 2;				// Родитель географического местоположения
-	string name = 3;							// Наименование географического местоположения
-	optional string ids  = 4;					// Список идентификаторы родительских географических местоположений и собственный идентификатор
-	optional string names  = 5;					// Список наименований родительских географических местоположении и собственное наименование (путь)
-	optional int32  is_country = 6;				// Признак страны
-	optional string code2 = 7;					// Двухзначный код ТОЛЬКО ДЛЯ СТРАН
-	optional string name_lat = 8;				// Наименование географического местоположения (латиница)
-	optional string json_codes = 9;				// Json, содержащий коды географического местоположения. Заполнение для страны обязательно. 
+	optional int32 parent_id = 2;				// Родитель географического местоположения
+	Geolocation Parent = 3;
+	string name = 4;							// Наименование географического местоположения
+	optional string ids  = 5;					// Список идентификаторы родительских географических местоположений и собственный идентификатор
+	optional string names  = 6;					// Список наименований родительских географических местоположении и собственное наименование (путь)
+	optional int32  is_country = 7;				// Признак страны
+	optional string code2 = 8;					// Двухзначный код ТОЛЬКО ДЛЯ СТРАН
+	optional string name_lat = 9;				// Наименование географического местоположения (латиница)
+	oneof json_codes {
+		CountryJson country_json = 10;				// Json, содержащий коды географического местоположения. Заполнение для страны обязательно. 
 													// Примеры: страна Узбекистан  { "Code2"; "UZ", "Code3"; "UZB", "CodeDigit"; 860}
-													// город Ташкент {"SOATO": "1726"}
+		RegionJson region_json = 11;				// город Ташкент {"SOATO": "1726"}
 													// город Ахангаран {"SOATO": "1727212501"}
-	optional string phone_code = 10;				// Телефонный код географического местоположения полны_. Например. у страны Узбекистан +998, у города Ташкента +998 71
-	optional int32  lock = 11;					//  Флаг блокировки редактирования геолокаций
+	}												
+	optional string phone_code = 12;				// Телефонный код географического местоположения полны_. Например. у страны Узбекистан +998, у города Ташкента +998 71
+	optional int32  lock = 13;					//  Флаг блокировки редактирования геолокаций
 }
 
 message Place {
@@ -30,3 +49,4 @@ message Place {
 	int32 geoLocation_id = 6;		// Идентификатор расположения места место расположения
 	int32 lock = 7;					// Флаг блокировки редактирования места размещения
 }
+

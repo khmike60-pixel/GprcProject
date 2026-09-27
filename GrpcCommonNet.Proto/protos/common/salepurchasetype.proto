@@ -14,13 +14,22 @@ package Common;
 
 // Метаданные аудита
 message MetaData {
-  google.protobuf.Timestamp confirmed_at = 1;		// Дата утверждения  
-  string confirmed_by = 2;							// Аббревиатура утвердившего
-  google.protobuf.Int32Value confirmed_userid = 3;  // Идентификатор утвердившего (пользователя)
-  google.protobuf.Timestamp cheked_at = 4;			// Дата проверки   
-  string cheked_by = 5;								// Аббревиатура проверившего
-  google.protobuf.Int32Value cheked_userid = 6;		// Идентификатор проверевшего (пользователя)
+  google.protobuf.Timestamp confirmed_at = 1;			// Дата утверждения  
+  string confirmed_by = 2;								// Аббревиатура утвердившего
+  google.protobuf.Int32Value confirmed_userid = 3;		// Идентификатор утвердившего (пользователя)
+  string confirmed_name = 4;
+  google.protobuf.Timestamp checked_at = 5;				// Дата проверки   
+  string checked_by = 6;								// Аббревиатура проверившего
+  google.protobuf.Int32Value checked_userid = 7;		// Идентификатор проверевшего (пользователя)
+  string checked_name = 8;
 }
+
+message CurrencyUsing {
+	int32 id = 1;
+	string code = 2;
+	Common.DecimalValue rate1 =  3;
+	Common.DecimalValue rate2 =  4;
+}	
 
 message SalePurchaseType{
 	google.protobuf.Int32Value id = 1;			
@@ -34,20 +43,26 @@ message SalePurchaseType{
 	bool confirmed = 9;							// Признак утверждения записи
 	MetaData meta_data  = 10;					// Мета данные подтверждения/проверки
 	google.protobuf.Struct data = 11;			// Перечень валют, по которым хранятся утвержденные курсы (json)
+	repeated CurrencyUsing currencies_using = 12;			
+
 }
 
 message SalePurchaseRate {
 	google.protobuf.Int32Value id = 1;
-	google.protobuf.Timestamp date = 2;				// Дата установки параметров
-	google.protobuf.Struct json = 3;				// JSON-объект с валютами и курсами (id - id валюты, code - аббревиатура валюты, rate1 - курс прайс-листа, rate2 - курс конвертации)
-	Common.DecimalValue salary_rate =4;				// Курс валюты учета для выдачи наличных
-	Common.DecimalValue bank_to_cash_res = 5;		// Коэффициент (%) при конвертации безнал. в нал. (резидент)
-	Common.DecimalValue bank_to_cash_nonres = 6;	// Коэффициент (%) при конвертации безнал. в нал. (нерезидент)
-	Common.DecimalValue cash_to_bank = 7;			// Коэффициент (%) при конвертации нал. в безнал.
-	Common.DecimalValue vat = 8;					// Процент НДС на указанную дату
-	Common.DecimalValue on_cost = 9;				// Накладные расходы (%)
-	Common.DecimalValue max_profit = 10;			// Максимальная рентабельность (%)
-	MetaData meta_data = 11;						// Мета-данные
-	
-
+	SalePurchaseType sale_purchase_type = 2;
+	google.protobuf.Timestamp date = 3;				// Дата установки параметров
+	google.protobuf.Struct json = 4;				// JSON-объект с валютами и курсами (id - id валюты, code - аббревиатура валюты, rate1 - курс прайс-листа, rate2 - курс конвертации)
+	Common.DecimalValue rate_cb =5;					// Курс валюты ЦБ
+	Common.DecimalValue salary_rate =6;				// Курс валюты учета для выдачи наличных
+	Common.DecimalValue bank_to_cash_res = 7;		// Коэффициент (%) при конвертации безнал. в нал. (резидент)
+	Common.DecimalValue bank_to_cash_nonres = 8;	// Коэффициент (%) при конвертации безнал. в нал. (нерезидент)
+	Common.DecimalValue cash_to_bank = 9;			// Коэффициент (%) при конвертации нал. в безнал.
+	Common.DecimalValue vat = 10;					// Процент НДС на указанную дату
+	Common.DecimalValue on_cost = 11;				// Накладные расходы (%)
+	Common.DecimalValue max_profit = 12;			// Максимальная рентабельность (%)
+	MetaData meta_data = 13;						// Мета-данные
+	bool checked = 14;
+	bool confirmed = 15;
 }
+
+

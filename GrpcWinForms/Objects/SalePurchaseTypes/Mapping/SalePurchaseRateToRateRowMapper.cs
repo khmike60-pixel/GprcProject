@@ -17,7 +17,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Mapping
 
             rateRow.Id = Convert.ToInt32(salePurchaseRate.Id);
             rateRow.Date = salePurchaseRate.Date.ToDateTime();
-            rateRow.CBRate = 0;  // Дописать
+            rateRow.CBRate = MyConvert.ToDecimal(salePurchaseRate.RateCb);  // Дописать
             rateRow.Rate0_1 = 0;
             rateRow.Rate0_2 = 0;
             rateRow.Rate1_1 = 0;
@@ -29,15 +29,15 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Mapping
             rateRow.BankToCashNonres = MyConvert.ToDecimal(salePurchaseRate.BankToCashNonres);
             rateRow.CashToBank = MyConvert.ToDecimal(salePurchaseRate.CashToBank);
             rateRow.Vat = MyConvert.ToDecimal(salePurchaseRate.Vat);
-            rateRow.Oncost = MyConvert.ToDecimal(salePurchaseRate.OnCost);
+            rateRow.OnCost = MyConvert.ToDecimal(salePurchaseRate.OnCost);
             rateRow.MaxProfit = MyConvert.ToDecimal(salePurchaseRate.MaxProfit);
 
-            rateRow.Checked = salePurchaseRate.MetaData?.ChekedBy == null ? 0 : 1;
-            rateRow.CheckDate = salePurchaseRate.MetaData?.ChekedAt.ToDateTime();
-            rateRow.CheckName = salePurchaseRate.MetaData?.ChekedBy;
-            rateRow.CheckerId = salePurchaseRate.MetaData?.ChekedUserid;
+            rateRow.Checked = salePurchaseRate.MetaData?.CheckedBy == null ? 0 : 1;
+            rateRow.CheckDate = salePurchaseRate.MetaData?.CheckedAt?.ToDateTime();
+            rateRow.CheckName = salePurchaseRate.MetaData?.CheckedBy;
+            rateRow.CheckerId = salePurchaseRate.MetaData?.CheckedUserid;
             rateRow.Confirmed = salePurchaseRate.MetaData?.ConfirmedBy == null ? 0 : 1;
-            rateRow.ConfDate = salePurchaseRate.MetaData?.ConfirmedAt.ToDateTime();
+            rateRow.ConfDate = salePurchaseRate.MetaData?.ConfirmedAt?.ToDateTime();
             rateRow.ConfName = salePurchaseRate.MetaData?.ConfirmedBy;
             rateRow.ConfirmerId = salePurchaseRate.MetaData?.ConfirmedUserid;
 

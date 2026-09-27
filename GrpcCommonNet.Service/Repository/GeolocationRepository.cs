@@ -1,7 +1,12 @@
-﻿using GrpcCommonNet.Library.Common;
+﻿using Google.Protobuf;
+using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Geolocation;
+using GrpcCommonNet.Service.Models;
 using MySql.Data.MySqlClient;
+using System.Data;
 using System.Data.Common;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Xml.Linq;
 
 public class GeolocationRepository
@@ -15,7 +20,7 @@ public class GeolocationRepository
         _connectionString = configuration.GetConnectionString("MySql");
     }
 
-    #region Методы получения  данных  о приложениях
+    #region Методы получения  данных 
 
     public async Task<Geolocation?> GetByIdAsync(long id)
     {
@@ -37,15 +42,30 @@ public class GeolocationRepository
         }
     }
 
-    public async Task<List<Geolocation>> GetTreeGeoAsync(long id)
+    public async Task<List<Geolocation>> GetTreeGeoAsync(TreeGeoRequest request, UserData userData)
     {
         List<Geolocation> geoTree = new List<Geolocation>();
         try
         {
+            bool onlyCountry = false;
+            if (request.GeoType != null && request.GeoType == GeoType.Country) onlyCountry = true;
+            
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
-            cmd.CommandText = $@"SELECT * FROM global_db.geolocations g where g.GeoLocation_Id >= {id} order by g.GeoLocation_Names";
+            cmd.CommandText = 
+                $@"
+                    SELECT 
+                        g.* , p.GeoLocation_Name as ParentName
+                    FROM global_db.geolocations g 
+                        left join global_db.geolocations p on p.GeoLocation_Id = g.Geolocation_ParentId
+                    where 1 = 1
+                        and if({onlyCountry}, if(g.GeoLocation_IsCountry = 1, true, false), true)
+                        and g.GeoLocation_Names like CONCAT('%', @name, '%')
+                    order by g.GeoLocation_Names
+                ";
+            cmd.Parameters.AddWithValue("@name", request.Name);
+
             using var rdr = await cmd.ExecuteReaderAsync();
             while (await rdr.ReadAsync())
             {
@@ -237,7 +257,15 @@ public class GeolocationRepository
 
                 cmd.Parameters.AddWithValue("@code2", geolocation.Code2);
                 cmd.Parameters.AddWithValue("@nameLat", geolocation.NameLat);
-                cmd.Parameters.AddWithValue("@jsonCodes", geolocation.JsonCodes);
+
+                if (geolocation.CountryJson != null)
+                    cmd.Parameters.AddWithValue("@jsonCodes", geolocation.CountryJson);
+                else if (geolocation.RegionJson != null)
+                    cmd.Parameters.AddWithValue("@jsonCodes", geolocation.RegionJson);
+                else
+                    cmd.Parameters.AddWithValue("@jsonCodes", string.Empty);
+
+
                 cmd.Parameters.AddWithValue("@phoneCode", geolocation.PhoneCode);
                 cmd.Parameters.AddWithValue("@lock", geolocation.Lock);
 
@@ -265,7 +293,13 @@ public class GeolocationRepository
         Geolocation geo = new Geolocation();
 
         geo.Id = Convert.ToInt32(rdr["GeoLocation_Id"]);
+        
         geo.ParentId = rdr["GeoLocation_ParentId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["GeoLocation_ParentId"]);
+        geo.Parent = new Geolocation()
+        {
+            ParentId = geo.ParentId,
+            Name = rdr["ParentName"].ToString()
+        };
         geo.Ids = rdr["GeoLocation_Ids"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Ids"]);
         geo.Names = rdr["GeoLocation_Names"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Names"]);
         geo.Name = rdr["GeoLocation_Name"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Name"]);
@@ -273,7 +307,29 @@ public class GeolocationRepository
         geo.Code2 = rdr["GeoLocation_Code2"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Code2"]);
         geo.NameLat = rdr["GeoLocation_NameLat"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_NameLat"]);
         geo.PhoneCode = rdr["GeoLocation_PhoneCode"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_PhoneCode"]);
-        geo.JsonCodes = rdr["GeoLocation_JsonCodes"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_JsonCodes"]);
+
+        int geoOrdinal = rdr.GetOrdinal("GeoLocation_JsonCodes");
+
+        // Создаем один экземпляр парсера gRPC с флагом игнорирования неизвестных полей (на случай будущих изменений JSON)
+        var grpcJsonParser = new JsonParser(JsonParser.Settings.Default.WithIgnoreUnknownFields(true));
+
+        if (geo.IsCountry == 1)
+        {
+            geo.CountryJson = rdr.IsDBNull(geoOrdinal)
+                ? null
+                : grpcJsonParser.Parse<CountryJson>(rdr.GetString(geoOrdinal));
+        }
+        else if (geo.IsCountry == 0)
+        {
+            geo.RegionJson = rdr.IsDBNull(geoOrdinal)
+                ? null
+                : grpcJsonParser.Parse<RegionJson>(rdr.GetString(geoOrdinal));
+        }
+        else
+        {
+            geo.CountryJson = null;
+        }
+
         geo.Lock = rdr["GeoLocation_Lock"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["GeoLocation_Lock"]);
 
         return geo;
