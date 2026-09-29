@@ -47,5 +47,32 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
 
         }
 
+        public async Task<Geolocation> AddGeolocation()
+        {
+            Geolocation geo = new Geolocation();
+            geo.Name = _view.GeoName;
+            geo.NameLat = _view.GeoNameLat;
+            geo.Parent = new Geolocation()
+            {
+                Id = _view.GeoParentObject.Id,
+                Name = _view.GeoParentObject.Name,
+            };
+            geo.IsCountry = _view.GeoIsCountry ? 1: 0;
+            geo.Code2 = _view.GeoCode2;
+            geo.PhoneCode = _view.GeoPhone;
+            if (geo.IsCountry == 1) geo.CountryJson = new CountryJson()
+            {
+                Code2 = _view.GeoCode2,
+                Code3 = _view.GeoCode3,
+                CodeDigit = _view.GeoDigit
+            };
+            else geo.RegionJson = new RegionJson()
+            {
+                Code2 = _view.GeoCode2,
+                SOATO = _view.GeoCode3
+            };
+
+            return geo;
+        }
     }
 }
