@@ -242,6 +242,7 @@
             MinimumSize = new Size(601, 254);
             Name = "GeolocationForm";
             Text = "Географическое место";
+            Load += GeolocationForm_Load;
             ((System.ComponentModel.ISupportInitialize)lblName).EndInit();
             ((System.ComponentModel.ISupportInitialize)txtName).EndInit();
             ((System.ComponentModel.ISupportInitialize)lblParent).EndInit();

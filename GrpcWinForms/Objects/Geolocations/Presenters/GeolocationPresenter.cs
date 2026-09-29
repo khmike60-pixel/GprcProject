@@ -1,4 +1,6 @@
 ﻿using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Geolocation;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Currencies.Views;
 using GrpcWinForms.Objects.Geolocations.Views;
 using System;
@@ -21,58 +23,39 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
             _view.OnClick_OkAsync += HandleClick_OkAsync;
         }
 
-        public async Task HandleClick_OkAsync(Geolocation geolocation)
+        public async Task HandleClick_OkAsync()
         {
-            _view.Geolocation.Name = _view.GeoName;
-            _view.Geolocation.NameLat = _view.GeoNameLat;
-            if (_view.Geolocation.Parent == null) _view.Geolocation.Parent = new Geolocation();
-            _view.Geolocation.Parent.Id = _view.GeoParentObject.Id;
-            _view.Geolocation.Parent.Name = _view.GeoParentObject.Name;
-            _view.Geolocation.IsCountry = _view.GeoIsCountry ? 1 : 0;
-            _view.Geolocation.Code2 = _view.GeoCode2;
-            _view.Geolocation.PhoneCode = _view.GeoPhone;
-            if (_view.Geolocation.IsCountry == 1)
-                _view.Geolocation.CountryJson = new CountryJson()
+            Geolocation newGeo = new Geolocation();
+            newGeo.Name = _view.GeoName;
+            newGeo.NameLat = _view.GeoNameLat;
+            if (_view.Geolocation.Parent == null) newGeo.Parent = new Geolocation();
+            newGeo.Parent.Id = _view.GeoParentObject.Id;
+            newGeo.Parent.Name = _view.GeoParentObject.Name;
+            newGeo.IsCountry = _view.GeoIsCountry ? 1 : 0;
+            newGeo.Code2 = _view.GeoCode2;
+            newGeo.PhoneCode = _view.GeoPhone;
+            if (newGeo.IsCountry == 1)
+                newGeo.CountryJson = new CountryJson()
                 {
                     Code2 = _view.GeoCode2,
                     Code3 = _view.GeoCode3,
                     CodeDigit = _view.GeoDigit
                 };
             else
-                _view.Geolocation.RegionJson = new RegionJson()
+                newGeo.RegionJson = new RegionJson()
                 {
                     Code2 = _view.GeoCode2,
                     SOATO = _view.GeoCode3
                 };
 
+            CreateGeoRequest request = new CreateGeoRequest() { Geolocation = newGeo };
+            GeoResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Geolocation.CreateGeoAsync(request).ResponseAsync).ConfigureAwait(false);
+            if (response.Result.Status == Status.Ok)
+                _view.Geolocation = newGeo;
+            else _view.Geolocation = null;
+
         }
 
-        public async Task<Geolocation> AddGeolocation()
-        {
-            Geolocation geo = new Geolocation();
-            geo.Name = _view.GeoName;
-            geo.NameLat = _view.GeoNameLat;
-            geo.Parent = new Geolocation()
-            {
-                Id = _view.GeoParentObject.Id,
-                Name = _view.GeoParentObject.Name,
-            };
-            geo.IsCountry = _view.GeoIsCountry ? 1: 0;
-            geo.Code2 = _view.GeoCode2;
-            geo.PhoneCode = _view.GeoPhone;
-            if (geo.IsCountry == 1) geo.CountryJson = new CountryJson()
-            {
-                Code2 = _view.GeoCode2,
-                Code3 = _view.GeoCode3,
-                CodeDigit = _view.GeoDigit
-            };
-            else geo.RegionJson = new RegionJson()
-            {
-                Code2 = _view.GeoCode2,
-                SOATO = _view.GeoCode3
-            };
-
-            return geo;
-        }
     }
 }

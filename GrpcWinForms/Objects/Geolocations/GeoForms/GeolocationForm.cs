@@ -39,7 +39,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         #region Вызываемые события 
 
-        public event Func<Geolocation, Task> OnClick_OkAsync;
+        public event Func<Task> OnClick_OkAsync;
 
         #endregion
 
@@ -53,15 +53,23 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         private async void btnOk_Click(object sender, EventArgs e)
         {
-            OnClick_OkAsync?.Invoke(Geolocation);
-            
-            this.DialogResult = DialogResult.OK;
+            OnClick_OkAsync?.Invoke();
+            if (Geolocation != null)
+                this.DialogResult = DialogResult.OK;
+            else 
+                MessageBox.Show("Добавление документа не удалось");
+
             Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void GeolocationForm_Load(object sender, EventArgs e)
+        {
+            GeoParentName = GeoParentObject.Name;
         }
     }
 }

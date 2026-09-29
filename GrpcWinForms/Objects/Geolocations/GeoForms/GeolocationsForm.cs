@@ -222,7 +222,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                 };
                 if(geoForm.ShowDialog() == DialogResult.OK)
                 {
-
+                    Geolocation newGeo = geoForm.Geolocation;
                 }
             }
         }
