@@ -12,6 +12,7 @@ namespace GrpcWinForms.Objects.Geolocations.Models
         public int Id { get; set; } = 0;
         public string Name { get; set; } = string.Empty;
         public int ParentId { get; set; } = 0;
+        public int IsCountry {  get; set; } = 1;
         public string Code2 { get; set; } = string.Empty;
         public string NameLat {  get; set; } = string.Empty;
         public string PhoneCode { get; set; } = string.Empty;

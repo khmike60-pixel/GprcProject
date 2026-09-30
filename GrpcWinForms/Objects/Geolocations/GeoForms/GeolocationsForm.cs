@@ -217,7 +217,8 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                 geoForm.GeoParentObject = new Geolocation()
                 {
                     Id = geoItem.Id,
-                    Name = geoItem.Name
+                    Name = geoItem.Name,
+                    IsCountry = geoItem.IsCountry
                     
                 };
                 if(geoForm.ShowDialog() == DialogResult.OK)

@@ -117,47 +117,50 @@ public class GeolocationRepository
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            string parentNames = String.Empty;
-            string parentIds = String.Empty;
-
-            // Определение родителя
-            using (var cmd = conn.CreateCommand())
-            {
-                cmd.CommandText = $@"SELECT g.GeoLocation_Names, g.GeoLocation_Ids from global_db.geolocations g where g.GeoLocation_Id = {geolocation.ParentId}";
-                using var rdr = await cmd.ExecuteReaderAsync();
-                if (await rdr.ReadAsync())
-                {
-                    parentNames = rdr["GeoLocation_Names"] == DBNull.Value ? string.Empty : rdr["GeoLocation_Names"].ToString();
-                    parentIds = rdr["GeoLocation_Ids"] == DBNull.Value ? string.Empty : rdr["GeoLocation_Ids"].ToString();
-                }
-            }
             // Вставляем данные
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = $@"
-                INSERT INTO global_db.geolocations (
+                INSERT INTO global_db.geolocations 
+                (
+                    GeoLocation_Name, 
+                    GeoLocation_NameLat,
+                    GeoLocation_MCode,
                     GeoLocation_ParentId, 
                     GeoLocation_IsCountry,
-                    GeoLocation_Name, 
-                    GeoLocation_Ids, GeoLocation_Names
-                    )
-                    VALUE (
+                    GeoLocation_Code2, 
+                    GeoLocation_JsonCodes,
+                    GeoLocation_PhoneCode
+                )
+                VALUE (
+                    @Name,                     
+                    @NameLat,
+                    @MCode,
                     IF(IFNULL(@ParentId,0)=0,null,@ParentId),
-                    IF(IFNULL(@ParentId,0)=0,1,0),
-                    @Name, 
-                    @Ids, @parentNames);
+                    @IsCountry,
+                    @Code2,
+                    @JsonCode,
+                    @PhoneCode
+                );
                     
-                UPDATE global_db.geolocations  
-                    set 
-                        GeoLocation_Ids = IF(IFNULL(GeoLocation_Ids,'')='',CONCAT(LAST_INSERT_ID()),CONCAT(GeoLocation_Ids,',',GeoLocation_Id)),
-                        GeoLocation_Names = if(IFNULL(GeoLocation_Names,'')= '',GeoLocation_Name, CONCAT(GeoLocation_Names,' / ',GeoLocation_Name))
-                    where GeoLocation_Id = LAST_INSERT_ID();
-                SELECT * FROM global_db.geolocations g where g.GeoLocation_Id = LAST_INSERT_ID();";
-                cmd.Parameters.AddWithValue("@ParentId", geolocation.ParentId);
+                SELECT * FROM global_db.geolocations g where g.GeoLocation_Id = LAST_INSERT_ID();
+                ";
+
                 cmd.Parameters.AddWithValue("@Name", geolocation.Name);
-                cmd.Parameters.AddWithValue("@Names", geolocation.Names);
-                cmd.Parameters.AddWithValue("@Ids", parentIds);
-                cmd.Parameters.AddWithValue("@parentNames", parentNames);
+                cmd.Parameters.AddWithValue("@NameLat", geolocation.NameLat);
+                cmd.Parameters.AddWithValue("@MCode", geolocation.Name);
+                cmd.Parameters.AddWithValue("@ParentId", geolocation.ParentId);
+                cmd.Parameters.AddWithValue("@IsCountry", geolocation.IsCountry);
+                cmd.Parameters.AddWithValue("@Code2", geolocation.IsCountry == 1? geolocation.Code2: "");
+
+                // Записываем Json
+                var jsonValue = geolocation.CountryJson ?? geolocation.CountryJson;
+                var parameter = new MySqlParameter("@JsonCode", MySqlDbType.JSON);
+                parameter.Value = (object)jsonValue ?? DBNull.Value;
+                cmd.Parameters.Add(parameter);
+
+                cmd.Parameters.AddWithValue("@PhoneCode", geolocation.PhoneCode);
+
 
                 using var rdr = await cmd.ExecuteReaderAsync();
                 if (await rdr.ReadAsync())

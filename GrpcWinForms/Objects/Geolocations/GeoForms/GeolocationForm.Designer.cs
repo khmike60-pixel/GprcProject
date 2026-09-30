@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeolocationForm));
             lblName = new C1.Win.Input.C1Label();
             txtName = new C1.Win.Input.C1TextBox();
             lblParent = new C1.Win.Input.C1Label();
@@ -96,6 +97,7 @@
             txtParent.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtParent.Location = new Point(145, 69);
             txtParent.Name = "txtParent";
+            txtParent.ReadOnly = true;
             txtParent.Size = new Size(426, 23);
             txtParent.TabIndex = 5;
             txtParent.Value = "";
@@ -103,11 +105,16 @@
             // chkIsCountry
             // 
             chkIsCountry.CheckAlign = ContentAlignment.MiddleRight;
+            chkIsCountry.Checked = true;
+            chkIsCountry.CheckState = CheckState.Indeterminate;
+            chkIsCountry.Enabled = false;
             chkIsCountry.Location = new Point(13, 96);
             chkIsCountry.Name = "chkIsCountry";
             chkIsCountry.Size = new Size(148, 24);
+            chkIsCountry.Styles.Button.Disabled.ForeColor = SystemColors.ActiveCaptionText;
             chkIsCountry.TabIndex = 6;
             chkIsCountry.Text = "Является страной:";
+            chkIsCountry.Value = resources.GetObject("chkIsCountry.Value");
             // 
             // lblCode2
             // 

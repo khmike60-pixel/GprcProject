@@ -28,12 +28,17 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
             Geolocation newGeo = new Geolocation();
             newGeo.Name = _view.GeoName;
             newGeo.NameLat = _view.GeoNameLat;
+
             if (_view.Geolocation.Parent == null) newGeo.Parent = new Geolocation();
             newGeo.Parent.Id = _view.GeoParentObject.Id;
             newGeo.Parent.Name = _view.GeoParentObject.Name;
-            newGeo.IsCountry = _view.GeoIsCountry ? 1 : 0;
+
+            newGeo.ParentId = _view.GeoParentObject.Id;
+            newGeo.IsCountry = newGeo.Parent.Id == 0 ? 1 : 0;
+
             newGeo.Code2 = _view.GeoCode2;
             newGeo.PhoneCode = _view.GeoPhone;
+
             if (newGeo.IsCountry == 1)
                 newGeo.CountryJson = new CountryJson()
                 {

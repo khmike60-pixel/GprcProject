@@ -70,6 +70,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
         private void GeolocationForm_Load(object sender, EventArgs e)
         {
             GeoParentName = GeoParentObject.Name;
+            GeoIsCountry = GeoParentObject.Id == 0 ? true : false;
         }
     }
 }
