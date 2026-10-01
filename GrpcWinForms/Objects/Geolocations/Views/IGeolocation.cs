@@ -9,11 +9,12 @@ namespace GrpcWinForms.Objects.Geolocations.Views
 {
     public interface IGeolocation
     {
-        Geolocation Geolocation { get; set; }
-        Geolocation GeoParentObject { get; set; }
+        Geolocation Geolocation { get; set; } // Объект геолокации, введенный в форму
+        Geolocation GeoParentObject { get; set; } // Родительский объект геолокации
+        ModeEdit ModeEdit { get; set; } // Режим редактирования (None, Add, Edit)
 
         #region Поля формы
-        
+
         string GeoName {  get; set; }
         string GeoNameLat {  get; set; }
         string GeoParentName {  get; set; }
@@ -31,5 +32,11 @@ namespace GrpcWinForms.Objects.Geolocations.Views
         event Func<Task> OnClick_OkAsync;
 
         #endregion
+    }
+    public enum ModeEdit
+    {
+        None,
+        Add,
+        Edit
     }
 }

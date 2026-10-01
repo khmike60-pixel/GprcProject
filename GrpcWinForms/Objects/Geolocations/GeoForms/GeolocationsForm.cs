@@ -34,6 +34,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
             loader.Parent = gridGeo;
             loader.Size = gridGeo.Size;
 
+            gridGeo.AllowNodeMove = true;
         }
 
         private async void RefreshGeoTree()
@@ -212,20 +213,42 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
             if (row < gridGeo.Rows.Fixed) return;
             Node node = gridGeo.Rows[row].Node;
             GeoTree geoItem = node.Key as GeoTree;
+            Geolocation newGeo = null;
+
             using (GeolocationForm geoForm = new GeolocationForm())
             {
+                geoForm.ModeEdit = Views.ModeEdit.Add;
                 geoForm.GeoParentObject = new Geolocation()
                 {
                     Id = geoItem.Id,
                     Name = geoItem.Name,
                     IsCountry = geoItem.IsCountry
-                    
+
                 };
-                if(geoForm.ShowDialog() == DialogResult.OK)
+
+                if (geoForm.ShowDialog() == DialogResult.OK)
                 {
-                    Geolocation newGeo = geoForm.Geolocation;
+                    newGeo = geoForm.Geolocation;
                 }
             }
+            if (newGeo == null) return;
+            gridGeo.BeginUpdate();
+            gridGeo.Rows[row].Node.AddNode(NodeTypeEnum.FirstChild, newGeo.Name, new GeoTree()
+            {
+                Id = newGeo.Id,
+                Name = newGeo.Name,
+                ParentId = newGeo.ParentId,
+                IsCountry = newGeo.IsCountry,
+                Code2 = newGeo.Code2,
+                PhoneCode = newGeo.PhoneCode,
+                Lock = newGeo.Lock == 0 ? false : true
+            }, null);
+            gridGeo.EndUpdate();
+        }
+
+        private void gridGeo_Move(object sender, EventArgs e)
+        {
+
         }
     }
 

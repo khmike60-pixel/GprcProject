@@ -12,9 +12,18 @@ using System.Security.Authentication.ExtendedProtection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static GrpcWinForms.Objects.Geolocations.Views.IGeolocation;
 
 namespace GrpcWinForms.Objects.Geolocations.GeoForms
 {
+    /*
+    public enum ModeEdit
+    {
+        None,
+        Add,
+        Edit
+    }
+*/
     public partial class GeolocationForm : Form, IGeolocation
     {
         private readonly GeolocationPresenter _presenter;
@@ -37,6 +46,8 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         public Geolocation Geolocation { get => geolocation; set => geolocation = value; }
 
+        public ModeEdit ModeEdit { get; set; }
+
         #region Вызываемые события 
 
         public event Func<Task> OnClick_OkAsync;
@@ -53,13 +64,18 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         private async void btnOk_Click(object sender, EventArgs e)
         {
-            OnClick_OkAsync?.Invoke();
-            if (Geolocation != null)
-                this.DialogResult = DialogResult.OK;
+            if (ModeEdit == ModeEdit.None)
+                btnOk.Enabled = false;
             else 
-                MessageBox.Show("Добавление документа не удалось");
+            {
+                OnClick_OkAsync?.Invoke();
+                if (Geolocation != null)
+                    this.DialogResult = DialogResult.OK;
+                else
+                    MessageBox.Show("Добавление документа не удалось");
 
-            Close();
+                Close();
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

@@ -25,6 +25,7 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
 
         public async Task HandleClick_OkAsync()
         {
+            // Создаем новый объект Geolocation и заполняем его данными из View
             Geolocation newGeo = new Geolocation();
             newGeo.Name = _view.GeoName;
             newGeo.NameLat = _view.GeoNameLat;
@@ -53,13 +54,29 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
                     SOATO = _view.GeoCode3
                 };
 
-            CreateGeoRequest request = new CreateGeoRequest() { Geolocation = newGeo };
-            GeoResponse response = await GrpcRetry.CallAsync(() =>
-                GrpcClients.GrpcClients.Geolocation.CreateGeoAsync(request).ResponseAsync).ConfigureAwait(false);
-            if (response.Result.Status == Status.Ok)
-                _view.Geolocation = newGeo;
-            else _view.Geolocation = null;
+            // Создаем или обновляем геолокацию в зависимости от режима редактирования
+            if (_view.ModeEdit == ModeEdit.Add)
+            {
+                // Создаем новую геолокацию
+                CreateGeoRequest request = new CreateGeoRequest() { Geolocation = newGeo };
+                GeoResponse response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Geolocation.CreateGeoAsync(request).ResponseAsync).ConfigureAwait(false);
+                if (response.Result.Status == Status.Ok)
+                    newGeo = response.Geolocation;
 
+                _view.Geolocation = newGeo;
+            }
+            else if (_view.ModeEdit == ModeEdit.Edit)
+            {
+                // Обновляем существующую геолокацию
+                UpdateGeoRequest request = new UpdateGeoRequest() { Geolocation = newGeo };
+                GeoResponse response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Geolocation.UpdateGeoAsync(request).ResponseAsync).ConfigureAwait(false);
+                if (response.Result.Status == Status.Ok)
+                    _view.Geolocation = newGeo;
+                else _view.Geolocation = null;
+
+            }
         }
 
     }

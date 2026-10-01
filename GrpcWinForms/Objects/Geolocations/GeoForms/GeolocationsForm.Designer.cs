@@ -91,6 +91,7 @@
             gridGeo.Tree.Column = 2;
             gridGeo.AfterResizeColumn += smartGrid_AfterResizeColumn;
             gridGeo.DoubleClick += smartGrid1_DoubleClick;
+            gridGeo.Move += gridGeo_Move;
             // 
             // toolStrip1
             // 
