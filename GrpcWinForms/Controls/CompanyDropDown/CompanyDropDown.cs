@@ -125,8 +125,23 @@ namespace GrpcWinForms.Objects.Contragents.Components
                     return;
                 }
             }
-            MessageBox.Show(this, "Такой контрагент не найден!");
-            Focus();
+            Control? parent = this.Parent;
+            while (parent != null)
+            {
+                if (parent is Form f)
+                    break;
+                parent = parent.Parent;
+            }
+            Form errForm = parent as Form;
+            if (errForm == null) return;
+            errForm.Activate();
+
+            MessageBox.Show(errForm, String.Join(Environment.NewLine, 
+                "Такой контрагент не найден!",
+                "Строка будет ощищена."));
+            this.Text = "";
+            //errForm.ActiveControl = this;
+            //this.Focus();
         }
 
         private void CompanyDropDown_KeyPress(object sender, KeyPressEventArgs e)

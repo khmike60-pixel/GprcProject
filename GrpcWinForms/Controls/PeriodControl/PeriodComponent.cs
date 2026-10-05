@@ -93,6 +93,7 @@ namespace GrpcWinForms.Controls.PeriodControl
 
         private void PeriodComponent_TextChanged(object sender, EventArgs e)
         {
+            if(DesignMode) return;
             var form = this.Control as PeriodForm;
             if (form == null) return;
             _startDate = form.StartDate;
