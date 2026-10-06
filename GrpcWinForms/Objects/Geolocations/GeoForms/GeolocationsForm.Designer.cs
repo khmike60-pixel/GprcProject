@@ -131,6 +131,7 @@
             toolStripButtonEdit.Name = "toolStripButtonEdit";
             toolStripButtonEdit.Size = new Size(28, 28);
             toolStripButtonEdit.Text = "Редактировать";
+            toolStripButtonEdit.Click += toolStripButtonEdit_Click;
             // 
             // toolStripButtonDelete
             // 
@@ -140,6 +141,7 @@
             toolStripButtonDelete.Name = "toolStripButtonDelete";
             toolStripButtonDelete.Size = new Size(28, 28);
             toolStripButtonDelete.Text = "Удалить";
+            toolStripButtonDelete.Click += toolStripButtonDelete_Click;
             // 
             // toolStripButtonRefresh
             // 

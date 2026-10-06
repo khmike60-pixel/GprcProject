@@ -29,7 +29,7 @@ namespace GrpcWinForms.Objects.Geolocations.Views
 
         #region События, которые view только вызывает
 
-        event Func<Task> OnClick_OkAsync;
+        event Func<bool>  OnClick_OkAsync;
 
         #endregion
     }

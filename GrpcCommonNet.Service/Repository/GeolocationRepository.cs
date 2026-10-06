@@ -319,6 +319,7 @@ public class GeolocationRepository
         {
             ParentId = geo.ParentId
         };
+        geo.Parent.Name = rdr["ParentName"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["ParentName"]);
         geo.Ids = rdr["GeoLocation_Ids"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Ids"]);
         geo.Names = rdr["GeoLocation_Names"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Names"]);
         geo.Name = rdr["GeoLocation_Name"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Name"]);

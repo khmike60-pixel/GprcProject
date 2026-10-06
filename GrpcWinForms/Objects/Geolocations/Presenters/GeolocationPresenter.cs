@@ -23,18 +23,20 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
             _view.OnClick_OkAsync += HandleClick_OkAsync;
         }
 
-        public async Task HandleClick_OkAsync()
+        public bool HandleClick_OkAsync()
         {
             // Создаем новый объект Geolocation и заполняем его данными из View
             Geolocation newGeo = new Geolocation();
             newGeo.Name = _view.GeoName;
             newGeo.NameLat = _view.GeoNameLat;
 
-            if (_view.Geolocation.Parent == null) newGeo.Parent = new Geolocation();
-            newGeo.Parent.Id = _view.GeoParentObject.Id;
-            newGeo.Parent.Name = _view.GeoParentObject.Name;
+            newGeo.Parent = new Geolocation()
+            {
+                Id = _view.Geolocation.Parent.Id,
+                Name = _view.Geolocation.Parent.Name
+            };
 
-            newGeo.ParentId = _view.GeoParentObject.Id;
+            newGeo.ParentId = _view.Geolocation.Parent.Id;
             newGeo.IsCountry = newGeo.Parent.Id == 0 ? 1 : 0;
 
             newGeo.Code2 = _view.GeoCode2;
@@ -59,8 +61,7 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
             {
                 // Создаем новую геолокацию
                 CreateGeoRequest request = new CreateGeoRequest() { Geolocation = newGeo };
-                GeoResponse response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Geolocation.CreateGeoAsync(request).ResponseAsync).ConfigureAwait(false);
+                GeoResponse response = GrpcClients.GrpcClients.Geolocation.CreateGeo(request);
                 if (response.Result.Status == Status.Ok)
                     newGeo = response.Geolocation;
 
@@ -70,13 +71,13 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
             {
                 // Обновляем существующую геолокацию
                 UpdateGeoRequest request = new UpdateGeoRequest() { Geolocation = newGeo };
-                GeoResponse response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Geolocation.UpdateGeoAsync(request).ResponseAsync).ConfigureAwait(false);
+                GeoResponse response = GrpcClients.GrpcClients.Geolocation.UpdateGeo(request);
                 if (response.Result.Status == Status.Ok)
                     _view.Geolocation = newGeo;
                 else _view.Geolocation = null;
 
             }
+            return true;    
         }
 
     }

@@ -16,14 +16,7 @@ using static GrpcWinForms.Objects.Geolocations.Views.IGeolocation;
 
 namespace GrpcWinForms.Objects.Geolocations.GeoForms
 {
-    /*
-    public enum ModeEdit
-    {
-        None,
-        Add,
-        Edit
-    }
-*/
+    
     public partial class GeolocationForm : Form, IGeolocation
     {
         private readonly GeolocationPresenter _presenter;
@@ -42,7 +35,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         #endregion
 
-        private Geolocation geolocation { get; set; } = new Geolocation();
+        private Geolocation geolocation { get; set; }
 
         public Geolocation Geolocation { get => geolocation; set => geolocation = value; }
 
@@ -50,7 +43,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         #region Вызываемые события 
 
-        public event Func<Task> OnClick_OkAsync;
+        public event Func<bool> OnClick_OkAsync;
 
         #endregion
 
@@ -62,7 +55,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         }
 
-        private async void btnOk_Click(object sender, EventArgs e)
+        private void btnOk_Click(object sender, EventArgs e)
         {
             if (ModeEdit == ModeEdit.None)
                 btnOk.Enabled = false;
@@ -85,8 +78,35 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         private void GeolocationForm_Load(object sender, EventArgs e)
         {
-            GeoParentName = GeoParentObject.Name;
-            GeoIsCountry = GeoParentObject.Id == 0 ? true : false;
+            if (Geolocation == null) return;
+
+            GeoName = Geolocation.Name ?? "";
+            GeoNameLat = Geolocation.NameLat ?? "";
+            GeoParentName = Geolocation.Parent.Name;
+            GeoIsCountry = Geolocation.Parent.Id == 0 ? true : false;
+            GeoCode2 = Geolocation.Code2 ?? "";
+            if (GeoIsCountry)
+            {
+                if (Geolocation.CountryJson != null)
+                {
+                    GeoCode3 = Geolocation.CountryJson.Code3 ?? "";
+                    GeoCode2 = Geolocation.CountryJson.Code2 ?? "";
+                    GeoDigit = Geolocation.CountryJson.CodeDigit ?? "";
+                }
+            }
+            else
+            {
+                if (Geolocation.RegionJson != null)
+                {
+                    GeoCode3 = Geolocation.RegionJson.SOATO ?? "";
+                    GeoCode2 = Geolocation.RegionJson.Code2 ?? "";
+                }
+            }
+            GeoPhone = Geolocation.PhoneCode ?? "";
+
+
+
+
         }
     }
 }

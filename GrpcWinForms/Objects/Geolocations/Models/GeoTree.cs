@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GrpcCommonNet.Library.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace GrpcWinForms.Objects.Geolocations.Models
         public int Id { get; set; } = 0;
         public string Name { get; set; } = string.Empty;
         public int ParentId { get; set; } = 0;
+        public Geolocation Parent { get; set; } = new Geolocation();
         public int IsCountry {  get; set; } = 1;
         public string Code2 { get; set; } = string.Empty;
         public string NameLat {  get; set; } = string.Empty;
@@ -29,8 +31,13 @@ namespace GrpcWinForms.Objects.Geolocations.Models
 
         private string CodeCountry2(string json)
         {
-            CountryCodes countryCodes = JsonSerializer.Deserialize<CountryCodes>(json);
-            return countryCodes.Code2;
+            if (string.IsNullOrEmpty(json))
+                return "";
+            else
+            {
+                CountryCodes countryCodes = JsonSerializer.Deserialize<CountryCodes>(json);
+                return countryCodes.Code2;
+            }
         }
 
         private string CodeCountry3(string json)
