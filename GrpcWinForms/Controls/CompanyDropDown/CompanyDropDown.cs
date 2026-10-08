@@ -84,6 +84,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
         public CompanyDropDown()
         {
             InitializeComponent();
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
             UpdateGridData("");
         }
 
@@ -92,6 +93,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
             container.Add(this);
 
             InitializeComponent();
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
             UpdateGridData("");
         }
 

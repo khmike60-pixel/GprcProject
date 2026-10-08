@@ -620,7 +620,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
                     newtreeContract.Date = e.Contract.Date.ToDateTime();
                     newtreeContract.ContractDate = e.Contract.Date.ToDateTime();
                     newtreeContract.DateExpiried = e.Contract.ExpirationDate?.ToDateTime();
-                    newtreeContract.Name = string.IsNullOrEmpty(e.Contract.Name) ? "Контракт " + e.Contract.Number : e.Contract.Name + " " + e.Contract.Number;
                     newtreeContract.Seller = e.Contract.Seller?.Name;
                     newtreeContract.State = "";
                     newtreeContract.Type = e.Contract.TypeContract?.Name;
@@ -630,7 +629,6 @@ namespace GrpcWinForms.Objects.Contracts.Forms
 
                     row = smartGridContracts1.Row;
                     smartGridContracts1.Rows.InsertNode(row, 0);
-                    smartGridContracts1.Rows[row].Node.Data = newtreeContract.Name; // А рамочный контракт?
                     smartGridContracts1.Rows[row].Node.Key = newtreeContract;
                     smartGridContracts1.Row -= 1;
                     RefreshLines();
@@ -648,6 +646,10 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             smartGridContracts1.Rows[row]["Paid"] = newtreeContract.Paid;
             smartGridContracts1.Rows[row]["Shipped"] = newtreeContract.Shipped;
             smartGridContracts1.Rows[row]["DateExpiried"] = newtreeContract.DateExpiried;
+
+            // А рамочный контракт?
+            smartGridContracts1.Rows[row].Node.Data = string.IsNullOrEmpty(e.Contract.DocName) ? "Контракт " + e.Contract.Number : e.Contract.DocName + " " + e.Contract.Number; ;
+
 
         }
 

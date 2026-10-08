@@ -282,6 +282,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 };
 
                 // Получаем наименование контракта из headContractControl
+                contract.DocName = headContractControl.tbDocName.Text;
 
                 // Обновление данных контракта на основе данных из sumContractControl1
 
@@ -761,6 +762,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private void toolStripButtonRefreshLines_Click(object sender, EventArgs e)
         {
             RefreshContractFull();
+
         }
 
         private void toolStripButtonState_Click(object sender, EventArgs e)
