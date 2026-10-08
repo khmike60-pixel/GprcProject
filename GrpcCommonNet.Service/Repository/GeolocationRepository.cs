@@ -142,13 +142,26 @@ public class GeolocationRepository
                     @JsonCode,
                     @PhoneCode
                 );
+
+                with Parent as
+                (
+	                select p.Geolocation_Ids as Ids, p.Geolocation_Names as Names, p.Geolocation_id as Id
+	                from global_db.geolocations g
+                		left join global_db.geolocations p on p.Geolocation_Id = g.Geolocation_ParentId
+	                where g.Geolocation_Id = LAST_INSERT_ID()
+                )
+                update global_db.geolocations g
+	                join Parent as p on p.Id = Geolocation_ParentId
+                set g.Geolocation_Ids   = CONCAT(IF(p.Ids   is null,'',CONCAT(p.Ids,    ',')), Geolocation_Id),
+	                g.Geolocation_Names = CONCAT(IF(p.Names is null,'',CONCAT(p.Names,' / ')), Geolocation_Name)
+                where g.GeoLocation_Id = LAST_INSERT_ID();
                     
                 SELECT * FROM global_db.geolocations g where g.GeoLocation_Id = LAST_INSERT_ID();
                 ";
 
                 cmd.Parameters.AddWithValue("@Name", geolocation.Name);
                 cmd.Parameters.AddWithValue("@NameLat", geolocation.NameLat);
-                cmd.Parameters.AddWithValue("@MCode", geolocation.Name);
+                cmd.Parameters.AddWithValue("@MCode", geolocation.Name );
                 cmd.Parameters.AddWithValue("@ParentId", geolocation.ParentId);
                 cmd.Parameters.AddWithValue("@IsCountry", geolocation.IsCountry);
                 cmd.Parameters.AddWithValue("@Code2", geolocation.IsCountry == 1? geolocation.Code2: "");
@@ -161,12 +174,16 @@ public class GeolocationRepository
 
                 cmd.Parameters.AddWithValue("@PhoneCode", geolocation.PhoneCode);
 
-
                 using var rdr = await cmd.ExecuteReaderAsync();
-                if (await rdr.ReadAsync())
+                do
                 {
-                    geo = Fill(rdr);
-                }
+                    if (await rdr.ReadAsync())
+                    {
+                        geo = Fill(rdr);
+                        break;
+                    }
+                } while (await rdr.NextResultAsync());
+
             }
         }
         catch (Exception ex)
@@ -300,9 +317,9 @@ public class GeolocationRepository
         geo.ParentId = rdr["GeoLocation_ParentId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["GeoLocation_ParentId"]);
         geo.Parent = new Geolocation()
         {
-            ParentId = geo.ParentId,
-            Name = rdr["ParentName"].ToString()
+            ParentId = geo.ParentId
         };
+        geo.Parent.Name = rdr["ParentName"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["ParentName"]);
         geo.Ids = rdr["GeoLocation_Ids"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Ids"]);
         geo.Names = rdr["GeoLocation_Names"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Names"]);
         geo.Name = rdr["GeoLocation_Name"] == DBNull.Value ? string.Empty : Convert.ToString(rdr["GeoLocation_Name"]);
@@ -337,6 +354,94 @@ public class GeolocationRepository
 
         return geo;
     }
+
+    #endregion
+
+
+    #region Тестовый пример обновления в иерархии
+
+    public async Task UpdateGeoLocationWithChildrenAsync(int geoLocationId, string newIds, string newNames)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        // Запускаем транзакцию, чтобы оба обновления выполнились как неделимая операция
+        using var transaction = await connection.BeginTransactionAsync(IsolationLevel.RepeatableRead);
+
+        try
+        {
+            // ШАГ 1: Получаем СТАРЫЕ значения (аналог OLD в триггере)
+            string selectSql = @"
+            SELECT GeoLocation_Ids, GeoLocation_Names 
+            FROM geolocations 
+            WHERE GeoLocation_Id = @id 
+            FOR UPDATE;"; // FOR UPDATE блокирует строку от изменений другими пользователями
+
+            string oldIds = "";
+            string oldNames = "";
+
+            using (var selectCmd = new MySqlCommand(selectSql, connection, transaction))
+            {
+                selectCmd.Parameters.AddWithValue("@id", geoLocationId);
+                using var reader = await selectCmd.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    oldIds = reader.GetString("GeoLocation_Ids");
+                    oldNames = reader.GetString("GeoLocation_Names");
+                }
+                else
+                {
+                    throw new Exception($"Локация с ID {geoLocationId} не найдена.");
+                }
+            }
+
+            // ШАГ 2: Обновляем целевую запись (то, что запускало триггер)
+            string updateCurrentSql = @"
+            UPDATE geolocations 
+            SET GeoLocation_Ids = @newIds, 
+                GeoLocation_Names = @newNames 
+            WHERE GeoLocation_Id = @id;";
+
+            using (var cmd1 = new MySqlCommand(updateCurrentSql, connection, transaction))
+            {
+                cmd1.Parameters.AddWithValue("@id", geoLocationId);
+                cmd1.Parameters.AddWithValue("@newIds", newIds);
+                cmd1.Parameters.AddWithValue("@newNames", newNames);
+                await cmd1.ExecuteNonQueryAsync();
+            }
+
+            // ШАГ 3: Каскадно обновляем дочерние записи (код из вашего триггера)
+            string updateChildrenSql = @"
+            UPDATE geolocations
+            SET GeoLocation_Ids = REPLACE(GeoLocation_Ids, @oldIds, @newIds),
+                GeoLocation_Names = REPLACE(GeoLocation_Names, @oldNames, @newNames)
+            WHERE LOCATE(CONCAT(',', GeoLocation_Id, ','), CONCAT(',', GeoLocation_Ids, ',')) > 0
+              AND GeoLocation_Id <> @id;";
+
+            using (var cmd2 = new MySqlCommand(updateChildrenSql, connection, transaction))
+            {
+                cmd2.Parameters.AddWithValue("@id", geoLocationId);
+                cmd2.Parameters.AddWithValue("@oldIds", oldIds);
+                cmd2.Parameters.AddWithValue("@newIds", newIds);
+                cmd2.Parameters.AddWithValue("@oldNames", oldNames);
+                cmd2.Parameters.AddWithValue("@newNames", newNames);
+
+                await cmd2.ExecuteNonQueryAsync();
+            }
+
+            // Если всё прошло успешно — фиксируем транзакцию в БД
+            await transaction.CommitAsync();
+        }
+        catch (Exception ex)
+        {
+            // Если произошла ошибка (сбой сети, deadlock и т.д.) — откатываем все изменения
+            await transaction.RollbackAsync();
+            // Логируем ошибку или пробрасываем её выше
+            Console.WriteLine($"Ошибка при обновлении геолокаций: {ex.Message}");
+            throw;
+        }
+    }
+
 
     #endregion
 }

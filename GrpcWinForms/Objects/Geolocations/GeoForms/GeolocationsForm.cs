@@ -19,6 +19,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 {
     public partial class GeolocationsForm : Form
     {
+        #region Свойства формы
         private BindingList<Geolocation> geo;
         private Loader loader = new Loader();
         private Geolocation selectedItem = null;
@@ -27,6 +28,10 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
         public bool DialogMode { get; set; }
         public GeoType GeoType { get; set; } = GeoType.All;
 
+        #endregion
+
+
+        #region Конструктор, основной Refresh и метод Load
         public GeolocationsForm()
         {
             InitializeComponent();
@@ -34,6 +39,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
             loader.Parent = gridGeo;
             loader.Size = gridGeo.Size;
 
+            gridGeo.AllowNodeMove = true;
         }
 
         private async void RefreshGeoTree()
@@ -54,16 +60,13 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                 geo = new BindingList<Geolocation>(response.Geolocations);
                 List<GeoTree> geoTree = new List<GeoTree>();
 
-                //// Добавляем головной нод
-                //GeoTree root = new GeoTree() { Id = -1, Name = "Все" };
-                //geoTree.Add(root);
-
                 foreach (var item in response.Geolocations)
                     geoTree.Add(new GeoTree()
                     {
                         Id = Convert.ToInt32(item.Id),
                         Name = item.Name,
                         ParentId = item.ParentId,
+                        Parent = item.Parent,
                         Code2 = item.Code2,
                         //JsonCode = item.JsonCodes,
                         Lock = item.Lock == 0 ? false : true,
@@ -87,6 +90,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
                         gridGeo.ExpandByLevel(level);
                         gridGeo.EndUpdate();
                     };
+                    toolStripSplitButtonLevels.DropDownItems.Clear();
                     toolStripSplitButtonLevels.DropDownItems.Add(levelItem);
                 }
 
@@ -115,15 +119,105 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
         }
 
-        private async void toolStripButtonRefresh_Click(object sender, EventArgs e)
+        #endregion
+
+
+        #region События кнопок
+
+        private void toolStripButtonNew_Click(object sender, EventArgs e)
         {
-            RefreshGeoTree();
+            int row = gridGeo.Row;
+            if (row < gridGeo.Rows.Fixed) return;
+            Node node = gridGeo.Rows[row].Node;
+            GeoTree geoItem = node.Key as GeoTree;
+            Geolocation newGeo = null;
+
+            using (GeolocationForm geoForm = new GeolocationForm())
+            {
+                geoForm.ModeEdit = Views.ModeEdit.Add;
+                geoForm.Geolocation = new Geolocation()
+                {
+                    Parent = new Geolocation()
+                    {
+                        Id =  geoItem.Id,
+                        Name = geoItem.Name,
+                        IsCountry = geoItem.IsCountry
+                        
+                    }
+                };
+
+                if (geoForm.ShowDialog() == DialogResult.OK)
+                {
+                    newGeo = geoForm.Geolocation;
+                }
+            }
+            if (newGeo == null) return;
+            gridGeo.BeginUpdate();
+            gridGeo.Rows[row].Node.AddNode(NodeTypeEnum.FirstChild, newGeo.Name, new GeoTree()
+            {
+                Id = newGeo.Id,
+                Name = newGeo.Name,
+                ParentId = newGeo.ParentId,
+                IsCountry = newGeo.IsCountry,
+                Code2 = newGeo.Code2,
+                PhoneCode = newGeo.PhoneCode,
+                Lock = newGeo.Lock == 0 ? false : true
+            }, null);
+            gridGeo.Row += 1;
+            gridGeo.EndUpdate();
+        }
+
+        private void toolStripButtonEdit_Click(object sender, EventArgs e)
+        {
+            int row = gridGeo.Row;
+            if (row < gridGeo.Rows.Fixed) return;
+            Node node = gridGeo.Rows[row].Node;
+            GeoTree geoItem = node.Key as GeoTree;
+            Geolocation newGeo = null;
+
+            using (GeolocationForm geoForm = new GeolocationForm())
+            {
+                geoForm.ModeEdit = Views.ModeEdit.Edit;
+                geoForm.Geolocation = new Geolocation()
+                {
+                    Id = geoItem.Id,
+                    Name = geoItem.Name,
+                    NameLat = geoItem.NameLat,
+                    ParentId = geoItem.ParentId,
+                    Parent = geoItem.Parent,
+                    IsCountry = geoItem.IsCountry,
+                    Code2 = geoItem.Code2,
+                    PhoneCode = geoItem.PhoneCode,
+                    Lock = geoItem.Lock ? 1 : 0
+                };
+                if (geoForm.Geolocation.IsCountry == 1)
+                {
+                    geoForm.Geolocation.CountryJson = new CountryJson();
+                    geoForm.Geolocation.CountryJson.Code2 = geoItem.JsonCode2;
+                    geoForm.Geolocation.CountryJson.Code3 = geoItem.JsonCode3;
+                    geoForm.Geolocation.CountryJson.CodeDigit = geoItem.JsonDigit;
+                }
+                else
+                {
+                    geoForm.Geolocation.RegionJson = new RegionJson();
+                    geoForm.Geolocation.RegionJson.Code2 = geoItem.JsonCode2;
+                    geoForm.Geolocation.RegionJson.SOATO = geoItem.JsonSoato;
+                }
+
+                if (geoForm.ShowDialog() == DialogResult.OK)
+                {
+                    newGeo = geoForm.Geolocation;
+                }
+            }
+            if (newGeo == null) return;
+            gridGeo[row, "Name"] = newGeo.Name;
+            gridGeo[row, "Code2"] = newGeo.Code2;
 
         }
 
-        private void smartGrid_AfterResizeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
+        private void toolStripButtonDelete_Click(object sender, EventArgs e)
         {
-            gridGeo.Cols["Name"].StarWidth = "*";
+
         }
 
         private void toolStripButtonPath_Click(object sender, EventArgs e)
@@ -141,6 +235,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
             }
 
         }
+
 
         private void IsolateCurrentBranch(SmartLib.SmartGrid grid)
         {
@@ -194,6 +289,23 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
             }
         }
 
+        private async void toolStripButtonRefresh_Click(object sender, EventArgs e)
+        {
+            RefreshGeoTree();
+
+        }
+
+
+        #endregion
+
+
+        #region События грида
+
+        private void smartGrid_AfterResizeColumn(object sender, C1.Win.FlexGrid.RowColEventArgs e)
+        {
+            gridGeo.Cols["Name"].StarWidth = "*";
+        }
+
         private void smartGrid1_DoubleClick(object sender, EventArgs e)
         {
             int row = gridGeo.Row;
@@ -206,27 +318,13 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
             }
         }
 
-        private void toolStripButtonNew_Click(object sender, EventArgs e)
+        private void gridGeo_Move(object sender, EventArgs e)
         {
-            int row = gridGeo.Row;
-            if (row < gridGeo.Rows.Fixed) return;
-            Node node = gridGeo.Rows[row].Node;
-            GeoTree geoItem = node.Key as GeoTree;
-            using (GeolocationForm geoForm = new GeolocationForm())
-            {
-                geoForm.GeoParentObject = new Geolocation()
-                {
-                    Id = geoItem.Id,
-                    Name = geoItem.Name,
-                    IsCountry = geoItem.IsCountry
-                    
-                };
-                if(geoForm.ShowDialog() == DialogResult.OK)
-                {
-                    Geolocation newGeo = geoForm.Geolocation;
-                }
-            }
+
         }
+
+        #endregion
+
     }
 
 }
