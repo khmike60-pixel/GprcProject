@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GrpcCommonNet.Library.Common;
+using GrpcWinForms.Objects.Currencies.Repository;
 
 namespace GrpcWinForms.Objects.Currencies.Presenters
 {
@@ -25,24 +26,8 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
         {
             try
             {
-                var request = new ListCurrencyRequest
-                {
-                    IncludeInvisible = _view.IncludeInvisible,
-                    CurrencyAbbrev = string.IsNullOrWhiteSpace(_view.CurrencyAbbrev) ? string.Empty : _view.CurrencyAbbrev,
-                    FieldMask = new FieldMask()
-                };
-                request.FieldMask.Paths.Add("name");
-                request.FieldMask.Paths.Add("code");
-                request.FieldMask.Paths.Add("id");
-                request.FieldMask.Paths.Add("abbrev");
-                request.FieldMask.Paths.Add("order_number");
-                request.FieldMask.Paths.Add("is_visible");
-
-                ListCurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Currency.GetListCurrencyAsync(request).ResponseAsync
-                );
-
-                _view.Currencies = new BindingList<Currency>(response.Currencies);
+                BindingList<Currency> currencies = await CurrencyRepository.GetCurrenciesAsync(_view.IncludeInvisible, _view.CurrencyAbbrev ?? string.Empty);
+                _view.Currencies = currencies;
             }
             catch (Exception ex)
             {
