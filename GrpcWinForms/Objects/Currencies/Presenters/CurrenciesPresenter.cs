@@ -46,27 +46,40 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                 {
                     try
                     {
-                        var request = new CreateCurrencyRequest { Currency = form.Currency };
-                        CurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                            GrpcClients.GrpcClients.Currency.CreateCurrencyAsync(request).ResponseAsync
-                        );
-
-                        if (response.Result.Status != Status.Ok || response.Currency == null)
-                        {
-                            _view.ShowMessage("Добавить данные не удалось.", "Ошибка");
-                            return;
-                        }
-
+                        Currency currency = await CurrencyRepository.CreateCurrencyAsync(form.Currency);
                         // Вставляем в существующий BindingList, если он есть
                         if (_view.Currencies != null)
                         {
-                            int insertIndex = Math.Max(0, _view.RowSel - /*Rows.Fixed*/ 1); // Rows.Fixed проксируется в View, упрощение
-                            _view.Currencies.Insert(insertIndex, response.Currency);
+                            int insertIndex = Math.Max(0, _view.RowSel - 1);
+                            _view.Currencies.Insert(insertIndex, currency);
                         }
                         else
                         {
                             await RefreshAsync();
                         }
+
+                        //var request = new CreateCurrencyRequest { Currency = form.Currency };
+                        //CurrencyResponse response = await GrpcRetry.CallAsync(() =>
+                        //    GrpcClients.GrpcClients.Currency.CreateCurrencyAsync(request).ResponseAsync
+                        //);
+
+                        //if (response.Result.Status != Status.Ok || response.Currency == null)
+                        //{
+                        //    _view.ShowMessage("Добавить данные не удалось.", "Ошибка");
+                        //    return;
+                        //}
+
+                        //// Вставляем в существующий BindingList, если он есть
+                        //if (_view.Currencies != null)
+                        //{
+                        //    int insertIndex = Math.Max(0, _view.RowSel - /*Rows.Fixed*/ 1); // Rows.Fixed проксируется в View, упрощение
+                        //    _view.Currencies.Insert(insertIndex, response.Currency);
+                        //}
+                        //else
+                        //{
+                        //    await RefreshAsync();
+                        //}
+                        
                     }
                     catch (Exception ex)
                     {
@@ -90,18 +103,22 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                 {
                     try
                     {
-                        var request = new UpdateCurrencyRequest { Currency = form.Currency };
-                        CurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                            GrpcClients.GrpcClients.Currency.UpdateCurrencyAsync(request).ResponseAsync
-                        );
+                        _view.Currencies[_view.RowSel - 1] = 
+                            await CurrencyRepository.UpdateCurrencyAsync(form.Currency);
 
-                        if (response.Result.Status != Status.Ok || response.Currency == null)
-                        {
-                            _view.ShowMessage("Изменить данные не удалось.", "Ошибка");
-                            return;
-                        }
 
-                        _view.Currencies[_view.RowSel - 1] = response.Currency;
+                        //var request = new UpdateCurrencyRequest { Currency = form.Currency };
+                        //CurrencyResponse response = await GrpcRetry.CallAsync(() =>
+                        //    GrpcClients.GrpcClients.Currency.UpdateCurrencyAsync(request).ResponseAsync
+                        //);
+
+                        //if (response.Result.Status != Status.Ok || response.Currency == null)
+                        //{
+                        //    _view.ShowMessage("Изменить данные не удалось.", "Ошибка");
+                        //    return;
+                        //}
+
+                        //_view.Currencies[_view.RowSel - 1] = response.Currency;
                     }
                     catch (Exception ex)
                     {
