@@ -45,7 +45,7 @@ namespace GrpcWinForms.Objects.Currencies.Forms
 
         #endregion
 
-
+        #region Конструкторы и метод формы Load
         public CurrenciesForm()
         {
             InitializeComponent();
@@ -57,6 +57,9 @@ namespace GrpcWinForms.Objects.Currencies.Forms
             await _presenter.RefreshAsync();
         }
 
+        #endregion
+
+        #region Обработчики событий элементов управления (кнопок)
         private async void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             await _presenter.RefreshAsync();
@@ -65,6 +68,7 @@ namespace GrpcWinForms.Objects.Currencies.Forms
         private async void toolStripButtonNew_Click(object sender, EventArgs e)
         {
             await _presenter.NewAsync();
+            gridCurrencies.Row -= 1;
         }
 
         private async void toolStripButtonEdit_Click(object sender, EventArgs e)
@@ -77,6 +81,9 @@ namespace GrpcWinForms.Objects.Currencies.Forms
             await _presenter.DeleteAsync();
         }
 
+        #endregion
+
+        #region Обработчики событий элементов управления (grid валют)
         private void gridCurrencies_AfterResizeColumn(object sender, RowColEventArgs e)
         {
             gridCurrencies.Cols["Name"].StarWidth = "*";
@@ -86,6 +93,8 @@ namespace GrpcWinForms.Objects.Currencies.Forms
         {
             _presenter.OnItemDoubleClicked();
         }
+
+        #endregion
 
         // ICurrenciesView helper implementations
         public DialogResult ShowCurrencyDialog(Form form)

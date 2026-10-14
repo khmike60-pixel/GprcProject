@@ -57,29 +57,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                         {
                             await RefreshAsync();
                         }
-
-                        //var request = new CreateCurrencyRequest { Currency = form.Currency };
-                        //CurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                        //    GrpcClients.GrpcClients.Currency.CreateCurrencyAsync(request).ResponseAsync
-                        //);
-
-                        //if (response.Result.Status != Status.Ok || response.Currency == null)
-                        //{
-                        //    _view.ShowMessage("Добавить данные не удалось.", "Ошибка");
-                        //    return;
-                        //}
-
-                        //// Вставляем в существующий BindingList, если он есть
-                        //if (_view.Currencies != null)
-                        //{
-                        //    int insertIndex = Math.Max(0, _view.RowSel - /*Rows.Fixed*/ 1); // Rows.Fixed проксируется в View, упрощение
-                        //    _view.Currencies.Insert(insertIndex, response.Currency);
-                        //}
-                        //else
-                        //{
-                        //    await RefreshAsync();
-                        //}
-                        
+                       
                     }
                     catch (Exception ex)
                     {
@@ -138,18 +116,14 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                     if (dr != DialogResult.OK) return;
 
                     int id = Convert.ToInt32(_view.Currencies[_view.RowSel - 1].Id);
-                    var request = new DeleteCurrencyRequest { Id = id };
-                    var response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Currency.DeleteCurrencyAsync(request).ResponseAsync
-                    );
-
-                    if (response.Result.Status == Status.Ok)
+                    bool deletedOk = await CurrencyRepository.DeleteCurrencyAsync(id);
+                    if (deletedOk)
                     {
                         _view.Currencies.RemoveAt(_view.RowSel - 1);
                     }
                     else
                     {
-                        _view.ShowMessage("Ошибка при удалении: " + response.Result.Message, "Ошибка");
+                        _view.ShowMessage("Ошибка при удалении.", "Ошибка");
                     }
                 }
                 else
@@ -162,29 +136,25 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                     {
                         ids.Add(Convert.ToInt32(_view.Currencies[idx - 1].Id));
                     }
+                    ids.Sort();
 
-                    var request = new DeleteIdsCurrencyRequest();
-                    request.Ids.AddRange(ids);
-
-                    UndeletedIdsCurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Currency.DeleteIdsCurrencyAsync(request).ResponseAsync
-                    );
-
-                    if (response.Result.Status != Status.Ok)
+                    List<int> undeletedIds = await CurrencyRepository.DeleteCurrenciesAsync(ids);
+                    // Удаляем из BindingList только те, которые были успешно удалены
+                    for (int i = _view.SelectedRows.Count - 1; i >= 0; i--)
                     {
-                        _view.ShowMessage("Ошибка при удалении: " + response.Result.Message, "Ошибка");
-                        // Обновим список для консистентности
-                        await RefreshAsync();
-                        return;
+                        int idx = _view.SelectedRows[i];
+                        int id = Convert.ToInt32(_view.Currencies[idx - 1].Id);
+                        if (!undeletedIds.Contains(id))
+                        {
+                            _view.Currencies.RemoveAt(idx - 1);
+                        }
                     }
 
-                    // Обновим представление: перезагрузим список (упрощённо)
-                    await RefreshAsync();
-
-                    if (response.UndeletedIds.Count > 0)
+                    if (undeletedIds.Count > 0)
                     {
-                        _view.ShowMessage("Данные, которые не удалось удалить, остались.", "Информация");
+                        _view.ShowMessage("Данные, которые не удалось удалить, остались помеченными.", "Информация");
                     }
+
                 }
             }
             catch (Exception ex)
