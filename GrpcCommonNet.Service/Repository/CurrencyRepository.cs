@@ -83,10 +83,15 @@ public class CurrencyRepository
             }
 
             var where = whereParts.Count > 0 ? "WHERE " + string.Join(" AND ", whereParts) : string.Empty;
-            var order = string.IsNullOrEmpty(orderBy) ? "ORDER BY order_number ASC" : "ORDER BY " + orderBy;
+            var order = "ORDER BY order1, abbrev";
 
-            cmd.CommandText = $@"SELECT c.CurrencyId id, c.Code code, c.Abbrev abbrev, c.Name name, c.Scale scale, c.Dec as `dec`, c.OrdNumber order_number, c.IsVisible is_visible
-                              FROM global_db.rfr_currency c {where} {order} LIMIT 1000";
+            cmd.CommandText = $@"
+                SELECT c.CurrencyId id, c.Code code, c.Abbrev abbrev, c.Name name, c.Scale scale, c.Dec as `dec`, c.OrdNumber order_number, c.IsVisible is_visible,
+                    case 
+		                when c.OrdNumber is null or c.OrdNumber = 0 then 1000
+		                else c.OrdNumber
+	                end as order1
+                FROM global_db.rfr_currency c {where} {order} LIMIT 1000";
 
             using var rdr = await cmd.ExecuteReaderAsync();
             while (await rdr.ReadAsync())

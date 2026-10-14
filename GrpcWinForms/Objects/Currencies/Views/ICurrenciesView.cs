@@ -19,7 +19,7 @@ namespace GrpcWinForms.Objects.Currencies.Views
 
         // Положение/выделение в гриде
         int RowSel { get; }
-        IList<int> SelectedRows { get; }
+        IList<int> SelectedRows { get; set; }
 
         // Вспомогательные операции, которые View умеет выполнять
         DialogResult ShowCurrencyDialog(Form form);

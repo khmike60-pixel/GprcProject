@@ -1,15 +1,16 @@
-﻿using GrpcWinForms.Objects.Currencies.Views;
+﻿using Google.Protobuf.WellKnownTypes;
+using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Currency;
-using Google.Protobuf.WellKnownTypes;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
+using GrpcWinForms.Objects.Currencies.Repository;
+using GrpcWinForms.Objects.Currencies.Views;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GrpcCommonNet.Library.Common;
-using GrpcWinForms.Objects.Currencies.Repository;
 
 namespace GrpcWinForms.Objects.Currencies.Presenters
 {
@@ -132,26 +133,33 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                     if (dr != DialogResult.OK) return;
 
                     var ids = new List<int>();
+                    var indxs = new List<int>();
                     foreach (var idx in _view.SelectedRows)
                     {
                         ids.Add(Convert.ToInt32(_view.Currencies[idx - 1].Id));
+                        indxs.Add(idx - 1);
                     }
-                    ids.Sort();
+                    indxs.Sort();
 
                     List<int> undeletedIds = await CurrencyRepository.DeleteCurrenciesAsync(ids);
+
                     // Удаляем из BindingList только те, которые были успешно удалены
-                    for (int i = _view.SelectedRows.Count - 1; i >= 0; i--)
+                    List<int> idx_undeleted = new();
+                    for (int i = indxs.Count - 1; i >= 0; i--)
                     {
-                        int idx = _view.SelectedRows[i];
-                        int id = Convert.ToInt32(_view.Currencies[idx - 1].Id);
+                        int index = indxs[i];
+                        int id = Convert.ToInt32(_view.Currencies[index].Id);
                         if (!undeletedIds.Contains(id))
                         {
-                            _view.Currencies.RemoveAt(idx - 1);
+                            _view.Currencies.RemoveAt(index);
+                            //_view.SelectedRows.Remove(index + 1);
                         }
+                        else idx_undeleted.Add(index);
                     }
 
                     if (undeletedIds.Count > 0)
                     {
+                        _view.SelectedRows = idx_undeleted;
                         _view.ShowMessage("Данные, которые не удалось удалить, остались помеченными.", "Информация");
                     }
 

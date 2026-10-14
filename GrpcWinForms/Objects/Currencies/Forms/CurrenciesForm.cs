@@ -41,6 +41,11 @@ namespace GrpcWinForms.Objects.Currencies.Forms
                 foreach (var i in gridCurrencies.SelectedRows) list.Add(Convert.ToInt32(i));
                 return list;
             }
+            set
+            {
+                gridCurrencies.SelectedRows.Clear();
+                foreach (var i in value) gridCurrencies.SelectedRows.Add(i);
+            }
         }
 
         #endregion
@@ -87,6 +92,7 @@ namespace GrpcWinForms.Objects.Currencies.Forms
         private void gridCurrencies_AfterResizeColumn(object sender, RowColEventArgs e)
         {
             gridCurrencies.Cols["Name"].StarWidth = "*";
+            var i = gridCurrencies.SelectedRows;
         }
 
         private void gridCurrencies_DoubleClick(object sender, EventArgs e)
