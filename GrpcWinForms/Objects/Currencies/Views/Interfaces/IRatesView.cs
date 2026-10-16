@@ -3,7 +3,7 @@ using GrpcCommonNet.Library.Currency;
 using System;
 using System.ComponentModel;
 
-namespace GrpcWinForms.Objects.Currencies.Views
+namespace GrpcWinForms.Objects.Currencies.Views.Interfaces
 {
     public interface IRatesView
     {
@@ -18,15 +18,23 @@ namespace GrpcWinForms.Objects.Currencies.Views
 
         // Получить выбранную валюту (или null)
         CurrencyRate GetSelectedCurrencyRate();
+        int GetSelectedIndexCurrencyRate();
+        Rate GetSelectedRate();
 
-        // Управление loader'ом
-        void ShowLoader();
-        void HideLoader();
+        // Управление доступом к UI при обновлении данных
+        void SetBusy(bool busy);
 
         // Показ сообщений
         void ShowMessage(string text, string caption = "");
 
-        // Текущее положение/выбор строки (если нужно)
+        /// <summary>
+        /// Текущее положение/выбор строки курсов в коллекции
+        /// </summary>
         int RowSel { get; }
+
+        /// <summary>
+        /// Текущее положение/выбор строки курсов в гриде
+        /// </summary>
+        int Row { get; set; }
     }
 }

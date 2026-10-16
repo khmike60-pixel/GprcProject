@@ -1,4 +1,4 @@
-﻿using GrpcWinForms.Objects.Applications.Views;
+﻿using GrpcWinForms.Objects.Applications.Views.Interfaces;
 using System;
 
 namespace GrpcWinForms.Objects.Applications.Presenters

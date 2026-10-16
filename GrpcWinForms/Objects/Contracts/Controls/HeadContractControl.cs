@@ -5,7 +5,7 @@ using GrpcCommonNet.Library.Currency;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Contragents.Forms;
-using GrpcWinForms.Objects.Currencies.Forms;
+using GrpcWinForms.Objects.Currencies.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

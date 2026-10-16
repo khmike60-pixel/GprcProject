@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Currency;
+using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.GrpcUtils;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrpcWinForms.Objects.Currencies.Repository
+namespace GrpcWinForms.Objects.Currencies.Repositories
 {
     public class CurrencyRepository
     {
+        #region Методы для работы со справочником валют
         /// <summary>
-        /// Получить список валют из gRPC сервиса
+        /// Получить список валют 
         /// </summary>
         /// <param name="includeInvisible">Включая невидимые валюты</param>
         /// <param name="currencyAbbrev">Фильтр по аббревиатуре валюты</param>
@@ -47,7 +49,7 @@ namespace GrpcWinForms.Objects.Currencies.Repository
         }
 
         /// <summary>
-        /// Получить валюту по ID из gRPC сервиса
+        /// Получить валюту по ID 
         /// </summary>
         /// <param name="id">ID валюты</param>
         /// <returns>Валюта</returns>
@@ -176,6 +178,122 @@ namespace GrpcWinForms.Objects.Currencies.Repository
                 throw new Exception($"Ошибка при удалении валют: {ex.Message}", ex);
             }
         }
+        #endregion
+
+        #region Методы для работы с курсами валют
+        /// <summary>
+        /// Получить список валют с курсами на дату (для левой таблицы RatesForm)
+        /// </summary>
+        /// <param name="includeInvisible"></param>
+        /// <param name="abbrev"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static async Task<BindingList<CurrencyRate>> GetCurrencyRatesByDateAsync(bool includeInvisible, string abbrev, DateTime date)
+        {
+            try
+            {
+                var request = new GetListCurrencyRateDateRequest
+                {
+                    IncludeInvisible = includeInvisible,
+                    Abbrev = string.IsNullOrWhiteSpace(abbrev) ? string.Empty : abbrev,
+                    Date = date.ToLocalTime().ToUniversalTime().ToTimestamp()
+                };
+
+                var response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Currency.GetListCurrencyRateDateAsync(request).ResponseAsync
+                );
+
+                return new BindingList<CurrencyRate>(response.CurrencyRates);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ошибка при получении списка валют с курсами: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Получить список курсов для валюты (для правой таблицы RatesForm)
+        /// </summary>
+        /// <param name="currencyId"></param>
+        /// <param name="startDate"></param>
+        /// <param name="endDate"></param>
+        /// <returns></returns>
+        public static async Task<BindingList<Rate>> GetRatesAsync(int currencyId, DateTime startDate, DateTime endDate)
+        {
+            try
+            {
+                var request = new ListCurrencyRateRequest
+                {
+                    CurrencyId = currencyId,
+                    StartDate = startDate.ToLocalTime().ToUniversalTime().ToTimestamp(),
+                    EndDate = endDate.ToLocalTime().ToUniversalTime().ToTimestamp()
+                };
+
+                var response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Currency.GetListCurrencyRateAsync(request).ResponseAsync
+                );
+
+                return new BindingList<Rate>(response.Rates);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ошибка при получении курсов валют: {ex.Message}", ex);
+            }
+        }
+
+        public static async Task<Rate> CreateRateAsync(Rate rate)
+        {
+            try
+            {
+                CreateCurrencyRateRequest request = new();
+                request.Rate = new Rate
+                {
+                    CurrencyId = rate.CurrencyId,
+                    Date = DateTime.Now.ToUniversalTime().ToTimestamp(),
+                    Rate_ = rate.Rate_
+                };
+
+                CurrencyRateResponse response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Currency.CreateCurrencyRateAsync(request).ResponseAsync
+                );
+                if (response.Result.Status != Status.Ok)
+                    throw new Exception("Не удалось создать записьс курсом.");
+                return response.Rate;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ошибка при создании записи курса: {ex.Message}", ex);
+            }
+        }
+
+        public static async Task<Rate> UpdateRateAsync(Rate rate)
+        {
+            try
+            {
+                UpdateCurrencyRateRequest request = new();
+                request.Rate = new Rate
+                {
+                    RateId =rate.RateId,
+                    CurrencyId =  rate.CurrencyId,
+                    Date = rate.Date,
+                    Rate_ = rate.Rate_
+                };
+
+                CurrencyRateResponse response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Currency.UpdateCurrencyRateAsync(request).ResponseAsync
+                );
+                if (response.Result.Status != Status.Ok)
+                    throw new Exception("Не удалось изменить запись с курсом.");
+                return response.Rate;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ошибка при редактировании записи курса: {ex.Message}", ex);
+            }
+        }
+
+
+        #endregion
 
     }
 }

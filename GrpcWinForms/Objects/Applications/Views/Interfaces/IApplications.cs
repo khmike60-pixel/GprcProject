@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using Application = GrpcCommonNet.Library.Common.Application;
 
-namespace GrpcWinForms.Objects.Applications.Views
+namespace GrpcWinForms.Objects.Applications.Views.Interfaces
 {
     public interface IApplicationsView
     {
@@ -19,7 +19,7 @@ namespace GrpcWinForms.Objects.Applications.Views
         int RowsFixed { get; }
 
         // Выбранные строки (индексы)
-        IList<int> SelectedRows { get; }
+        IList<int> SelectedRows { get; set; }
 
         // Доступ к объекту/данным в строке
         Application GetApplicationAtRow(int row);

@@ -1,20 +1,19 @@
 ﻿using GrpcCommonNet.Library.Common;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Currencies.Presenters;
-using GrpcWinForms.Objects.Currencies.Views;
+using GrpcWinForms.Objects.Currencies.Views.Interfaces;
 using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Currencies.Forms
+namespace GrpcWinForms.Objects.Currencies.Views
 {
     public partial class RatesForm : Form, IRatesView
     {
         private BindingList<CurrencyRate> currencyRates;
         private BindingList<Rate> rates;
-        private Loader loaderRates = new Loader();
         private int currentRow = -1;
         private readonly RatesPresenter _presenter;
 
@@ -22,20 +21,15 @@ namespace GrpcWinForms.Objects.Currencies.Forms
         {
             InitializeComponent();
 
-            loaderRates.Parent = gridRates;
-            loaderRates.Location = new Point(0, 0);
-            loaderRates.Size = gridRates.Size;
-
             dateTimePickerDateRates.Value = DateTime.Now;
 
             _presenter = new RatesPresenter(this);
         }
 
-        // IRatesView implementation
+        // IRatesView свойства
         public bool IncludeInvisible => checkIncludeInvisible.Checked;
         public string Abbrev => string.IsNullOrWhiteSpace(textAbbrev.Text) ? string.Empty : textAbbrev.Text;
         public DateTime DateRates => dateTimePickerDateRates.Value;
-
         public BindingList<CurrencyRate> CurrencyRates
         {
             get => currencyRates;
@@ -45,7 +39,6 @@ namespace GrpcWinForms.Objects.Currencies.Forms
                 gridCurrencies.DataSource = currencyRates;
             }
         }
-
         public BindingList<Rate> Rates
         {
             get => rates;
@@ -55,20 +48,35 @@ namespace GrpcWinForms.Objects.Currencies.Forms
                 gridRates.DataSource = rates;
             }
         }
+        public int RowSel => gridRates.Rows[gridRates.Row].Index;
+        public int Row { get => gridRates.Row; set => gridRates.Row = value; }
 
-        public int RowSel => gridCurrencies.RowSel;
-
+        // IRatesView методы
         public CurrencyRate GetSelectedCurrencyRate()
         {
             if (gridCurrencies.Row < gridCurrencies.Rows.Fixed) return null;
             return gridCurrencies.Rows[gridCurrencies.Row].DataSource as CurrencyRate;
         }
-
-        public void ShowLoader() => loaderRates.ShowLoader();
-        public void HideLoader() => loaderRates.HideLoader();
-
+        public int GetSelectedIndexCurrencyRate()
+        {
+            if (gridCurrencies.Row < gridCurrencies.Rows.Fixed) return -1;
+            return gridCurrencies.Row;
+        }
+        public Rate GetSelectedRate()
+        {
+            if (gridRates.Row < gridCurrencies.Rows.Fixed) return null;
+            return gridRates.Rows[gridRates.Row].DataSource as Rate;
+        }
+        public void SetBusy(bool busy)
+        {
+            Cursor = busy ? Cursors.WaitCursor : Cursors.Default;
+            gridCurrencies.Enabled = !busy;
+            gridRates.Enabled = !busy;
+            toolStripRates.Enabled = !busy;
+        }
         public void ShowMessage(string text, string caption = "") => MessageBox.Show(this, text, caption);
 
+        #region События формы
         private async void RatesForm_Load(object sender, EventArgs e)
         {
             await _presenter.RefreshCurrencyRatesAsync();
@@ -130,6 +138,16 @@ namespace GrpcWinForms.Objects.Currencies.Forms
         {
             gridRates.Cols["DateRate"].StarWidth = "*";
             gridRates.Cols["Rate"].StarWidth = "*";
+        }
+
+        #endregion
+
+        private async void toolStripButtonNew_Click(object sender, EventArgs e)
+        {
+            gridRates.Select();
+            await _presenter.NewAsync();
+            gridRates.Row--;
+
         }
     }
 }

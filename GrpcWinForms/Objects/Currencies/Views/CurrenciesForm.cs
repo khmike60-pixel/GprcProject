@@ -5,7 +5,6 @@ using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Library.Common;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Applications.Forms;
-using GrpcWinForms.Objects.Currencies.Forms;
 using GrpcWinForms.Objects.Currencies.Views;
 using GrpcWinForms.Objects.Currencies.Presenters;
 using System;
@@ -14,8 +13,9 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GrpcWinForms.GrpcUtils;
+using GrpcWinForms.Objects.Currencies.Views.Interfaces;
 
-namespace GrpcWinForms.Objects.Currencies.Forms
+namespace GrpcWinForms.Objects.Currencies.Views
 {
     public partial class CurrenciesForm : Form, ICurrenciesView
     {
@@ -128,6 +128,13 @@ namespace GrpcWinForms.Objects.Currencies.Forms
         public void EndUpdate()
         {
             gridCurrencies.EndUpdate();
+        }
+
+        public void SetBusy(bool busy)
+        {
+            Cursor = busy ? Cursors.WaitCursor : Cursors.Default;
+            gridCurrencies.Enabled = !busy;
+            toolStrip1.Enabled = !busy;
         }
     }
 }

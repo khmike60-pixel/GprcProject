@@ -1,7 +1,7 @@
 ﻿using GrpcCommonNet.Library.Common;
 using GrpcWinForms.Objects.Currencies.Presenters;
 using GrpcWinForms.Objects.Geolocations.Presenters;
-using GrpcWinForms.Objects.Geolocations.Views;
+using GrpcWinForms.Objects.Geolocations.Views.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +12,7 @@ using System.Security.Authentication.ExtendedProtection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static GrpcWinForms.Objects.Geolocations.Views.IGeolocation;
+using static GrpcWinForms.Objects.Geolocations.Views.Interfaces.IGeolocation;
 
 namespace GrpcWinForms.Objects.Geolocations.GeoForms
 {

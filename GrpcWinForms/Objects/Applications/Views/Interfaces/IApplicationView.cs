@@ -1,7 +1,7 @@
 ﻿using GrpcCommonNet.Library.Common;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Applications.Views
+namespace GrpcWinForms.Objects.Applications.Views.Interfaces
 {
     public interface IApplicationView
     {

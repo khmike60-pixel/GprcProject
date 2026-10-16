@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrpcWinForms.Objects.Geolocations.Views
+namespace GrpcWinForms.Objects.Geolocations.Views.Interfaces
 {
     public interface IGeolocation
     {

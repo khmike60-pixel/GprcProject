@@ -1,4 +1,4 @@
-﻿namespace GrpcWinForms.Objects.Currencies.Forms
+﻿namespace GrpcWinForms.Objects.Currencies.Views
 {
     partial class CurrencyForm
     {

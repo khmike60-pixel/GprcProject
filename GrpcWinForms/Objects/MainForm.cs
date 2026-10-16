@@ -6,7 +6,7 @@ using GrpcWinForms.Objects.Contracts.Forms;
 using GrpcWinForms.Objects.DocumentTypes.Forms;
 using GrpcWinForms.Objects.Contragents.Components;
 using GrpcWinForms.Objects.Contragents.Forms;
-using GrpcWinForms.Objects.Currencies.Forms;
+using GrpcWinForms.Objects.Currencies.Views;
 using GrpcWinForms.Objects.Geolocations.GeoForms;
 using GrpcWinForms.Objects.OurCompanies.Forms;
 using GrpcWinForms.Objects.Products.ProductsForm;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Currencies.Views
+namespace GrpcWinForms.Objects.Currencies.Views.Interfaces
 {
     public interface ICurrenciesView
     {
@@ -25,6 +25,7 @@ namespace GrpcWinForms.Objects.Currencies.Views
         DialogResult ShowCurrencyDialog(Form form);
         void ShowMessage(string text, string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK);
         void CloseWithResult(Currency selected);
+        void SetBusy(bool busy);
 
         // Методы для минимального управления обновлением UI (по необходимости)
         void BeginUpdate();

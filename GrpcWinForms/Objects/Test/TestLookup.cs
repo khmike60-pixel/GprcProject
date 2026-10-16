@@ -14,7 +14,7 @@ using GrpcWinForms.Controls.SmartBox;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Contracts.Forms;
 using GrpcWinForms.Objects.Contracts.Models;
-using GrpcWinForms.Objects.Currencies.Forms;
+using GrpcWinForms.Objects.Currencies.Views;
 using GrpcWinForms.Objects.Departaments;
 using GrpcWinForms.Objects.Departaments.Forms;
 using SmartLib;

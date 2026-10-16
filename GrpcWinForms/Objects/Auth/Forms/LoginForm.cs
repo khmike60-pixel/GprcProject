@@ -11,16 +11,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GrpcWinForms.Models;
+using GrpcWinForms.Objects.Auth.Views;
 
 namespace GrpcWinForms.Forms
 {
-    public partial class LoginForm : Form
+    public partial class LoginForm : Form, IAuth
     {
         private readonly string _application = Program.Configuration["Application:Name"].ToString();
         private Loader loaderAuth = new Loader();
-        //private readonly string _serverAddress = Program.Configuration["Grpc:ServerAddress"].ToString();
-        //private readonly AuthServices.AuthServicesClient _client;
 
+        public string LoginTxt { get => loginTextBox.Text; set => loginTextBox.Text = value; }
+        public string PasswordTxt { get => passwordTextBox.Text; set => passwordTextBox.Text = value; }
 
         public LoginForm()
         {
@@ -51,10 +52,31 @@ namespace GrpcWinForms.Forms
             }
         }
 
+
+        public void SetBusy(bool busy)
+        {
+            if (InvokeRequired) Invoke(new Action(() => SetBusy(busy)));
+            else
+            {
+                Cursor = busy ? Cursors.WaitCursor : Cursors.Default;
+                // Включаем/выключаем элементы управления
+                buttonOk.Enabled = !busy;
+                loginTextBox.Enabled = !busy;
+                passwordTextBox.Enabled = !busy;
+            }
+        }
+
+        public void ShowError(string message)
+        {
+            throw new NotImplementedException();
+        }
+
         private async void btnLogin_Click(object sender, EventArgs e)
         {
+
             labelError.Visible = false;
             loaderAuth.ShowLoader();
+
             try
             {
                 // Формируем запрос
@@ -67,7 +89,7 @@ namespace GrpcWinForms.Forms
 
                 // реальный вызов gRPC Auth
                 AuthResponse resp = await GrpcClients.GrpcClients.Auth.AuthAsync(req);
-                loaderAuth.HideLoader();
+                //loaderAuth.HideLoader();
 
                 if (resp.Result?.Status == Status.Ok)
                 {

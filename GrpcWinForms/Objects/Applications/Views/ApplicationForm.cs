@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using GrpcWinForms.Objects.Applications.Views;
 using GrpcWinForms.Objects.Applications.Presenters;
 using Application = GrpcCommonNet.Library.Common.Application;
+using GrpcWinForms.Objects.Applications.Views.Interfaces;
 
 namespace GrpcWinForms.Objects.Applications.Forms
 {

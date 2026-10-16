@@ -3,7 +3,7 @@ using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Currency;
 using GrpcWinForms.GrpcUtils;
-using GrpcWinForms.Objects.Currencies.Forms;
+using GrpcWinForms.Objects.Currencies.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

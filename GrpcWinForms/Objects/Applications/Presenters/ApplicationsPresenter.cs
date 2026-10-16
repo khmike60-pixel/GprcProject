@@ -1,6 +1,5 @@
 ﻿using GrpcCommonNet.Library.Application;
 using GrpcCommonNet.Library.Common;
-using GrpcWinForms.Objects.Applications.Views;
 using GrpcWinForms.GrpcUtils;
 using System;
 using System.Collections.Generic;
@@ -9,12 +8,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Application = GrpcCommonNet.Library.Common.Application;
+using GrpcWinForms.Objects.Applications.Views.Interfaces;
+using GrpcWinForms.Objects.Applications.Repositories;
 
 namespace GrpcWinForms.Objects.Applications.Presenters
 {
     public class ApplicationsPresenter
     {
         private readonly IApplicationsView _view;
+        private readonly ApplicationsRepository _repository = new ApplicationsRepository();
 
         public ApplicationsPresenter(IApplicationsView view)
         {
@@ -25,18 +27,13 @@ namespace GrpcWinForms.Objects.Applications.Presenters
         {
             _view.BeginUpdate();
             try
-            {
-                var request = new ApplicationFilterRequest()
-                {
-                    Name = _view.NameFilter ?? string.Empty,
-                    Product = _view.NameFilter ?? string.Empty,
-                    Db = _view.NameFilter ?? string.Empty
-                };
+            { 
+                List<Application> applications = await _repository.GetApplicationsAsync(
+                    _view.NameFilter ?? string.Empty, 
+                    _view.NameFilter ?? string.Empty, 
+                    _view.NameFilter ?? string.Empty);
 
-                var response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Application.GetListApplicationAsync(request).ResponseAsync);
-
-                _view.Applications = new BindingList<Application>(response.Applications);
+                _view.Applications = new BindingList<Application>(applications);
             }
             catch (Exception ex)
             {
@@ -55,29 +52,20 @@ namespace GrpcWinForms.Objects.Applications.Presenters
                 using var form = new Forms.ApplicationForm() { IsTypeInsert = true };
                 if (_view.ShowApplicationDialog(form) != DialogResult.OK) return;
 
-                var request = new CreateApplicationRequest
+                Application application = await _repository.CreateApplicationAsync(form.Application);
+                
+                if (application.Id == 0 )
                 {
-                    Name = form.Application.Name,
-                    Db = form.Application.Db,
-                    Product = form.Application.Product
-                };
-
-                var response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Application.CreateApplicationAsync(request).ResponseAsync);
-
-                if (response.Result.Status != Status.Ok || response.Application == null)
-                {
-                    _view.ShowMessage("Добавить данные не удалось.", "Ошибка");
+                    _view.ShowMessage("Не удалось создать запись.", "Ошибка");
                     return;
                 }
-
                 int insertIndex = Math.Max(0, _view.RowSel - _view.RowsFixed);
-                _view.InsertApplicationAt(insertIndex, response.Application);
+                _view.InsertApplicationAt(insertIndex, application);
                 _view.SetRow(_view.RowSel);
             }
             catch (Exception ex)
             {
-                _view.ShowMessage("Ошибка при создании: " + ex.Message, "Ошибка");
+                _view.ShowMessage(ex.Message, "Ошибка");
             }
         }
 
@@ -91,25 +79,16 @@ namespace GrpcWinForms.Objects.Applications.Presenters
                 using var form = new Forms.ApplicationForm() { IsTypeInsert = false, Application = app };
                 if (_view.ShowApplicationDialog(form) != DialogResult.OK) return;
 
-                var request = new UpdateApplicationRequest
-                {
-                    Id = form.Application.Id,
-                    Name = form.Application.Name,
-                    Db = form.Application.Db,
-                    Product = form.Application.Product
-                };
+                Application application = await _repository.UpdateApplicationAsync(form.Application);
 
-                var response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Application.UpdateApplicationAsync(request).ResponseAsync);
-
-                if (response.Application == null)
+                if (application == null)
                 {
                     _view.ShowMessage("Изменить данные не удалось.", "Ошибка");
                     return;
                 }
 
                 int idx = _view.RowSel - _view.RowsFixed;
-                _view.ReplaceApplicationAt(idx, response.Application);
+                _view.ReplaceApplicationAt(idx, application);
             }
             catch (Exception ex)
             {
@@ -149,24 +128,16 @@ namespace GrpcWinForms.Objects.Applications.Presenters
                     var ids = new List<int>();
                     foreach (var idx in _view.SelectedRows) ids.Add(_view.GetIdAtRow(idx));
 
-                    var request = new DeleteIdsApplicationRequest();
-                    request.Ids.AddRange(ids);
+                    List<int> undeletedIds = await _repository.DeleteApplicationsAsync(ids);
 
-                    var response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Application.DeleteIdsApplicationAsync(request).ResponseAsync);
-
-                    if (response.Result.Status != Status.Ok)
-                    {
-                        _view.ShowMessage("Ошибка при удалении: " + response.Result.Message, "Ошибка");
-                        return;
-                    }
-
-                    var undeleted = response.UndeletedIds.Select(i => Convert.ToInt32(i)).ToList();
+                    var undeleted = undeletedIds.Select(i => Convert.ToInt32(i)).ToList();
                     var removed = ids.Except(undeleted).ToList();
                     _view.RemoveApplicationsByIds(removed);
 
                     if (undeleted.Count > 0)
+                    {
                         _view.ShowMessage("Данные, которые не удалось удалить остались выделенными.", "Внимание");
+                    }
                 }
             }
             catch (Exception ex)

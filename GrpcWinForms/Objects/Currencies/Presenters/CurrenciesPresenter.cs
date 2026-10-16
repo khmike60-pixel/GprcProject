@@ -3,8 +3,8 @@ using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Currency;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
-using GrpcWinForms.Objects.Currencies.Repository;
-using GrpcWinForms.Objects.Currencies.Views;
+using GrpcWinForms.Objects.Currencies.Repositories;
+using GrpcWinForms.Objects.Currencies.Views.Interfaces;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -27,6 +27,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
         {
             try
             {
+                _view.SetBusy(true);
                 BindingList<Currency> currencies = await CurrencyRepository.GetCurrenciesAsync(_view.IncludeInvisible, _view.CurrencyAbbrev ?? string.Empty);
                 _view.Currencies = currencies;
             }
@@ -34,11 +35,12 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
             {
                 _view.ShowMessage("Ошибка при получении данных: " + ex.Message, "Ошибка");
             }
+            finally { _view.SetBusy(false); }
         }
 
         public async Task NewAsync()
         {
-            using (var form = new GrpcWinForms.Objects.Currencies.Forms.CurrencyForm())
+            using (var form = new GrpcWinForms.Objects.Currencies.Views.CurrencyForm())
             {
                 form.IsNew = true;
                 form.Currency = new Currency();
@@ -47,6 +49,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                 {
                     try
                     {
+                        _view.SetBusy(true);
                         Currency currency = await CurrencyRepository.CreateCurrencyAsync(form.Currency);
                         // Вставляем в существующий BindingList, если он есть
                         if (_view.Currencies != null)
@@ -58,12 +61,13 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                         {
                             await RefreshAsync();
                         }
-                       
+
                     }
                     catch (Exception ex)
                     {
                         _view.ShowMessage("Ошибка при создании: " + ex.Message, "Ошибка");
                     }
+                    finally { _view.SetBusy(false); };
                 }
             }
         }
@@ -73,7 +77,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
             if (_view.Currencies == null || _view.RowSel < 1) return;
 
             var existing = _view.Currencies[_view.RowSel - 1];
-            using (var form = new GrpcWinForms.Objects.Currencies.Forms.CurrencyForm())
+            using (var form = new GrpcWinForms.Objects.Currencies.Views.CurrencyForm())
             {
                 form.IsNew = false;
                 form.Currency = existing;
@@ -82,7 +86,8 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                 {
                     try
                     {
-                        _view.Currencies[_view.RowSel - 1] = 
+                        _view.SetBusy(true);
+                        _view.Currencies[_view.RowSel - 1] =
                             await CurrencyRepository.UpdateCurrencyAsync(form.Currency);
 
 
@@ -103,7 +108,8 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                     {
                         _view.ShowMessage("Ошибка при обновлении: " + ex.Message, "Ошибка");
                     }
-                }
+                    finally { _view.SetBusy(false); }
+                    }
             }
         }
 
@@ -111,6 +117,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
         {
             try
             {
+                _view.SetBusy(true);
                 if (_view.SelectedRows == null || _view.SelectedRows.Count == 0)
                 {
                     var dr = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
@@ -169,6 +176,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
             {
                 _view.ShowMessage("Ошибка при удалении: " + ex.Message, "Ошибка");
             }
+            finally { _view.SetBusy(false); }
         }
 
         public void OnItemDoubleClicked()

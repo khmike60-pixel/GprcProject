@@ -1,5 +1,5 @@
 ﻿using GrpcCommonNet.Library.Common;
-using GrpcWinForms.Objects.Currencies.Views;
+using GrpcWinForms.Objects.Currencies.Views.Interfaces;
 using System;
 
 namespace GrpcWinForms.Objects.Currencies.Presenters

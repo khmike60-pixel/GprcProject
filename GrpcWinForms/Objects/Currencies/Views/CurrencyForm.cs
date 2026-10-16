@@ -1,10 +1,10 @@
 ﻿using GrpcCommonNet.Library.Common;
 using GrpcWinForms.Objects.Currencies.Presenters;
-using GrpcWinForms.Objects.Currencies.Views;
+using GrpcWinForms.Objects.Currencies.Views.Interfaces;
 using System;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Currencies.Forms
+namespace GrpcWinForms.Objects.Currencies.Views
 {
     public partial class CurrencyForm : Form, ICurrencyView
     {

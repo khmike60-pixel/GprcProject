@@ -1,4 +1,4 @@
-﻿namespace GrpcWinForms.Objects.Currencies.Forms
+﻿namespace GrpcWinForms.Objects.Currencies.Views
 {
     partial class RatesForm
     {
@@ -30,10 +30,10 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RatesForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription3 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition3 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
             panel2 = new Panel();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanelRates = new C1.Win.SplitContainer.C1SplitterPanel();
@@ -116,11 +116,11 @@
             gridRates.ColumnInfo = resources.GetString("gridRates.ColumnInfo");
             gridRates.Dock = DockStyle.Fill;
             gridRates.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition3.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition3.Caption = "Всего: ";
-            aggregateDefinition3.Column = 2;
-            footerDescription3.Aggregates.Add(aggregateDefinition3);
-            gridRates.Footers.Descriptions.Add(footerDescription3);
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 2;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            gridRates.Footers.Descriptions.Add(footerDescription1);
             gridRates.Footers.Fixed = true;
             gridRates.IdName = null;
             gridRates.Location = new Point(0, 31);
@@ -153,6 +153,7 @@
             toolStripButtonNew.Name = "toolStripButtonNew";
             toolStripButtonNew.Size = new Size(28, 28);
             toolStripButtonNew.Text = "Новый";
+            toolStripButtonNew.Click += toolStripButtonNew_Click;
             // 
             // toolStripButtonDouble
             // 
@@ -217,11 +218,11 @@
             gridCurrencies.ColumnInfo = resources.GetString("gridCurrencies.ColumnInfo");
             gridCurrencies.Dock = DockStyle.Fill;
             gridCurrencies.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 3;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            gridCurrencies.Footers.Descriptions.Add(footerDescription1);
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition2.Caption = "Всего: ";
+            aggregateDefinition2.Column = 3;
+            footerDescription2.Aggregates.Add(aggregateDefinition2);
+            gridCurrencies.Footers.Descriptions.Add(footerDescription2);
             gridCurrencies.Footers.Fixed = true;
             gridCurrencies.IdName = null;
             gridCurrencies.Location = new Point(0, 31);

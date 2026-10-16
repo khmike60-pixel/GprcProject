@@ -2,7 +2,7 @@
 using GrpcCommonNet.Library.Geolocation;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Currencies.Views;
-using GrpcWinForms.Objects.Geolocations.Views;
+using GrpcWinForms.Objects.Geolocations.Views.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

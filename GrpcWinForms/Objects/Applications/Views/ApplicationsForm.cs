@@ -2,7 +2,7 @@
 using GrpcCommonNet.Library.Common;
 using GrpcWinForms.Objects.Applications.Forms;
 using GrpcWinForms.Objects.Applications.Presenters;
-using GrpcWinForms.Objects.Applications.Views;
+using GrpcWinForms.Objects.Applications.Views.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,17 +14,12 @@ namespace GrpcWinForms.Objects.Applications
 {
     public partial class ApplicationsForm : Form, IApplicationsView
     {
+
+        #region Свойства
         private BindingList<Application> applications = new BindingList<Application>();
         private readonly ApplicationsPresenter _presenter;
 
         public bool IsChoiceMode { get; set; } = false;
-
-        public ApplicationsForm()
-        {
-            InitializeComponent();
-            this.KeyPreview = true;
-            _presenter = new ApplicationsPresenter(this);
-        }
 
         // Обратно добавленные свойства для совместимости с UsersAppForm
         public Application SelectedApplication
@@ -77,7 +72,25 @@ namespace GrpcWinForms.Objects.Applications
                 list.AddRange(smartGrid1.SelectedRows);
                 return list;
             }
+            set
+            {
+                smartGrid1.SelectedRows.Clear();
+                if (value == null) return;
+                smartGrid1.SelectedRows.AddRange(value);
+            }
         }
+
+        IList<int> IApplicationsView.SelectedRows { get => SelectedRows; set => SelectedRows = value; }
+        #endregion
+
+
+        public ApplicationsForm()
+        {
+            InitializeComponent();
+            this.KeyPreview = true;
+            _presenter = new ApplicationsPresenter(this);
+        }
+
 
         public Application GetApplicationAtRow(int row)
         {
@@ -121,7 +134,14 @@ namespace GrpcWinForms.Objects.Applications
         {
             if (ids == null || ids.Count == 0) return;
             var toRemove = applications.Where(a => ids.Contains(a.Id)).ToList();
-            foreach (var item in toRemove) applications.Remove(item);
+            var ndxRemove = toRemove.Select(a => applications.IndexOf(a)).Where(idx => idx >= 0).ToList();
+            ndxRemove.Sort();
+            for(int i = ndxRemove.Count - 1; i >= 0; i--)
+                ndxRemove.RemoveAt(i);
+            foreach (var item in toRemove)
+                applications.Remove(item);
+            smartGrid1.SelectedRows.Clear();
+            smartGrid1.SelectedRows.AddRange(ndxRemove);
         }
 
         public void ShowMessage(string text, string caption = "") => MessageBox.Show(text, caption);

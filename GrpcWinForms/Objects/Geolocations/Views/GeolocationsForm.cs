@@ -5,6 +5,7 @@ using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Currencies.Presenters;
 using GrpcWinForms.Objects.Geolocations.Models;
+using GrpcWinForms.Objects.Geolocations.Views.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -134,7 +135,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
             using (GeolocationForm geoForm = new GeolocationForm())
             {
-                geoForm.ModeEdit = Views.ModeEdit.Add;
+                geoForm.ModeEdit = ModeEdit.Add;
                 geoForm.Geolocation = new Geolocation()
                 {
                     Parent = new Geolocation()
@@ -177,7 +178,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
 
             using (GeolocationForm geoForm = new GeolocationForm())
             {
-                geoForm.ModeEdit = Views.ModeEdit.Edit;
+                geoForm.ModeEdit = ModeEdit.Edit;
                 geoForm.Geolocation = new Geolocation()
                 {
                     Id = geoItem.Id,

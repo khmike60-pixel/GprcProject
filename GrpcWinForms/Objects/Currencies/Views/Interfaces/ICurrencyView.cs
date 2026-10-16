@@ -1,7 +1,7 @@
 ﻿using GrpcCommonNet.Library.Common;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Currencies.Views
+namespace GrpcWinForms.Objects.Currencies.Views.Interfaces
 {
     public interface ICurrencyView
     {
