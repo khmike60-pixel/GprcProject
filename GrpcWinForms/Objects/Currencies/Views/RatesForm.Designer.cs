@@ -108,7 +108,6 @@
             // 
             // gridRates
             // 
-            gridRates.AllowEditing = false;
             gridRates.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             gridRates.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             gridRates.AllowNodeMove = false;
@@ -123,6 +122,7 @@
             gridRates.Footers.Descriptions.Add(footerDescription1);
             gridRates.Footers.Fixed = true;
             gridRates.IdName = null;
+            gridRates.KeyActionEnter = C1.Win.FlexGrid.KeyActionEnum.None;
             gridRates.Location = new Point(0, 31);
             gridRates.Name = "gridRates";
             gridRates.Rows.Count = 51;
@@ -133,6 +133,10 @@
             gridRates.StyleInfo = resources.GetString("gridRates.StyleInfo");
             gridRates.TabIndex = 2;
             gridRates.AfterFreezeColumn += gridRates_AfterFreezeColumn;
+            gridRates.BeforeEdit += gridRates_BeforeEdit;
+            gridRates.AfterEdit += gridRates_AfterEdit;
+            gridRates.LeaveEdit += gridRates_LeaveEdit;
+            gridRates.CellChanged += gridRates_CellChanged;
             gridRates.GetUnboundValue += gridRates_GetUnboundValue;
             // 
             // toolStripRates

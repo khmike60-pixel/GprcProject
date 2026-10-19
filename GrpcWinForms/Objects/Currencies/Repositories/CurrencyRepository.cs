@@ -292,6 +292,24 @@ namespace GrpcWinForms.Objects.Currencies.Repositories
             }
         }
 
+        public static async Task<List<int>> DeleteRatesAsync(List<int> ids)
+        {
+            try
+            {
+                DeleteIdsCurrencyRateRequest request = new();
+                request.RateIds.AddRange(ids);
+                var response  = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Currency.DeleteIdsCurrencyRateAsync(request).ResponseAsync
+                );
+                if (response.Result.Status != Status.Ok) return null;
+                return response.UndeletedRateIds.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(String.Join(Environment.NewLine,"Ошибка при удалении курсов валют",
+                    ex.Message));
+            }
+        }
 
         #endregion
 

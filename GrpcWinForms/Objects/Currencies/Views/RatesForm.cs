@@ -1,4 +1,7 @@
-﻿using GrpcCommonNet.Library.Common;
+﻿using Google.Protobuf.WellKnownTypes;
+using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Currency;
+using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Currencies.Presenters;
 using GrpcWinForms.Objects.Currencies.Views.Interfaces;
@@ -48,8 +51,27 @@ namespace GrpcWinForms.Objects.Currencies.Views
                 gridRates.DataSource = rates;
             }
         }
-        public int RowSel => gridRates.Rows[gridRates.Row].Index;
+        public int RowCol => gridRates.Row - gridRates.Rows.Fixed;
         public int Row { get => gridRates.Row; set => gridRates.Row = value; }
+
+        public List<Rate> SelectedRates
+        {
+            get
+            {
+                List<Rate> rates = new List<Rate>();
+                foreach (var row in gridRates.SelectedRows)
+                {
+                    Rate item = gridRates.Rows[row].DataSource as Rate;
+                    rates.Add(item);
+                }
+                return rates;
+            }
+        }
+        public List<int> SelectedRows
+        {
+            get => gridRates.SelectedRows;
+            set => gridRates.SelectedRows = value;
+        }
 
         // IRatesView методы
         public CurrencyRate GetSelectedCurrencyRate()
@@ -57,15 +79,16 @@ namespace GrpcWinForms.Objects.Currencies.Views
             if (gridCurrencies.Row < gridCurrencies.Rows.Fixed) return null;
             return gridCurrencies.Rows[gridCurrencies.Row].DataSource as CurrencyRate;
         }
-        public int GetSelectedIndexCurrencyRate()
-        {
-            if (gridCurrencies.Row < gridCurrencies.Rows.Fixed) return -1;
-            return gridCurrencies.Row;
-        }
         public Rate GetSelectedRate()
         {
             if (gridRates.Row < gridCurrencies.Rows.Fixed) return null;
             return gridRates.Rows[gridRates.Row].DataSource as Rate;
+        }
+        public int GetRateId(int index)
+        {
+            if (index < gridRates.Rows.Fixed) return 0;
+            Rate rate = gridRates.Rows[index].DataSource as Rate;
+            return rate.RateId;
         }
         public void SetBusy(bool busy)
         {
@@ -140,14 +163,43 @@ namespace GrpcWinForms.Objects.Currencies.Views
             gridRates.Cols["Rate"].StarWidth = "*";
         }
 
-        #endregion
-
         private async void toolStripButtonNew_Click(object sender, EventArgs e)
         {
             gridRates.Select();
             await _presenter.NewAsync();
             gridRates.Row--;
 
+        }
+
+        private void gridRates_BeforeEdit(object sender, C1.Win.FlexGrid.RowColEventArgs e)
+        {
+            if (gridRates.Cols[e.Col].Name == "Id") return;
+            var i = 0;
+        }
+
+        private void gridRates_AfterEdit(object sender, C1.Win.FlexGrid.RowColEventArgs e)
+        {
+        }
+
+        #endregion
+
+        private void gridRates_CellChanged(object sender, C1.Win.FlexGrid.RowColEventArgs e)
+        {
+        }
+
+        private void gridRates_LeaveEdit(object sender, C1.Win.FlexGrid.RowColEventArgs e)
+        {
+            Rate rate = gridRates.Rows[e.Row].DataSource as Rate;
+            switch (gridRates.Cols[e.Col].Name)
+            {
+                case "DateRate":
+                    rate.Date = Convert.ToDateTime(gridRates.Editor.Text).ToUniversalTime().ToTimestamp();
+                    break;
+                case "Rate":
+                    rate.Rate_ = MyConvert.ToDecimalValue(Convert.ToDecimal(gridRates.Editor.Text));
+                    break;
+            }
+            _presenter.EditAsync(rate);
         }
     }
 }

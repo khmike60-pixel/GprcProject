@@ -77,7 +77,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                 Rate newRate = await CurrencyRepository.CreateRateAsync(curRate);
                 if (newRate != null)
                 {
-                    int insertIndex = Math.Max(0, _view.RowSel);
+                    int insertIndex = Math.Max(0, _view.RowCol);
                     _view.Rates.Insert(insertIndex, newRate);
                 }
                 else
@@ -90,15 +90,15 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
             finally { _view.SetBusy(false); }
         }
 
-        public async Task EditAsync()
+        public async Task EditAsync(Rate rate)
         {
             try
             {
                 _view.SetBusy(true);
-                Rate editedRate = _view.GetSelectedRate();
-                Rate newRate = await CurrencyRepository.UpdateRateAsync(editedRate);
+
+                Rate newRate = await CurrencyRepository.UpdateRateAsync(rate);
                 if(newRate != null) 
-                    _view.Rates[_view.RowSel] = newRate;
+                    _view.Rates[_view.Row] = newRate;
                 else
                     _view.ShowMessage("Ошибка при редактировании строки", "Ошибка");
             }
@@ -107,6 +107,48 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
                 _view.ShowMessage("Ошибка при редактировании строки: " + ex.Message, "Ошибка");
             }
             finally { _view.SetBusy(false); }
+        }
+
+        public async Task DeleteAsync(List<int> selectedRows)
+        {
+            try
+            {
+                _view.SetBusy(true);
+
+                List<int> ids = new List<int>();
+                foreach (Rate rate in _view.SelectedRates)
+                    ids.Add(rate.RateId);
+
+                List<int> undeletedIds = new List<int>();
+                undeletedIds = await CurrencyRepository.DeleteRatesAsync(ids);
+
+                _view.SelectedRows.Sort();
+
+                // Удаляем из BindingList только те записи, которые были успешно удалены
+                List<int> newSelectedRows = new List<int>();
+                for (int i = _view.SelectedRows.Count - 1; i >= 0; i--)
+                {
+                    int index = _view.SelectedRows[i];
+                    int rateId = _view.GetRateId(index);
+                    if (!undeletedIds.Contains(rateId))
+                    {
+                        _view.Rates.RemoveAt(index);
+                    }
+                    else { newSelectedRows.Add(index); }
+                }
+
+                if (undeletedIds.Count > 0)
+                {
+                    _view.SelectedRows = newSelectedRows;
+                    _view.ShowMessage("Данные, которые не удалось удалить, остались помеченными.", "Информация");
+                }
+            }
+            catch (Exception ex)
+            {
+                _view.ShowMessage("Ошибка при удалении строк: " + ex.Message, "Ошибка");
+            }
+            finally { _view.SetBusy(false); }
+
         }
     }
 }

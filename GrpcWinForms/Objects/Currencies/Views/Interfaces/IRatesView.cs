@@ -18,7 +18,9 @@ namespace GrpcWinForms.Objects.Currencies.Views.Interfaces
 
         // Получить выбранную валюту (или null)
         CurrencyRate GetSelectedCurrencyRate();
-        int GetSelectedIndexCurrencyRate();
+        
+        //int GetSelectedIndexCurrencyRate(); Не используется
+
         Rate GetSelectedRate();
 
         // Управление доступом к UI при обновлении данных
@@ -30,11 +32,23 @@ namespace GrpcWinForms.Objects.Currencies.Views.Interfaces
         /// <summary>
         /// Текущее положение/выбор строки курсов в коллекции
         /// </summary>
-        int RowSel { get; }
+        int RowCol { get; }
 
         /// <summary>
         /// Текущее положение/выбор строки курсов в гриде
         /// </summary>
         int Row { get; set; }
+
+        /// <summary>
+        /// Отмеченные курсы валют  в коллекции курсов
+        /// </summary>
+        List<Rate>  SelectedRates {  get; }
+
+        /// <summary>
+        /// Отмеченные строки в гриде курсов
+        /// </summary>
+        List<int> SelectedRows { get; set; }
+
+        int GetRateId(int index);
     }
 }
