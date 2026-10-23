@@ -19,6 +19,7 @@ namespace GrpcWinForms.Objects.Currencies.Views
         private BindingList<Rate> rates;
         private int currentRow = -1;
         private readonly RatesPresenter _presenter;
+        private bool _isManualEdit = false;
 
         public RatesForm()
         {
@@ -142,6 +143,7 @@ namespace GrpcWinForms.Objects.Currencies.Views
 
         private void gridRates_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
         {
+
             Rate rate = (Rate)(gridRates.Rows[e.Row].DataSource);
             switch (gridRates.Cols[e.Col].Name)
             {
@@ -178,18 +180,9 @@ namespace GrpcWinForms.Objects.Currencies.Views
         private void gridRates_BeforeEdit(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
             if (gridRates.Cols[e.Col].Name == "Id") return;
-            var i = 0;
-        }
-
-        private void gridRates_AfterEdit(object sender, C1.Win.FlexGrid.RowColEventArgs e)
-        {
         }
 
         #endregion
-
-        private void gridRates_CellChanged(object sender, C1.Win.FlexGrid.RowColEventArgs e)
-        {
-        }
 
         private void gridRates_LeaveEdit(object sender, C1.Win.FlexGrid.RowColEventArgs e)
         {
@@ -197,9 +190,13 @@ namespace GrpcWinForms.Objects.Currencies.Views
             switch (gridRates.Cols[e.Col].Name)
             {
                 case "DateRate":
-                    rate.Date = Convert.ToDateTime(gridRates.Editor.Text).ToUniversalTime().ToTimestamp();
+                    Timestamp dateNew = Convert.ToDateTime(gridRates.Editor.Text).ToUniversalTime().ToTimestamp();
+                    if (rate.Date == dateNew) return;
+                        rate.Date = dateNew;
                     break;
                 case "Rate":
+                    DecimalValue rateNew = MyConvert.ToDecimalValue(Convert.ToDecimal(gridRates.Editor.Text));
+                    if (rate.Rate_.Equals(rateNew)) return;
                     rate.Rate_ = MyConvert.ToDecimalValue(Convert.ToDecimal(gridRates.Editor.Text));
                     break;
             }
@@ -209,6 +206,10 @@ namespace GrpcWinForms.Objects.Currencies.Views
         private void toolStripButtonRefreshRates_Click(object sender, EventArgs e)
         {
             _presenter.RefreshRatesAsync();
+        }
+
+        private void gridRates_ChangeEdit(object sender, EventArgs e)
+        {
         }
     }
 }

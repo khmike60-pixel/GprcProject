@@ -134,9 +134,7 @@
             gridRates.TabIndex = 2;
             gridRates.AfterFreezeColumn += gridRates_AfterFreezeColumn;
             gridRates.BeforeEdit += gridRates_BeforeEdit;
-            gridRates.AfterEdit += gridRates_AfterEdit;
             gridRates.LeaveEdit += gridRates_LeaveEdit;
-            gridRates.CellChanged += gridRates_CellChanged;
             gridRates.GetUnboundValue += gridRates_GetUnboundValue;
             // 
             // toolStripRates

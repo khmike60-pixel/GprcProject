@@ -30,21 +30,22 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TestLookup));
+            GrpcCommonNet.Library.Common.Contragent contragent2 = new GrpcCommonNet.Library.Common.Contragent();
             buttonCancel = new Button();
             textBox1 = new TextBox();
             smartBoxCurrency = new GrpcWinForms.Controls.SmartBox.SmartBox(components);
             smartBoxDepartment = new GrpcWinForms.Controls.SmartBox.SmartBox(components);
-            c1Button1 = new C1.Win.Input.C1Button();
+            companyDropDown = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             ((System.ComponentModel.ISupportInitialize)smartBoxCurrency).BeginInit();
             ((System.ComponentModel.ISupportInitialize)smartBoxDepartment).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)c1Button1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)companyDropDown).BeginInit();
             SuspendLayout();
             // 
             // buttonCancel
             // 
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonCancel.AutoSize = true;
-            buttonCancel.Location = new Point(383, 257);
+            buttonCancel.Location = new Point(383, 190);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 25);
             buttonCancel.TabIndex = 23;
@@ -54,7 +55,7 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(82, 170);
+            textBox1.Location = new Point(72, 168);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(100, 23);
             textBox1.TabIndex = 25;
@@ -91,21 +92,35 @@
             smartBoxDepartment.TabIndex = 27;
             smartBoxDepartment.Value = "";
             // 
-            // c1Button1
+            // companyDropDown
             // 
-            c1Button1.Location = new Point(296, 187);
-            c1Button1.Name = "c1Button1";
-            c1Button1.Size = new Size(75, 23);
-            c1Button1.TabIndex = 28;
-            c1Button1.Text = "Статус";
-            c1Button1.Click += c1Button1_Click;
+            companyDropDown.ButtonsSettings.CustomButton.Icon = new C1.Framework.C1BitmapIcon(null, new Size(16, 16), Color.Transparent, (Image)resources.GetObject("companyDropDown1.ButtonsSettings.CustomButton.Icon"));
+            companyDropDown.ButtonsSettings.CustomButton.Visible = true;
+            companyDropDown.DropDownAlign = C1.Framework.DropDownAlignment.Left;
+            companyDropDown.DropDownWidth = 300;
+            companyDropDown.GetDataSourceFunc = null;
+            companyDropDown.Location = new Point(72, 126);
+            companyDropDown.Name = "companyDropDown";
+            contragent2.CountryId = 0;
+            contragent2.CountrySymbol = "";
+            contragent2.Entity = null;
+            contragent2.Id = 0;
+            contragent2.Name = "";
+            contragent2.Person = null;
+            contragent2.Prefix = "";
+            contragent2.Taxno = "";
+            contragent2.Type = GrpcCommonNet.Library.Common.ContragentType.Entity;
+            companyDropDown.SelectedCompany = contragent2;
+            companyDropDown.Size = new Size(386, 23);
+            companyDropDown.TabIndex = 28;
+            companyDropDown.Value = "";
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(470, 294);
-            Controls.Add(c1Button1);
+            ClientSize = new Size(470, 227);
+            Controls.Add(companyDropDown);
             Controls.Add(smartBoxDepartment);
             Controls.Add(smartBoxCurrency);
             Controls.Add(textBox1);
@@ -115,7 +130,7 @@
             Load += TestLookup_Load;
             ((System.ComponentModel.ISupportInitialize)smartBoxCurrency).EndInit();
             ((System.ComponentModel.ISupportInitialize)smartBoxDepartment).EndInit();
-            ((System.ComponentModel.ISupportInitialize)c1Button1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)companyDropDown).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -125,6 +140,6 @@
         private TextBox textBox1;
         private Controls.SmartBox.SmartBox smartBoxCurrency;
         private Controls.SmartBox.SmartBox smartBoxDepartment;
-        private C1.Win.Input.C1Button c1Button1;
+        private Contragents.Components.CompanyDropDown companyDropDown;
     }
 }
