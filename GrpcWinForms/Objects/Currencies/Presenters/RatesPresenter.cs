@@ -98,7 +98,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
 
                 Rate newRate = await CurrencyRepository.UpdateRateAsync(rate);
                 if(newRate != null) 
-                    _view.Rates[_view.Row] = newRate;
+                    _view.Rates[_view.Row-1] = newRate;
                 else
                     _view.ShowMessage("Ошибка при редактировании строки", "Ошибка");
             }

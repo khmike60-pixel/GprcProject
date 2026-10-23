@@ -79,17 +79,20 @@ namespace GrpcWinForms.Objects.Currencies.Views
             if (gridCurrencies.Row < gridCurrencies.Rows.Fixed) return null;
             return gridCurrencies.Rows[gridCurrencies.Row].DataSource as CurrencyRate;
         }
+
         public Rate GetSelectedRate()
         {
             if (gridRates.Row < gridCurrencies.Rows.Fixed) return null;
             return gridRates.Rows[gridRates.Row].DataSource as Rate;
         }
+
         public int GetRateId(int index)
         {
             if (index < gridRates.Rows.Fixed) return 0;
             Rate rate = gridRates.Rows[index].DataSource as Rate;
             return rate.RateId;
         }
+
         public void SetBusy(bool busy)
         {
             Cursor = busy ? Cursors.WaitCursor : Cursors.Default;
@@ -97,6 +100,7 @@ namespace GrpcWinForms.Objects.Currencies.Views
             gridRates.Enabled = !busy;
             toolStripRates.Enabled = !busy;
         }
+
         public void ShowMessage(string text, string caption = "") => MessageBox.Show(this, text, caption);
 
         #region События формы
@@ -200,6 +204,11 @@ namespace GrpcWinForms.Objects.Currencies.Views
                     break;
             }
             _presenter.EditAsync(rate);
+        }
+
+        private void toolStripButtonRefreshRates_Click(object sender, EventArgs e)
+        {
+            _presenter.RefreshRatesAsync();
         }
     }
 }

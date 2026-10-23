@@ -195,6 +195,7 @@
             toolStripButtonRefreshRates.Name = "toolStripButtonRefreshRates";
             toolStripButtonRefreshRates.Size = new Size(89, 28);
             toolStripButtonRefreshRates.Text = "Обновить";
+            toolStripButtonRefreshRates.Click += toolStripButtonRefreshRates_Click;
             // 
             // toolStripSeparator1
             // 
