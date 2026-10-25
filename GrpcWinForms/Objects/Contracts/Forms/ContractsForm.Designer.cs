@@ -30,6 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ContractsForm));
+            GrpcCommonNet.Library.Common.Contragent contragent1 = new GrpcCommonNet.Library.Common.Contragent();
+            GrpcCommonNet.Library.Common.Contragent contragent2 = new GrpcCommonNet.Library.Common.Contragent();
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
@@ -141,6 +143,16 @@
             companySeller.GetDataSourceFunc = null;
             companySeller.Location = new Point(99, 34);
             companySeller.Name = "companySeller";
+            contragent1.CountryId = 0;
+            contragent1.CountrySymbol = "";
+            contragent1.Entity = null;
+            contragent1.Id = 0;
+            contragent1.Name = "";
+            contragent1.Person = null;
+            contragent1.Prefix = "";
+            contragent1.Taxno = "";
+            contragent1.Type = GrpcCommonNet.Library.Common.ContragentType.Entity;
+            companySeller.SelectedCompany = contragent1;
             companySeller.Size = new Size(207, 23);
             companySeller.TabIndex = 17;
             companySeller.Value = "";
@@ -154,6 +166,16 @@
             companyBuyer.GetDataSourceFunc = null;
             companyBuyer.Location = new Point(99, 6);
             companyBuyer.Name = "companyBuyer";
+            contragent2.CountryId = 0;
+            contragent2.CountrySymbol = "";
+            contragent2.Entity = null;
+            contragent2.Id = 0;
+            contragent2.Name = "";
+            contragent2.Person = null;
+            contragent2.Prefix = "";
+            contragent2.Taxno = "";
+            contragent2.Type = GrpcCommonNet.Library.Common.ContragentType.Entity;
+            companyBuyer.SelectedCompany = contragent2;
             companyBuyer.Size = new Size(207, 23);
             companyBuyer.TabIndex = 16;
             companyBuyer.Value = "";

@@ -74,6 +74,7 @@
     <ProjectReference Include="..\GrpcCommonNet.Proto\GrpcCommonNet.Proto.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Objects\Contracts\ContractViews\Presenters\" />
     <Folder Include="Objects\Geolocations\GeoForms\" />
   </ItemGroup>
 </Project>

@@ -108,6 +108,20 @@ namespace GrpcWinForms.Models
             }
         }
 
-        
+        /// <summary>
+        /// Изменение форму курсора взависимости от параметра busy
+        /// </summary>
+        /// <param name="busy">
+        /// true - форма в режиме занаята. Не забудьте закрыть иные контролы. 
+        /// false - форма открыта. Не забудьте закрыть иные контролы.</param>
+        /// <param name="sender">Укажите форму, которая меняет курсор. Обычно это текущая форма (this).</param>
+        public static void SetBusy(bool busy, object sender)
+        {
+            if (sender.GetType() == typeof(Form)) {
+                Form form = (Form)sender;
+                form.Cursor = busy ? Cursors.WaitCursor : Cursors.Default;
+            }
+       }
+
     }
 }

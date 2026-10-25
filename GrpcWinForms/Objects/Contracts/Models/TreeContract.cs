@@ -34,6 +34,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
         public DateTime? DateExpiried {  get; set; }
         public int? Contract_RootId { get; set; }
         public string State {  get; set; }
+        public ContractState StateEnum { get; set; }
 
         public TreeContract FromNodeContract(NodeContract node)
         {
@@ -63,6 +64,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
                 TypeCode = node.Contract.TypeContract.Code,
                 TypeForm = node.Contract.TypeContract.Form,
                 Contract_RootId = node.Contract.RootId,
+                StateEnum = node.Contract.State,
                 State = node.Contract.State == ContractState.Draft ? "" :                   // Новый
                         node.Contract.State == ContractState.SentToClient ? "передан" :     // передан клиенту
                         node.Contract.State == ContractState.Signed ? "подписан" :          // подписан
@@ -90,7 +92,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
                     Number = this.Number,
                     Date = this.Date.ToUniversalTime().ToTimestamp(),
                     Sum = MyConvert.ToDecimalValue(this.Sum, 2),
-                    Amount = MyConvert.ToDecimalValue(this.Sum, 2)
+                    Amount = MyConvert.ToDecimalValue(this.Sum, 2)                    
                 }
             };
             return nodeContract;

@@ -76,6 +76,7 @@ namespace GrpcWinForms.Objects.Contragents.Components
             // 
             // smart1
             // 
+            smart1.AllowEditing = false;
             smart1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smart1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
             smart1.AllowNodeMove = false;

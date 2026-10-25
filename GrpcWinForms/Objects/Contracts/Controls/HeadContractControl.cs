@@ -87,11 +87,11 @@ namespace GrpcWinForms.Objects.Contracts.Forms.Controls
 
                 textBoxTaxnoBuyer.Text = contract.Buyer?.Taxno;                  // ИНН покупателя
                 companyBuyer.Text = contract.Buyer?.Name;                        // Контрагент покупатель
-                companyBuyer.Value = contract.Buyer?.Id;                         // Идентификатор контрагента покупателя
+                //companyBuyer.Value = contract.Buyer?.Id;                         // Идентификатор контрагента покупателя
 
                 textBoxTaxnoSeller.Text = contract.Seller?.Taxno;                // ИНН продавца
                 companySeller.Text = contract.Seller?.Name;                      // Контрагент продавец
-                companySeller.Value = contract.Seller?.Id;                       // Идентификатор контрагента продавца
+                //companySeller.Value = contract.Seller?.Id;                       // Идентификатор контрагента продавца
 
                 comboBoxContractType.Text = contract.TypeContract.Name.ToString();   // Тип договора
 

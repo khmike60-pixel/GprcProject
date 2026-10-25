@@ -527,6 +527,9 @@ public class ContractRepository
                 cmd.Parameters.AddWithValue("_End", dateEnd);
                 cmd.Parameters.AddWithValue("_WithAgreement", withAdd);
 
+                cmd.Parameters.AddWithValue("_BuyerId", buyer?.Id);
+                cmd.Parameters.AddWithValue("_SellerId", seller?.Id);
+
                 using var rdr = await cmd.ExecuteReaderAsync();
 
                 while (await rdr.ReadAsync())
