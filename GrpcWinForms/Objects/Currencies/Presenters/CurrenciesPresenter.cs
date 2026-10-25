@@ -28,6 +28,7 @@ namespace GrpcWinForms.Objects.Currencies.Presenters
             try
             {
                 _view.SetBusy(true);
+
                 BindingList<Currency> currencies = await CurrencyRepository.GetCurrenciesAsync(_view.IncludeInvisible, _view.CurrencyAbbrev ?? string.Empty);
                 _view.Currencies = currencies;
             }
