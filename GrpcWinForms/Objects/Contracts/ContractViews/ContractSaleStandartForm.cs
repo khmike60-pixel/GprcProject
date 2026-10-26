@@ -9,6 +9,8 @@ using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.ContractViews;
+using GrpcWinForms.Objects.Contracts.ContractViews.Presenters;
+using GrpcWinForms.Objects.Contracts.ContractViews.Repositories;
 using GrpcWinForms.Objects.Contracts.Forms;
 using GrpcWinForms.Objects.Contracts.Models;
 using System;
@@ -40,6 +42,10 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private CellStyle cellStyleDeleted;
         private CellStyle baseStyle;
         private bool contractEdited = false;
+        private ContractPresenter presenter;
+
+        public Control.ControlCollection ControlCollection { get => this.Controls; }
+        
 
         //public bool CurrentMode = false;
 
@@ -92,6 +98,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                         GrpcClients.GrpcClients.Contract.GetContractFullAsync(requestContract).ResponseAsync
                     );
                     contract = responseContract.Contract;
+
+                    //await presenter.RefreshAsync();
                 }
 
                 headContractControl.SetControls(contract);
@@ -173,8 +181,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 MessageBox.Show("Ошибка в дополнительных параметрах");
             }
 
-            //this.Text = $"Контракт № {contract.Number} от {contract.Date.ToDateTime().ToShortDateString()} (Id={ContractId})";
-        }
+       }
 
         #endregion
 
