@@ -4,6 +4,7 @@ using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Service.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics.Eventing.Reader;
 using Metadata = GrpcCommonNet.Library.Contract.Metadata;
 using Status = GrpcCommonNet.Library.Common.Status;
 
@@ -130,7 +131,11 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
 
         try
         {
-            Contract _contract = await _repo.UpdateContractAsync(request.Contract);
+            Contract _contract = new();
+            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0) 
+                _contract = await _repo.UpdateContractAsync(request);
+            else
+                _contract = await _repo.UpdateContractAsync(request.Contract);
             return new ContractResponse() { Contract = _contract, Result = new Result { Status = Status.Ok } };
 
         } catch (Exception ex)
