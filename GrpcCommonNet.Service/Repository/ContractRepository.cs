@@ -379,6 +379,61 @@ public class ContractRepository
         return contract;
     }
 
+    public async Task<Contract> UpdateContractAsync(ContractRequest request)
+    {
+        try
+        {
+            List<string> updateFields = new List<string>();
+            var parameters = new List<MySqlParameter> { new MySqlParameter("@id", request.Contract.Id) };
+            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                updateFields = AllFieldsContract(request.Contract, parameters);
+            else
+                updateFields = MappingContract(request.Contract, parameters, request.FieldMask.Paths.ToList());
+
+            // Защита от ситуации, когда маска передана, но в ней нет валидных полей
+            if (updateFields.Count == 0)
+                throw new Exception(string.Join(Environment.NewLine, "UpdateMask пуста."));
+
+            string sql =
+                $@"UPDATE cwatis.contracts SET {string.Join(", ", updateFields)} WHERE contract_id = {request.Contract.Id}; " +
+                Environment.NewLine +
+                $@"SELECT
+                    c.* ,
+                    if (cd.ContractDoc_Id is not null, true, false) as haveDoc,
+                    cu.Abbrev, 
+                    t.DocumentType_Name as DocumentType_Name, 
+                    t.DocumentType_Code as DocumentType_Code,
+                    t.DocumentType_Form as DocumentType_Form
+                FROM cwatis.contracts c
+                    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
+                    left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
+                    left join cwatis.contractdocs cd on cd.contract_id = c.contract_id
+                WHERE 1 = 1
+                    and c.contract_id = {request.Contract.Id};
+            ";
+
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using var cmd = conn.CreateCommand();
+
+            cmd.CommandText = sql;
+            cmd.Parameters.AddRange(parameters.ToArray());
+
+            using var rdr = await cmd.ExecuteReaderAsync();
+
+            Contract contract = new Contract();
+            if (await rdr.ReadAsync())
+                contract = FillContract(rdr);
+            else contract = request.Contract;
+
+            return contract;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Ошибка при обновлении контракта.", ex);
+        }
+    }
+
     public async Task<Contract> CreateContractAsync(Contract _contract)
     {
         Contract contract = new Contract();
@@ -545,59 +600,6 @@ public class ContractRepository
         }
     }
 
-    public async Task<Contract> UpdateContractAsync(ContractRequest request)
-    {
-        try
-        {
-            List<string> updateFields = new List<string>();
-            var parameters = new List<MySqlParameter> { new MySqlParameter("@id", request.Contract.Id) };
-            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
-                updateFields = AllFieldsContract(request.Contract, parameters);
-            else
-                updateFields = MappingContract(request.Contract, parameters, request.FieldMask.Paths.ToList());
-
-            // Защита от ситуации, когда маска передана, но в ней нет валидных полей
-            if (updateFields.Count == 0)
-                throw new Exception(string.Join(Environment.NewLine, "UpdateMask пуста."));
-
-            string sql =
-                $@"UPDATE cwatis.contracts SET {string.Join(", ", updateFields)} WHERE contract_id = {request.Contract.Id}; " +
-                Environment.NewLine +
-                $@"SELECT
-                    c.* ,
-                    if (cd.ContractDoc_Id is not null, true, false) as haveDoc,
-                    cu.Abbrev, 
-                    t.DocumentType_Name as DocumentType_Name, 
-                    t.DocumentType_Code as DocumentType_Code,
-                    t.DocumentType_Form as DocumentType_Form
-                FROM cwatis.contracts c
-                    LEFT JOIN global_db.rfr_currency cu ON cu.currencyId = c.currencyId
-                    left join cwatis.documenttypes t ON c.DocumentType_Id = t.DocumentType_Id
-                    left join cwatis.contractdocs cd on cd.contract_id = c.contract_id
-                WHERE 1 = 1
-                    and c.contract_id = {request.Contract.Id};
-            ";
-
-            using var conn = new MySqlConnection(_connectionString);
-            await conn.OpenAsync();
-            using var cmd = conn.CreateCommand();
-
-            cmd.CommandText = sql;
-            cmd.Parameters.AddRange(parameters.ToArray());
-
-            using var rdr = await cmd.ExecuteReaderAsync();
-
-            Contract contract = new Contract();
-            if (await rdr.ReadAsync())
-                contract = FillContract(rdr);
-            else contract = request.Contract;
-
-            return contract;
-        }  catch  (Exception ex)
-        {
-            throw new Exception("Ошибка при обновлении контракта.", ex);
-        }
-    }
 
     public async Task<List<int>> DeleteIdsContractAsync(DeleteIdsContractRequest request)
     {
@@ -1266,7 +1268,7 @@ public class ContractRepository
         updateFields.Add("contract_State = @contract_State");
         parameters.Add(new MySqlParameter("@contract_State", contract.State));
         updateFields.Add("contract_data = @contract_data");
-        parameters.Add(new MySqlParameter("@contract_data", contract.Data));
+        parameters.Add(new MySqlParameter("@contract_data", contract.Data.ToString()));
         updateFields.Add("DocumentType_Id = @DocumentType_Id");
         parameters.Add(new MySqlParameter("@DocumentType_Id", contract.TypeContract?.Id));
         updateFields.Add("SDid = @SDid");
