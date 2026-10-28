@@ -22,6 +22,7 @@ using GrpcWinForms.Objects.Users;
 using GrpcWinForms.Objects.SalePurchaseTypes.Forms;
 using GrpcWinForms.Objects.Departaments.Forms;
 using GrpcWinForms.Objects.Units.Forms;
+using GrpcWinForms.Objects.StockDocuments.Views;
 
 namespace GrpcWinForms.Forms
 {
@@ -115,17 +116,6 @@ namespace GrpcWinForms.Forms
             }
             var f = new ProductsForm { MdiParent = this };
             f.Show();
-        }
-
-        private void ToolStripMenuItemContrtacts_Click(object sender, EventArgs e)
-        {
-            foreach (Form child in MdiChildren)
-            {
-                if (child is ContractsForm) { child.Activate(); return; }
-            }
-            var f = new ContractsForm { MdiParent = this };
-            f.Show();
-
         }
 
         private void UsersOfAppToolStripMenuItem_Click(object sender, EventArgs e)
@@ -251,6 +241,44 @@ namespace GrpcWinForms.Forms
                 if (child is SalePurchaseRatesForm) { child.Activate(); return; }
             }
             var f = new SalePurchaseRatesForm { MdiParent = this };
+            f.Show();
+        }
+
+        private void AllContrtactsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is ContractsForm) { child.Activate(); return; }
+            }
+            var f = new ContractsForm { MdiParent = this };
+            f.Show();
+
+        }
+
+        private void StockDocumentTypesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is DocumentTypesForm) { child.Activate(); return; }
+            }
+            var f = new DocumentTypesForm { MdiParent = this };
+            f.HeadCode = "WHDocuments";
+            f.Show();
+
+        }
+
+        private void ContractTempatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AllDocumrntsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is StockDocumentsForm) { child.Activate(); return; }
+            }
+            var f = new StockDocumentsForm { MdiParent = this };
             f.Show();
         }
     }
