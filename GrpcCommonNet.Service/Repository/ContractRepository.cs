@@ -1266,7 +1266,7 @@ public class ContractRepository
         updateFields.Add("VatPrc = @VatPrc");
         parameters.Add(new MySqlParameter("@VatPrc", MyConvert.ToDecimal(contract.VatPrc)));
         updateFields.Add("contract_State = @contract_State");
-        parameters.Add(new MySqlParameter("@contract_State", contract.State));
+        parameters.Add(new MySqlParameter("@contract_State", contract.State.ToString()));
         updateFields.Add("contract_data = @contract_data");
         parameters.Add(new MySqlParameter("@contract_data", contract.Data.ToString()));
         updateFields.Add("DocumentType_Id = @DocumentType_Id");

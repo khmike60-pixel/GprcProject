@@ -216,6 +216,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             toolStripButtonEdit.Name = "toolStripButtonEdit";
             toolStripButtonEdit.Size = new Size(28, 28);
             toolStripButtonEdit.Text = "Редактировать";
+            toolStripButtonEdit.Click += toolStripButtonEdit_Click;
             // 
             // toolStripButtonDelete
             // 

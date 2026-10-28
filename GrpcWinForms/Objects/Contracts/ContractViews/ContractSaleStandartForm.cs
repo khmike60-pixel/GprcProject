@@ -45,7 +45,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private ContractPresenter presenter;
 
         public Control.ControlCollection ControlCollection { get => this.Controls; }
-        
+
 
         //public bool CurrentMode = false;
 
@@ -135,7 +135,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonEditLine.Enabled = false;
                     toolStripButtonDeleteLine.Enabled = false;
                     toolStripButtonState.Enabled = false;
-                    
+
                     toolStripButtonSetupSpecification.Enabled = false;
                     smartGridLines1.AllowEditing = false;
 
@@ -181,7 +181,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 MessageBox.Show("Ошибка в дополнительных параметрах");
             }
 
-       }
+        }
 
         #endregion
 
@@ -248,7 +248,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 if (MessageBox.Show(String.Join(Environment.NewLine, "Основные данные документа были изменены.",
                     "Записать изменения?"), "", MessageBoxButtons.OKCancel) == DialogResult.OK)
                     buttonOk_Click(sender, e);
-            } else Close();
+            }
+            else Close();
         }
 
         private async void buttonOk_Click(object sender, EventArgs e)
@@ -314,7 +315,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     Contract = contract
                 };
 
-                
+
                 ContractResponse response = new ContractResponse();
                 if (ViewMode == ViewMode.Edit)  // Редактируем запись
                 {
@@ -388,6 +389,34 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             {
                 // Убираем Strikeout, если он был
                 smartGridLines1.Rows[e.Row].Style = baseStyle;
+            }
+        }
+
+        private void smartGridLines1_BeforeEdit(object sender, RowColEventArgs e)
+        {
+            try
+            {
+                Line line = smartGridLines1.Rows[e.Row].DataSource as Line;
+
+                // Получаем базовый шрифт
+                var baseFont = smartGridLines1.Styles.Normal.Font ?? smartGridLines1.Font ?? SystemFonts.DefaultFont;
+
+                if (!Validate(line))
+                    smartGridLines1.Rows[e.Row].Style = cellStyleDeleted;
+                else
+                    // Убираем Strikeout, если он был
+                    smartGridLines1.Rows[e.Row].Style = baseStyle;
+
+                if (!Validate(line))
+                {
+                    smartGridLines1.Rows[e.Row].AllowEditing = false;
+                    MessageBox.Show(string.Join(Environment.NewLine, "Нельзя редактировать удаленную строку"));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Join(Environment.NewLine, "Ошибка при смене стиля", ex.Message));
             }
         }
 
@@ -530,7 +559,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 if (contractResponse.Result.Status == Status.Ok)
                 {
                     contract = contractResponse.Contract;
-                    sumContractControl1.textBoxSumContract.Value= MyConvert.ToDecimal(contract.Sum);
+                    sumContractControl1.textBoxSumContract.Value = MyConvert.ToDecimal(contract.Sum);
 
                     // Уведомляем всех подписчиков об изменении контракта
                     ContractEventService.Instance.RaiseContractChanged(contract, ContractChangeType.Updated);
@@ -546,34 +575,6 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             }
         }
 
-        private void smartGridLines1_BeforeEdit(object sender, RowColEventArgs e)
-        {
-            try
-            {
-                Line line = smartGridLines1.Rows[e.Row].DataSource as Line;
-
-                // Получаем базовый шрифт
-                var baseFont = smartGridLines1.Styles.Normal.Font ?? smartGridLines1.Font ?? SystemFonts.DefaultFont;
-
-                if (!Validate(line))
-                    smartGridLines1.Rows[e.Row].Style = cellStyleDeleted;
-                else
-                    // Убираем Strikeout, если он был
-                    smartGridLines1.Rows[e.Row].Style = baseStyle;
-
-                if (!Validate(line))
-                {
-                    smartGridLines1.Rows[e.Row].AllowEditing = false;
-                    MessageBox.Show(string.Join(Environment.NewLine, "Нельзя редактировать удаленную строку"));
-                }
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Join(Environment.NewLine, "Ошибка при смене стиля", ex.Message));
-            }
-        }
-
         private void smartGridLines1_DoubleClick(object sender, EventArgs e)
         {
             if (ViewMode == ViewMode.View) return;
@@ -583,7 +584,38 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
 
         }
+        #endregion
 
+
+        #region События верхних кнопок
+
+        private void toolStripButtonState_Click(object sender, EventArgs e)
+        {
+            using (StateForm form = new StateForm() { Contract = contract })
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    contract.State = form.Contract.State;
+                    // должен быть обновлен только статус документа. Переписать UpdateContract
+                }
+            }
+        }
+
+        private void toolStripButtonEdit_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        #endregion
+
+
+        #region События нижних кнопок (строк контракта)
+
+        /// <summary>
+        /// Добавить новую строку контракта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void toolStripButtonNewLine_Click(object sender, EventArgs e)
         {
             try
@@ -641,6 +673,11 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             }
         }
 
+        /// <summary>
+        /// Удалить строки контракта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void toolStripButtonDeleteLine_Click(object sender, EventArgs e)
         {
             int row = smartGridLines1.Row;
@@ -740,6 +777,35 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         }
 
         /// <summary>
+        /// Настроить спецификации
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButtonSetupSpecification_Click(object sender, EventArgs e)
+        {
+            using (var setupSpecificationForm = new SetupSpecificationForm())
+            {
+                if (setupSpecificationForm.ShowDialog() == DialogResult.OK)
+                {
+                    var str = setupSpecificationForm.StringJson;
+                    // Handle OK result if needed
+                }
+            }
+        }
+
+        /// <summary>
+        /// Обновить строки контракта
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButtonRefreshLines_Click(object sender, EventArgs e)
+        {
+            RefreshContractFull();
+
+        }
+
+
+        /// <summary>
         /// Валидация строки. Пока реализована тольео смена стиля для удаленных записей
         /// </summary>
         /// <param name="line"></param>
@@ -754,34 +820,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         #endregion
 
-        private void toolStripButtonSetupSpecification_Click(object sender, EventArgs e)
-        {
-            using (var setupSpecificationForm = new SetupSpecificationForm())
-            {
-                if (setupSpecificationForm.ShowDialog() == DialogResult.OK)
-                {
-                    var str = setupSpecificationForm.StringJson;
-                    // Handle OK result if needed
-                }
-            }
-        }
 
-        private void toolStripButtonRefreshLines_Click(object sender, EventArgs e)
-        {
-            RefreshContractFull();
 
-        }
-
-        private void toolStripButtonState_Click(object sender, EventArgs e)
-        {
-            using (StateForm form = new StateForm() { Contract = contract })
-            {
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    contract.State = form.Contract.State;
-                    // должен быть обновлен только статус документа. Переписать UpdateContract
-                }
-            }
-        }
     }
 }

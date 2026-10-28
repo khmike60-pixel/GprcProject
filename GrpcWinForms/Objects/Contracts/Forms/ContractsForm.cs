@@ -623,6 +623,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
         #endregion
 
 
+        #region Технические методы
         /// <summary>
         /// Не используется. Метод формирует Nodes[] с учетом первичного контракта и допсоглашений
         /// </summary>
@@ -729,7 +730,7 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             }
             return null;
         }
-
+        #endregion
     }
 
 }
