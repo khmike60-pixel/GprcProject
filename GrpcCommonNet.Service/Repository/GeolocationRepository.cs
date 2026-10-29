@@ -1,8 +1,10 @@
 ﻿using Google.Protobuf;
 using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Geolocation;
 using GrpcCommonNet.Service.Models;
 using MySql.Data.MySqlClient;
+using System;
 using System.Data;
 using System.Data.Common;
 using System.Text.Json;
@@ -20,7 +22,7 @@ public class GeolocationRepository
         _connectionString = configuration.GetConnectionString("MySql");
     }
 
-    #region Методы получения  данных 
+    #region Методы получения данных геолокации
 
     public async Task<Geolocation?> GetByIdAsync(long id)
     {
@@ -307,6 +309,39 @@ public class GeolocationRepository
 
     #endregion
 
+    #region методы получения Мест хранения
+
+    public async Task<List<GeoPlace>> GetListPlaceAsync(TreePlaceRequest request, UserData userData)
+    {
+        try
+        {
+            List<GeoPlace> nodes = new();
+
+            using var conn = new MySqlConnection(_connectionString);
+            await conn.OpenAsync();
+            using (MySqlCommand cmd = new MySqlCommand("global_db.Places_Get_ByFilter", conn))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("_Name", request.Name??"");
+                cmd.Parameters.AddWithValue("_Place_GeoLocationId", request.GeolocationId);
+                cmd.Parameters.AddWithValue("_OnlyPlacesWithLocation", request.OnlyPlacesWithLocation);
+
+                using var rdr = await cmd.ExecuteReaderAsync();
+                while (await rdr.ReadAsync())
+                    nodes.Add(FillGeoPlace(rdr));
+            }
+
+            return nodes;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Ошибка в CreateGelocationAsync: " + ex.Message);
+        }
+    }
+
+    #endregion
+
     #region  Внутренние методы
     public Geolocation Fill(DbDataReader rdr)
     {
@@ -355,6 +390,24 @@ public class GeolocationRepository
         return geo;
     }
 
+    public GeoPlace FillGeoPlace(DbDataReader rdr)
+    {
+        GeoPlace geo_place = new();
+        geo_place.Id  = Convert.ToInt32(rdr["id"]);
+        geo_place.ParentId = Convert.ToInt32(rdr["id"]);
+        geo_place.Geolocation = new()
+        {
+            Id = Convert.ToInt32(rdr["Place_GeoLocationId"]),
+            Name = rdr["Place_Name"].ToString()
+        };
+        geo_place.Place = new()
+        {
+            Id = Convert.ToInt32(rdr["id"]),
+            Name = rdr["Place_Name"].ToString()
+        };
+
+        return geo_place;
+    }
     #endregion
 
 

@@ -1,6 +1,6 @@
 ﻿using C1.Win.FlexGrid;
 using GrpcCommonNet.Library.Common;
-using GrpcWinForms.Objects.StockDocuments.Repositories;
+//using GrpcWinForms.Objects.StockDocuments.Repositories;
 using SmartLib;
 using System;
 using System.Collections.Generic;

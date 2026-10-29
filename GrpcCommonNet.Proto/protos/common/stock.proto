@@ -4,29 +4,34 @@ option csharp_namespace = "GrpcCommonNet.Library.Common";
 
 import "google/protobuf/timestamp.proto";
 import "protos/common/documenttype.proto";
+import "protos/common/contragent.proto";
+import "protos/common/general.proto";
+import "protos/common/geolocation.proto";
 
 package Common;
 
 message Stock {
-	int id = 1;
+	int32 id = 1;
 	string name = 2;
-	int parent_id = 3;
-	string ids = 4;
-	string names = 5;
+	Common.Place place = 3;
 }
 
-enum StatusOpereation {
+enum StatusOperation {
 	NEW = 0;
 	EXECUTED = 1;
 }
 
 
 message StockOperation {
-	int id = 1;
-	DocumentType document_type = 2;
-	string status = 3;
-	string number = 4;
-	google.protobuf.Timestamp date = 5;
-	StatusOpereation status = 6;
-
+	int32 id = 1;
+	Common.DocumentType document_type = 2;
+	string number = 3;
+	google.protobuf.Timestamp date = 4;
+	StatusOperation status = 5;
+	Common.Contragent contragent_to = 6;
+	Common.Contragent contragent_from = 7;
+	Stock stock_to =8;
+	Stock stock_from = 9;
+	Common.DecimalValue sum_out  = 10;
+	Common.DecimalValue sum_inp = 11;
 }

@@ -15,6 +15,7 @@ using GrpcCommonNet.Library.Department;
 using GrpcCommonNet.Library.Bank;
 using GrpcCommonNet.Library.Employee;
 using GrpcCommonNet.Library.SalePurchaseType;
+using GrpcCommonNet.Library.Stock;
 
 
 namespace GrpcWinForms.GrpcClients
@@ -36,6 +37,7 @@ namespace GrpcWinForms.GrpcClients
         private static BankServices.BankServicesClient _bank;
         private static EmployeeServices.EmployeeServicesClient _employee;
         private static SalePurchaseTypeServices.SalePurchaseTypeServicesClient _salePurchaseType;
+        private static StockServices.StockServicesClient _stock;
 
         public static ApplicationServices.ApplicationServicesClient Application =>
             _application ??= new ApplicationServices.ApplicationServicesClient(MainClass.Invoker);
@@ -65,6 +67,8 @@ namespace GrpcWinForms.GrpcClients
             _employee ??= new EmployeeServices.EmployeeServicesClient(MainClass.Invoker);
         public static SalePurchaseTypeServices.SalePurchaseTypeServicesClient SalePurchaseType =>
             _salePurchaseType ??= new SalePurchaseTypeServices.SalePurchaseTypeServicesClient(MainClass.Invoker);
+        public static StockServices.StockServicesClient Stock =>
+            _stock ??= new StockServices.StockServicesClient(MainClass.Invoker);
 
 
         public static AuthServices.AuthServicesClient Auth =>

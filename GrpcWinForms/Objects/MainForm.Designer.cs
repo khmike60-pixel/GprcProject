@@ -34,7 +34,7 @@ namespace GrpcWinForms.Forms
             StockMovToolStripMenuItem = new ToolStripMenuItem();
             StockMovementsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem7 = new ToolStripSeparator();
-            ñêëàäûToolStripMenuItem = new ToolStripMenuItem();
+            StocksToolStripMenuItem = new ToolStripMenuItem();
             MainDictionariesToolStripMenuItem = new ToolStripMenuItem();
             êîíòğàãåíòûToolStripMenuItem = new ToolStripMenuItem();
             ContragentsToolStripMenuItem = new ToolStripMenuItem();
@@ -205,7 +205,7 @@ namespace GrpcWinForms.Forms
             // 
             // StockMovToolStripMenuItem
             // 
-            StockMovToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { StockMovementsToolStripMenuItem, toolStripMenuItem7, ñêëàäûToolStripMenuItem });
+            StockMovToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { StockMovementsToolStripMenuItem, toolStripMenuItem7, StocksToolStripMenuItem });
             StockMovToolStripMenuItem.Name = "StockMovToolStripMenuItem";
             StockMovToolStripMenuItem.Size = new Size(196, 22);
             StockMovToolStripMenuItem.Text = "Ñêëàäñêèå  äâèæåíèÿ";
@@ -221,11 +221,12 @@ namespace GrpcWinForms.Forms
             toolStripMenuItem7.Name = "toolStripMenuItem7";
             toolStripMenuItem7.Size = new Size(186, 6);
             // 
-            // ñêëàäûToolStripMenuItem
+            // StocksToolStripMenuItem
             // 
-            ñêëàäûToolStripMenuItem.Name = "ñêëàäûToolStripMenuItem";
-            ñêëàäûToolStripMenuItem.Size = new Size(189, 22);
-            ñêëàäûToolStripMenuItem.Text = "Ñêëàäû";
+            StocksToolStripMenuItem.Name = "StocksToolStripMenuItem";
+            StocksToolStripMenuItem.Size = new Size(189, 22);
+            StocksToolStripMenuItem.Text = "Ñêëàäû";
+            StocksToolStripMenuItem.Click += StocksToolStripMenuItem_Click;
             // 
             // MainDictionariesToolStripMenuItem
             // 
@@ -580,7 +581,7 @@ namespace GrpcWinForms.Forms
         private ToolStripMenuItem StockMovToolStripMenuItem;
         private ToolStripMenuItem StockMovementsToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem7;
-        private ToolStripMenuItem ñêëàäûToolStripMenuItem;
+        private ToolStripMenuItem StocksToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem8;
         private ToolStripMenuItem ContractTypesToolStripMenuItem;
         private ToolStripMenuItem ContractTempatesToolStripMenuItem;

@@ -123,13 +123,23 @@ message PlaceResponse {
 	Common.Result Result = 2;
 }
 
+
+message GeoPlace {
+	int32 id = 1;
+	int32 parent_id = 2;
+	Common.Place place = 3;
+	Common.Geolocation geolocation = 4;
+}
+
 message TreePlaceRequest {
-	int32  id =  1;
-	google.protobuf.FieldMask field_mask = 2;
+	string name = 1;
+	int32  geolocation_id =  2;
+	bool only_places_with_location = 3;
+	google.protobuf.FieldMask field_mask = 4;
 }
 
 message TreePlaceResponse {
-	repeated Common.Place places = 1;
+	repeated GeoPlace tree_places = 1;
 	Common.Result Result = 2;
 }
 

@@ -129,4 +129,40 @@ public class GeolocationServiceImpl : GeolocationServices.GeolocationServicesBas
 
     #endregion
 
+    #region Методы  работы с местами хранения
+    public override async Task<TreePlaceResponse> GetTreePlace(TreePlaceRequest request, ServerCallContext context)
+    {
+        UserData userData = new UserData().GetUserData(context);
+        _logger.LogDebug($"GetTreeGeo called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+        try
+        {
+            TreePlaceResponse response = new();
+            List<GeoPlace> geo_place = await _repo.GetListPlaceAsync(request, userData);
+            if (geo_place == null) return new TreePlaceResponse { Result = new Result { Status = Status.NotFound } };
+
+            if (request.FieldMask != null && request.FieldMask.Paths.Count > 0)
+            {
+                foreach (var item in geo_place)
+                {
+                    GeoPlace maskedGeo = new();
+                    request.FieldMask.Merge(item, maskedGeo);
+                    response.TreePlaces.Add(maskedGeo);
+                }
+            }
+            else
+                response.TreePlaces.AddRange(geo_place);
+            response.Result = new Result { Status = Status.Ok };
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return new TreePlaceResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+        }
+    }
+
+    #endregion
+
 }

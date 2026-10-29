@@ -23,6 +23,7 @@ using GrpcWinForms.Objects.SalePurchaseTypes.Forms;
 using GrpcWinForms.Objects.Departaments.Forms;
 using GrpcWinForms.Objects.Units.Forms;
 using GrpcWinForms.Objects.StockDocuments.Views;
+using GrpcWinForms.Objects.Stocks.Views;
 
 namespace GrpcWinForms.Forms
 {
@@ -280,6 +281,17 @@ namespace GrpcWinForms.Forms
             }
             var f = new StockDocumentsForm { MdiParent = this };
             f.Show();
+        }
+
+        private void StocksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is StocksForm) { child.Activate(); return; }
+            }
+            var f = new StocksForm { MdiParent = this };
+            f.Show();
+
         }
     }
 }
