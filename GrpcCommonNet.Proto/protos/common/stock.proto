@@ -1,0 +1,32 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "google/protobuf/timestamp.proto";
+import "protos/common/documenttype.proto";
+
+package Common;
+
+message Stock {
+	int id = 1;
+	string name = 2;
+	int parent_id = 3;
+	string ids = 4;
+	string names = 5;
+}
+
+enum StatusOpereation {
+	NEW = 0;
+	EXECUTED = 1;
+}
+
+
+message StockOperation {
+	int id = 1;
+	DocumentType document_type = 2;
+	string status = 3;
+	string number = 4;
+	google.protobuf.Timestamp date = 5;
+	StatusOpereation status = 6;
+
+}
