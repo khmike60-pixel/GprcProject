@@ -319,17 +319,28 @@ public class GeolocationRepository
 
             using var conn = new MySqlConnection(_connectionString);
             await conn.OpenAsync();
-            using (MySqlCommand cmd = new MySqlCommand("global_db.Places_Get_ByFilter", conn))
+            using (var cmd = conn.CreateCommand())
             {
-                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = $@"
+                select p.* from global_db.places p
+                where 1 = 1
+                    and FIND_IN_SET(@PlaceId,p.Place_Ids)
+                order by p.place_names;
+                ";
 
-                cmd.Parameters.AddWithValue("_Name", request.Name??"");
-                cmd.Parameters.AddWithValue("_Place_GeoLocationId", request.GeolocationId);
-                cmd.Parameters.AddWithValue("_OnlyPlacesWithLocation", request.OnlyPlacesWithLocation);
+                cmd.Parameters.AddWithValue("@PlaceId", request.Id);
 
                 using var rdr = await cmd.ExecuteReaderAsync();
                 while (await rdr.ReadAsync())
-                    nodes.Add(FillGeoPlace(rdr));
+                {
+                    GeoPlace geoplace = new();
+                    if (request.FieldMask != null && request.FieldMask.Paths.Count != 0)
+                    {
+                        request.FieldMask.Merge(FillGeoPlace(rdr), geoplace);
+                    }
+                    else geoplace = FillGeoPlace(rdr);
+                    nodes.Add(geoplace);
+                }
             }
 
             return nodes;
@@ -393,17 +404,16 @@ public class GeolocationRepository
     public GeoPlace FillGeoPlace(DbDataReader rdr)
     {
         GeoPlace geo_place = new();
-        geo_place.Id  = Convert.ToInt32(rdr["id"]);
-        geo_place.ParentId = Convert.ToInt32(rdr["id"]);
-        geo_place.Geolocation = new()
-        {
-            Id = Convert.ToInt32(rdr["Place_GeoLocationId"]),
-            Name = rdr["Place_Name"].ToString()
-        };
+        geo_place.Id  = rdr["Place_Id"] == DBNull.Value? 0: Convert.ToInt32(rdr["Place_Id"]);
+        geo_place.ParentId = rdr["Place_Parentid"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["Place_Parentid"]);
         geo_place.Place = new()
         {
-            Id = Convert.ToInt32(rdr["id"]),
+            Id = rdr["Place_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["Place_Id"]),
             Name = rdr["Place_Name"].ToString()
+        };
+        geo_place.Geolocation = new()
+        {
+            Id = rdr["Place_GeoLocationId"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["Place_GeoLocationId"]),
         };
 
         return geo_place;

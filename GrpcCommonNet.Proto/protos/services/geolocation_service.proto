@@ -133,8 +133,8 @@ message GeoPlace {
 
 message TreePlaceRequest {
 	string name = 1;
-	int32  geolocation_id =  2;
-	bool only_places_with_location = 3;
+	int32 id = 2;
+	int32 geolocation_id =  3;
 	google.protobuf.FieldMask field_mask = 4;
 }
 

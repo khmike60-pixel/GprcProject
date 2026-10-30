@@ -119,6 +119,7 @@
             gridPlaces.SortingType = SmartLib.SortingType.Descending;
             gridPlaces.StyleInfo = resources.GetString("gridPlaces.StyleInfo");
             gridPlaces.TabIndex = 3;
+            gridPlaces.Tree.Column = 2;
             // 
             // toolStripRates
             // 
@@ -152,7 +153,6 @@
             // tsbEditPlace
             // 
             tsbEditPlace.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            tsbEditPlace.Enabled = false;
             tsbEditPlace.Image = Properties.Resources.icons8_редактирование_файла_50;
             tsbEditPlace.ImageTransparentColor = Color.Magenta;
             tsbEditPlace.Name = "tsbEditPlace";
@@ -176,6 +176,7 @@
             tsbRefreshPlace.Name = "tsbRefreshPlace";
             tsbRefreshPlace.Size = new Size(89, 28);
             tsbRefreshPlace.Text = "Обновить";
+            tsbRefreshPlace.Click += tsbRefreshPlace_Click;
             // 
             // toolStripSeparator1
             // 
@@ -219,6 +220,8 @@
             gridStocks.SortingType = SmartLib.SortingType.Descending;
             gridStocks.StyleInfo = resources.GetString("gridStocks.StyleInfo");
             gridStocks.TabIndex = 5;
+            gridStocks.AfterSelChange += gridStocks_AfterSelChange;
+            gridStocks.GetUnboundValue += gridStocks_GetUnboundValue;
             // 
             // toolStripCurrencies
             // 
@@ -238,6 +241,7 @@
             tsbNewStock.Name = "tsbNewStock";
             tsbNewStock.Size = new Size(28, 28);
             tsbNewStock.Text = "Новый";
+            tsbNewStock.Click += tsbNewStock_Click;
             // 
             // tsbDoubleStock
             // 
@@ -257,6 +261,7 @@
             tsbEditStock.Name = "tsbEditStock";
             tsbEditStock.Size = new Size(28, 28);
             tsbEditStock.Text = "Редактировать";
+            tsbEditStock.Click += tsbEditStock_Click;
             // 
             // tsbDeleteStock
             // 
@@ -266,6 +271,7 @@
             tsbDeleteStock.Name = "tsbDeleteStock";
             tsbDeleteStock.Size = new Size(28, 28);
             tsbDeleteStock.Text = "Удалить";
+            tsbDeleteStock.Click += tsbDeleteStock_Click;
             // 
             // tsbRefreshStock
             // 
@@ -275,6 +281,7 @@
             tsbRefreshStock.Name = "tsbRefreshStock";
             tsbRefreshStock.Size = new Size(89, 28);
             tsbRefreshStock.Text = "Обновить";
+            tsbRefreshStock.Click += tsbRefreshStock_Click;
             // 
             // toolStripSeparator2
             // 

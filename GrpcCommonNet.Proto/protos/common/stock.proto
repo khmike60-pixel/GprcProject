@@ -14,6 +14,7 @@ message Stock {
 	int32 id = 1;
 	string name = 2;
 	Common.Place place = 3;
+	Common.Geolocation geolocation = 4;
 }
 
 enum StatusOperation {

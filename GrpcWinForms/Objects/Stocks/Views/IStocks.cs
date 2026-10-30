@@ -1,5 +1,6 @@
 ﻿using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Geolocation;
+using GrpcWinForms.Objects.Stocks.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +14,7 @@ namespace GrpcWinForms.Objects.Stocks.Views
     {
         #region Общие свойства и объекты
         BindingList<Stock> Stocks { get; set; }         // Склады
-        BindingList<GeoPlace> GeoPlaces { get; set; }   // Места  хранения
+        List<TreePlace> Places { get; set; }            // Места  хранения (дерево)
 
         int RowStock { get; set; }                      // Строка позиционирования в гриде складов
         int RowPlace { get; set; }                      // Строка позиционирования в гриде мест храненния
