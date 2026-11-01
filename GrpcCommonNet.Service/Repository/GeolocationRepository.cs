@@ -324,7 +324,7 @@ public class GeolocationRepository
                 cmd.CommandText = $@"
                 select p.* from global_db.places p
                 where 1 = 1
-                    and FIND_IN_SET(@PlaceId,p.Place_Ids)
+                    and (ifnull(@PlaceId,0) = 0 or FIND_IN_SET(@PlaceId,p.Place_Ids))
                 order by p.place_names;
                 ";
 

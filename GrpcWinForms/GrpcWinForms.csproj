@@ -31,6 +31,7 @@
     <PackageReference Include="C1.Win.Input" Version="8.0.20251.708" />
     <PackageReference Include="C1.Win.Input.MultiColumnCombo" Version="8.0.20251.708" />
     <PackageReference Include="C1.Win.SplitContainer" Version="8.0.20251.708" />
+    <PackageReference Include="C1.Win.TreeView" Version="8.0.20251.708" />
     <PackageReference Include="Grpc.Net.Client" Version="2.76.0" />
     <PackageReference Include="Google.Protobuf" Version="3.33.2" />
     <PackageReference Include="Grpc.Core.Api" Version="2.76.0" />
@@ -75,7 +76,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Objects\Geolocations\GeoForms\" />
-    <Folder Include="Objects\StockDocuments\Presenters\" />
-    <Folder Include="Objects\StockDocuments\Presenters\" />
   </ItemGroup>
 </Project>

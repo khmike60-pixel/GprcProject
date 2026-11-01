@@ -1,16 +1,20 @@
 ﻿using C1.Win.FlexGrid;
 using C1.Win.Input;
 using C1.Win.Input.MultiColumnCombo;
+using C1.Win.TreeView;
 using Google.Protobuf.WellKnownTypes;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Contract;
 using GrpcCommonNet.Library.Contragent;
 using GrpcCommonNet.Library.Currency;
 using GrpcCommonNet.Library.Department;
+using GrpcCommonNet.Library.Geolocation;
 using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.Controls.CompanyDropDown;
 using GrpcWinForms.Controls.PeriodControl;
+using GrpcWinForms.Controls.TreeBox;
 using GrpcWinForms.Controls.SmartBox;
+using GrpcWinForms.Controls.TreeBox;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Contracts.Forms;
 using GrpcWinForms.Objects.Contracts.Models;
@@ -18,7 +22,7 @@ using GrpcWinForms.Objects.Contragents.Forms;
 using GrpcWinForms.Objects.Currencies.Views;
 using GrpcWinForms.Objects.Departaments;
 using GrpcWinForms.Objects.Departaments.Forms;
-using SmartLib;
+using GrpcWinForms.Objects.Stocks.Repositories;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,66 +39,75 @@ namespace GrpcWinForms.Objects.Test
 {
     public partial class TestLookup : Form
     {
+        private C1TreeView tree = new C1TreeView();
+        private StocksReposirory _reposirory;
+        private List<GeoPlace> geoplaces = new();
+
 
         public TestLookup()
         {
             InitializeComponent();
-
+            _reposirory = new StocksReposirory();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e) // Cancel
         {
             MessageBox.Show(string.Join(Environment.NewLine,
-                $"Валюта smartBoxCurrency  : Id = {smartBoxCurrency.SelectedItemBox.Id}, Name = {smartBoxCurrency.SelectedItemBox.Name}",
-                $"Отдел  smartBoxDepartment: Id = {smartBoxDepartment.SelectedItemBox.Id}, Name = {smartBoxDepartment.SelectedItemBox.Name}",
-                $"Компания  companyDropDowm: Id = {companyDropDown.SelectedCompany.Id}, Name = {companyDropDown.SelectedCompany.Name}"
+                $"Склад : Id = {places.SelectedNode.Id}, Name = {places.SelectedNode.Name}"
                 ));
         }
 
         private async void TestLookup_Load(object sender, EventArgs e)
         {
-            // ---- Выбор валюты 
-                    // Читаем данные для smartBoxCurrency
-            ListCurrencyRequest request = new ListCurrencyRequest()
+            try
             {
-                IncludeInvisible = false,
-            };
-            request.FieldMask = new FieldMask() { Paths = { "id", "abbrev" } };
-            ListCurrencyResponse response = await GrpcRetry.CallAsync(() =>
-                GrpcClients.GrpcClients.Currency.GetListCurrencyAsync(request).ResponseAsync);
-                    // Передаем данные в smartBoxCurrency
-            Currency curr = new Currency() { Id = 31, Name = "UZS" };
-            smartBoxCurrency.DataSourceList(response.Currencies, "Abbrev");
-            smartBoxCurrency.SetSelectedItemBox(curr, "Id");
-            smartBoxCurrency.AutoSuggestMode = AutoSuggestMode.StartsWith;
-            smartBoxCurrency.SetModalForm(new CurrenciesForm() { DialogMode = true });
 
-            // ---- Выбор департамента 
-                    // Читаем данные для smartBoxDepartment
-            ListDepartmentRequest requstDep = new ListDepartmentRequest()
-            { FieldMask = new FieldMask() { Paths = { "id", "symbol" } } };
-            ListDepartmentResponse responseDep = await GrpcRetry.CallAsync(() =>
-                GrpcClients.GrpcClients.Department.GetListDepartmentAsync(requstDep).ResponseAsync);
-                    // Передаем данные в smartBoxDepartment
-            Department dep = new Department() { };
-            smartBoxDepartment.DataSourceList(responseDep.Departments, "symbol");
-            smartBoxDepartment.SetSelectedItemBox(dep, "Id");
-            smartBoxDepartment.AutoSuggestMode = AutoSuggestMode.StartsWith;
-            smartBoxDepartment.SetModalForm(new DepartamentsForm() { DialogMode = true });
+                Stock stock = new Stock()
+                {
+                    Id = 2,
+                    Name = "Центральный офис",
+                    Place = new Place
+                    {
+                        Id = 77,
+                        Name = "Кичик Бешагач 86 (Центральный офис)"
+                    }
+                };
+
+                StocksReposirory reposirory = new StocksReposirory();
+                geoplaces = await StocksReposirory.GetGeoPlacesAsync(new Stock());
 
 
-            // ---- Выбор Контрагента
-            companyDropDown.GetDataSourceFunc = LoadCompanies;
-            //companyDropDown.Value = 4676;
-            companyDropDown.Text = "MICROS UCD";
+                List<TreeItem> items = new List<TreeItem>();
+                foreach (GeoPlace g_place in geoplaces)
+                {
+                    items.Add(
+                        new TreeItem()
+                        {
+                            Id = g_place.Id,
+                            ParentId = g_place.ParentId,
+                            Name = g_place.Place.Name
+                        }
+                    );
+
+                }
+                TreeItem treeItem = new TreeItem() { Id =  3, ParentId =  0, Name = "А. Каххара склад" };
+                BindingInfo building = places.BuildTree(items);
+                places.InitialNode  = items.FirstOrDefault(x => x.Id == treeItem.Id);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
 
         }
 
         private BindingList<Company> LoadCompanies(string name)
         {
-            SearchRequest searchRequest = new() 
-            { 
-                Search = name, Paging = new() { PageNumber = 1, PageSize = 10 } ,
+            SearchRequest searchRequest = new()
+            {
+                Search = name,
+                Paging = new() { PageNumber = 1, PageSize = 10 },
                 FieldMask = new() { Paths = { "id", "name", "taxno" } }
             };
 
@@ -113,13 +126,20 @@ namespace GrpcWinForms.Objects.Test
             }
             return _companies;
         }
-       
+               
     }
 
     public class CurrencyItemBox : IItemBox
     {
         public int Id { get; set; }
         public string Name { get; set ; }
+    }
+
+    public class TreeItem : ITreeData
+    {
+        public int Id { get ; set; }
+        public int ParentId { get; set; }
+        public string Name { get; set; }
     }
 
 }

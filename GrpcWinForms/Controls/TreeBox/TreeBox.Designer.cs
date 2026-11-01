@@ -1,6 +1,8 @@
-﻿namespace GrpcWinForms.Controls.PlaceDropDownControl
+﻿using C1.Win.Input;
+
+namespace GrpcWinForms.Controls.TreeBox
 {
-    partial class PlaceDropDown
+    partial class TreeBox: C1DropDownControl
     {
         /// <summary>
         /// Обязательная переменная конструктора.

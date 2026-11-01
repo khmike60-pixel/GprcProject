@@ -1,4 +1,5 @@
 ﻿using GrpcCommonNet.Library.Common;
+using GrpcWinForms.Controls.TreeBox;
 using SmartLib;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,13 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
         PeriodBox Period { get; set; }
         Contragent ContragentTo {  get; set; }
         Contragent ContragentFrom { get; set; }
-        Stock Stock {  get; set; }
+        Stock StockTo { get; set; }
+        Stock StockFrom { get; set; }
         DocumentType Type { get; set; }
         string Number { get; set; }
+        Place PlaceTo { get; set; }
+        Place PlaceFrom { get; set; }
+
         #endregion
 
         #region Методы

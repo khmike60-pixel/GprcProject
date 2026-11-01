@@ -33,7 +33,24 @@ namespace GrpcWinForms.Objects.Stocks.Repositories
         {
             try
             {
-                TreePlaceRequest request = new TreePlaceRequest() { Id = stock.Place.Id};
+                TreePlaceRequest request = new TreePlaceRequest() { Id = stock == null || stock.Place == null ? 0: stock.Place.Id};
+                TreePlaceResponse response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Geolocation.GetTreePlaceAsync(request).ResponseAsync);
+                if (response.Result.Status == Status.Ok) return new List<GeoPlace>(response.TreePlaces);
+                else return new List<GeoPlace>();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Ошибка при получении списка мест хранения: {ex.Message}", ex);
+            }
+
+        }
+
+        public static async Task<List<GeoPlace>> GetGeoPlacesAsync(Place place)
+        {
+            try
+            {
+                TreePlaceRequest request = new TreePlaceRequest() { Id = place.Id };
                 TreePlaceResponse response = await GrpcRetry.CallAsync(() =>
                     GrpcClients.GrpcClients.Geolocation.GetTreePlaceAsync(request).ResponseAsync);
                 if (response.Result.Status == Status.Ok) return new List<GeoPlace>(response.TreePlaces);
