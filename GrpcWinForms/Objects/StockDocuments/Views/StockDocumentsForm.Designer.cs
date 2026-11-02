@@ -34,17 +34,23 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StockDocumentsForm));
             C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition3 = new C1.Win.FlexGrid.AggregateDefinition();
             SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
             SmartLib.StringItem stringItem2 = new SmartLib.StringItem();
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition3 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition4 = new C1.Win.FlexGrid.AggregateDefinition();
+            SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
             GrpcCommonNet.Library.Common.Contragent contragent1 = new GrpcCommonNet.Library.Common.Contragent();
             GrpcCommonNet.Library.Common.Contragent contragent2 = new GrpcCommonNet.Library.Common.Contragent();
             panel2 = new Panel();
             c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
+            c1SplitterPanel2 = new C1.Win.SplitContainer.C1SplitterPanel();
+            smartGrid1 = new SmartLib.SmartGrid(components);
+            toolStrip2 = new ToolStrip();
             c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
             gridStockOperation = new SmartLib.SmartGrid(components);
-            c1SplitterPanel2 = new C1.Win.SplitContainer.C1SplitterPanel();
             toolStrip1 = new ToolStrip();
             NewToolStripButton = new ToolStripButton();
             DoubleToolStripButton = new ToolStripButton();
@@ -59,7 +65,6 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             tbPlaceFrom = new TreeBox(components);
             c1TextBox1 = new C1.Win.Input.C1TextBox();
             lNumber = new C1.Win.Input.C1Label();
-            sbType = new SmartLib.Base.SmartBox.SmartBox(components);
             lType = new C1.Win.Input.C1Label();
             cddContragentFrom = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             lContragentFrom = new C1.Win.Input.C1Label();
@@ -68,9 +73,12 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             cddContragentTo = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             periodBox = new SmartLib.PeriodBox(components);
             c1Label1 = new C1.Win.Input.C1Label();
+            c1CommandHolder1 = new C1.Win.Command.C1CommandHolder();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
             c1SplitContainer1.SuspendLayout();
+            c1SplitterPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).BeginInit();
             c1SplitterPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridStockOperation).BeginInit();
             toolStrip1.SuspendLayout();
@@ -81,7 +89,6 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             ((System.ComponentModel.ISupportInitialize)tbPlaceFrom).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1TextBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lNumber).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)sbType).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lType).BeginInit();
             ((System.ComponentModel.ISupportInitialize)cddContragentFrom).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lContragentFrom).BeginInit();
@@ -89,6 +96,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             ((System.ComponentModel.ISupportInitialize)cddContragentTo).BeginInit();
             ((System.ComponentModel.ISupportInitialize)periodBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1Label1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)c1CommandHolder1).BeginInit();
             SuspendLayout();
             // 
             // panel2
@@ -98,7 +106,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 104);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1030, 399);
+            panel2.Size = new Size(1101, 632);
             panel2.TabIndex = 3;
             // 
             // c1SplitContainer1
@@ -110,17 +118,71 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             c1SplitContainer1.Name = "c1SplitContainer1";
             c1SplitContainer1.Panels.Add(c1SplitterPanel2);
             c1SplitContainer1.Panels.Add(c1SplitterPanel1);
-            c1SplitContainer1.Size = new Size(1030, 368);
+            c1SplitContainer1.Size = new Size(1101, 601);
             c1SplitContainer1.TabIndex = 4;
+            // 
+            // c1SplitterPanel2
+            // 
+            c1SplitterPanel2.Collapsible = true;
+            c1SplitterPanel2.Controls.Add(smartGrid1);
+            c1SplitterPanel2.Controls.Add(toolStrip2);
+            c1SplitterPanel2.Dock = C1.Win.SplitContainer.PanelDockStyle.Bottom;
+            c1SplitterPanel2.Height = 298;
+            c1SplitterPanel2.Location = new Point(0, 331);
+            c1SplitterPanel2.Name = "c1SplitterPanel2";
+            c1SplitterPanel2.Size = new Size(1101, 270);
+            c1SplitterPanel2.TabIndex = 1;
+            c1SplitterPanel2.Text = "Товары";
+            // 
+            // smartGrid1
+            // 
+            smartGrid1.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            smartGrid1.AllowNodeMove = false;
+            smartGrid1.AutoGenerateColumns = false;
+            smartGrid1.ColumnInfo = resources.GetString("smartGrid1.ColumnInfo");
+            smartGrid1.Dock = DockStyle.Fill;
+            smartGrid1.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 2;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            smartGrid1.Footers.Descriptions.Add(footerDescription1);
+            smartGrid1.Footers.Fixed = true;
+            stringItem1.Name = "Head1";
+            stringItem1.Value = "....; Наименование; ИКПУ; Ед.изм.; Кол-во; Цена; Сумма; НДС; НДС; Сумма с НДС;";
+            stringItem2.Name = "Head2";
+            stringItem2.Value = "....; Наименование; ИКПУ; Ед.изм.; Кол-во; Цена; Сумма; %; Сумма; Сумма с НДС;";
+            smartGrid1.Headers.Add(stringItem1);
+            smartGrid1.Headers.Add(stringItem2);
+            smartGrid1.IdName = null;
+            smartGrid1.Location = new Point(0, 25);
+            smartGrid1.Name = "smartGrid1";
+            smartGrid1.Rows.Count = 5;
+            smartGrid1.Rows.Fixed = 2;
+            smartGrid1.SelectedRows = (List<int>)resources.GetObject("smartGrid1.SelectedRows");
+            smartGrid1.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            smartGrid1.Size = new Size(1101, 245);
+            smartGrid1.SortingType = SmartLib.SortingType.Descending;
+            smartGrid1.StyleInfo = resources.GetString("smartGrid1.StyleInfo");
+            smartGrid1.TabIndex = 1;
+            // 
+            // toolStrip2
+            // 
+            toolStrip2.Location = new Point(0, 0);
+            toolStrip2.Name = "toolStrip2";
+            toolStrip2.Size = new Size(1101, 25);
+            toolStrip2.TabIndex = 0;
+            toolStrip2.Text = "toolStrip2";
             // 
             // c1SplitterPanel1
             // 
             c1SplitterPanel1.Controls.Add(gridStockOperation);
             c1SplitterPanel1.Dock = C1.Win.SplitContainer.PanelDockStyle.Bottom;
-            c1SplitterPanel1.Height = 182;
+            c1SplitterPanel1.Height = 299;
             c1SplitterPanel1.Location = new Point(0, 21);
             c1SplitterPanel1.Name = "c1SplitterPanel1";
-            c1SplitterPanel1.Size = new Size(1030, 161);
+            c1SplitterPanel1.Size = new Size(1101, 278);
             c1SplitterPanel1.TabIndex = 0;
             c1SplitterPanel1.Text = "Складские документы";
             // 
@@ -134,24 +196,24 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             gridStockOperation.ColumnInfo = resources.GetString("gridStockOperation.ColumnInfo");
             gridStockOperation.Dock = DockStyle.Fill;
             gridStockOperation.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 3;
-            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
-            aggregateDefinition2.Column = 10;
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition2.Caption = "Всего: ";
+            aggregateDefinition2.Column = 3;
             aggregateDefinition3.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
-            aggregateDefinition3.Column = 11;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            footerDescription1.Aggregates.Add(aggregateDefinition2);
-            footerDescription1.Aggregates.Add(aggregateDefinition3);
-            gridStockOperation.Footers.Descriptions.Add(footerDescription1);
+            aggregateDefinition3.Column = 10;
+            aggregateDefinition4.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
+            aggregateDefinition4.Column = 11;
+            footerDescription2.Aggregates.Add(aggregateDefinition2);
+            footerDescription2.Aggregates.Add(aggregateDefinition3);
+            footerDescription2.Aggregates.Add(aggregateDefinition4);
+            gridStockOperation.Footers.Descriptions.Add(footerDescription2);
             gridStockOperation.Footers.Fixed = true;
-            stringItem1.Name = "Head2";
-            stringItem1.Value = "...;Id;Статус;Номер;Дата;Тип;Грузоотправитель;Грузоотправитель;Грузополучатель;Грузополучатель;Сумма по документу;Сумма по документу;";
-            stringItem2.Name = "Head1";
-            stringItem2.Value = "...;Id;Статус;Номер;Дата;Тип;Контрагент;Склад;Контрагент;Склад;Приход;Расход;";
-            gridStockOperation.Headers.Add(stringItem1);
-            gridStockOperation.Headers.Add(stringItem2);
+            stringItem3.Name = "Head2";
+            stringItem3.Value = "...;Id;Статус;Номер;Дата;Тип;Грузоотправитель;Грузоотправитель;Грузополучатель;Грузополучатель;Сумма по документу;Сумма по документу;";
+            stringItem4.Name = "Head1";
+            stringItem4.Value = "...;Id;Статус;Номер;Дата;Тип;Контрагент;Склад;Контрагент;Склад;Приход;Расход;";
+            gridStockOperation.Headers.Add(stringItem3);
+            gridStockOperation.Headers.Add(stringItem4);
             gridStockOperation.IdName = null;
             gridStockOperation.Location = new Point(0, 0);
             gridStockOperation.Name = "gridStockOperation";
@@ -159,21 +221,10 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             gridStockOperation.Rows.Fixed = 2;
             gridStockOperation.SelectedRows = (List<int>)resources.GetObject("gridStockOperation.SelectedRows");
             gridStockOperation.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            gridStockOperation.Size = new Size(1030, 161);
+            gridStockOperation.Size = new Size(1101, 278);
             gridStockOperation.SortingType = SmartLib.SortingType.Descending;
             gridStockOperation.StyleInfo = resources.GetString("gridStockOperation.StyleInfo");
             gridStockOperation.TabIndex = 3;
-            // 
-            // c1SplitterPanel2
-            // 
-            c1SplitterPanel2.Collapsible = true;
-            c1SplitterPanel2.Dock = C1.Win.SplitContainer.PanelDockStyle.Bottom;
-            c1SplitterPanel2.Height = 182;
-            c1SplitterPanel2.Location = new Point(0, 214);
-            c1SplitterPanel2.Name = "c1SplitterPanel2";
-            c1SplitterPanel2.Size = new Size(1030, 154);
-            c1SplitterPanel2.TabIndex = 1;
-            c1SplitterPanel2.Text = "Товары";
             // 
             // toolStrip1
             // 
@@ -181,7 +232,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             toolStrip1.Items.AddRange(new ToolStripItem[] { NewToolStripButton, DoubleToolStripButton, EditToolStripButton, DeleteToolStripButton, RefreshToolStripButton, toolStripSeparator1 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1030, 31);
+            toolStrip1.Size = new Size(1101, 31);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -244,7 +295,6 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             panel1.Controls.Add(tbPlaceFrom);
             panel1.Controls.Add(c1TextBox1);
             panel1.Controls.Add(lNumber);
-            panel1.Controls.Add(sbType);
             panel1.Controls.Add(lType);
             panel1.Controls.Add(cddContragentFrom);
             panel1.Controls.Add(lContragentFrom);
@@ -256,7 +306,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1030, 104);
+            panel1.Size = new Size(1101, 104);
             panel1.TabIndex = 2;
             // 
             // tbType
@@ -312,16 +362,6 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             lNumber.Size = new Size(79, 21);
             lNumber.TabIndex = 7;
             lNumber.Text = "Номер док.:";
-            // 
-            // sbType
-            // 
-            sbType.ButtonsSettings.ModalButton.Visible = true;
-            sbType.Location = new Point(911, 70);
-            sbType.Name = "sbType";
-            sbType.Placeholder = "Тип  документа";
-            sbType.Size = new Size(160, 23);
-            sbType.TabIndex = 14;
-            sbType.Value = "";
             // 
             // lType
             // 
@@ -413,7 +453,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             periodBox.Name = "periodBox";
             periodBox.Period.From = new DateTime(2026, 1, 1, 0, 0, 0, 0);
             periodBox.Period.To = new DateTime(2026, 12, 31, 23, 59, 59, 0);
-            periodBox.TabIndex = 2;
+            periodBox.TabIndex = 16;
             // 
             // c1Label1
             // 
@@ -424,11 +464,15 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             c1Label1.TabIndex = 1;
             c1Label1.Text = "Период:";
             // 
+            // c1CommandHolder1
+            // 
+            c1CommandHolder1.Owner = this;
+            // 
             // StockDocumentsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1030, 503);
+            ClientSize = new Size(1101, 736);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "StockDocumentsForm";
@@ -438,6 +482,9 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
             c1SplitContainer1.ResumeLayout(false);
+            c1SplitterPanel2.ResumeLayout(false);
+            c1SplitterPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)smartGrid1).EndInit();
             c1SplitterPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)gridStockOperation).EndInit();
             toolStrip1.ResumeLayout(false);
@@ -450,7 +497,6 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             ((System.ComponentModel.ISupportInitialize)tbPlaceFrom).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1TextBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)lNumber).EndInit();
-            ((System.ComponentModel.ISupportInitialize)sbType).EndInit();
             ((System.ComponentModel.ISupportInitialize)lType).EndInit();
             ((System.ComponentModel.ISupportInitialize)cddContragentFrom).EndInit();
             ((System.ComponentModel.ISupportInitialize)lContragentFrom).EndInit();
@@ -458,6 +504,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             ((System.ComponentModel.ISupportInitialize)cddContragentTo).EndInit();
             ((System.ComponentModel.ISupportInitialize)periodBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1Label1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)c1CommandHolder1).EndInit();
             ResumeLayout(false);
         }
 
@@ -480,7 +527,6 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
         private Contragents.Components.CompanyDropDown cddContragentTo;
         private Contragents.Components.CompanyDropDown cddContragentFrom;
         private C1.Win.Input.C1Label lContragentFrom;
-        private SmartLib.Base.SmartBox.SmartBox sbType;
         private C1.Win.Input.C1Label lType;
         private C1.Win.Input.C1TextBox c1TextBox1;
         private C1.Win.Input.C1Label lNumber;
@@ -491,5 +537,8 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
         private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel1;
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel2;
+        private SmartLib.SmartGrid smartGrid1;
+        private ToolStrip toolStrip2;
+        private C1.Win.Command.C1CommandHolder c1CommandHolder1;
     }
 }

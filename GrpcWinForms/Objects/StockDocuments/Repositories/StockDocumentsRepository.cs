@@ -26,36 +26,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Repositories
                 string number)
         {
             List<StockOperation> operations = new List<StockOperation>();
-            /*
-            operations.Add(new StockOperation
-            {
-                Id = 1,
-                DocumentType = type,
-                Number = number,
-                Date = Timestamp.FromDateTime(DateTime.UtcNow),
-                Status = StatusOperation.New,
-                ContragentTo = contragentTo,
-                ContragentFrom = contragentFrom,
-                StockTo = stockTo,
-                StockFrom = stockFrom,
-                SumOut = MyConvert.ToDecimalValue(1000),
-                SumInp = MyConvert.ToDecimalValue(1000)
-            });
-            operations.Add(new StockOperation
-            {
-                Id = 1,
-                DocumentType = type,
-                Number = number,
-                Date = Timestamp.FromDateTime(DateTime.UtcNow),
-                Status = StatusOperation.New,
-                ContragentTo = contragentTo,
-                ContragentFrom = contragentFrom,
-                StockTo = stockTo,
-                StockFrom = stockFrom,
-                SumOut = MyConvert.ToDecimalValue(1000),
-                SumInp = MyConvert.ToDecimalValue(1000)
-            });
-            */
+            
             return operations;
         }
 
