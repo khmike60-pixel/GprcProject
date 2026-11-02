@@ -73,17 +73,11 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
         private async void StockDocumentsForm_Load(object sender, EventArgs e)
         {
             // Фильтрация по типу документа
-            if (Type == null) Type = new DocumentType();
-            List<DocumentType> itemsType = await _presenter.GetDocumentTypes(Type);
-            List<Models.TreeDocumentType> treeItemsType = new List<Models.TreeDocumentType>();
-            foreach (DocumentType item in itemsType)
-            {
-                treeItemsType.Add(new Models.TreeDocumentType() { 
-                    Id = item.Id, ParentId = item.Parent?.Id ?? 0, Name = item.Name, DocumentType = item 
-                });
-            }
-            tbType.BuildTree(treeItemsType,true);
-
+            if (Type == null) Type = new DocumentType() { Code = "WHDocuments" };
+            List<TreeStockDocType> treeStockDocTypes = await _presenter.GetStockDocTypes(Type);
+            tbType.BuildTree(treeStockDocTypes, false);
+            tbType.InitialNode = new TreeStockDocType() { Id = 16, Name = "Складские документы" };    // Текущее значение
+            tbType.DropDownWidth = 350;
 
             // Фильтрация по складам
             PlaceTo = new Place() { Id = -1 }; // Ограничение для складов (должно быть пусто)

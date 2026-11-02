@@ -41,7 +41,10 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             GrpcCommonNet.Library.Common.Contragent contragent1 = new GrpcCommonNet.Library.Common.Contragent();
             GrpcCommonNet.Library.Common.Contragent contragent2 = new GrpcCommonNet.Library.Common.Contragent();
             panel2 = new Panel();
+            c1SplitContainer1 = new C1.Win.SplitContainer.C1SplitContainer();
+            c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
             gridStockOperation = new SmartLib.SmartGrid(components);
+            c1SplitterPanel2 = new C1.Win.SplitContainer.C1SplitterPanel();
             toolStrip1 = new ToolStrip();
             NewToolStripButton = new ToolStripButton();
             DoubleToolStripButton = new ToolStripButton();
@@ -50,6 +53,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             RefreshToolStripButton = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
             panel1 = new Panel();
+            tbType = new TreeBox(components);
             lStockFrom = new C1.Win.Input.C1Label();
             tbPlaceTo = new TreeBox(components);
             tbPlaceFrom = new TreeBox(components);
@@ -64,11 +68,14 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             cddContragentTo = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             periodBox = new SmartLib.PeriodBox(components);
             c1Label1 = new C1.Win.Input.C1Label();
-            tbType = new TreeBox(components);
             panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).BeginInit();
+            c1SplitContainer1.SuspendLayout();
+            c1SplitterPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridStockOperation).BeginInit();
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)tbType).BeginInit();
             ((System.ComponentModel.ISupportInitialize)lStockFrom).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbPlaceTo).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbPlaceFrom).BeginInit();
@@ -82,18 +89,40 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             ((System.ComponentModel.ISupportInitialize)cddContragentTo).BeginInit();
             ((System.ComponentModel.ISupportInitialize)periodBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1Label1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)tbType).BeginInit();
             SuspendLayout();
             // 
             // panel2
             // 
-            panel2.Controls.Add(gridStockOperation);
+            panel2.Controls.Add(c1SplitContainer1);
             panel2.Controls.Add(toolStrip1);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 104);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1111, 219);
+            panel2.Size = new Size(1030, 399);
             panel2.TabIndex = 3;
+            // 
+            // c1SplitContainer1
+            // 
+            c1SplitContainer1.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
+            c1SplitContainer1.Dock = DockStyle.Fill;
+            c1SplitContainer1.HeaderButtonBackColor = Color.Transparent;
+            c1SplitContainer1.Location = new Point(0, 31);
+            c1SplitContainer1.Name = "c1SplitContainer1";
+            c1SplitContainer1.Panels.Add(c1SplitterPanel2);
+            c1SplitContainer1.Panels.Add(c1SplitterPanel1);
+            c1SplitContainer1.Size = new Size(1030, 368);
+            c1SplitContainer1.TabIndex = 4;
+            // 
+            // c1SplitterPanel1
+            // 
+            c1SplitterPanel1.Controls.Add(gridStockOperation);
+            c1SplitterPanel1.Dock = C1.Win.SplitContainer.PanelDockStyle.Bottom;
+            c1SplitterPanel1.Height = 182;
+            c1SplitterPanel1.Location = new Point(0, 21);
+            c1SplitterPanel1.Name = "c1SplitterPanel1";
+            c1SplitterPanel1.Size = new Size(1030, 161);
+            c1SplitterPanel1.TabIndex = 0;
+            c1SplitterPanel1.Text = "Складские документы";
             // 
             // gridStockOperation
             // 
@@ -124,16 +153,27 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             gridStockOperation.Headers.Add(stringItem1);
             gridStockOperation.Headers.Add(stringItem2);
             gridStockOperation.IdName = null;
-            gridStockOperation.Location = new Point(0, 31);
+            gridStockOperation.Location = new Point(0, 0);
             gridStockOperation.Name = "gridStockOperation";
             gridStockOperation.Rows.Count = 5;
             gridStockOperation.Rows.Fixed = 2;
             gridStockOperation.SelectedRows = (List<int>)resources.GetObject("gridStockOperation.SelectedRows");
             gridStockOperation.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
-            gridStockOperation.Size = new Size(1111, 188);
+            gridStockOperation.Size = new Size(1030, 161);
             gridStockOperation.SortingType = SmartLib.SortingType.Descending;
             gridStockOperation.StyleInfo = resources.GetString("gridStockOperation.StyleInfo");
             gridStockOperation.TabIndex = 3;
+            // 
+            // c1SplitterPanel2
+            // 
+            c1SplitterPanel2.Collapsible = true;
+            c1SplitterPanel2.Dock = C1.Win.SplitContainer.PanelDockStyle.Bottom;
+            c1SplitterPanel2.Height = 182;
+            c1SplitterPanel2.Location = new Point(0, 214);
+            c1SplitterPanel2.Name = "c1SplitterPanel2";
+            c1SplitterPanel2.Size = new Size(1030, 154);
+            c1SplitterPanel2.TabIndex = 1;
+            c1SplitterPanel2.Text = "Товары";
             // 
             // toolStrip1
             // 
@@ -141,7 +181,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             toolStrip1.Items.AddRange(new ToolStripItem[] { NewToolStripButton, DoubleToolStripButton, EditToolStripButton, DeleteToolStripButton, RefreshToolStripButton, toolStripSeparator1 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1111, 31);
+            toolStrip1.Size = new Size(1030, 31);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -216,8 +256,17 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1111, 104);
+            panel1.Size = new Size(1030, 104);
             panel1.TabIndex = 2;
+            // 
+            // tbType
+            // 
+            tbType.Location = new Point(671, 9);
+            tbType.Name = "tbType";
+            tbType.Placeholder = "Тип складского документа";
+            tbType.Size = new Size(200, 23);
+            tbType.TabIndex = 15;
+            tbType.Value = "";
             // 
             // lStockFrom
             // 
@@ -375,20 +424,11 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             c1Label1.TabIndex = 1;
             c1Label1.Text = "Период:";
             // 
-            // tbType
-            // 
-            tbType.Location = new Point(671, 9);
-            tbType.Name = "tbType";
-            tbType.Placeholder = "Тип складского документа";
-            tbType.Size = new Size(200, 23);
-            tbType.TabIndex = 15;
-            tbType.Value = "";
-            // 
             // StockDocumentsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1111, 323);
+            ClientSize = new Size(1030, 503);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Name = "StockDocumentsForm";
@@ -396,11 +436,15 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             Load += StockDocumentsForm_Load;
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)c1SplitContainer1).EndInit();
+            c1SplitContainer1.ResumeLayout(false);
+            c1SplitterPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)gridStockOperation).EndInit();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)tbType).EndInit();
             ((System.ComponentModel.ISupportInitialize)lStockFrom).EndInit();
             ((System.ComponentModel.ISupportInitialize)tbPlaceTo).EndInit();
             ((System.ComponentModel.ISupportInitialize)tbPlaceFrom).EndInit();
@@ -414,7 +458,6 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             ((System.ComponentModel.ISupportInitialize)cddContragentTo).EndInit();
             ((System.ComponentModel.ISupportInitialize)periodBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1Label1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)tbType).EndInit();
             ResumeLayout(false);
         }
 
@@ -445,5 +488,8 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
         private C1.Win.Input.C1Label lStockFrom;
         private TreeBox tbPlaceTo;
         private TreeBox tbType;
+        private C1.Win.SplitContainer.C1SplitContainer c1SplitContainer1;
+        private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel1;
+        private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel2;
     }
 }

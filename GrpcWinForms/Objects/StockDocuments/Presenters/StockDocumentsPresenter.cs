@@ -2,6 +2,7 @@
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Geolocation;
 using GrpcWinForms.Controls.TreeBox;
+using GrpcWinForms.Objects.DocumentTypes.Models;
 using GrpcWinForms.Objects.DocumentTypes.Repositories;
 using GrpcWinForms.Objects.StockDocuments.Models;
 using GrpcWinForms.Objects.StockDocuments.Repositories;
@@ -77,20 +78,37 @@ namespace GrpcWinForms.Objects.StockDocuments.Presenters
             return new List<TreePlace>();
         }
 
-        public async Task<List<DocumentType>> GetDocumentTypes(DocumentType type)
+        public async Task<List<TreeStockDocType>> GetStockDocTypes(DocumentType type)
         {
             try
             {
                 if (type == null) type = new() { Code = "WHDocuments" };
-                //List<DocumentType> items = await DocumentTypesRepository.GetDocumentTypes(type);
-                //return items;
-                return new List<DocumentType>();
+                List<TreeDocumentType> items = await DocumentTypesRepository.GetDocumentTypes(type);
+                List<TreeStockDocType> stockDocTypes = new List<TreeStockDocType>();
+                foreach (TreeDocumentType item in items)
+                {
+                    stockDocTypes.Add(new TreeStockDocType
+                    {
+                        Id = item.Id,
+                        ParentId = item.ParentId,
+                        Name = item.Name,
+                        DocumentType = new DocumentType
+                        {
+                            Id = item.Id,
+                            Parent = item.Parent,
+                            Code = item.Code,
+                            Name = item.Name
+                        }
+                    });
+                }
+                return stockDocTypes;
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-            return new List<DocumentType>();
+            return new List<TreeStockDocType>();
         }
 
     }

@@ -58,6 +58,12 @@ namespace GrpcWinForms.Objects.StockDocuments.Repositories
             */
             return operations;
         }
+
+        public static async Task<List<StockLocal>> GetStockLocalsAsync(Stock stock)
+        {
+            List<StockLocal> locals = new List<StockLocal>();
+            return locals;
+        }
     };
         
 
