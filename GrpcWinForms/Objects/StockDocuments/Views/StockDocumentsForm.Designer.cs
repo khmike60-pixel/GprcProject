@@ -32,14 +32,14 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StockDocumentsForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition4 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition5 = new C1.Win.FlexGrid.AggregateDefinition();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition6 = new C1.Win.FlexGrid.AggregateDefinition();
-            SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
-            SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
-            GrpcCommonNet.Library.Common.Contragent contragent3 = new GrpcCommonNet.Library.Common.Contragent();
+            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition3 = new C1.Win.FlexGrid.AggregateDefinition();
+            SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem2 = new SmartLib.StringItem();
             GrpcCommonNet.Library.Common.Contragent contragent1 = new GrpcCommonNet.Library.Common.Contragent();
+            GrpcCommonNet.Library.Common.Contragent contragent2 = new GrpcCommonNet.Library.Common.Contragent();
             panel2 = new Panel();
             gridStockOperation = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
@@ -64,6 +64,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             cddContragentTo = new GrpcWinForms.Objects.Contragents.Components.CompanyDropDown(components);
             periodBox = new SmartLib.PeriodBox(components);
             c1Label1 = new C1.Win.Input.C1Label();
+            tbType = new TreeBox(components);
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridStockOperation).BeginInit();
             toolStrip1.SuspendLayout();
@@ -81,6 +82,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             ((System.ComponentModel.ISupportInitialize)cddContragentTo).BeginInit();
             ((System.ComponentModel.ISupportInitialize)periodBox).BeginInit();
             ((System.ComponentModel.ISupportInitialize)c1Label1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)tbType).BeginInit();
             SuspendLayout();
             // 
             // panel2
@@ -103,24 +105,24 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             gridStockOperation.ColumnInfo = resources.GetString("gridStockOperation.ColumnInfo");
             gridStockOperation.Dock = DockStyle.Fill;
             gridStockOperation.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition4.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition4.Caption = "Всего: ";
-            aggregateDefinition4.Column = 3;
-            aggregateDefinition5.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
-            aggregateDefinition5.Column = 10;
-            aggregateDefinition6.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
-            aggregateDefinition6.Column = 11;
-            footerDescription2.Aggregates.Add(aggregateDefinition4);
-            footerDescription2.Aggregates.Add(aggregateDefinition5);
-            footerDescription2.Aggregates.Add(aggregateDefinition6);
-            gridStockOperation.Footers.Descriptions.Add(footerDescription2);
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 3;
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
+            aggregateDefinition2.Column = 10;
+            aggregateDefinition3.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
+            aggregateDefinition3.Column = 11;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            footerDescription1.Aggregates.Add(aggregateDefinition2);
+            footerDescription1.Aggregates.Add(aggregateDefinition3);
+            gridStockOperation.Footers.Descriptions.Add(footerDescription1);
             gridStockOperation.Footers.Fixed = true;
-            stringItem3.Name = "Head2";
-            stringItem3.Value = "...;Id;Статус;Номер;Дата;Тип;Грузоотправитель;Грузоотправитель;Грузополучатель;Грузополучатель;Сумма по документу;Сумма по документу;";
-            stringItem4.Name = "Head1";
-            stringItem4.Value = "...;Id;Статус;Номер;Дата;Тип;Контрагент;Склад;Контрагент;Склад;Приход;Расход;";
-            gridStockOperation.Headers.Add(stringItem3);
-            gridStockOperation.Headers.Add(stringItem4);
+            stringItem1.Name = "Head2";
+            stringItem1.Value = "...;Id;Статус;Номер;Дата;Тип;Грузоотправитель;Грузоотправитель;Грузополучатель;Грузополучатель;Сумма по документу;Сумма по документу;";
+            stringItem2.Name = "Head1";
+            stringItem2.Value = "...;Id;Статус;Номер;Дата;Тип;Контрагент;Склад;Контрагент;Склад;Приход;Расход;";
+            gridStockOperation.Headers.Add(stringItem1);
+            gridStockOperation.Headers.Add(stringItem2);
             gridStockOperation.IdName = null;
             gridStockOperation.Location = new Point(0, 31);
             gridStockOperation.Name = "gridStockOperation";
@@ -196,6 +198,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             // 
             // panel1
             // 
+            panel1.Controls.Add(tbType);
             panel1.Controls.Add(lStockFrom);
             panel1.Controls.Add(tbPlaceTo);
             panel1.Controls.Add(tbPlaceFrom);
@@ -264,7 +267,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             // sbType
             // 
             sbType.ButtonsSettings.ModalButton.Visible = true;
-            sbType.Location = new Point(671, 10);
+            sbType.Location = new Point(911, 70);
             sbType.Name = "sbType";
             sbType.Placeholder = "Тип  документа";
             sbType.Size = new Size(160, 23);
@@ -290,16 +293,16 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             cddContragentFrom.Location = new Point(134, 40);
             cddContragentFrom.Name = "cddContragentFrom";
             cddContragentFrom.Placeholder = "Грузоотправитель";
-            contragent3.CountryId = 0;
-            contragent3.CountrySymbol = "";
-            contragent3.Entity = null;
-            contragent3.Id = 0;
-            contragent3.Name = "";
-            contragent3.Person = null;
-            contragent3.Prefix = "";
-            contragent3.Taxno = "";
-            contragent3.Type = GrpcCommonNet.Library.Common.ContragentType.Entity;
-            cddContragentFrom.SelectedCompany = contragent3;
+            contragent1.CountryId = 0;
+            contragent1.CountrySymbol = "";
+            contragent1.Entity = null;
+            contragent1.Id = 0;
+            contragent1.Name = "";
+            contragent1.Person = null;
+            contragent1.Prefix = "";
+            contragent1.Taxno = "";
+            contragent1.Type = GrpcCommonNet.Library.Common.ContragentType.Entity;
+            cddContragentFrom.SelectedCompany = contragent1;
             cddContragentFrom.Size = new Size(201, 23);
             cddContragentFrom.TabIndex = 4;
             cddContragentFrom.Value = "";
@@ -341,16 +344,16 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             cddContragentTo.Location = new Point(134, 71);
             cddContragentTo.Name = "cddContragentTo";
             cddContragentTo.Placeholder = "Грузополучатель";
-            contragent1.CountryId = 0;
-            contragent1.CountrySymbol = "";
-            contragent1.Entity = null;
-            contragent1.Id = 0;
-            contragent1.Name = "";
-            contragent1.Person = null;
-            contragent1.Prefix = "";
-            contragent1.Taxno = "";
-            contragent1.Type = GrpcCommonNet.Library.Common.ContragentType.Entity;
-            cddContragentTo.SelectedCompany = contragent1;
+            contragent2.CountryId = 0;
+            contragent2.CountrySymbol = "";
+            contragent2.Entity = null;
+            contragent2.Id = 0;
+            contragent2.Name = "";
+            contragent2.Person = null;
+            contragent2.Prefix = "";
+            contragent2.Taxno = "";
+            contragent2.Type = GrpcCommonNet.Library.Common.ContragentType.Entity;
+            cddContragentTo.SelectedCompany = contragent2;
             cddContragentTo.Size = new Size(201, 23);
             cddContragentTo.TabIndex = 6;
             cddContragentTo.Value = "";
@@ -361,6 +364,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             periodBox.Name = "periodBox";
             periodBox.Period.From = new DateTime(2026, 1, 1, 0, 0, 0, 0);
             periodBox.Period.To = new DateTime(2026, 12, 31, 23, 59, 59, 0);
+            periodBox.TabIndex = 2;
             // 
             // c1Label1
             // 
@@ -370,6 +374,15 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             c1Label1.Size = new Size(58, 21);
             c1Label1.TabIndex = 1;
             c1Label1.Text = "Период:";
+            // 
+            // tbType
+            // 
+            tbType.Location = new Point(671, 9);
+            tbType.Name = "tbType";
+            tbType.Placeholder = "Тип складского документа";
+            tbType.Size = new Size(200, 23);
+            tbType.TabIndex = 15;
+            tbType.Value = "";
             // 
             // StockDocumentsForm
             // 
@@ -401,6 +414,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
             ((System.ComponentModel.ISupportInitialize)cddContragentTo).EndInit();
             ((System.ComponentModel.ISupportInitialize)periodBox).EndInit();
             ((System.ComponentModel.ISupportInitialize)c1Label1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)tbType).EndInit();
             ResumeLayout(false);
         }
 
@@ -430,5 +444,6 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
         private TreeBox tbPlaceFrom;
         private C1.Win.Input.C1Label lStockFrom;
         private TreeBox tbPlaceTo;
+        private TreeBox tbType;
     }
 }

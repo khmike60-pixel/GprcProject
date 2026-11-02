@@ -30,7 +30,15 @@ namespace GrpcWinForms.Controls.TreeBox
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            ((System.ComponentModel.ISupportInitialize)this).BeginInit();
+            SuspendLayout();
+            // 
+            // TreeBox
+            // 
+            KeyDown += TreeBox_KeyDown;
+            KeyPress += TreeBox_KeyPress;
+            ((System.ComponentModel.ISupportInitialize)this).EndInit();
+            ResumeLayout(false);
         }
 
         #endregion

@@ -26,6 +26,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Repositories
                 string number)
         {
             List<StockOperation> operations = new List<StockOperation>();
+            /*
             operations.Add(new StockOperation
             {
                 Id = 1,
@@ -54,7 +55,7 @@ namespace GrpcWinForms.Objects.StockDocuments.Repositories
                 SumOut = MyConvert.ToDecimalValue(1000),
                 SumInp = MyConvert.ToDecimalValue(1000)
             });
-
+            */
             return operations;
         }
     };

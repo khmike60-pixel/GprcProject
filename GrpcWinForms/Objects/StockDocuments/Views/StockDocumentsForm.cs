@@ -3,9 +3,10 @@ using C1.Win.TreeView;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Geolocation;
 using GrpcWinForms.Controls.TreeBox;
+using GrpcWinForms.Objects.DocumentTypes.Models;
+using GrpcWinForms.Objects.StockDocuments.Models;
 using GrpcWinForms.Objects.StockDocuments.Presenters;
 using GrpcWinForms.Objects.Stocks.Repositories;
-using GrpcWinForms.Objects.Test;
 
 
 //using GrpcWinForms.Objects.StockDocuments.Repositories;
@@ -61,20 +62,46 @@ namespace GrpcWinForms.Objects.StockDocuments.Views
 
         private void Setup()
         {
-
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
+            if (Period == null)
+            {
+                Period = new PeriodBox();
+                Period.Period.SetPeriod(DateTime.Now.AddDays(-90), DateTime.Now);
+            }
         }
 
         private async void StockDocumentsForm_Load(object sender, EventArgs e)
         {
-            List<TreeItem> itemsTo  = await _presenter.GetPlaceTo();
-            tbPlaceTo.BuildTree(itemsTo);
-            TreeItem treeItemTo = new TreeItem() { Id = 3, ParentId = 0, Name = "А. Каххара склад" };
+            // Фильтрация по типу документа
+            if (Type == null) Type = new DocumentType();
+            List<DocumentType> itemsType = await _presenter.GetDocumentTypes(Type);
+            List<Models.TreeDocumentType> treeItemsType = new List<Models.TreeDocumentType>();
+            foreach (DocumentType item in itemsType)
+            {
+                treeItemsType.Add(new Models.TreeDocumentType() { 
+                    Id = item.Id, ParentId = item.Parent?.Id ?? 0, Name = item.Name, DocumentType = item 
+                });
+            }
+            tbType.BuildTree(treeItemsType,true);
+
+
+            // Фильтрация по складам
+            PlaceTo = new Place() { Id = -1 }; // Ограничение для складов (должно быть пусто)
+
+            List<TreePlace> itemsTo  = await _presenter.GetPlace(PlaceTo);
+            itemsTo.Insert(0, new TreePlace() { Name = "Отгрузка во вне", Id = -1, ParentId = 0 });
+            tbPlaceTo.BuildTree(itemsTo, false); // Для отгрузки во вне корень в дереве не нужен
+            TreePlace treeItemTo = new TreePlace() { Id = -1, Name = "Отгрузка во вне" }; // Текущее значение
             tbPlaceTo.InitialNode = treeItemTo;
 
-            List<TreeItem> itemsFrom = await _presenter.GetPlaceFrom();
-            tbPlaceFrom.BuildTree(itemsFrom);
-            TreeItem treeItemFrom = new TreeItem() { Id = 4, ParentId = 3, Name = "А. Каххара, 19/21 (Полиграфия)" };
+            PlaceFrom = new Place() { Id = 4 }; // Ограничение по складу "А. Каххара, 19/21 (Полиграфия)"
+            List<TreePlace> itemsFrom = await _presenter.GetPlace(PlaceFrom);
+            tbPlaceFrom.BuildTree(itemsFrom); // Для фильтра по реальным местам хранения корень нужен
+            TreePlace treeItemFrom = new TreePlace() { Id = 4, ParentId = 3, Name = "А. Каххара, 19/21 (Полиграфия)" }; // Текущее значение
             tbPlaceFrom.InitialNode = treeItemFrom;
+
+            _presenter.LoadStockDocuments();
+            gridStockOperation.DataSource = Operations;
 
         }
     }

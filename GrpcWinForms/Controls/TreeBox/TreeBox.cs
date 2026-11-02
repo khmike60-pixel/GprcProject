@@ -20,20 +20,20 @@ namespace GrpcWinForms.Controls.TreeBox
         private C1TreeNode _selectedNode = new();
         private C1TreeNode _initialNode = new();
 
-        public C1TreeView TreeView 
-        { 
-            get; 
-            set; 
+        public C1TreeView TreeView
+        {
+            get;
+            set;
         } = new C1TreeView();
         public ITreeData InitialNode
-        { 
+        {
             get => (ITreeData)_initialNode.GetValue();
             set
             {
                 C1TreeNode nodeInit = new C1TreeNode();
                 nodeInit.SetValue(value);
 
-                nodeInit = FindNode( x => ((ITreeData)x.GetValue()).Id == value.Id );
+                nodeInit = FindNode(x => ((ITreeData)x.GetValue()).Id == value.Id);
                 if (nodeInit != null)
                 {
                     C1TreeNode node = nodeInit;
@@ -48,8 +48,8 @@ namespace GrpcWinForms.Controls.TreeBox
                 }
             }
         }
-        public ITreeData SelectedNode 
-        { 
+        public ITreeData SelectedNode
+        {
             get
             {
                 C1TreeNode node = this.TreeView.GetFocusedNode();
@@ -83,13 +83,15 @@ namespace GrpcWinForms.Controls.TreeBox
             TreeView.SelectionChanged += TreeView_SelectionChanged;
         }
 
-        public BindingInfo BuildTree<T>(List<T> source) where T : ITreeData, new()
+        public BindingInfo BuildTree<T>(List<T> source, bool root = true) where T : ITreeData, new()
         {
+            if (root)
+                source.Insert(0, new T() { Id = 0, ParentId = -2, Name = "..." });
             this.TreeView.BindingInfo.DataSource = source;
             this.TreeView.BindingInfo.KeyField = "Id";
             this.TreeView.BindingInfo.ParentKeyField = "ParentId";
             this.TreeView.Columns.Clear();
-            this.TreeView.Columns.Add(new C1TreeColumn() { HeaderText = "Наименование",  DisplayFieldName = "Name" });
+            this.TreeView.Columns.Add(new C1TreeColumn() { HeaderText = "Наименование", DisplayFieldName = "Name" });
 
             return this.TreeView.BindingInfo;
         }
@@ -103,7 +105,7 @@ namespace GrpcWinForms.Controls.TreeBox
             this.DroppedDown = false;
         }
 
-        public C1TreeNode FindNode( Func<C1TreeNode, bool> predicate, C1TreeNode defaultValue = null)
+        public C1TreeNode FindNode(Func<C1TreeNode, bool> predicate, C1TreeNode defaultValue = null)
         {
             if (this.TreeView.Nodes == null) throw new ArgumentNullException(nameof(this.TreeView.Nodes));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
@@ -143,6 +145,18 @@ namespace GrpcWinForms.Controls.TreeBox
             return defaultValue;
         }
 
+        private void TreeBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = true; // Отменяем обработку события по умолчанию
+        }
+
+        private void TreeBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.Delete)
+            {
+                e.Handled = true; // Отменяем обработку события по умолчанию
+            }
+        }
     }
 
     #region Классы для постоения иерархии
