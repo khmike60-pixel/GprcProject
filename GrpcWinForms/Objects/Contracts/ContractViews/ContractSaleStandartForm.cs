@@ -134,7 +134,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonDoubleLine.Enabled = false;
                     toolStripButtonEditLine.Enabled = false;
                     toolStripButtonDeleteLine.Enabled = false;
-                    toolStripButtonState.Enabled = false;
+                    //toolStripButtonState.Enabled = false;
 
                     toolStripButtonSetupSpecification.Enabled = false;
                     smartGridLines1.AllowEditing = false;
@@ -150,7 +150,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonDoubleLine.Enabled = true;
                     toolStripButtonEditLine.Enabled = true;
                     toolStripButtonDeleteLine.Enabled = true;
-                    toolStripButtonState.Enabled = true;
+                    //toolStripButtonState.Enabled = true;
 
                     toolStripButtonSetupSpecification.Enabled = true;
                     smartGridLines1.AllowEditing = true;
@@ -166,7 +166,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                     toolStripButtonDoubleLine.Enabled = true;
                     toolStripButtonEditLine.Enabled = true;
                     toolStripButtonDeleteLine.Enabled = true;
-                    toolStripButtonState.Enabled = true;
+                    //toolStripButtonState.Enabled = true;
 
                     toolStripButtonSetupSpecification.Enabled = true;
                     smartGridLines1.AllowEditing = true;
@@ -597,6 +597,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
                 {
                     contract.State = form.Contract.State;
                     // должен быть обновлен только статус документа. Переписать UpdateContract
+                    buttonOk_Click(sender, e);
                 }
             }
         }
