@@ -142,6 +142,10 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             cbCurrency.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.StartsWith;
             tbParent.Text = ParentTxt;
 
+            if(DocumentType.Code.Contains("Contract") && !String.IsNullOrEmpty(DocumentType.Form))
+                chkIsContract.Visible = true;
+            else chkIsContract.Visible = false;
+
             // Инициализация представления через презентер
             _presenter.Initialize();
 

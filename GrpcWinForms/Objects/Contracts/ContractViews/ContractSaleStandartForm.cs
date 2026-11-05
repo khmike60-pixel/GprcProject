@@ -188,48 +188,10 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         #region  Работа с вкладками
 
-        // Нет ссылок, по-моему не  работает
-        private void smartGridHistory_GetUnboundValue(object sender, C1.Win.FlexGrid.UnboundValueEventArgs e)
+        private async void RefreshDocuments()
         {
-            //Contract _contract = (Contract)historyContractControl.smartGridHistory1.Rows[e.Row].DataSource;
-            //switch (historyContractControl.smartGridHistory1.Cols[e.Col].Name)
-            //{
-            //    case "colDate":
-            //        {
-            //            e.Value = _contract.Date == null ? "" : _contract.Date.ToDateTime();
-            //            break;
-            //        }
-            //    case "colAbbrev":
-            //        {
-            //            e.Value = _contract.Currency == null ? "" : _contract.Currency.Abbrev;
-            //            break;
-            //        }
-            //    case "colSum":
-            //        {
-            //            e.Value = _contract.Sum == null || _contract.Sum.Units == 0 ? "" : MyConvert.ToDecimal(_contract.Sum);
-            //            break;
-            //        }
-            //    case "colAmount":
-            //        {
-            //            e.Value = _contract.Amount == null || _contract.Amount.Units == 0 ? "" : MyConvert.ToDecimal(_contract.Amount);
-            //            break;
-            //        }
-            //    case "colSumVat":
-            //        {
-            //            e.Value = _contract.SumVat == null || _contract.SumVat.Units == 0 ? "" : MyConvert.ToDecimal(_contract.SumVat);
-            //            break;
-            //        }
-            //    case "colType":
-            //        {
-            //            if (_contract.RootId == 0)
-            //                e.Value = "Основной контракт";
-            //            else
-            //                e.Value = "Дополнительное соглашение";
-            //            break;
-            //        }
-            //}
-        }
 
+        }
 
         #endregion
 
@@ -366,7 +328,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         {
             if (c1DockingTab2.SelectedIndex == 2)
             {
-//                historyContractControl.SetControl(contract);
+                RefreshDocuments();
             }
         }
 

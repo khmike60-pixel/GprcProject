@@ -38,14 +38,15 @@ namespace GrpcWinForms.Controls.SmartBox
         public SmartBox()
         {
             InitializeComponent();
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
             Setup();
         }
 
         public SmartBox(IContainer container)
         {
             container.Add(this);
-
             InitializeComponent();
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return;
             Setup();
         }
 

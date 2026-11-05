@@ -15,12 +15,14 @@ namespace GrpcWinForms.Forms
             menuStrip1 = new MenuStrip();
             ContractsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItemContrtacts = new ToolStripMenuItem();
+            AllContrtactsToolStripMenuItemAllContrtacts = new ToolStripMenuItem();
             SaleContrtactsToolStripMenuItem = new ToolStripMenuItem();
             PurchaseContrtactsToolStripMenuItem = new ToolStripMenuItem();
-            AllContrtactsToolStripMenuItemAllContrtacts = new ToolStripMenuItem();
+            toolStripMenuItem4 = new ToolStripSeparator();
+            типыКонтрактовToolStripMenuItem = new ToolStripMenuItem();
+            шаблоныКонтрактовДляПечатиToolStripMenuItem = new ToolStripMenuItem();
+            конттрактныедокументтыToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem8 = new ToolStripSeparator();
-            ContractTypesToolStripMenuItem = new ToolStripMenuItem();
-            ContractTempatesToolStripMenuItem = new ToolStripMenuItem();
             StockOperationsToolStripMenuItem = new ToolStripMenuItem();
             StockDocumentsToolStripMenuItem = new ToolStripMenuItem();
             OutDocumentsToolStripMenuItem = new ToolStripMenuItem();
@@ -77,6 +79,12 @@ namespace GrpcWinForms.Forms
             UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             тестоваяФормаToolStripMenuItem = new ToolStripMenuItem();
             taskBar = new GrpcWinForms.Controls.TaskBar.TaskBar(components);
+            всеToolStripMenuItem = new ToolStripMenuItem();
+            реализацияToolStripMenuItem = new ToolStripMenuItem();
+            приобретениеToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem9 = new ToolStripSeparator();
+            типыСчетовфактурToolStripMenuItem = new ToolStripMenuItem();
+            шаблоныСчеттовфактурToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -91,55 +99,67 @@ namespace GrpcWinForms.Forms
             // 
             // ContractsToolStripMenuItem
             // 
-            ContractsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItemContrtacts, toolStripMenuItem8, ContractTypesToolStripMenuItem, ContractTempatesToolStripMenuItem });
+            ContractsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItemContrtacts, конттрактныедокументтыToolStripMenuItem, toolStripMenuItem8 });
             ContractsToolStripMenuItem.Name = "ContractsToolStripMenuItem";
             ContractsToolStripMenuItem.Size = new Size(78, 20);
             ContractsToolStripMenuItem.Text = "Контракты";
             // 
             // toolStripMenuItemContrtacts
             // 
-            toolStripMenuItemContrtacts.DropDownItems.AddRange(new ToolStripItem[] { SaleContrtactsToolStripMenuItem, PurchaseContrtactsToolStripMenuItem, AllContrtactsToolStripMenuItemAllContrtacts });
+            toolStripMenuItemContrtacts.DropDownItems.AddRange(new ToolStripItem[] { AllContrtactsToolStripMenuItemAllContrtacts, SaleContrtactsToolStripMenuItem, PurchaseContrtactsToolStripMenuItem, toolStripMenuItem4, типыКонтрактовToolStripMenuItem, шаблоныКонтрактовДляПечатиToolStripMenuItem });
             toolStripMenuItemContrtacts.Name = "toolStripMenuItemContrtacts";
-            toolStripMenuItemContrtacts.Size = new Size(245, 22);
+            toolStripMenuItemContrtacts.Size = new Size(180, 22);
             toolStripMenuItemContrtacts.Text = "Контракты";
+            // 
+            // AllContrtactsToolStripMenuItemAllContrtacts
+            // 
+            AllContrtactsToolStripMenuItemAllContrtacts.Name = "AllContrtactsToolStripMenuItemAllContrtacts";
+            AllContrtactsToolStripMenuItemAllContrtacts.Size = new Size(256, 22);
+            AllContrtactsToolStripMenuItemAllContrtacts.Text = "Контракты все";
+            AllContrtactsToolStripMenuItemAllContrtacts.Click += AllContrtactsToolStripMenuItem_Click;
             // 
             // SaleContrtactsToolStripMenuItem
             // 
             SaleContrtactsToolStripMenuItem.Name = "SaleContrtactsToolStripMenuItem";
-            SaleContrtactsToolStripMenuItem.Size = new Size(200, 22);
+            SaleContrtactsToolStripMenuItem.Size = new Size(256, 22);
             SaleContrtactsToolStripMenuItem.Text = "Контракты на продажу";
             // 
             // PurchaseContrtactsToolStripMenuItem
             // 
             PurchaseContrtactsToolStripMenuItem.Name = "PurchaseContrtactsToolStripMenuItem";
-            PurchaseContrtactsToolStripMenuItem.Size = new Size(200, 22);
+            PurchaseContrtactsToolStripMenuItem.Size = new Size(256, 22);
             PurchaseContrtactsToolStripMenuItem.Text = "Контракты на покупку";
             // 
-            // AllContrtactsToolStripMenuItemAllContrtacts
+            // toolStripMenuItem4
             // 
-            AllContrtactsToolStripMenuItemAllContrtacts.Name = "AllContrtactsToolStripMenuItemAllContrtacts";
-            AllContrtactsToolStripMenuItemAllContrtacts.Size = new Size(200, 22);
-            AllContrtactsToolStripMenuItemAllContrtacts.Text = "Контракты все";
-            AllContrtactsToolStripMenuItemAllContrtacts.Click += AllContrtactsToolStripMenuItem_Click;
+            toolStripMenuItem4.Name = "toolStripMenuItem4";
+            toolStripMenuItem4.Size = new Size(253, 6);
+            // 
+            // типыКонтрактовToolStripMenuItem
+            // 
+            типыКонтрактовToolStripMenuItem.Name = "типыКонтрактовToolStripMenuItem";
+            типыКонтрактовToolStripMenuItem.Size = new Size(256, 22);
+            типыКонтрактовToolStripMenuItem.Text = "Типы контрактов";
+            типыКонтрактовToolStripMenuItem.Click += ContractTypesToolStripMenuItem_Click;
+            // 
+            // шаблоныКонтрактовДляПечатиToolStripMenuItem
+            // 
+            шаблоныКонтрактовДляПечатиToolStripMenuItem.Name = "шаблоныКонтрактовДляПечатиToolStripMenuItem";
+            шаблоныКонтрактовДляПечатиToolStripMenuItem.Size = new Size(256, 22);
+            шаблоныКонтрактовДляПечатиToolStripMenuItem.Text = "Шаблоны контрактов для печати";
+            шаблоныКонтрактовДляПечатиToolStripMenuItem.Click += ContractTempatesToolStripMenuItem_Click;
+            // 
+            // конттрактныедокументтыToolStripMenuItem
+            // 
+            конттрактныедокументтыToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { всеToolStripMenuItem, реализацияToolStripMenuItem, приобретениеToolStripMenuItem, toolStripMenuItem9, типыСчетовфактурToolStripMenuItem, шаблоныСчеттовфактурToolStripMenuItem });
+            конттрактныедокументтыToolStripMenuItem.Name = "конттрактныедокументтыToolStripMenuItem";
+            конттрактныедокументтыToolStripMenuItem.Size = new Size(180, 22);
+            конттрактныедокументтыToolStripMenuItem.Text = "Счета-Фактуры";
             // 
             // toolStripMenuItem8
             // 
             toolStripMenuItem8.Name = "toolStripMenuItem8";
-            toolStripMenuItem8.Size = new Size(242, 6);
-            // 
-            // ContractTypesToolStripMenuItem
-            // 
-            ContractTypesToolStripMenuItem.Name = "ContractTypesToolStripMenuItem";
-            ContractTypesToolStripMenuItem.Size = new Size(245, 22);
-            ContractTypesToolStripMenuItem.Text = "Типы  контрактов";
-            ContractTypesToolStripMenuItem.Click += ContractTypesToolStripMenuItem_Click;
-            // 
-            // ContractTempatesToolStripMenuItem
-            // 
-            ContractTempatesToolStripMenuItem.Name = "ContractTempatesToolStripMenuItem";
-            ContractTempatesToolStripMenuItem.Size = new Size(245, 22);
-            ContractTempatesToolStripMenuItem.Text = "Шаблоны печати  (контрактов)";
-            ContractTempatesToolStripMenuItem.Click += ContractTempatesToolStripMenuItem_Click;
+            toolStripMenuItem8.Size = new Size(177, 6);
             // 
             // StockOperationsToolStripMenuItem
             // 
@@ -505,6 +525,42 @@ namespace GrpcWinForms.Forms
             taskBar.TabIndex = 2;
             taskBar.Text = "taskBarComponent1";
             // 
+            // всеToolStripMenuItem
+            // 
+            всеToolStripMenuItem.Name = "всеToolStripMenuItem";
+            всеToolStripMenuItem.Size = new Size(217, 22);
+            всеToolStripMenuItem.Text = "Все";
+            всеToolStripMenuItem.Click += InvoicesToolStripMenuItem_Click;
+            // 
+            // реализацияToolStripMenuItem
+            // 
+            реализацияToolStripMenuItem.Name = "реализацияToolStripMenuItem";
+            реализацияToolStripMenuItem.Size = new Size(217, 22);
+            реализацияToolStripMenuItem.Text = "Продажа";
+            // 
+            // приобретениеToolStripMenuItem
+            // 
+            приобретениеToolStripMenuItem.Name = "приобретениеToolStripMenuItem";
+            приобретениеToolStripMenuItem.Size = new Size(217, 22);
+            приобретениеToolStripMenuItem.Text = "Покупка";
+            // 
+            // toolStripMenuItem9
+            // 
+            toolStripMenuItem9.Name = "toolStripMenuItem9";
+            toolStripMenuItem9.Size = new Size(214, 6);
+            // 
+            // типыСчетовфактурToolStripMenuItem
+            // 
+            типыСчетовфактурToolStripMenuItem.Name = "типыСчетовфактурToolStripMenuItem";
+            типыСчетовфактурToolStripMenuItem.Size = new Size(217, 22);
+            типыСчетовфактурToolStripMenuItem.Text = "Типы счетов-фактур";
+            // 
+            // шаблоныСчеттовфактурToolStripMenuItem
+            // 
+            шаблоныСчеттовфактурToolStripMenuItem.Name = "шаблоныСчеттовфактурToolStripMenuItem";
+            шаблоныСчеттовфактурToolStripMenuItem.Size = new Size(217, 22);
+            шаблоныСчеттовфактурToolStripMenuItem.Text = "Шаблоны счеттов-фактур";
+            // 
             // MainForm
             // 
             ClientSize = new Size(1100, 364);
@@ -583,7 +639,15 @@ namespace GrpcWinForms.Forms
         private ToolStripSeparator toolStripMenuItem7;
         private ToolStripMenuItem StocksToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem8;
-        private ToolStripMenuItem ContractTypesToolStripMenuItem;
-        private ToolStripMenuItem ContractTempatesToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem4;
+        private ToolStripMenuItem типыКонтрактовToolStripMenuItem;
+        private ToolStripMenuItem шаблоныКонтрактовДляПечатиToolStripMenuItem;
+        private ToolStripMenuItem конттрактныедокументтыToolStripMenuItem;
+        private ToolStripMenuItem всеToolStripMenuItem;
+        private ToolStripMenuItem реализацияToolStripMenuItem;
+        private ToolStripMenuItem приобретениеToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem9;
+        private ToolStripMenuItem типыСчетовфактурToolStripMenuItem;
+        private ToolStripMenuItem шаблоныСчеттовфактурToolStripMenuItem;
     }
 }

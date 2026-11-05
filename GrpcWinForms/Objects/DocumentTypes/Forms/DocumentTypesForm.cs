@@ -410,7 +410,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
                 {
                     gridDocumentTypes[e.Row, e.Col] = null; return;
                 }
-                if (!dt.Code.Contains("Contract")) 
+                if (!dt.Code.Contains("Contract") || String.IsNullOrEmpty(dt.Form))
                     gridDocumentTypes[e.Row, e.Col] = null;
             }
         }

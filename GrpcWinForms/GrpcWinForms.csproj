@@ -76,5 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Objects\Geolocations\GeoForms\" />
+    <Folder Include="Objects\Innvoices\Presenters\" />
+    <Folder Include="Objects\Innvoices\Repositories\" />
+    <Folder Include="Objects\Innvoices\Models\" />
   </ItemGroup>
 </Project>

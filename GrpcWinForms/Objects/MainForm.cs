@@ -293,5 +293,10 @@ namespace GrpcWinForms.Forms
             f.Show();
 
         }
+
+        private void InvoicesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
