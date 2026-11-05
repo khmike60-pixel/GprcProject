@@ -30,8 +30,8 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DocumentTypesForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
             panel1 = new Panel();
             textBoxContractTypeName = new TextBox();
             labelName = new Label();
@@ -98,11 +98,11 @@
             gridDocumentTypes.ColumnInfo = resources.GetString("gridDocumentTypes.ColumnInfo");
             gridDocumentTypes.Dock = DockStyle.Fill;
             gridDocumentTypes.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition2.Caption = "Всего: ";
-            aggregateDefinition2.Column = 1;
-            footerDescription2.Aggregates.Add(aggregateDefinition2);
-            gridDocumentTypes.Footers.Descriptions.Add(footerDescription2);
+            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Всего: ";
+            aggregateDefinition1.Column = 1;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            gridDocumentTypes.Footers.Descriptions.Add(footerDescription1);
             gridDocumentTypes.Footers.Fixed = true;
             gridDocumentTypes.IdName = null;
             gridDocumentTypes.Location = new Point(0, 31);
@@ -117,6 +117,7 @@
             gridDocumentTypes.Tree.Column = 1;
             gridDocumentTypes.BeforeNodeMove += smartGridDocumentTypes_BeforeNodeMove;
             gridDocumentTypes.AfterNodeMove += smartGridDocumentTypes_AfterNodeMove;
+            gridDocumentTypes.OwnerDrawCell += gridDocumentTypes_OwnerDrawCell;
             gridDocumentTypes.DoubleClick += smartGridDocumentTypes1_DoubleClick;
             // 
             // toolStrip1

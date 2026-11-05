@@ -95,6 +95,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Presenters
                 }
             };
 
+
             if (_view.ShowDocumentTypeDialog(form) != DialogResult.OK) return;
 
             try

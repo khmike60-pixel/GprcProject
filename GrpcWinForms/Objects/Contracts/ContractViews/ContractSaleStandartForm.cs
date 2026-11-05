@@ -9,6 +9,7 @@ using GrpcCommonNet.Proto.Utils;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Contracts.ContractViews;
+using GrpcWinForms.Objects.Contracts.ContractViews.Interfaces;
 using GrpcWinForms.Objects.Contracts.ContractViews.Presenters;
 using GrpcWinForms.Objects.Contracts.ContractViews.Repositories;
 using GrpcWinForms.Objects.Contracts.Forms;
@@ -43,9 +44,8 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private CellStyle baseStyle;
         private bool contractEdited = false;
         private ContractPresenter presenter;
-
+        
         public Control.ControlCollection ControlCollection { get => this.Controls; }
-
 
         //public bool CurrentMode = false;
 
@@ -366,7 +366,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         {
             if (c1DockingTab2.SelectedIndex == 2)
             {
-                historyContractControl.SetControl(contract);
+//                historyContractControl.SetControl(contract);
             }
         }
 

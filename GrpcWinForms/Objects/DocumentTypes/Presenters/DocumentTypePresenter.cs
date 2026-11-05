@@ -37,6 +37,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Presenters
 
             _view.IsDefault = _view.DocumentType.IsDefault;
             _view.IsContract = _view.DocumentType.IsContract;
+            _view.ParentTxt  = _view.DocumentType.Parent.Name;
         }
 
         // Считать значения из формы в модель; вернуть true, если всё ок
@@ -65,6 +66,12 @@ namespace GrpcWinForms.Objects.DocumentTypes.Presenters
 
                 doc.IsDefault = _view.IsDefault;
                 doc.IsContract = _view.IsContract;
+                
+                //
+                if (doc.Parent == null)
+                    doc.Parent = new Tree { Name = _view.ParentTxt };
+                doc.Parent.Name = _view.ParentTxt;
+                //
 
                 _view.DocumentType = doc;
                 return true;

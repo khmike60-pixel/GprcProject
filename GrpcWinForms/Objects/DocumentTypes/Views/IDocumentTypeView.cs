@@ -24,6 +24,8 @@ namespace GrpcWinForms.Objects.DocumentTypes.Views
         bool IsDefault { get; set; }
         bool IsContract { get; set; }
 
+        string ParentTxt { get; set; }
+
         // UI-операции
         DialogResult ShowDocumentTypeDialog(Form form);
         void ShowMessage(string text, string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK);

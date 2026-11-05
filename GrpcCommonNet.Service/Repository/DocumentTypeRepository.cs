@@ -109,7 +109,7 @@ namespace GrpcCommonNet.Service.Repository
                         @KindId,  
                         @ContractCurrencyType_Id,
                         @rfr_countryCurr_Id,
-                        @ViewMaster, ViewDetail,
+                        @ViewMaster, @ViewDetail,
                         @DocumentType_IsDefault, 
                         @Approved_UserId,
                         @Approved_By, 
@@ -122,12 +122,12 @@ namespace GrpcCommonNet.Service.Repository
                 ";
 
                 cmd.Parameters.AddWithValue("DocumentType_Name", documentType.Name);
-                cmd.Parameters.AddWithValue("ParentId", documentType.Parent.Id );
+                cmd.Parameters.AddWithValue("ParentId", documentType.Parent.Id == 0? null: documentType.Parent.Id);
                 cmd.Parameters.AddWithValue("DocumentType_Code", documentType.Code);
                 cmd.Parameters.AddWithValue("DocumentType_Form", documentType.Form);
                 cmd.Parameters.AddWithValue("KindId", documentType.KindId == 0? null: documentType.KindId);
                 cmd.Parameters.AddWithValue("ContractCurrencyType_Id", documentType.CurrencyType);
-                cmd.Parameters.AddWithValue("DocumentType_Data", documentType.Data);
+                //cmd.Parameters.AddWithValue("DocumentType_Data", documentType.Data);
                 cmd.Parameters.AddWithValue("rfr_countryCurr_Id", documentType.CountryCurrencyId == 0? null : documentType.CountryCurrencyId);
                 cmd.Parameters.AddWithValue("ViewMaster", documentType.ViewMaster);
                 cmd.Parameters.AddWithValue("ViewDetail", documentType.ViewDetail);
@@ -171,7 +171,7 @@ namespace GrpcCommonNet.Service.Repository
                         t.ContractCurrencyType_Id = @ContractCurrencyType_Id,
                         t.rfr_countryCurr_Id = @rfr_countryCurr_Id,
                         t.ViewMaster = @ViewMaster, ViewDetail = @ViewDetail,
-                        -- t.DocumentType_IsDefault = @DocumentType_IsDefault, 
+                        t.DocumentType_IsDefault = @DocumentType_IsDefault, 
                         t.Approved_UserId = @Approved_UserId,
                         t.Approved_By = @Approved_By, 
                         t.Approved_Date = @Approved_Date
@@ -184,7 +184,7 @@ namespace GrpcCommonNet.Service.Repository
 
                 cmd.Parameters.AddWithValue("DocumentType_Id", documentType.Id);
                 cmd.Parameters.AddWithValue("DocumentType_Name", documentType.Name);
-                cmd.Parameters.AddWithValue("ParentId", documentType.Parent.Id);
+                cmd.Parameters.AddWithValue("ParentId", documentType.Parent.Id == 0? null: documentType.Parent.Id);
                 cmd.Parameters.AddWithValue("DocumentType_Code", documentType.Code);
                 cmd.Parameters.AddWithValue("DocumentType_Form", documentType.Form);
                 cmd.Parameters.AddWithValue("KindId", documentType.KindId == 0? null : documentType.KindId);

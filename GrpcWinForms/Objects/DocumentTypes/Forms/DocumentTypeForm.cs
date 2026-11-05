@@ -113,6 +113,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             get => chkIsContract.Checked;
             set => chkIsContract.Checked = value;
         }
+        public string ParentTxt { get => DocumentType.Parent?.Name; set => DocumentType.Parent.Name = value; }
 
         public DialogResult ShowDocumentTypeDialog(Form form) => form.ShowDialog(this);
 
@@ -139,6 +140,7 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
             cbCurrency.AutoCompleteMode = AutoCompleteMode.Suggest;
             cbCurrency.AutoCompleteSource = AutoCompleteSource.ListItems;
             cbCurrency.AutoSuggestMode = C1.Win.Input.AutoSuggestMode.StartsWith;
+            tbParent.Text = ParentTxt;
 
             // Инициализация представления через презентер
             _presenter.Initialize();

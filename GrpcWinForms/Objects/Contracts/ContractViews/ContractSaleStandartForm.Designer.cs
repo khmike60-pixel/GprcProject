@@ -40,6 +40,13 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             C1.Win.FlexGrid.AggregateDefinition aggregateDefinition4 = new C1.Win.FlexGrid.AggregateDefinition();
             SmartLib.StringItem stringItem1 = new SmartLib.StringItem();
             SmartLib.StringItem stringItem2 = new SmartLib.StringItem();
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition5 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition6 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition7 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition8 = new C1.Win.FlexGrid.AggregateDefinition();
+            SmartLib.StringItem stringItem3 = new SmartLib.StringItem();
+            SmartLib.StringItem stringItem4 = new SmartLib.StringItem();
             splitContainerAll = new C1.Win.SplitContainer.C1SplitContainer();
             c1SplitterPanelMain = new C1.Win.SplitContainer.C1SplitterPanel();
             buttonOk = new Button();
@@ -71,8 +78,23 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             c1DockingTabPageProperties = new C1.Win.Command.C1DockingTabPage();
             propertiesControl1 = new GrpcWinForms.Objects.Contracts.Controls.PropertiesControl();
             c1DockingTabPageHistory = new C1.Win.Command.C1DockingTabPage();
-            historyContractControl = new GrpcWinForms.Objects.Contracts.Controls.HistoryContractControl();
             panel1 = new Panel();
+            pDocFilters = new Panel();
+            tsContractDocuments = new ToolStrip();
+            gContractDocuments = new SmartLib.SmartGrid(components);
+            scContractDocuments = new C1.Win.SplitContainer.C1SplitContainer();
+            c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
+            c1SplitterPanel2 = new C1.Win.SplitContainer.C1SplitterPanel();
+            toolStrip1 = new ToolStrip();
+            gDocumentLines = new SmartLib.SmartGrid(components);
+            splitButtonNew = new ToolStripSplitButton();
+            btnNewInvoice = new ToolStripMenuItem();
+            btnNewDeliveryNote = new ToolStripMenuItem();
+            btnDoubleDocument = new ToolStripButton();
+            btnEditDocument = new ToolStripButton();
+            btnDeleteDocument = new ToolStripButton();
+            btnStatusDocument = new ToolStripButton();
+            btnRefreshDocuments = new ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)splitContainerAll).BeginInit();
             splitContainerAll.SuspendLayout();
             c1SplitterPanelMain.SuspendLayout();
@@ -90,6 +112,13 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             c1DockingTabPageProperties.SuspendLayout();
             c1DockingTabPageHistory.SuspendLayout();
             panel1.SuspendLayout();
+            tsContractDocuments.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gContractDocuments).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)scContractDocuments).BeginInit();
+            scContractDocuments.SuspendLayout();
+            c1SplitterPanel1.SuspendLayout();
+            c1SplitterPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gDocumentLines).BeginInit();
             SuspendLayout();
             // 
             // splitContainerAll
@@ -113,7 +142,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             c1SplitterPanelMain.Controls.Add(managerControl1);
             c1SplitterPanelMain.Controls.Add(sumContractControl1);
             c1SplitterPanelMain.Controls.Add(toolStripHead);
-            c1SplitterPanelMain.Height = 320;
+            c1SplitterPanelMain.Height = 313;
             c1SplitterPanelMain.KeepRelativeSize = false;
             c1SplitterPanelMain.Location = new Point(0, 21);
             c1SplitterPanelMain.MinHeight = 320;
@@ -435,20 +464,15 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             // 
             // c1DockingTabPageHistory
             // 
-            c1DockingTabPageHistory.Controls.Add(historyContractControl);
+            c1DockingTabPageHistory.Controls.Add(scContractDocuments);
+            c1DockingTabPageHistory.Controls.Add(tsContractDocuments);
+            c1DockingTabPageHistory.Controls.Add(pDocFilters);
             c1DockingTabPageHistory.Location = new Point(1, 27);
             c1DockingTabPageHistory.Name = "c1DockingTabPageHistory";
             c1DockingTabPageHistory.Size = new Size(1182, 573);
             c1DockingTabPageHistory.TabIndex = 2;
-            c1DockingTabPageHistory.Text = "История";
-            // 
-            // historyContractControl
-            // 
-            historyContractControl.Dock = DockStyle.Fill;
-            historyContractControl.Location = new Point(0, 0);
-            historyContractControl.Name = "historyContractControl";
-            historyContractControl.Size = new Size(1182, 573);
-            historyContractControl.TabIndex = 0;
+            c1DockingTabPageHistory.Text = "Документы";
+            c1DockingTabPageHistory.ToolTipText = "Вс документы контракта (СФ, накладны и т.п.)";
             // 
             // panel1
             // 
@@ -458,6 +482,198 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             panel1.Name = "panel1";
             panel1.Size = new Size(1184, 601);
             panel1.TabIndex = 3;
+            // 
+            // pDocFilters
+            // 
+            pDocFilters.Dock = DockStyle.Top;
+            pDocFilters.Location = new Point(0, 0);
+            pDocFilters.Name = "pDocFilters";
+            pDocFilters.Size = new Size(1182, 59);
+            pDocFilters.TabIndex = 0;
+            // 
+            // tsContractDocuments
+            // 
+            tsContractDocuments.ImageScalingSize = new Size(24, 24);
+            tsContractDocuments.Items.AddRange(new ToolStripItem[] { splitButtonNew, btnDoubleDocument, btnEditDocument, btnDeleteDocument, btnStatusDocument, btnRefreshDocuments });
+            tsContractDocuments.Location = new Point(0, 59);
+            tsContractDocuments.Name = "tsContractDocuments";
+            tsContractDocuments.Size = new Size(1182, 31);
+            tsContractDocuments.TabIndex = 1;
+            tsContractDocuments.Text = "toolStrip1";
+            // 
+            // gContractDocuments
+            // 
+            gContractDocuments.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gContractDocuments.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gContractDocuments.AllowNodeMove = false;
+            gContractDocuments.ColumnInfo = resources.GetString("gContractDocuments.ColumnInfo");
+            gContractDocuments.Dock = DockStyle.Fill;
+            gContractDocuments.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            aggregateDefinition5.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition5.Caption = "Всего: ";
+            aggregateDefinition5.Column = 3;
+            aggregateDefinition6.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
+            aggregateDefinition6.Column = 6;
+            aggregateDefinition7.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
+            aggregateDefinition7.Column = 7;
+            aggregateDefinition8.Aggregate = C1.Win.FlexGrid.AggregateEnum.Sum;
+            aggregateDefinition8.Column = 8;
+            footerDescription2.Aggregates.Add(aggregateDefinition5);
+            footerDescription2.Aggregates.Add(aggregateDefinition6);
+            footerDescription2.Aggregates.Add(aggregateDefinition7);
+            footerDescription2.Aggregates.Add(aggregateDefinition8);
+            gContractDocuments.Footers.Descriptions.Add(footerDescription2);
+            gContractDocuments.Footers.Fixed = true;
+            stringItem3.Name = "Head1";
+            stringItem3.Value = "...; Id; Статус; Тип документа; Дата; Номер; Сумма; НДС; Сумма с НДС; Ответственный; Ответственный;";
+            stringItem4.Name = "Head2";
+            stringItem4.Value = "...; Id; Статус; Тип документа; Дата; Номер; Сумма; НДС; Сумма с НДС; Отдел; Испол.;";
+            gContractDocuments.Headers.Add(stringItem3);
+            gContractDocuments.Headers.Add(stringItem4);
+            gContractDocuments.IdName = null;
+            gContractDocuments.Location = new Point(0, 0);
+            gContractDocuments.Name = "gContractDocuments";
+            gContractDocuments.Rows.Count = 5;
+            gContractDocuments.Rows.Fixed = 2;
+            gContractDocuments.SelectedRows = (List<int>)resources.GetObject("gContractDocuments.SelectedRows");
+            gContractDocuments.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gContractDocuments.Size = new Size(1182, 219);
+            gContractDocuments.SortingType = SmartLib.SortingType.Descending;
+            gContractDocuments.StyleInfo = resources.GetString("gContractDocuments.StyleInfo");
+            gContractDocuments.TabIndex = 2;
+            // 
+            // scContractDocuments
+            // 
+            scContractDocuments.AutoSizeElement = C1.Framework.AutoSizeElement.Both;
+            scContractDocuments.Dock = DockStyle.Fill;
+            scContractDocuments.HeaderButtonBackColor = Color.Transparent;
+            scContractDocuments.Location = new Point(0, 90);
+            scContractDocuments.Name = "scContractDocuments";
+            scContractDocuments.Panels.Add(c1SplitterPanel1);
+            scContractDocuments.Panels.Add(c1SplitterPanel2);
+            scContractDocuments.Size = new Size(1182, 483);
+            scContractDocuments.TabIndex = 3;
+            // 
+            // c1SplitterPanel1
+            // 
+            c1SplitterPanel1.Controls.Add(gContractDocuments);
+            c1SplitterPanel1.Height = 240;
+            c1SplitterPanel1.Location = new Point(0, 21);
+            c1SplitterPanel1.Name = "c1SplitterPanel1";
+            c1SplitterPanel1.Size = new Size(1182, 219);
+            c1SplitterPanel1.TabIndex = 0;
+            c1SplitterPanel1.Text = "Документы";
+            // 
+            // c1SplitterPanel2
+            // 
+            c1SplitterPanel2.Controls.Add(gDocumentLines);
+            c1SplitterPanel2.Controls.Add(toolStrip1);
+            c1SplitterPanel2.Height = 239;
+            c1SplitterPanel2.Location = new Point(0, 265);
+            c1SplitterPanel2.Name = "c1SplitterPanel2";
+            c1SplitterPanel2.Size = new Size(1182, 218);
+            c1SplitterPanel2.TabIndex = 1;
+            c1SplitterPanel2.Text = "Строки документа";
+            // 
+            // toolStrip1
+            // 
+            toolStrip1.Location = new Point(0, 0);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Size = new Size(1182, 25);
+            toolStrip1.TabIndex = 0;
+            toolStrip1.Text = "toolStrip1";
+            // 
+            // gDocumentLines
+            // 
+            gDocumentLines.AllowMerging = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gDocumentLines.AllowMergingFixed = C1.Win.FlexGrid.AllowMergingEnum.FixedOnly;
+            gDocumentLines.AllowNodeMove = false;
+            gDocumentLines.ColumnInfo = resources.GetString("gDocumentLines.ColumnInfo");
+            gDocumentLines.Dock = DockStyle.Fill;
+            gDocumentLines.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
+            gDocumentLines.IdName = null;
+            gDocumentLines.Location = new Point(0, 25);
+            gDocumentLines.Name = "gDocumentLines";
+            gDocumentLines.SelectedRows = (List<int>)resources.GetObject("gDocumentLines.SelectedRows");
+            gDocumentLines.SelectionMode = C1.Win.FlexGrid.SelectionModeEnum.Row;
+            gDocumentLines.Size = new Size(1182, 193);
+            gDocumentLines.SortingType = SmartLib.SortingType.Descending;
+            gDocumentLines.StyleInfo = resources.GetString("gDocumentLines.StyleInfo");
+            gDocumentLines.TabIndex = 1;
+            // 
+            // splitButtonNew
+            // 
+            splitButtonNew.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            splitButtonNew.DropDownItems.AddRange(new ToolStripItem[] { btnNewInvoice, btnNewDeliveryNote });
+            splitButtonNew.Image = Properties.Resources.icons8_документ_50;
+            splitButtonNew.ImageTransparentColor = Color.Magenta;
+            splitButtonNew.Name = "splitButtonNew";
+            splitButtonNew.Size = new Size(40, 28);
+            splitButtonNew.Text = "toolStripSplitButton1";
+            splitButtonNew.ToolTipText = "Добавить новый документ";
+            // 
+            // btnNewInvoice
+            // 
+            btnNewInvoice.Image = Properties.Resources.icons8_документ_50;
+            btnNewInvoice.Name = "btnNewInvoice";
+            btnNewInvoice.Size = new Size(242, 30);
+            btnNewInvoice.Text = "Новый СФ";
+            // 
+            // btnNewDeliveryNote
+            // 
+            btnNewDeliveryNote.Image = Properties.Resources.icons8_agreement_50;
+            btnNewDeliveryNote.Name = "btnNewDeliveryNote";
+            btnNewDeliveryNote.Size = new Size(242, 30);
+            btnNewDeliveryNote.Text = "Новая накладная на отгрузку";
+            // 
+            // btnDoubleDocument
+            // 
+            btnDoubleDocument.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnDoubleDocument.Image = Properties.Resources.icons8_скопировать_50;
+            btnDoubleDocument.ImageTransparentColor = Color.Magenta;
+            btnDoubleDocument.Name = "btnDoubleDocument";
+            btnDoubleDocument.Size = new Size(28, 28);
+            btnDoubleDocument.Text = "toolStripButton1";
+            btnDoubleDocument.ToolTipText = "Дублировать";
+            // 
+            // btnEditDocument
+            // 
+            btnEditDocument.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnEditDocument.Image = Properties.Resources.icons8_редактирование_файла_50;
+            btnEditDocument.ImageTransparentColor = Color.Magenta;
+            btnEditDocument.Name = "btnEditDocument";
+            btnEditDocument.Size = new Size(28, 28);
+            btnEditDocument.Text = "toolStripButton1";
+            btnEditDocument.ToolTipText = "Редактировать";
+            // 
+            // btnDeleteDocument
+            // 
+            btnDeleteDocument.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnDeleteDocument.Image = Properties.Resources.icons8_удалить_файл_50;
+            btnDeleteDocument.ImageTransparentColor = Color.Magenta;
+            btnDeleteDocument.Name = "btnDeleteDocument";
+            btnDeleteDocument.Size = new Size(28, 28);
+            btnDeleteDocument.Text = "toolStripButton1";
+            btnDeleteDocument.ToolTipText = "Удалить";
+            // 
+            // btnStatusDocument
+            // 
+            btnStatusDocument.Image = Properties.Resources.icons8_checklist_50_2;
+            btnStatusDocument.ImageTransparentColor = Color.Magenta;
+            btnStatusDocument.Name = "btnStatusDocument";
+            btnStatusDocument.Size = new Size(187, 28);
+            btnStatusDocument.Text = "Изменить статус документа";
+            // 
+            // btnRefreshDocuments
+            // 
+            btnRefreshDocuments.Alignment = ToolStripItemAlignment.Right;
+            btnRefreshDocuments.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            btnRefreshDocuments.Image = Properties.Resources.icons8_refresh_50;
+            btnRefreshDocuments.ImageTransparentColor = Color.Magenta;
+            btnRefreshDocuments.Name = "btnRefreshDocuments";
+            btnRefreshDocuments.Size = new Size(28, 28);
+            btnRefreshDocuments.Text = "toolStripButton1";
+            btnRefreshDocuments.ToolTipText = "Обновить";
             // 
             // ContractSaleStandartForm
             // 
@@ -489,7 +705,17 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             c1DockingTabPageMain.ResumeLayout(false);
             c1DockingTabPageProperties.ResumeLayout(false);
             c1DockingTabPageHistory.ResumeLayout(false);
+            c1DockingTabPageHistory.PerformLayout();
             panel1.ResumeLayout(false);
+            tsContractDocuments.ResumeLayout(false);
+            tsContractDocuments.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)gContractDocuments).EndInit();
+            ((System.ComponentModel.ISupportInitialize)scContractDocuments).EndInit();
+            scContractDocuments.ResumeLayout(false);
+            c1SplitterPanel1.ResumeLayout(false);
+            c1SplitterPanel2.ResumeLayout(false);
+            c1SplitterPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)gDocumentLines).EndInit();
             ResumeLayout(false);
 
         }
@@ -527,8 +753,23 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private C1.Win.Command.C1DockingTabPage c1DockingTabPageMain;
         private C1.Win.Command.C1DockingTabPage c1DockingTabPageProperties;
         private C1.Win.Command.C1DockingTabPage c1DockingTabPageHistory;
-        private Contracts.Controls.HistoryContractControl historyContractControl;
         private SmartLib.SmartGrid smartGridLines1;
         private ToolStripButton toolStripButtonState;
+        private SmartLib.SmartGrid gContractDocuments;
+        private ToolStrip tsContractDocuments;
+        private Panel pDocFilters;
+        private C1.Win.SplitContainer.C1SplitContainer scContractDocuments;
+        private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel1;
+        private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel2;
+        private SmartLib.SmartGrid gDocumentLines;
+        private ToolStrip toolStrip1;
+        private ToolStripSplitButton splitButtonNew;
+        private ToolStripMenuItem btnNewInvoice;
+        private ToolStripMenuItem btnNewDeliveryNote;
+        private ToolStripButton btnDoubleDocument;
+        private ToolStripButton btnEditDocument;
+        private ToolStripButton btnDeleteDocument;
+        private ToolStripButton btnStatusDocument;
+        private ToolStripButton btnRefreshDocuments;
     }
 }

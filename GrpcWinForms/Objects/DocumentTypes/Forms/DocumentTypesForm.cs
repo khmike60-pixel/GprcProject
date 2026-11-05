@@ -399,7 +399,20 @@ namespace GrpcWinForms.Objects.DocumentTypes.Forms
         }
 
         #endregion
-    }
 
-    
+        private void gridDocumentTypes_OwnerDrawCell(object sender, OwnerDrawCellEventArgs e)
+        {
+            if (e.Row < gridDocumentTypes.Rows.Fixed) return;
+            if (gridDocumentTypes.Cols[e.Col].Name == "IsContract")
+            {
+                TreeDocumentType dt = gridDocumentTypes.Rows[e.Row].Node.Key as TreeDocumentType;
+                if (dt == null || dt.Code == null)
+                {
+                    gridDocumentTypes[e.Row, e.Col] = null; return;
+                }
+                if (!dt.Code.Contains("Contract")) 
+                    gridDocumentTypes[e.Row, e.Col] = null;
+            }
+        }
+    }
 }
