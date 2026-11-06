@@ -28,7 +28,55 @@ service GeolocationServices {
 	rpc DeletePlace(DeletePlaceRequest) returns (DeletePlaceResponse);
 	rpc DeleteIdsPlace(DeleteIdsPlaceRequest) returns (UndeletedIdsPlaceResponse);
 
+	// Методы работы с location
+	rpc GetLocation(LocationRequest) returns(LocationResponse);
+	rpc GetListLocation(ListLocationRequest) returns(ListLocationResponse);
+	rpc CreateLocation(CreateLocationRequest) returns(LocationResponse);
+	rpc UpddateLocation(UpdateLocationRequest) returns(LocationResponse);
+	rpc DeleteLocation(DeleteLocationRequest) returns(UndeletedLocationResponse);
+
 }
+
+message LocationRequest {
+	int32 id = 1;
+	google.protobuf.FieldMask field_mask  = 2;
+}
+
+message LocationResponse {
+	Common.Result result = 1;						// Результат выполнения	
+	Common.Geolocation location = 2;				// Место расположения
+}
+
+message ListLocationRequest {
+	Common.LocationType type = 1;								// Фильтр по типу: 0 - только страны, 1 - только города, 2 - только места
+	string name = 2;								// Фильтр по наименованию
+	Common.Location location = 3;					// узел дерева, от которого надо показывать
+	google.protobuf.FieldMask field_mask  = 4;		// Нужные поля
+}
+
+message ListLocationResponse {
+	Common.Result result = 1;						// Результат выполнения	
+	repeated Common.Location locations = 2;			// Места расположения
+}
+
+message CreateLocationRequest {
+	Common.Location location = 1;
+}
+
+message UpdateLocationRequest {
+	Common.Location location = 1;
+	google.protobuf.FieldMask field_mask  = 2;		// Нужные поля
+}
+
+message DeleteLocationRequest {
+	repeated int32 ids = 1;
+}
+
+message UndeletedLocationResponse {
+	Common.Result result = 1;						// Результат выполнения	
+	repeated int32 undeleted = 2;					// Список не удаленных id
+}
+
 
 message GeoRequest {
 	int32 id = 1;						// Идентификатор географического местоположения

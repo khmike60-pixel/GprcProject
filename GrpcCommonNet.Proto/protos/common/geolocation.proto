@@ -2,11 +2,19 @@
 
 option csharp_namespace = "GrpcCommonNet.Library.Common";
 
+import "google/protobuf/struct.proto";
+
 package Common;
 
 enum GeoType {
 	ALL = 0;				// Все			
 	COUNTRY = 1;			// Только страны
+}
+
+enum LocationType{
+	LOCATION_COUNTRY = 0;
+	LOCATION_CITY = 1;
+	LOCATION_PLACE = 2;
 }
 
 message CountryJson {
@@ -48,5 +56,16 @@ message Place {
 	string names = 5;				// Список наименований родительских место расположения и собственное наименование (путь)
 	int32 geoLocation_id = 6;		// Идентификатор расположения места место расположения
 	int32 lock = 7;					// Флаг блокировки редактирования места размещения
+}
+
+message Location {
+	int32 id = 1;
+	int32 parent_id = 2;
+	Location Parent = 3;
+	string name = 4;
+	string ids = 5;
+	LocationType type = 6;
+	string names = 7;
+	google.protobuf.Struct data = 8;
 }
 
