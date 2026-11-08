@@ -7,7 +7,6 @@ using GrpcWinForms.Objects.DocumentTypes.Forms;
 using GrpcWinForms.Objects.Contragents.Components;
 using GrpcWinForms.Objects.Contragents.Forms;
 using GrpcWinForms.Objects.Currencies.Views;
-using GrpcWinForms.Objects.Geolocations.GeoForms;
 using GrpcWinForms.Objects.OurCompanies.Forms;
 using GrpcWinForms.Objects.Products.ProductsForm;
 using GrpcWinForms.Objects.Test;
@@ -24,6 +23,8 @@ using GrpcWinForms.Objects.Departaments.Forms;
 using GrpcWinForms.Objects.Units.Forms;
 using GrpcWinForms.Objects.StockDocuments.Views;
 using GrpcWinForms.Objects.Stocks.Views;
+using GrpcWinForms.Objects.Locations.Views;
+using GrpcWinForms.Objects.Geolocations.Views;
 
 namespace GrpcWinForms.Forms
 {
@@ -93,9 +94,9 @@ namespace GrpcWinForms.Forms
         {
             foreach (Form child in MdiChildren)
             {
-                if (child is GeolocationsForm) { child.Activate(); return; }
+                if (child is GeolocationForm) { child.Activate(); return; }
             }
-            var f = new GeolocationsForm { MdiParent = this };
+            var f = new GeolocationForm { MdiParent = this };
             f.Show();
         }
 
@@ -296,6 +297,17 @@ namespace GrpcWinForms.Forms
 
         private void InvoicesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void LocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is Objects.Locations.Views.LocationsForm) { child.Activate(); return; }
+            }
+            var f = new Objects.Locations.Views.LocationsForm { MdiParent = this };
+            f.Show();
 
         }
     }

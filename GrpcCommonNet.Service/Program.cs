@@ -8,6 +8,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Serilog;
 using GrpcCommonNet.Service.Repository;
+using GrpcCommonNet.Service.Services;
 
 try
 {
@@ -140,6 +141,7 @@ try
     builder.Services.AddSingleton<EmployeeRepository>();
     builder.Services.AddSingleton<SalePurchaseTypeRepository>();
     builder.Services.AddSingleton<StockRepository>();
+    builder.Services.AddSingleton<LocationRepository>();
 
     // Register gRPC service classes if they have constructor dependencies (DI will resolve them).
     // Note: you don't "Add" the service classes here; MapGrpcService will resolve them from DI.
@@ -181,6 +183,7 @@ try
     app.MapGrpcService<EmployeeServiceImpl>().RequireAuthorization("DefaultPolicy");
     app.MapGrpcService<SalePurchaseTypeServiceImpl>().RequireAuthorization("DefaultPolicy");
     app.MapGrpcService<StockServiceImpl>().RequireAuthorization("DefaultPolicy");
+    app.MapGrpcService<LocationServiceImpl>().RequireAuthorization("DefaultPolicy");
 
 
     // If you also expose REST controllers (e.g. AuthController), enable mapping

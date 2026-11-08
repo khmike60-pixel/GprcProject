@@ -1,0 +1,25 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "google/protobuf/struct.proto";
+
+package Common;
+
+enum LocationType{
+	LOCATION_COUNTRY = 0;
+	LOCATION_CITY = 1;
+	LOCATION_PLACE = 2;
+}
+
+message Location {
+	int32 id = 1;
+	int32 parent_id = 2;
+	Location Parent = 3;
+	string name = 4;
+	string name_lat = 5;
+	string ids = 6;
+	LocationType type = 7;
+	string names = 8;
+	google.protobuf.Struct data = 9;
+}

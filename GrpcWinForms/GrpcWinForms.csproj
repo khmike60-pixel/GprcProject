@@ -78,6 +78,7 @@
     <ProjectReference Include="..\GrpcCommonNet.Proto\GrpcCommonNet.Proto.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Objects\Geolocations\Repositories\" />
     <Folder Include="Objects\Innvoices\Presenters\" />
     <Folder Include="Objects\Innvoices\Repositories\" />
     <Folder Include="Objects\Innvoices\Models\" />

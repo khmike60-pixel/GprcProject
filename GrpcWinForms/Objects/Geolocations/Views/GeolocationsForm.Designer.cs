@@ -1,6 +1,6 @@
-﻿namespace GrpcWinForms.Objects.Geolocations.GeoForms
-{
-    partial class GeolocationsForm
+﻿namespace GrpcWinForms.Objects.Geolocations.Views
+{ 
+    partial class LocationsForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,9 +29,12 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GeolocationsForm));
-            C1.Win.FlexGrid.FooterDescription footerDescription1 = new C1.Win.FlexGrid.FooterDescription();
-            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition1 = new C1.Win.FlexGrid.AggregateDefinition();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LocationsForm));
+            C1.Win.FlexGrid.FooterDescription footerDescription2 = new C1.Win.FlexGrid.FooterDescription();
+            C1.Win.FlexGrid.AggregateDefinition aggregateDefinition2 = new C1.Win.FlexGrid.AggregateDefinition();
+            C1.Win.Input.ComboBoxItem comboBoxItem4 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem5 = new C1.Win.Input.ComboBoxItem();
+            C1.Win.Input.ComboBoxItem comboBoxItem6 = new C1.Win.Input.ComboBoxItem();
             panel2 = new Panel();
             gridGeo = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
@@ -46,10 +49,14 @@
             panel1 = new Panel();
             textBoxGeoName = new TextBox();
             labelName = new Label();
+            cbType = new C1.Win.Input.C1ComboBox();
+            lType = new C1.Win.Input.C1Label();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridGeo).BeginInit();
             toolStrip1.SuspendLayout();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)cbType).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)lType).BeginInit();
             SuspendLayout();
             // 
             // panel2
@@ -72,11 +79,11 @@
             gridGeo.ColumnInfo = resources.GetString("gridGeo.ColumnInfo");
             gridGeo.Dock = DockStyle.Fill;
             gridGeo.DrawMode = C1.Win.FlexGrid.DrawModeEnum.OwnerDraw;
-            aggregateDefinition1.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
-            aggregateDefinition1.Caption = "Всего: ";
-            aggregateDefinition1.Column = 2;
-            footerDescription1.Aggregates.Add(aggregateDefinition1);
-            gridGeo.Footers.Descriptions.Add(footerDescription1);
+            aggregateDefinition2.Aggregate = C1.Win.FlexGrid.AggregateEnum.Count;
+            aggregateDefinition2.Caption = "Всего: ";
+            aggregateDefinition2.Column = 2;
+            footerDescription2.Aggregates.Add(aggregateDefinition2);
+            gridGeo.Footers.Descriptions.Add(footerDescription2);
             gridGeo.Footers.Fixed = true;
             gridGeo.IdName = null;
             gridGeo.Location = new Point(0, 31);
@@ -180,6 +187,8 @@
             // 
             // panel1
             // 
+            panel1.Controls.Add(lType);
+            panel1.Controls.Add(cbType);
             panel1.Controls.Add(textBoxGeoName);
             panel1.Controls.Add(labelName);
             panel1.Dock = DockStyle.Top;
@@ -204,6 +213,32 @@
             labelName.TabIndex = 0;
             labelName.Text = "Наименование";
             // 
+            // cbType
+            // 
+            comboBoxItem4.DisplayText = "Страны";
+            comboBoxItem4.Value = "0";
+            comboBoxItem5.DisplayText = "Регионы и города";
+            comboBoxItem5.Value = "1";
+            comboBoxItem6.DisplayText = "Места размещения";
+            comboBoxItem6.Value = "2";
+            cbType.Items.Add(comboBoxItem4);
+            cbType.Items.Add(comboBoxItem5);
+            cbType.Items.Add(comboBoxItem6);
+            cbType.Location = new Point(292, 5);
+            cbType.Name = "cbType";
+            cbType.Size = new Size(166, 23);
+            cbType.TabIndex = 3;
+            cbType.Value = "0";
+            // 
+            // lType
+            // 
+            lType.AutoSize = true;
+            lType.Location = new Point(250, 5);
+            lType.Name = "lType";
+            lType.Size = new Size(36, 21);
+            lType.TabIndex = 2;
+            lType.Text = "Тип:";
+            // 
             // GeolocationsForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -221,6 +256,8 @@
             toolStrip1.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)cbType).EndInit();
+            ((System.ComponentModel.ISupportInitialize)lType).EndInit();
             ResumeLayout(false);
         }
 
@@ -240,5 +277,7 @@
         private ToolStripSplitButton toolStripSplitButtonLevels;
         private ToolStripButton toolStripButtonPath;
         private SmartLib.SmartGrid gridGeo;
+        private C1.Win.Input.C1Label lType;
+        private C1.Win.Input.C1ComboBox cbType;
     }
 }

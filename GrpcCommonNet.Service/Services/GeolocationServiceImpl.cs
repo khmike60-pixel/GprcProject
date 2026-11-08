@@ -129,7 +129,7 @@ public class GeolocationServiceImpl : GeolocationServices.GeolocationServicesBas
 
     #endregion
 
-    #region Методы  работы с местами хранения
+    #region Методы  работы с местами хранения (кривая иерархия)
     public override async Task<TreePlaceResponse> GetTreePlace(TreePlaceRequest request, ServerCallContext context)
     {
         UserData userData = new UserData().GetUserData(context);
@@ -164,5 +164,5 @@ public class GeolocationServiceImpl : GeolocationServices.GeolocationServicesBas
     }
 
     #endregion
-
+        
 }

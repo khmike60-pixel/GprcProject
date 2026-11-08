@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static GrpcWinForms.Objects.Geolocations.Views.Interfaces.IGeolocation;
 
-namespace GrpcWinForms.Objects.Geolocations.GeoForms
+namespace GrpcWinForms.Objects.Geolocations.Views
 {
     
     public partial class GeolocationForm : Form, IGeolocation

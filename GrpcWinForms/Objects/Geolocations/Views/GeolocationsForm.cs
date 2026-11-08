@@ -6,6 +6,7 @@ using GrpcWinForms.Models;
 using GrpcWinForms.Objects.Currencies.Presenters;
 using GrpcWinForms.Objects.Geolocations.Models;
 using GrpcWinForms.Objects.Geolocations.Views.Interfaces;
+using SmartLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,9 +17,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Geolocations.GeoForms
+namespace GrpcWinForms.Objects.Geolocations.Views
 {
-    public partial class GeolocationsForm : Form
+    public partial class LocationsForm : Form, ILocations
     {
         #region Свойства формы
         private BindingList<Geolocation> geo;
@@ -28,12 +29,21 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
         public Geolocation SelectedItem { get { return selectedItem; } }
         public bool DialogMode { get; set; }
         public GeoType GeoType { get; set; } = GeoType.All;
+        public Location CurrentLocation { get; set; }
+        public LocationType Type { 
+            get => cbType.SelectedIndex == 0? LocationType.LocationCountry:
+                cbType.SelectedIndex == 1 ? LocationType.LocationCity:
+                LocationType.LocationPlace;
+        }
+        public string TextString { get => textBoxGeoName.Text; }
+        public BindingList<Location> Locations { get; set; }
+        public SmartGrid GridLocation { get => gridGeo; set => gridGeo = value; }
 
         #endregion
 
 
         #region Конструктор, основной Refresh и метод Load
-        public GeolocationsForm()
+        public LocationsForm()
         {
             InitializeComponent();
 
@@ -114,7 +124,7 @@ namespace GrpcWinForms.Objects.Geolocations.GeoForms
             }
         }
 
-        private async void GeolocationsForm_Load(object sender, EventArgs e)
+        private void GeolocationsForm_Load(object sender, EventArgs e)
         {
             RefreshGeoTree();
 

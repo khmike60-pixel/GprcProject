@@ -1,5 +1,5 @@
-﻿namespace GrpcWinForms.Objects.Geolocations.GeoForms
-{
+﻿namespace GrpcWinForms.Objects.Geolocations.Views
+{ 
     partial class GeolocationForm
     {
         /// <summary>

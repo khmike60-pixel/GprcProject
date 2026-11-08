@@ -3,8 +3,10 @@ using GrpcCommonNet.Library.Geolocation;
 using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Objects.Currencies.Views;
 using GrpcWinForms.Objects.Geolocations.Views.Interfaces;
+using SmartLib;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +16,7 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
     public class GeolocationPresenter
     {
         private readonly IGeolocation _view;
+        private  readonly ILocations _viewLocation;
 
         public GeolocationPresenter(IGeolocation view)
         {
@@ -79,6 +82,14 @@ namespace GrpcWinForms.Objects.Geolocations.Presenters
             }
             return true;    
         }
+
+    }
+
+    public class TreeLocation: ITreeData
+    {
+        public int Id { get ; set ; }
+        public int ParentId { get; set; }
+        public string Name { get; set; }
 
     }
 }

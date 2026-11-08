@@ -1,5 +1,5 @@
 ﻿using GrpcCommonNet.Library.Common;
-using GrpcWinForms.Objects.Geolocations.GeoForms;
+using GrpcWinForms.Objects.Geolocations.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +23,7 @@ namespace GrpcWinForms.Objects.SalePurchaseTypes.Forms
 
         private void cbCountry_ModalButtonClick(object sender, EventArgs e)
         {
-            using (GeolocationsForm geolocationForm = new GeolocationsForm())
+            using (LocationsForm geolocationForm = new LocationsForm())
             {
 
                 if (geolocationForm.DialogResult == DialogResult.OK)

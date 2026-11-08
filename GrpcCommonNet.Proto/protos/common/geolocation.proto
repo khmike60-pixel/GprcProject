@@ -11,12 +11,6 @@ enum GeoType {
 	COUNTRY = 1;			// Только страны
 }
 
-enum LocationType{
-	LOCATION_COUNTRY = 0;
-	LOCATION_CITY = 1;
-	LOCATION_PLACE = 2;
-}
-
 message CountryJson {
 	string Code2 = 1;
 	string Code3 = 2;
@@ -58,14 +52,4 @@ message Place {
 	int32 lock = 7;					// Флаг блокировки редактирования места размещения
 }
 
-message Location {
-	int32 id = 1;
-	int32 parent_id = 2;
-	Location Parent = 3;
-	string name = 4;
-	string ids = 5;
-	LocationType type = 6;
-	string names = 7;
-	google.protobuf.Struct data = 8;
-}
 
