@@ -123,11 +123,11 @@ namespace GrpcWinForms.Objects.Locations.Views
             {
                 LocationName = CurrentLocation.Name;
                 LocationNameLat = CurrentLocation.NameLat;
-                LocationParentName = CurrentLocation.Parent.Name;
+                LocationParentName = CurrentLocation.Names;
                 LocationType = CurrentLocation.Type;
 
                 string jsonString = JsonFormatter.Default.Format(CurrentLocation.Data);
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true }; // Стандартный сериализатор не увствительный к регистру
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true }; // Стандартный сериализатор нечувствительный к регистру
 
                 LocationType type = CurrentLocation.Type;
                 switch (type)
@@ -135,42 +135,43 @@ namespace GrpcWinForms.Objects.Locations.Views
                     case LocationType.LocationCountry:
                         lblCode2.Text = "Код страны (2 симв.):"; lblCode2.Visible = true; txtCode2.Enabled = true;
                         lblCode3.Text = "Код страны (3 симв.):"; lblCode3.Visible = true; txtCode3.Enabled = true;
-                        lblCodeDigit.Text = "Код страны (числ.)"; lblCodeDigit.Visible = true; txtCodeDig.Enabled = true;
+                        lblCodeDigit.Text = "Код страны (числ.)"; lblCodeDigit.Visible = true; txtCodeDig.Enabled = true; txtCodeDig.Visible = true;
                         lblPhone.Text = "Телефонный код:"; lblPhone.Visible = true; txtPhone.Enabled = true;
 
 
                         CountryLocation country = JsonSerializer.Deserialize<CountryLocation>(jsonString, options);
-                        txtCode2.Text = country.Code2.ToString();
-                        txtCode3.Text = country.Code3.ToString();
-                        txtCodeDig.Text = country.CodeDigit.ToString();
-                        txtPhone.Text = country.PhoneCode.ToString();
+                        txtCode2.Text = country.Code2?.ToString();
+                        txtCode3.Text = country.Code3?.ToString();
+                        txtCodeDig.Text = country.CodeDigit?.ToString();
+                        txtPhone.Text = country.PhoneCode?.ToString();
 
                         break;
                     case LocationType.LocationCity:
                         lblCode2.Text = "Код страны (2 симв.):"; lblCode2.Visible = true; txtCode2.Enabled = true;
                         lblCode3.Text = "Код региона:"; lblCode3.Visible = true; txtCode3.Enabled = true;
-                        lblCodeDigit.Text = ""; lblCodeDigit.Visible = false; txtCodeDig.Enabled = false;
+                        lblCodeDigit.Text = ""; lblCodeDigit.Visible = false; txtCodeDig.Enabled = false; txtCodeDig.Visible = false;
                         lblPhone.Text = "Телефонный код:"; lblPhone.Visible = true; txtPhone.Enabled = true;
 
                         CityLocation city = JsonSerializer.Deserialize<CityLocation>(jsonString, options);
-                        txtCode2.Text = city.Code2.ToString();
-                        txtCode3.Text = city.SOATO.ToString();
-                        txtPhone.Text = city.PhoneCode.ToString();
+                        txtCode2.Text = city.Code2?.ToString();
+                        txtCode3.Text = city.SOATO?.ToString();
+                        txtPhone.Text = city.PhoneCode?.ToString();
 
                         break;
                     case LocationType.LocationPlace:
                         lblCode2.Text = ""; lblCode2.Visible = false; txtCode2.Enabled = false;
                         lblCode3.Text = ""; lblCode3.Visible = false; txtCode3.Enabled = false;
-                        lblCodeDigit.Text = ""; lblCodeDigit.Visible = false; txtCodeDig.Enabled = false;
+                        lblCodeDigit.Text = ""; lblCodeDigit.Visible = false; txtCodeDig.Enabled = false; txtCodeDig.Visible = false;
                         lblPhone.Text = "Телефонный код:"; lblPhone.Visible = true; txtPhone.Enabled = true;
 
                         PlaceLocation place = JsonSerializer.Deserialize<PlaceLocation>(jsonString, options);
-                        txtPhone.Text = place.PhoneCode.ToString();
+                        txtPhone.Text = place.PhoneCode?.ToString();
                         lblPhone.Text = "Телефонный код:"; lblPhone.Visible = true; txtPhone.Enabled = true;
 
                         break;
                 }
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show("Ошибка при заполнении формы");
             }

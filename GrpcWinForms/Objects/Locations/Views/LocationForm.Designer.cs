@@ -131,13 +131,12 @@
             // 
             // lblCode3
             // 
-            lblCode3.AutoSize = true;
             lblCode3.Location = new Point(194, 129);
             lblCode3.Name = "lblCode3";
             lblCode3.Size = new Size(130, 21);
             lblCode3.TabIndex = 10;
             lblCode3.Text = "Код страны (3 симв.):";
-            lblCode3.TextAlign = ContentAlignment.TopRight;
+            lblCode3.TextAlign = ContentAlignment.MiddleRight;
             // 
             // txtPhone
             // 
