@@ -133,8 +133,8 @@ namespace GrpcWinForms.Objects.Locations.Views
                 switch (type)
                 {
                     case LocationType.LocationCountry:
-                        lblCode2.Text = "Код страны (2 симв.):"; lblCode2.Visible = true; txtCode2.Enabled = true;
-                        lblCode3.Text = "Код страны (3 симв.):"; lblCode3.Visible = true; txtCode3.Enabled = true;
+                        lblCode2.Text = "Код страны (2 симв.):"; lblCode2.Visible = true; txtCode2.Enabled = true; txtCode2.Visible = true;
+                        lblCode3.Text = "Код страны (3 симв.):"; lblCode3.Visible = true; txtCode3.Enabled = true; txtCode3.Visible = true;
                         lblCodeDigit.Text = "Код страны (числ.)"; lblCodeDigit.Visible = true; txtCodeDig.Enabled = true; txtCodeDig.Visible = true;
                         lblPhone.Text = "Телефонный код:"; lblPhone.Visible = true; txtPhone.Enabled = true;
 
@@ -147,8 +147,8 @@ namespace GrpcWinForms.Objects.Locations.Views
 
                         break;
                     case LocationType.LocationCity:
-                        lblCode2.Text = "Код страны (2 симв.):"; lblCode2.Visible = true; txtCode2.Enabled = true;
-                        lblCode3.Text = "Код региона:"; lblCode3.Visible = true; txtCode3.Enabled = true;
+                        lblCode2.Text = "Код страны (2 симв.):"; lblCode2.Visible = true; txtCode2.Enabled = true; txtCode2.Visible = true;
+                        lblCode3.Text = "Код региона:"; lblCode3.Visible = true; txtCode3.Enabled = true; txtCode3.Visible = true;
                         lblCodeDigit.Text = ""; lblCodeDigit.Visible = false; txtCodeDig.Enabled = false; txtCodeDig.Visible = false;
                         lblPhone.Text = "Телефонный код:"; lblPhone.Visible = true; txtPhone.Enabled = true;
 
@@ -159,8 +159,8 @@ namespace GrpcWinForms.Objects.Locations.Views
 
                         break;
                     case LocationType.LocationPlace:
-                        lblCode2.Text = ""; lblCode2.Visible = false; txtCode2.Enabled = false;
-                        lblCode3.Text = ""; lblCode3.Visible = false; txtCode3.Enabled = false;
+                        lblCode2.Text = ""; lblCode2.Visible = false; txtCode2.Enabled = false; txtCode2.Visible = false;
+                        lblCode3.Text = ""; lblCode3.Visible = false; txtCode3.Enabled = false; txtCode3.Visible = false;
                         lblCodeDigit.Text = ""; lblCodeDigit.Visible = false; txtCodeDig.Enabled = false; txtCodeDig.Visible = false;
                         lblPhone.Text = "Телефонный код:"; lblPhone.Visible = true; txtPhone.Enabled = true;
 

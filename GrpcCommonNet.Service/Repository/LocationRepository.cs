@@ -4,7 +4,9 @@ using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Location;
 using GrpcCommonNet.Service.Models;
 using MySql.Data.MySqlClient;
+using System.Data;
 using System.Data.Common;
+using System.Xml.Linq;
 
 namespace GrpcCommonNet.Service.Repository
 {
@@ -135,94 +137,24 @@ namespace GrpcCommonNet.Service.Repository
                 using var conn = new MySqlConnection(_connectionString);
                 await conn.OpenAsync();
 
-                string new_parent_names_path = String.Empty;
-                string new_parent_ids_path = String.Empty;
-
-                // Определение нового родителя
-                using (var cmd = conn.CreateCommand())
+                // Процедур обновления
+                using (MySqlCommand command = new MySqlCommand("global_db.Location_update", conn))
                 {
-                    cmd.CommandText = 
-                        $@"SELECT g.GeoLocation_Names, g.GeoLocation_Ids from global_db.geolocations g 
-                        where g.GeoLocation_Id = {request.Location.ParentId}";
-                    using var rdr = await cmd.ExecuteReaderAsync();
-                    if (await rdr.ReadAsync())
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@p_code", request.Location.Id);
+                    command.Parameters.AddWithValue("@p_target_parentId", request.Location.ParentId);
+                    command.Parameters.AddWithValue("@p_new_name", request.Location.Name);
+                    command.Parameters.AddWithValue("@p_new_name", request.Location.Data);
+                    
+                    using (var rdr = await command.ExecuteReaderAsync())
                     {
-                        new_parent_names_path = rdr["GeoLocation_Names"] == DBNull.Value ? string.Empty : rdr["GeoLocation_Names"].ToString();
-                        new_parent_ids_path = rdr["GeoLocation_Ids"] == DBNull.Value ? string.Empty : rdr["GeoLocation_Ids"].ToString();
-                    }
-                }
-                // Обновляем даные 
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = $@"
-                WITH RECURSIVE Subtree AS (
-                -- Базовый случай: сам перемещаемый узел
-                    SELECT
-                        t.Geolocation_Id id,
-                        t.Geolocation_ParentId parent_id,
-                        t.Geolocation_Name as old_name,
-                        @new_node_name AS new_name, -- Используем новое заданное имя
-                -- Формируем новый путь ID: путь_нового_родителя + ',' + id
-                        if(IFNULL(@new_parent_id,0) = 0, @moved_node_id, CONCAT(@new_parent_ids_path, ',', CAST(t.Geolocation_id AS CHAR))) AS new_ids_path,
-                -- Формируем новый путь ИМЕН: путь_нового_родителя_имен + ',' + новое_имя
-                        if(IFNULL(@new_parent_id,0) = 0, t.Geolocation_Name, CONCAT(@new_parent_names_path, ' / ', @new_node_name)) AS new_names_path
-                        FROM
-                            global_db.geolocations t
-                        WHERE
-                            t.Geolocation_Id = @moved_node_id
-
-                    UNION ALL
-
-                -- Рекурсивная часть: все потомки
-                    SELECT
-                        g.Geolocation_id,
-                        g.Geolocation_parentid,
-                        g.Geolocation_name AS old_name,
-                        g.Geolocation_name AS new_name, -- Для потомков имя не меняется, берем текущее
-                        -- Используем путь ID родителя из предыдущего шага CTE
-                        CONCAT(s.new_ids_path, ',', CAST(g.Geolocation_id AS CHAR)) AS new_ids_path,
-                -- Используем путь ИМЕН родителя из предыдущего шага CTE
-                        CONCAT(s.new_names_path, ' / ', g.Geolocation_name) AS new_names_path
-                        FROM
-                            global_db.geolocations g
-                            INNER JOIN
-                                Subtree s ON g.Geolocation_parentid = s.id
-                )
-                -- 3. Обновляем таблицу, используя данные из CTE
-                UPDATE global_db.geolocations AS g
-                    JOIN Subtree AS s ON g.Geolocation_id = s.id
-                    SET
-                        g.Geolocation_ids = s.new_ids_path,
-                        g.Geolocation_names = s.new_names_path,
-                -- Обновляем собственное имя (только для корневого узла перемещения, если оно новое)
-                        g.Geolocation_name = s.new_name,
-                -- Обновляем parent_id для корневого узла перемещаемого поддерева
-                        g.Geolocation_parentid = CASE WHEN g.Geolocation_id = @moved_node_id THEN @new_parent_id ELSE g.Geolocation_parentid END,
-                        g.Geolocation_NameLat = @NameLat,
-                        g.Geolocation_Data  = @data
-                    WHERE
-                        g.Geolocation_Id IN (SELECT id FROM Subtree);
-    
-                select * from global_db.geolocations AS g where g.GeoLocation_Id = @moved_node_id;";
-
-                    cmd.Parameters.AddWithValue("@new_parent_names_path", new_parent_names_path);
-                    cmd.Parameters.AddWithValue("@new_parent_ids_path", new_parent_ids_path);
-
-                    cmd.Parameters.AddWithValue("@moved_node_id", request.Location.Id);
-                    cmd.Parameters.AddWithValue("@new_parent_id", request.Location.ParentId > 0 ? request.Location.ParentId : null);
-                    cmd.Parameters.AddWithValue("@new_node_name", request.Location.Name);
-                    cmd.Parameters.AddWithValue("@NameLat", request.Location.NameLat);
-                    cmd.Parameters.AddWithValue("@data", JsonFormatter.Default.Format(request.Location.Data));
-
-                    using var rdr = await cmd.ExecuteReaderAsync();
-
-
-                    if (await rdr.ReadAsync())
-                    {
-                        if(request.FieldMask == null || request.FieldMask.Paths.Count == 0 )
-                            location =  FillLocation(rdr);
-                        else
-                            request.FieldMask.Merge(FillLocation(rdr),location);
+                        if (await rdr.ReadAsync())
+                        {
+                            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                                location = FillLocation(rdr);
+                            else
+                                request.FieldMask.Merge(FillLocation(rdr), location);
+                        }
                     }
                 }
                 return location;
@@ -233,10 +165,96 @@ namespace GrpcCommonNet.Service.Repository
             }
         }
 
+        public async Task<List<int>> DeleteLocationAsync(DeleteLocationRequest  request, UserData userData)
+        {
+            try
+            {
+                List<int> undeletedIds = new();
+
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = $@"
+                    DELETE IGNORE FROM global_db.geolocations 
+                    WHERE FIND_IN_SET(GeoLocation_Id, @p_ids_list) > 0;
+
+                    SELECT 
+                        g.GeoLocation_Id
+                    FROM global_db.geolocations g
+                    WHERE FIND_IN_SET(g.GeoLocation_Id, @p_ids_list) > 0
+                    Order by g.GeoLocation_Names
+                    ;";
+
+                    string p_ids_list = string.Empty;
+                    foreach (int id in request.Ids)
+                    {
+                        if (string.IsNullOrEmpty(p_ids_list))
+                            p_ids_list += id.ToString();
+                        else
+                            p_ids_list += "," + id.ToString();
+                    }
+
+                    cmd.Parameters.AddWithValue("@p_ids_list", p_ids_list);
+
+                    using var rdr = await cmd.ExecuteReaderAsync();
+                    while (await rdr.ReadAsync())
+                    {
+                        undeletedIds.Add(
+                            rdr["GeoLocation_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["GeoLocation_Id"])
+                            );
+                    }
+                }
+
+                return undeletedIds;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в DeleteLocationAsync: " + ex.Message);
+            }
+
+        }
+
+        public async Task<Location> CreateLocationAsync(CreateLocationRequest request, UserData userData)
+        {
+            try
+            {
+                Location location = new();
+
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                // Процедур создания
+                using (MySqlCommand command = new MySqlCommand("global_db.Location_Insert", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@p_parent_id", request.Location.ParentId);
+                    command.Parameters.AddWithValue("@p_name", request.Location.Name);
+                    command.Parameters.AddWithValue("@p_type", request.Location.Type);
+                    command.Parameters.AddWithValue("@p_data", request.Location.Data);
+
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        if (await rdr.ReadAsync())
+                        {
+                            location = FillLocation(rdr);
+                        }
+                    }
+                }
+
+                return location ;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в CreateLocationAsync: " + ex.Message);
+            }
+
+        }
 
         #endregion
 
-
+        #region Метод маппинга
         public Location FillLocation(DbDataReader rdr)
         {
             Location location = new();
@@ -266,6 +284,6 @@ namespace GrpcCommonNet.Service.Repository
 
             return location;
         }
-
+        #endregion
     }
 }
