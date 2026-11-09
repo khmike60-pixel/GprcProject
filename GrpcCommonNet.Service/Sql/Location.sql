@@ -3,6 +3,12 @@ set @new_parentId = 571;
 set @new_name = 'aaaaa';
 set @data = '{}';
 
+set @old_ParentId = 0;
+set @old_Ids = '';
+set @old_name = '';
+set @old_names = '';
+set @old_ParentName = '';
+
 
 select 
 	g.GeoLocation_ParentId, g.GeoLocation_Ids, 	g.GeoLocation_Name, g.GeoLocation_Names, p.GeoLocation_Name
@@ -10,7 +16,6 @@ into @old_ParentId, @old_Ids, @old_name, @old_names, @old_ParentName
 from global_db.geolocations g
 	left join global_db.geolocations p on p.GeoLocation_Id = g.GeoLocation_ParentId 
 where g.GeoLocation_Id = @id;
--- select @id, @old_ParentId, @old_Ids, @old_name, @old.names, @old_ParentName;
 
 with 
 t as (
@@ -21,7 +26,7 @@ t as (
 		g.GeoLocation_Name Name,
 		g.GeoLocation_Names Names 
 	from global_db.geolocations g 
-	where FIND_IN_SET(@id, g.GeoLocation_Ids)
+	where FIND_IN_SET(@id, g.GeoLocation_Ids) > 0
 )
 select 
 	t.Id Id, 
