@@ -469,13 +469,6 @@ public class CurrencyRepository
             {
                 Rate createdRate = new Rate();
                 return createdRate = FillRate(rdr);
-                //return new Rate
-                //{
-                //    RateId = rdr.IsDBNull(0) ? 0 : rdr.GetInt64(0),
-                //    CurrencyId = rdr.IsDBNull(1) ? 0 : rdr.GetInt64(1),
-                //    Date = rdr.IsDBNull(2) ? null : rdr.GetDateTime(2).ToLocalTime().ToUniversalTime().ToTimestamp(),
-                //    Rate_ = rdr.IsDBNull(3) ? new DecimalValue { Units = 0, Scale = 0 } : MyMath.ToDecimalValue((decimal)rdr.GetDouble(3), 2)
-                //};
             }
         }
         catch (Exception ex)
@@ -505,13 +498,6 @@ public class CurrencyRepository
             {
                 Rate updateRate = new Rate();
                 return updateRate = FillRate(rdr);
-                //return new Rate
-                //{
-                //    RateId = rdr.IsDBNull(0) ? 0 : rdr.GetInt64(0),
-                //    CurrencyId = rdr.IsDBNull(1) ? 0 : rdr.GetInt64(1),
-                //    Date = rdr.IsDBNull(2) ? null : rdr.GetDateTime(2).ToLocalTime().ToUniversalTime().ToTimestamp(),
-                //    Rate_ = rdr.IsDBNull(3) ? new DecimalValue { Units = 0, Scale = 0 } : MyMath.ToDecimalValue((decimal)rdr.GetDouble(3), 2)
-                //};
             } else return new Rate {}; 
         }
         catch (Exception ex)

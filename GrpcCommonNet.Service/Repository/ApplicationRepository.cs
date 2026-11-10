@@ -243,52 +243,6 @@ public class ApplicationRepository
         };
     }
 
-    //public async Task<ApplicationOfUser> AddApplicationOfUserAsync(int userId, int appId)
-    //{
-    //    try
-    //    {
-    //        using var conn = new MySqlConnection(_connectionString);
-    //        await conn.OpenAsync();
-    //        using var cmd = conn.CreateCommand();
-    //        cmd.CommandText = @"INSERT INTO refers.m_user_system 
-    //                            (UserId, MSysId)
-    //                           VALUES (@userId, @appId);
-    //                            select 
-    //                                us.MUSysId, 
-    //                                s.MSysId,s.ProductName, s.BaseName, s.MSysName,
-    //                                u.UserId, u.UserName        
-    //                            from m_user_system us
-    //                                left join refers.m_system s on s.MSysId = us.MSysId
-    //                                left join refers.m_user u on u.UserId = us.UserId
-    //                            where us.MUSysId = LAST_INSERT_ID();";
-    //        cmd.Parameters.AddWithValue("@userId", userId);
-    //        cmd.Parameters.AddWithValue("@appId", appId);
-    //        var rdr = await cmd.ExecuteReaderAsync();
-    //        ApplicationOfUser app_user = new ApplicationOfUser();
-    //        Application app = new Application();
-    //        User user = new User();
-    //        int id = 0;
-    //        if (rdr.Read())
-    //        {
-    //            id = rdr.IsDBNull(0) ? 0 : rdr.GetInt32(0);
-    //            app = await FillApplication(rdr);
-    //            user = new User()
-    //            {
-    //                UserId = rdr.IsDBNull(5) ? 0 : rdr.GetInt32(5),
-    //                UserName = rdr.IsDBNull(6) ? string.Empty : rdr.GetString(6)
-    //            };
-    //        }
-    //        else return null;
-
-    //        return new ApplicationOfUser() { Id = id, Application = app, User = user };
-
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new Exception("Ошибка в AddApplicationOfUserAsync: " + ex.Message);
-    //    }
-    //}
-
     public async Task<bool> DeleteApplicationOfUserAsync(int id)
     {
         try

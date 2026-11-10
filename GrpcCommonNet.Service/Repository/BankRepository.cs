@@ -53,14 +53,14 @@ public class BankRepository
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = $@"
-SELECT b.*, g.GeoLocation_Code2, g.GeoLocation_Name
-    FROM global_db.m_bank b 
-        LEFT JOIN global_db.geolocations g ON b.ID_M_GEOCOUNTRY_REG = g.GEOLOCATION_Id
-where 1 = 1 
-    and (@Name IS NULL OR b.NameBank LIKE CONCAT('%', @Name, '%'))
-      AND (IFNULL(@Mfo,'') = '' OR b.Mfo LIKE CONCAT('%', @Mfo, '%'))
-ORDER BY b.NameBank;
-";
+            SELECT b.*, g.GeoLocation_Code2, g.GeoLocation_Name
+            FROM global_db.m_bank b 
+                LEFT JOIN global_db.geolocations g ON b.ID_M_GEOCOUNTRY_REG = g.GEOLOCATION_Id
+            where 1 = 1 
+                and (@Name IS NULL OR b.NameBank LIKE CONCAT('%', @Name, '%'))
+                AND (IFNULL(@Mfo,'') = '' OR b.Mfo LIKE CONCAT('%', @Mfo, '%'))
+            ORDER BY b.NameBank;
+            ";
             cmd.Parameters.AddWithValue("@Name", request.Name);
             cmd.Parameters.AddWithValue("@Mfo", request.BankCode);
 
