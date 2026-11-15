@@ -53,7 +53,7 @@ namespace GrpcWinForms.Objects.Test
         private void buttonCancel_Click(object sender, EventArgs e) // Cancel
         {
             MessageBox.Show(string.Join(Environment.NewLine,
-                $"Склад : Id = {places.SelectedNode.Id}, Name = {places.SelectedNode.Name}"
+                $"Склад : Id = {places.SelectedNode?.Id}, Name = {places.SelectedNode?.Name}"
                 ));
         }
 

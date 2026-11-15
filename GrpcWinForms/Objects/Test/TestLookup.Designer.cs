@@ -45,7 +45,7 @@ namespace GrpcWinForms.Objects.Test
             // 
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonCancel.AutoSize = true;
-            buttonCancel.Location = new Point(327, 190);
+            buttonCancel.Location = new Point(361, 190);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 25);
             buttonCancel.TabIndex = 23;
@@ -59,7 +59,7 @@ namespace GrpcWinForms.Objects.Test
             textBox1.Location = new Point(73, 12);
             textBox1.Name = "textBox1";
             textBox1.PlaceholderText = "Произвольный  текст";
-            textBox1.Size = new Size(330, 23);
+            textBox1.Size = new Size(364, 23);
             textBox1.TabIndex = 25;
             // 
             // places
@@ -67,13 +67,14 @@ namespace GrpcWinForms.Objects.Test
             places.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             places.Location = new Point(73, 41);
             places.Name = "places";
-            places.Placeholder = "Yjdsq";
-            places.Size = new Size(330, 23);
+            places.Placeholder = "Укажите склад";
+            places.Size = new Size(364, 23);
             places.TabIndex = 33;
             places.Value = "";
             // 
             // c1TreeView1
             // 
+            c1TreeView1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             // 
             // 
             // 
@@ -89,16 +90,16 @@ namespace GrpcWinForms.Objects.Test
             c1TreeColumn1.HeaderText = "Column1";
             c1TreeColumn1.Name = "Column1";
             c1TreeView1.Columns.Add(c1TreeColumn1);
-            c1TreeView1.Location = new Point(111, 85);
+            c1TreeView1.Location = new Point(73, 70);
             c1TreeView1.Name = "c1TreeView1";
-            c1TreeView1.Size = new Size(200, 91);
+            c1TreeView1.Size = new Size(363, 91);
             c1TreeView1.TabIndex = 34;
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(415, 227);
+            ClientSize = new Size(449, 227);
             Controls.Add(c1TreeView1);
             Controls.Add(places);
             Controls.Add(textBox1);
