@@ -1,0 +1,23 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Permission";
+
+import "protos/common/general.proto";
+import "protos/common/permission.proto";
+
+package permission;
+
+service PermissionServices {
+	rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse);
+}
+
+message GetPermissionRequest {
+	Common.PermissionDbSources db_sources = 1;
+	Common.PermissionSubjects subjects    = 2;
+	string object_name            = 3;
+}
+
+message GetPermissionResponse {
+	Common.Result result = 1;
+	Common.Permission permission = 2;
+}

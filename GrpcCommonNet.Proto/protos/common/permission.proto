@@ -1,0 +1,35 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcCommonNet.Library.Common";
+
+import "google/protobuf/struct.proto";
+
+package Common;
+
+// C#: PermissionValue
+enum PermissionValue {
+  PERMISSION_VALUE_NONE   = 0;
+  PERMISSION_VALUE_VIEW   = 1;
+  PERMISSION_VALUE_SELECT = 2;
+  PERMISSION_VALUE_EDIT   = 3;
+}
+
+// C#: Permission
+message Permission {
+  PermissionValue value = 1;
+  bool can_check = 2;
+  bool can_approve = 3;
+  bool is_admin = 4;
+}
+
+// C#: PermissionDbSources
+message PermissionDbSources {
+  string global_db_name = 1;
+  string local_db_name  = 2;
+}
+
+// C#: PermissionSubjects
+message PermissionSubjects {
+  int32 global_subject_id = 1;
+  int32 local_subject_id  = 2;
+}

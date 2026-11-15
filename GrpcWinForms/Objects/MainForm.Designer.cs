@@ -31,10 +31,10 @@ namespace GrpcWinForms.Forms
             toolStripMenuItem8 = new ToolStripSeparator();
             StockOperationsToolStripMenuItem = new ToolStripMenuItem();
             StockDocumentsToolStripMenuItem = new ToolStripMenuItem();
+            AllDocumrntsToolStripMenuItem = new ToolStripMenuItem();
             OutDocumentsToolStripMenuItem = new ToolStripMenuItem();
             InpDocumentsToolStripMenuItem = new ToolStripMenuItem();
             InventoryToolStripMenuItem = new ToolStripMenuItem();
-            AllDocumrntsToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem5 = new ToolStripSeparator();
             TemplatesStockToolStripMenuItem = new ToolStripMenuItem();
             StockDocumentTypesToolStripMenuItem = new ToolStripMenuItem();
@@ -71,6 +71,7 @@ namespace GrpcWinForms.Forms
             GeographAndPlacesToolStripMenuItem = new ToolStripMenuItem();
             GeolocationsToolStripMenuItem = new ToolStripMenuItem();
             PlacesToolStripMenuItem = new ToolStripMenuItem();
+            LocationToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             DocumentTypesToolStripMenuItem = new ToolStripMenuItem();
             ServicesToolStripMenuItem = new ToolStripMenuItem();
@@ -85,7 +86,6 @@ namespace GrpcWinForms.Forms
             UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             тестоваяФормаToolStripMenuItem = new ToolStripMenuItem();
             taskBar = new GrpcWinForms.Controls.TaskBar.TaskBar(components);
-            LocationToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -109,7 +109,7 @@ namespace GrpcWinForms.Forms
             // 
             toolStripMenuItemContrtacts.DropDownItems.AddRange(new ToolStripItem[] { AllContrtactsToolStripMenuItemAllContrtacts, SaleContrtactsToolStripMenuItem, PurchaseContrtactsToolStripMenuItem, toolStripMenuItem4, типыКонтрактовToolStripMenuItem, шаблоныКонтрактовДляПечатиToolStripMenuItem });
             toolStripMenuItemContrtacts.Name = "toolStripMenuItemContrtacts";
-            toolStripMenuItemContrtacts.Size = new Size(159, 22);
+            toolStripMenuItemContrtacts.Size = new Size(180, 22);
             toolStripMenuItemContrtacts.Text = "Контракты";
             // 
             // AllContrtactsToolStripMenuItemAllContrtacts
@@ -154,7 +154,7 @@ namespace GrpcWinForms.Forms
             // 
             конттрактныедокументтыToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { всеToolStripMenuItem, реализацияToolStripMenuItem, приобретениеToolStripMenuItem, toolStripMenuItem9, типыСчетовфактурToolStripMenuItem, шаблоныСчеттовфактурToolStripMenuItem });
             конттрактныедокументтыToolStripMenuItem.Name = "конттрактныедокументтыToolStripMenuItem";
-            конттрактныедокументтыToolStripMenuItem.Size = new Size(159, 22);
+            конттрактныедокументтыToolStripMenuItem.Size = new Size(180, 22);
             конттрактныедокументтыToolStripMenuItem.Text = "Счета-Фактуры";
             // 
             // всеToolStripMenuItem
@@ -196,7 +196,7 @@ namespace GrpcWinForms.Forms
             // toolStripMenuItem8
             // 
             toolStripMenuItem8.Name = "toolStripMenuItem8";
-            toolStripMenuItem8.Size = new Size(156, 6);
+            toolStripMenuItem8.Size = new Size(177, 6);
             // 
             // StockOperationsToolStripMenuItem
             // 
@@ -207,10 +207,17 @@ namespace GrpcWinForms.Forms
             // 
             // StockDocumentsToolStripMenuItem
             // 
-            StockDocumentsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { OutDocumentsToolStripMenuItem, InpDocumentsToolStripMenuItem, InventoryToolStripMenuItem, AllDocumrntsToolStripMenuItem, toolStripMenuItem5, TemplatesStockToolStripMenuItem, StockDocumentTypesToolStripMenuItem });
+            StockDocumentsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { AllDocumrntsToolStripMenuItem, OutDocumentsToolStripMenuItem, InpDocumentsToolStripMenuItem, InventoryToolStripMenuItem, toolStripMenuItem5, TemplatesStockToolStripMenuItem, StockDocumentTypesToolStripMenuItem });
             StockDocumentsToolStripMenuItem.Name = "StockDocumentsToolStripMenuItem";
             StockDocumentsToolStripMenuItem.Size = new Size(196, 22);
             StockDocumentsToolStripMenuItem.Text = "Складские документы";
+            // 
+            // AllDocumrntsToolStripMenuItem
+            // 
+            AllDocumrntsToolStripMenuItem.Name = "AllDocumrntsToolStripMenuItem";
+            AllDocumrntsToolStripMenuItem.Size = new Size(300, 22);
+            AllDocumrntsToolStripMenuItem.Text = "Документы  все";
+            AllDocumrntsToolStripMenuItem.Click += AllDocumrntsToolStripMenuItem_Click;
             // 
             // OutDocumentsToolStripMenuItem
             // 
@@ -229,13 +236,6 @@ namespace GrpcWinForms.Forms
             InventoryToolStripMenuItem.Name = "InventoryToolStripMenuItem";
             InventoryToolStripMenuItem.Size = new Size(300, 22);
             InventoryToolStripMenuItem.Text = "Инвентаризация";
-            // 
-            // AllDocumrntsToolStripMenuItem
-            // 
-            AllDocumrntsToolStripMenuItem.Name = "AllDocumrntsToolStripMenuItem";
-            AllDocumrntsToolStripMenuItem.Size = new Size(300, 22);
-            AllDocumrntsToolStripMenuItem.Text = "Документы  все";
-            AllDocumrntsToolStripMenuItem.Click += AllDocumrntsToolStripMenuItem_Click;
             // 
             // toolStripMenuItem5
             // 
@@ -466,6 +466,13 @@ namespace GrpcWinForms.Forms
             PlacesToolStripMenuItem.Size = new Size(325, 22);
             PlacesToolStripMenuItem.Text = "Места расположения";
             // 
+            // LocationToolStripMenuItem
+            // 
+            LocationToolStripMenuItem.Name = "LocationToolStripMenuItem";
+            LocationToolStripMenuItem.Size = new Size(325, 22);
+            LocationToolStripMenuItem.Text = "Страны, регионы, города, места размещения";
+            LocationToolStripMenuItem.Click += LocationToolStripMenuItem_Click;
+            // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
@@ -556,22 +563,15 @@ namespace GrpcWinForms.Forms
             taskBar.Dock = DockStyle.Bottom;
             taskBar.ForeColor = SystemColors.ControlText;
             taskBar.GripStyle = ToolStripGripStyle.Hidden;
-            taskBar.Location = new Point(0, 339);
+            taskBar.Location = new Point(0, 431);
             taskBar.Name = "taskBar";
             taskBar.Size = new Size(1100, 25);
             taskBar.TabIndex = 2;
             taskBar.Text = "taskBarComponent1";
             // 
-            // LocationToolStripMenuItem
-            // 
-            LocationToolStripMenuItem.Name = "LocationToolStripMenuItem";
-            LocationToolStripMenuItem.Size = new Size(325, 22);
-            LocationToolStripMenuItem.Text = "Страны, регионы, города, места размещения";
-            LocationToolStripMenuItem.Click += LocationToolStripMenuItem_Click;
-            // 
             // MainForm
             // 
-            ClientSize = new Size(1100, 364);
+            ClientSize = new Size(1100, 456);
             Controls.Add(taskBar);
             Controls.Add(menuStrip1);
             IsMdiContainer = true;

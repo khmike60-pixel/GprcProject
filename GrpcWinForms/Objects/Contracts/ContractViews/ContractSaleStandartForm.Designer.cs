@@ -76,7 +76,7 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
             gDocumentLines = new SmartLib.SmartGrid(components);
             toolStrip1 = new ToolStrip();
             c1SplitterPanel1 = new C1.Win.SplitContainer.C1SplitterPanel();
-            invoiceList = new GrpcWinForms.Objects.Innvoices.Controls.InvoiceList();
+            invoiceList = new GrpcWinForms.Objects.Invoices.Controls.InvoiceList();
             panel1 = new Panel();
             ((System.ComponentModel.ISupportInitialize)splitContainerAll).BeginInit();
             splitContainerAll.SuspendLayout();
@@ -612,6 +612,6 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
         private C1.Win.SplitContainer.C1SplitterPanel c1SplitterPanel2;
         private SmartLib.SmartGrid gDocumentLines;
         private ToolStrip toolStrip1;
-        private Innvoices.Controls.InvoiceList invoiceList;
+        private Invoices.Controls.InvoiceList invoiceList;
     }
 }

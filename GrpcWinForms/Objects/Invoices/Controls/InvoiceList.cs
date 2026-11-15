@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Innvoices.Controls
+namespace GrpcWinForms.Objects.Invoices.Controls
 {
     public partial class InvoiceList : UserControl
     {

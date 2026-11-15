@@ -79,8 +79,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Objects\Geolocations\Repositories\" />
-    <Folder Include="Objects\Innvoices\Presenters\" />
-    <Folder Include="Objects\Innvoices\Repositories\" />
-    <Folder Include="Objects\Innvoices\Models\" />
+    <Folder Include="Objects\Invoices\Presenters\" />
+    <Folder Include="Objects\Invoices\Repositories\" />
+    <Folder Include="Objects\Invoices\Models\" />
+    <Folder Include="Objects\Rights\Presenters\" />
+    <Folder Include="Objects\Rights\Repositories\" />
   </ItemGroup>
 </Project>

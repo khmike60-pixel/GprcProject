@@ -1,4 +1,4 @@
-﻿namespace GrpcWinForms.Objects.Innvoices.Controls
+﻿namespace GrpcWinForms.Objects.Invoices.Controls
 {
     partial class InvoiceList
     {

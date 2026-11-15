@@ -17,6 +17,7 @@ using GrpcCommonNet.Library.Employee;
 using GrpcCommonNet.Library.SalePurchaseType;
 using GrpcCommonNet.Library.Stock;
 using GrpcCommonNet.Library.Location;
+using GrpcCommonNet.Library.Permission;
 
 
 namespace GrpcWinForms.GrpcClients
@@ -40,6 +41,7 @@ namespace GrpcWinForms.GrpcClients
         private static SalePurchaseTypeServices.SalePurchaseTypeServicesClient _salePurchaseType;
         private static StockServices.StockServicesClient _stock;
         private static LocationServices.LocationServicesClient _location;
+        private static PermissionServices.PermissionServicesClient _permission;
 
         public static ApplicationServices.ApplicationServicesClient Application =>
             _application ??= new ApplicationServices.ApplicationServicesClient(MainClass.Invoker);
@@ -73,6 +75,8 @@ namespace GrpcWinForms.GrpcClients
             _stock ??= new StockServices.StockServicesClient(MainClass.Invoker);
         public static LocationServices.LocationServicesClient Location =>
             _location ??= new LocationServices.LocationServicesClient(MainClass.Invoker);
+        public static PermissionServices.PermissionServicesClient Permission =>
+            _permission ??= new PermissionServices.PermissionServicesClient(MainClass.Invoker);
 
 
         public static AuthServices.AuthServicesClient Auth =>

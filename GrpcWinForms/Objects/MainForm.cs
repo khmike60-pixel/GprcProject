@@ -297,7 +297,12 @@ namespace GrpcWinForms.Forms
 
         private void InvoicesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            foreach (Form child in MdiChildren)
+            {
+                if (child is Objects.Invoices.Views.InvoicesForm) { child.Activate(); return; }
+            }
+            var f = new Objects.Invoices.Views.InvoicesForm { MdiParent = this };
+            f.Show();
         }
 
         private void LocationToolStripMenuItem_Click(object sender, EventArgs e)

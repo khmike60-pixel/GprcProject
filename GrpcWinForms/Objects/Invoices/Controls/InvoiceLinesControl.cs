@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GrpcWinForms.Objects.Innvoices.Views
+namespace GrpcWinForms.Objects.Invoices.Controls
 {
-    public partial class InnvoicesForm : Form
+    public partial class InvoiceLinesControl : UserControl
     {
-        public InnvoicesForm()
+        public InvoiceLinesControl()
         {
             InitializeComponent();
         }
