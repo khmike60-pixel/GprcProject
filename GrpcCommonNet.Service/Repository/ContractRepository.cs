@@ -966,7 +966,7 @@ public class ContractRepository
         List<string> updateFields = new List<string>();
         foreach (string path in Paths)
         {
-            switch (path.ToLowerInvariant())
+            switch (path)
             {
                 case "contract_RootId":
                     updateFields.Add("contract_RootId = @contract_RootId");

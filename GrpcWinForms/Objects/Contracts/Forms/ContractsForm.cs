@@ -528,8 +528,16 @@ namespace GrpcWinForms.Objects.Contracts.Forms
             TreeContract newTreeContract = new TreeContract() { ContractId = e.Contract.Id };
 
             // Запускаем поиск нужного нода и его замену на новый объект TreeContract
-            //Node foundNode = FindAndReplace(smartGridContracts1.Nodes, newTreeContract);
-            List<Node> foundNodes = FindAndReplaces(smartGridContracts1.Nodes, newTreeContract);
+            List<Node> foundNodes = new List<Node>();
+            Node fNode = FindAndReplace(smartGridContracts1.Nodes, newTreeContract);
+            if(fNode != null) foundNodes.Add(fNode);
+
+            if (fNode.Nodes.Length > 0)
+            {
+                Node fNodeCh = FindAndReplace(fNode.Nodes, newTreeContract);
+                foundNodes.Add(fNodeCh);
+            }
+            //List<Node> foundNodes = FindAndReplaces(smartGridContracts1.Nodes, newTreeContract);
 
             foreach (Node foundNode in foundNodes)
             {

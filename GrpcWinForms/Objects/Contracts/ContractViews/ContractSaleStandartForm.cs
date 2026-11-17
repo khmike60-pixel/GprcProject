@@ -551,16 +551,31 @@ namespace GrpcWinForms.Objects.Contracts.ContractViews
 
         #region События верхних кнопок
 
-        private void toolStripButtonState_Click(object sender, EventArgs e)
+        private async void toolStripButtonState_Click(object sender, EventArgs e)
         {
-            using (StateForm form = new StateForm() { Contract = contract })
+            try
             {
-                if (form.ShowDialog() == DialogResult.OK)
+                using (StateForm form = new StateForm() { Contract = contract })
                 {
-                    contract.State = form.Contract.State;
-                    // должен быть обновлен только статус документа. Переписать UpdateContract
-                    buttonOk_Click(sender, e);
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        contract.State = form.Contract.State;
+                        ContractRequest request = new ContractRequest()
+                        {
+                            Contract = contract,
+                            FieldMask = new FieldMask() { Paths = { "contract_State" } }
+                        };
+
+                        Contract contractResponse = await ContractRepository.UpdateContractAsync(request);
+                        // должен быть обновлен только статус документа. Переписать UpdateContract
+                        if (contractResponse == null) return;
+                        ContractEventService.Instance.RaiseContractChanged(contractResponse, ContractChangeType.Updated);
+                    }
                 }
+            }
+            catch (Exception ex )
+            {
+                MessageBox.Show("Ошибка изменения статуса документа");
             }
         }
 
