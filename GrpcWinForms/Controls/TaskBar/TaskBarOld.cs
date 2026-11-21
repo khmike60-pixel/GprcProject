@@ -197,7 +197,7 @@ namespace GrpcWinForms.Controls.TaskBar
         // Обработчик активации MDI-дочерней формы
         private void OnMdiChildActivate(object sender, EventArgs e)
         {
-            var activeForm = _mdiParent?.ActiveMdiChild;
+            Form activeForm = (Form)_mdiParent?.ActiveMdiChild;
 
             if (activeForm != null && !activeForm.IsDisposed)
             {

@@ -33,3 +33,37 @@ message PermissionSubjects {
   int32 global_subject_id = 1;
   int32 local_subject_id  = 2;
 }
+
+message RightObject {
+	int32 id = 1;
+	RightObject parent = 2;
+	string name = 3;
+	string ids = 4;
+	string names = 5;
+	string code = 6;
+	bool is_group = 7;
+	bool check_and_approve_enable = 8;
+}
+
+message Role {
+	int32 id = 1;
+	string name = 2;
+	bool default = 3;
+	bool checked = 4;
+	bool approved = 5;
+	string check_by = 6;
+	string approve_by = 7;
+}
+
+message RightValue {
+	RightObject right = 1;
+	Permission value = 2;
+}
+
+
+message RightsOfRole {
+	int32 id = 1;
+	Role role = 2;
+	repeated RightValue rights = 3;
+}
+

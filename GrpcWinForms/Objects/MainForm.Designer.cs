@@ -86,6 +86,11 @@ namespace GrpcWinForms.Forms
             UsersOfAppToolStripMenuItem = new ToolStripMenuItem();
             тестоваяФормаToolStripMenuItem = new ToolStripMenuItem();
             taskBar = new GrpcWinForms.Controls.TaskBar.TaskBar(components);
+            LocalRightsToolStripMenuItem = new ToolStripMenuItem();
+            LocalSubjectsToolStripMenuItem = new ToolStripMenuItem();
+            toolStripMenuItem10 = new ToolStripSeparator();
+            LocalRolesToolStripMenuItem = new ToolStripMenuItem();
+            LocalObjectsToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -109,7 +114,7 @@ namespace GrpcWinForms.Forms
             // 
             toolStripMenuItemContrtacts.DropDownItems.AddRange(new ToolStripItem[] { AllContrtactsToolStripMenuItemAllContrtacts, SaleContrtactsToolStripMenuItem, PurchaseContrtactsToolStripMenuItem, toolStripMenuItem4, типыКонтрактовToolStripMenuItem, шаблоныКонтрактовДляПечатиToolStripMenuItem });
             toolStripMenuItemContrtacts.Name = "toolStripMenuItemContrtacts";
-            toolStripMenuItemContrtacts.Size = new Size(180, 22);
+            toolStripMenuItemContrtacts.Size = new Size(159, 22);
             toolStripMenuItemContrtacts.Text = "Контракты";
             // 
             // AllContrtactsToolStripMenuItemAllContrtacts
@@ -154,7 +159,7 @@ namespace GrpcWinForms.Forms
             // 
             конттрактныедокументтыToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { всеToolStripMenuItem, реализацияToolStripMenuItem, приобретениеToolStripMenuItem, toolStripMenuItem9, типыСчетовфактурToolStripMenuItem, шаблоныСчеттовфактурToolStripMenuItem });
             конттрактныедокументтыToolStripMenuItem.Name = "конттрактныедокументтыToolStripMenuItem";
-            конттрактныедокументтыToolStripMenuItem.Size = new Size(180, 22);
+            конттрактныедокументтыToolStripMenuItem.Size = new Size(159, 22);
             конттрактныедокументтыToolStripMenuItem.Text = "Счета-Фактуры";
             // 
             // всеToolStripMenuItem
@@ -196,7 +201,7 @@ namespace GrpcWinForms.Forms
             // toolStripMenuItem8
             // 
             toolStripMenuItem8.Name = "toolStripMenuItem8";
-            toolStripMenuItem8.Size = new Size(177, 6);
+            toolStripMenuItem8.Size = new Size(156, 6);
             // 
             // StockOperationsToolStripMenuItem
             // 
@@ -487,7 +492,7 @@ namespace GrpcWinForms.Forms
             // 
             // ServicesToolStripMenuItem
             // 
-            ServicesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { GlobalRightsToolStripMenuItem, ApplicationsAndUsersToolStripMenuItem, тестоваяФормаToolStripMenuItem });
+            ServicesToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { ApplicationsAndUsersToolStripMenuItem, тестоваяФормаToolStripMenuItem, GlobalRightsToolStripMenuItem, LocalRightsToolStripMenuItem });
             ServicesToolStripMenuItem.Name = "ServicesToolStripMenuItem";
             ServicesToolStripMenuItem.Size = new Size(59, 20);
             ServicesToolStripMenuItem.Text = "Сервис";
@@ -502,24 +507,24 @@ namespace GrpcWinForms.Forms
             // SubjectsRightsToolStripMenuItem
             // 
             SubjectsRightsToolStripMenuItem.Name = "SubjectsRightsToolStripMenuItem";
-            SubjectsRightsToolStripMenuItem.Size = new Size(173, 22);
+            SubjectsRightsToolStripMenuItem.Size = new Size(180, 22);
             SubjectsRightsToolStripMenuItem.Text = "Субъекты прав";
             // 
             // toolStripMenuItem1
             // 
             toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(170, 6);
+            toolStripMenuItem1.Size = new Size(177, 6);
             // 
             // RolesRightsToolStripMenuItem
             // 
             RolesRightsToolStripMenuItem.Name = "RolesRightsToolStripMenuItem";
-            RolesRightsToolStripMenuItem.Size = new Size(173, 22);
+            RolesRightsToolStripMenuItem.Size = new Size(180, 22);
             RolesRightsToolStripMenuItem.Text = "Глобальные роли";
             // 
             // ObjectsRightsToolStripMenuItem
             // 
             ObjectsRightsToolStripMenuItem.Name = "ObjectsRightsToolStripMenuItem";
-            ObjectsRightsToolStripMenuItem.Size = new Size(173, 22);
+            ObjectsRightsToolStripMenuItem.Size = new Size(180, 22);
             ObjectsRightsToolStripMenuItem.Text = "Объекты прав";
             // 
             // ApplicationsAndUsersToolStripMenuItem
@@ -569,8 +574,40 @@ namespace GrpcWinForms.Forms
             taskBar.TabIndex = 2;
             taskBar.Text = "taskBarComponent1";
             // 
+            // LocalRightsToolStripMenuItem
+            // 
+            LocalRightsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { LocalSubjectsToolStripMenuItem, toolStripMenuItem10, LocalRolesToolStripMenuItem, LocalObjectsToolStripMenuItem });
+            LocalRightsToolStripMenuItem.Name = "LocalRightsToolStripMenuItem";
+            LocalRightsToolStripMenuItem.Size = new Size(235, 22);
+            LocalRightsToolStripMenuItem.Text = "Локальные права";
+            // 
+            // LocalSubjectsToolStripMenuItem
+            // 
+            LocalSubjectsToolStripMenuItem.Name = "LocalSubjectsToolStripMenuItem";
+            LocalSubjectsToolStripMenuItem.Size = new Size(180, 22);
+            LocalSubjectsToolStripMenuItem.Text = "Субъекты прав";
+            // 
+            // toolStripMenuItem10
+            // 
+            toolStripMenuItem10.Name = "toolStripMenuItem10";
+            toolStripMenuItem10.Size = new Size(177, 6);
+            // 
+            // LocalRolesToolStripMenuItem
+            // 
+            LocalRolesToolStripMenuItem.Name = "LocalRolesToolStripMenuItem";
+            LocalRolesToolStripMenuItem.Size = new Size(180, 22);
+            LocalRolesToolStripMenuItem.Text = "Локальные роли";
+            // 
+            // LocalObjectsToolStripMenuItem
+            // 
+            LocalObjectsToolStripMenuItem.Name = "LocalObjectsToolStripMenuItem";
+            LocalObjectsToolStripMenuItem.Size = new Size(180, 22);
+            LocalObjectsToolStripMenuItem.Text = "Объекты прав";
+            LocalObjectsToolStripMenuItem.Click += LocalObjectsToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
             ClientSize = new Size(1100, 456);
             Controls.Add(taskBar);
             Controls.Add(menuStrip1);
@@ -658,5 +695,10 @@ namespace GrpcWinForms.Forms
         private ToolStripMenuItem типыСчетовфактурToolStripMenuItem;
         private ToolStripMenuItem шаблоныСчеттовфактурToolStripMenuItem;
         private ToolStripMenuItem LocationToolStripMenuItem;
+        private ToolStripMenuItem LocalRightsToolStripMenuItem;
+        private ToolStripMenuItem LocalSubjectsToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem10;
+        private ToolStripMenuItem LocalRolesToolStripMenuItem;
+        private ToolStripMenuItem LocalObjectsToolStripMenuItem;
     }
 }

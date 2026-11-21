@@ -1,13 +1,13 @@
-﻿using System;
+﻿using SmartLib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SmartLib;
 
-namespace GrpcWinForms.Objects.Rights.Models
+namespace GrpcWinForms.Controls.UserPermissionsUI.Models
 {
-    public class RightObjectTreeModel : ITreeData, IEquatable<object>
+    public class RightObjectTreeModel: ITreeData
     {
         public int Id { get; set; }
         public int ParentId { get; set; }

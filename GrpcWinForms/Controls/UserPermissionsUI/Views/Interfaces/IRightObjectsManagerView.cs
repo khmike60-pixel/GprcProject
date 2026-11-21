@@ -1,11 +1,11 @@
-﻿using GrpcWinForms.Objects.Rights.Models;
+﻿using GrpcWinForms.Controls.UserPermissionsUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GrpcWinForms.Objects.Rights.Views.Interfaces
+namespace GrpcWinForms.Controls.UserPermissionsUI.Views.Interfaces
 {
     public interface IRightObjectsManagerView
     {
@@ -17,6 +17,6 @@ namespace GrpcWinForms.Objects.Rights.Views.Interfaces
         event Action<RightObjectTreeModel, RightObjectTreeModel> OnMove;
 
         void Show();
-        void Refresh(IEnumerable<RightObjectTreeModel> data);
+        void Refresh(IEnumerable<RightObjectTreeModel> data, RightObjectTreeModel selectedModel);
     }
 }

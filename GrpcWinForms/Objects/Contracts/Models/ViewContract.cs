@@ -79,7 +79,7 @@ namespace GrpcWinForms.Objects.Contracts.Models
                 // читая значение ContractId именно с реального типа экземпляра.
                 if (formType != null)
                 {
-                    foreach (var child in mainForm.MdiChildren)
+                    foreach (Form child in mainForm.MdiChildren)
                     {
                         if (child.GetType() != formType) continue;
 
