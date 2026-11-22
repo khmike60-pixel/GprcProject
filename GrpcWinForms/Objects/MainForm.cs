@@ -333,8 +333,8 @@ namespace GrpcWinForms.Forms
             {
                 if (child is RightObjectsManagerForm) { child.Activate(); return; }
             }
-            var f = new RightObjectsManagerForm("") { MdiParent = this };
-            f.Show();
+            var f = new RightObjectsManagerForm("LocalRightObjects") { MdiParent = this };
+            f.ShowWithPermission();
 
         }
     }

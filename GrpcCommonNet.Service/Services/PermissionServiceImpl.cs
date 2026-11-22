@@ -50,7 +50,7 @@ namespace GrpcCommonNet.Service.Services
         public override async Task<GetRightObjectsResponse> GetRightObjects(GetRightObjectsRequest request, ServerCallContext context)
         {
             UserData userData = new UserData().GetUserData(context);
-            _logger.LogDebug($"GetLocation called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+            _logger.LogDebug($"GetRightObjects called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
             try
             {
@@ -71,17 +71,32 @@ namespace GrpcCommonNet.Service.Services
                 return new GetRightObjectsResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
 
             }
-
-
-
         }
 
         public override async Task<RightObjectResponse> AddRightObject(RightObjectRequest request, ServerCallContext context)
         {
-            RightObjectResponse response = new RightObjectResponse();
+            UserData userData = new UserData().GetUserData(context);
+            _logger.LogDebug($"AddRightObject called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
+            try
+            {
+                RightObjectResponse response = new RightObjectResponse();
+                RightObject right = await _repo.AddRightObjectAsync(request, userData);
+                if (right == null) response.Result = new Result { Status = Status.NotFound };
+                else
+                {
+                    response.RightObject = right;
+                    response.Result = new Result { Status = Status.Ok };
+                }
+                return response;
 
-            return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return new RightObjectResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+
+            }
         }
 
         public override async Task<RightObjectResponse> EditRightObject(RightObjectRequest request, ServerCallContext context)

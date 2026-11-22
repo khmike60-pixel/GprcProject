@@ -33,7 +33,10 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Views.Forms
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RightObjectsManagerForm));
-            FooterDescription footerDescription2 = new FooterDescription();
+            FooterDescription footerDescription1 = new FooterDescription();
+            AggregateDefinition aggregateDefinition1 = new AggregateDefinition();
+            StringItem stringItem1 = new StringItem();
+            StringItem stringItem2 = new StringItem();
             RightObjectsGrid = new SmartGrid(components);
             toolStrip1 = new ToolStrip();
             AddObjectRight = new ToolStripButton();
@@ -54,19 +57,31 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Views.Forms
             RightObjectsGrid.ColumnInfo = resources.GetString("RightObjectsGrid.ColumnInfo");
             RightObjectsGrid.Dock = DockStyle.Fill;
             RightObjectsGrid.DrawMode = DrawModeEnum.OwnerDraw;
-            RightObjectsGrid.Footers.Descriptions.Add(footerDescription2);
+            aggregateDefinition1.Aggregate = AggregateEnum.Count;
+            aggregateDefinition1.Caption = "Итого: ";
+            aggregateDefinition1.Column = 1;
+            footerDescription1.Aggregates.Add(aggregateDefinition1);
+            RightObjectsGrid.Footers.Descriptions.Add(footerDescription1);
             RightObjectsGrid.Footers.Fixed = true;
+            stringItem1.Name = "Head1";
+            stringItem1.Value = "...; Наименование; Код; Проверка / Утверждение";
+            stringItem2.Name = "Head2";
+            stringItem2.Value = "...; Наименование; Код; Проверка / Утверждение";
+            RightObjectsGrid.Headers.Add(stringItem1);
+            RightObjectsGrid.Headers.Add(stringItem2);
             RightObjectsGrid.IdName = null;
             RightObjectsGrid.Location = new Point(0, 31);
             RightObjectsGrid.Margin = new Padding(4, 3, 4, 3);
             RightObjectsGrid.Name = "RightObjectsGrid";
-            RightObjectsGrid.Rows.Count = 51;
+            RightObjectsGrid.Rows.Count = 5;
+            RightObjectsGrid.Rows.Fixed = 2;
             RightObjectsGrid.SelectedRows = null;
             RightObjectsGrid.SelectionMode = SelectionModeEnum.Row;
             RightObjectsGrid.Size = new Size(933, 488);
             RightObjectsGrid.SortingType = SortingType.Descending;
             RightObjectsGrid.StyleInfo = resources.GetString("RightObjectsGrid.StyleInfo");
             RightObjectsGrid.TabIndex = 2;
+            RightObjectsGrid.Tree.Column = 1;
             RightObjectsGrid.BeforeNodeMove += RightObjectsGrid_BeforeNodeMove;
             RightObjectsGrid.AfterNodeMove += RightObjectsGrid_AfterNodeMove;
             RightObjectsGrid.SelChange += RightObjectsGrid_SelChange;
@@ -92,7 +107,9 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Views.Forms
             AddObjectRight.ImageTransparentColor = Color.Magenta;
             AddObjectRight.Name = "AddObjectRight";
             AddObjectRight.Size = new Size(28, 28);
+            AddObjectRight.Tag = "{\"name\": \"LocalRightObjects\"}";
             AddObjectRight.Text = "Новый";
+            AddObjectRight.Click += AddObjectRight_Click;
             // 
             // DeleteObjectRight
             // 
@@ -101,7 +118,9 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Views.Forms
             DeleteObjectRight.ImageTransparentColor = Color.Magenta;
             DeleteObjectRight.Name = "DeleteObjectRight";
             DeleteObjectRight.Size = new Size(28, 28);
+            DeleteObjectRight.Tag = "{\"name\": \"LocalRightObjects\"}";
             DeleteObjectRight.Text = "Удалить";
+            DeleteObjectRight.Click += DeleteObjectRight_Click;
             // 
             // RefreshRightObjects
             // 
@@ -111,6 +130,7 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Views.Forms
             RefreshRightObjects.Name = "RefreshRightObjects";
             RefreshRightObjects.Size = new Size(89, 28);
             RefreshRightObjects.Text = "Обновить";
+            RefreshRightObjects.Click += RefreshRightObjects_Click;
             // 
             // toolStripSeparator1
             // 
@@ -127,6 +147,7 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Views.Forms
             Margin = new Padding(4, 3, 4, 3);
             Name = "RightObjectsManagerForm";
             ShowInTaskbar = false;
+            Tag = "{\"name\": \"LocalRightObjects\"}";
             Text = "Объекты прав";
             ((System.ComponentModel.ISupportInitialize)RightObjectsGrid).EndInit();
             toolStrip1.ResumeLayout(false);

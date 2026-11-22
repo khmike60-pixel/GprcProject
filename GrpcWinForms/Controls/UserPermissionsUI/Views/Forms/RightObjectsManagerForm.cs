@@ -1,6 +1,9 @@
 ﻿using C1.Win.Command;
 using C1.Win.FlexGrid;
 using GrpcWinForms.Controls.UserPermissionsUI.Models;
+using GrpcWinForms.Controls.UserPermissionsUI.Presenters;
+using GrpcWinForms.Controls.UserPermissionsUI.Services.Implementaions;
+using GrpcWinForms.Controls.UserPermissionsUI.Services.Interfaces;
 using GrpcWinForms.Controls.UserPermissionsUI.Views.Interfaces;
 using SmartLib;
 using System;
@@ -36,6 +39,10 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Views.Forms
             this.Tag = "{\"name\": \"" + tagName + "\"}";
             AddObjectRight.Tag = "{\"name\": \"" + tagName + "\"}";
             DeleteObjectRight.Tag = "{\"name\": \"" + tagName + "\"}";
+            
+            // Добавить инициализацию презентера
+            var service = new RightObjectsService("cwatis"); 
+            var presenter = new RightObjectsManagerPresenter(this, service);
         }
 
         private void Setup()
@@ -49,6 +56,8 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Views.Forms
             this.RightObjectsGrid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RightObjectsGrid_MouseUp);
             this.RightObjectsGrid.BeforeEdit += new RowColEventHandler(this.RightObjectsGrid_BeforeEdit);
             this.RightObjectsGrid.AfterEdit += new RowColEventHandler(this.RightObjectsGrid_AfterEdit);
+            this.RightObjectsGrid.AfterNodeMove += new SmartGrid.NodeMoveDelegate(this.RightObjectsGrid_AfterNodeMove);
+            //this.RightObjectsGrid_BeforeNodeMove += new SmartGrid.NodeMoveDelegate(this.RightObjectsGrid_BeforeNodeMove);
         }
 
         public void Refresh(IEnumerable<RightObjectTreeModel> data, RightObjectTreeModel selectedModel)

@@ -78,7 +78,6 @@
     <ProjectReference Include="..\GrpcCommonNet.Proto\GrpcCommonNet.Proto.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\UserPermissionsUI\Presenters\" />
     <Folder Include="Objects\Geolocations\Repositories\" />
     <Folder Include="Objects\Invoices\Presenters\" />
     <Folder Include="Objects\Invoices\Repositories\" />

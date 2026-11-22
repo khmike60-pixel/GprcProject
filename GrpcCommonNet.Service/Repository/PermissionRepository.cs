@@ -90,12 +90,13 @@ namespace GrpcCommonNet.Service.Repository
             try
             {
                 List<RightObject> rights = new();
-                PermissionDbSources db = request.DbSources;
+                string dbName = request.DbType == Library.Permission.DbType.DbLocal?
+                    request.DbSources.LocalDbName: request.DbSources.GlobalDbName;
 
                 using var conn = new MySqlConnection(_connectionString);
                 await conn.OpenAsync();
 
-                using (MySqlCommand command = new MySqlCommand($"{db}.GetRightObjects", conn))
+                using (MySqlCommand command = new MySqlCommand($"{dbName}.GetRightObjects", conn))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -124,12 +125,86 @@ namespace GrpcCommonNet.Service.Repository
 
         public async Task<RightObject> AddRightObjectAsync(RightObjectRequest request, UserData userData)
         {
-            return null;
+            try
+            {
+                RightObject right = new();
+                string dbName = request.DbType == Library.Permission.DbType.DbLocal ?
+                    request.DbSources.LocalDbName : request.DbSources.GlobalDbName;
+
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand($"{dbName}.AddRightObjects", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("_ParentId", request.RightObject.Parent.Id);
+                    command.Parameters.AddWithValue("_Name", request.RightObject.Name);
+                    command.Parameters.AddWithValue("_Code", request.RightObject.Code);
+
+
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        if (await rdr.ReadAsync())
+                        {
+                            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                                right = FillRightObject(rdr);
+                            else
+                            {
+                                request.FieldMask.Merge(FillRightObject(rdr), right);
+                            }
+                        }
+                    }
+                }
+                return right;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в AddRightObjects: " + ex.Message);
+            }
         }
 
         public async Task<RightObject> EditRightObjectAsync(RightObjectRequest request, UserData userData)
         {
-            return null;
+            try
+            {
+                RightObject right = new();
+                string dbName = request.DbType == Library.Permission.DbType.DbLocal ?
+                    request.DbSources.LocalDbName : request.DbSources.GlobalDbName;
+
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand($"{dbName}.EditRightObjects", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("_Id", request.RightObject.Id);
+                    command.Parameters.AddWithValue("_ParentId", request.RightObject.Parent.Id);
+                    command.Parameters.AddWithValue("_Name", request.RightObject.Name);
+                    command.Parameters.AddWithValue("_Code", request.RightObject.Code);
+                    command.Parameters.AddWithValue("_CheckAndApproveEnable", request.RightObject.CheckAndApproveEnable);
+
+
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        if (await rdr.ReadAsync())
+                        {
+                            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                                right = FillRightObject(rdr);
+                            else
+                            {
+                                request.FieldMask.Merge(FillRightObject(rdr), right);
+                            }
+                        }
+                    }
+                }
+                return right;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в EditRightObjects: " + ex.Message);
+            }
         }
 
         public async Task<int> DeleteRightObjectAsync(DeleteRightObjectRequest request, UserData userData)
