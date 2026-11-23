@@ -16,5 +16,17 @@ namespace GrpcWinForms.Controls.FormTemplate
         {
             InitializeComponent();
         }
+
+        public void ShowWithPermission()
+        {
+            var Permission = new PermissionManager.PermissionManager(this);
+            if (!Permission.CanShowForm())
+            {
+                MessageBox.Show("Доступ запрещен", "У вас нет прав для просмотра данной формы", MessageBoxButtons.OK);
+                this.Close();
+            }
+            else this.Show();
+        }
+
     }
 }

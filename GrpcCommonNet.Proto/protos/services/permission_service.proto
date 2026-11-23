@@ -2,13 +2,31 @@
 
 option csharp_namespace = "GrpcCommonNet.Library.Permission";
 
+import "google/protobuf/field_mask.proto";
 import "protos/common/general.proto";
 import "protos/common/permission.proto";
 
 package permission;
 
 service PermissionServices {
-	rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse);
+	rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse);  // Полчить права на объект 
+
+	rpc GetRightObjects(GetRightObjectsRequest) returns (GetRightObjectsResponse); // 
+	rpc AddRightObject(RightObjectRequest) returns(RightObjectResponse); // 
+	rpc EditRightObject(RightObjectRequest) returns(RightObjectResponse); // 
+	rpc DeleteRightObject(DeleteRightObjectRequest) returns(DeleteRightObjectResponse); //
+	rpc MoveRightObject(MoveRightObjectRequest) returns(BoolResponse); //
+
+	rpc IsRightObjectNameExists(IsRightObjectNameExistsRequest) returns(BoolResponse); // Возвразает true если имя уже существует.
+	rpc IsRightObjectCodeExists(IsRightObjectCodeExistsRequest) returns(BoolResponse); // Возвразает true если код уже существует.
+	rpc IsRightObjectHasForeignKey(IsRightObjectHasForeignKeyRequest) returns(BoolResponse); // Возвращает true если на объект права ссылаются внешние ключи.
+	rpc IsRightObjectHasChilds(IsRightObjectHasChildsRequest) returns(BoolResponse); // Возвращает true если объект имеет детей.
+
+}
+
+enum DbType {
+	DB_LOCAL = 0;
+	DB_GLOBAL =  1;
 }
 
 message GetPermissionRequest {
@@ -20,4 +38,76 @@ message GetPermissionRequest {
 message GetPermissionResponse {
 	Common.Result result = 1;
 	Common.Permission permission = 2;
+}
+
+message IsRightObjectNameExistsRequest {
+	string name = 1;
+	int32 excludeId = 2;
+	Common.PermissionDbSources db_sources = 3;
+	DbType db_type =4;
+}
+
+message IsRightObjectCodeExistsRequest {
+	string code = 1;
+	int32 excludeId = 2;
+	Common.PermissionDbSources db_sources = 3;
+	DbType db_type =4;
+}
+
+message IsRightObjectHasForeignKeyRequest {
+	int32 id = 1;
+	Common.PermissionDbSources db_sources = 2;
+	DbType db_type =3;
+}
+
+message IsRightObjectHasChildsRequest {
+	int32 id = 1;
+	Common.PermissionDbSources db_sources = 2;
+	DbType db_type = 3;
+}
+
+message BoolResponse {
+	Common.Result result = 1;
+	bool response = 2;
+}
+
+message GetRightObjectsRequest {
+	Common.PermissionDbSources db_sources = 1;
+	google.protobuf.FieldMask field_mask = 2;
+	DbType db_type = 3;
+}
+
+message GetRightObjectsResponse  {
+	Common.Result result = 1;
+	repeated Common.RightObject right_objects = 2;
+}
+
+message RightObjectRequest {
+	Common.RightObject right_object = 1;
+	Common.PermissionDbSources db_sources = 2;
+	DbType db_type = 3;
+	google.protobuf.FieldMask field_mask = 4;
+}
+
+message RightObjectResponse {
+	Common.Result result = 1;
+	Common.RightObject right_object = 2;
+}
+
+message DeleteRightObjectRequest {
+	int32 id = 1;
+	Common.PermissionDbSources db_sources = 2;
+	DbType db_type = 3;
+}
+message DeleteRightObjectResponse {
+	Common.Result result = 1;
+	bool deleted = 2;
+}
+
+message MoveRightObjectRequest {
+	int32 id = 1;
+	int32 parent_id = 2;
+	Common.PermissionDbSources db_sources = 3;
+	DbType db_type = 4;
+	google.protobuf.FieldMask field_mask = 5;
 }

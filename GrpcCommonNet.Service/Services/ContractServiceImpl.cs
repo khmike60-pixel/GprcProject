@@ -132,10 +132,11 @@ public class ContractServiceImpl : ContractServices.ContractServicesBase
         try
         {
             Contract _contract = new();
-            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0) 
-                _contract = await _repo.UpdateContractAsync(request);
-            else
+            if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
                 _contract = await _repo.UpdateContractAsync(request.Contract);
+            else
+                _contract = await _repo.UpdateContractAsync(request);
+
             return new ContractResponse() { Contract = _contract, Result = new Result { Status = Status.Ok } };
 
         } catch (Exception ex)

@@ -25,6 +25,7 @@ using GrpcWinForms.Objects.StockDocuments.Views;
 using GrpcWinForms.Objects.Stocks.Views;
 using GrpcWinForms.Objects.Locations.Views;
 using GrpcWinForms.Objects.Geolocations.Views;
+using GrpcWinForms.Controls.UserPermissionsUI.Views.Forms;
 
 namespace GrpcWinForms.Forms
 {
@@ -40,6 +41,16 @@ namespace GrpcWinForms.Forms
             IsMdiContainer = true;
             taskBar.AttachToMdiParent(this);
 
+            InitializePermissions();
+
+        }
+
+        void InitializePermissions()
+        {
+            GlobalConfig.Enabled = true;
+            GlobalConfig.LocalDataBase = "cwatis";
+            GlobalConfig.GlobalDataBase = "global_db";
+            GlobalConfig.SubjectId = MainClass.User.Id;
         }
 
         private void CurrenciesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -313,6 +324,17 @@ namespace GrpcWinForms.Forms
             }
             var f = new Objects.Locations.Views.LocationsForm { MdiParent = this };
             f.Show();
+
+        }
+
+        private void LocalObjectsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (Form child in MdiChildren)
+            {
+                if (child is RightObjectsManagerForm) { child.Activate(); return; }
+            }
+            var f = new RightObjectsManagerForm("LocalRightObjects") { MdiParent = this };
+            f.ShowWithPermission();
 
         }
     }
