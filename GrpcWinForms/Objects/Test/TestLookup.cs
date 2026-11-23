@@ -34,6 +34,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using Currency = GrpcCommonNet.Library.Common.Currency;
+using GrpcWinForms.Objects.Currencies.Repositories;
 
 namespace GrpcWinForms.Objects.Test
 {
@@ -42,6 +43,7 @@ namespace GrpcWinForms.Objects.Test
         private C1TreeView tree = new C1TreeView();
         private StocksReposirory _reposirory;
         private List<GeoPlace> geoplaces = new();
+
 
 
         public TestLookup()
@@ -61,7 +63,7 @@ namespace GrpcWinForms.Objects.Test
         {
             try
             {
-
+                // Склады 
                 Stock stock = new Stock()
                 {
                     Id = 2,
@@ -93,6 +95,20 @@ namespace GrpcWinForms.Objects.Test
                 TreeItem treeItem = new TreeItem() { Id =  3, ParentId =  0, Name = "А. Каххара склад" };
                 BindingInfo building = places.BuildTree(items);
                 places.InitialNode  = items.FirstOrDefault(x => x.Id == treeItem.Id);
+
+                // Валюты
+                Currency currency = new Currency() { Id = 31, Abbrev = "UZS" };
+                BindingList<Currency> currencies = await CurrencyRepository.GetCurrenciesAsync(false, "");
+                List<CurrencyItemBox> currencyItems = new List<CurrencyItemBox>();
+                foreach (Currency item in currencies)
+                {
+                    currencyItems.Add(new CurrencyItemBox() { Id = item.Id, Name = item.Abbrev });
+                }
+                sbCurrency.DataSource = currencyItems;
+
+                sbCurrency.DataMember = "Name";
+                sbCurrency.Text = currency.Abbrev;
+
 
             }
             catch (Exception ex)
@@ -129,7 +145,7 @@ namespace GrpcWinForms.Objects.Test
                
     }
 
-    public class CurrencyItemBox : IItemBox
+    public class CurrencyItemBox
     {
         public int Id { get; set; }
         public string Name { get; set ; }

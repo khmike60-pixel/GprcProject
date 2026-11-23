@@ -32,13 +32,12 @@ namespace GrpcWinForms.Objects.Test
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            C1.Win.TreeView.C1TreeColumn c1TreeColumn1 = new C1.Win.TreeView.C1TreeColumn();
             buttonCancel = new Button();
             textBox1 = new TextBox();
             places = new TreeBox(components);
-            c1TreeView1 = new C1.Win.TreeView.C1TreeView();
+            sbCurrency = new SmartLib.Base.SmartBox.SmartBox(components);
             ((System.ComponentModel.ISupportInitialize)places).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)c1TreeView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)sbCurrency).BeginInit();
             SuspendLayout();
             // 
             // buttonCancel
@@ -72,35 +71,20 @@ namespace GrpcWinForms.Objects.Test
             places.TabIndex = 33;
             places.Value = "";
             // 
-            // c1TreeView1
+            // sbCurrency
             // 
-            c1TreeView1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            // 
-            // 
-            // 
-            c1TreeView1.ButtonImageList.ColorDepth = ColorDepth.Depth32Bit;
-            c1TreeView1.ButtonImageList.ImageSize = new Size(9, 9);
-            c1TreeView1.ButtonImageList.TransparentColor = Color.Transparent;
-            // 
-            // 
-            // 
-            c1TreeView1.CheckImageList.ColorDepth = ColorDepth.Depth32Bit;
-            c1TreeView1.CheckImageList.ImageSize = new Size(13, 13);
-            c1TreeView1.CheckImageList.TransparentColor = Color.Transparent;
-            c1TreeColumn1.HeaderText = "Column1";
-            c1TreeColumn1.Name = "Column1";
-            c1TreeView1.Columns.Add(c1TreeColumn1);
-            c1TreeView1.Location = new Point(73, 70);
-            c1TreeView1.Name = "c1TreeView1";
-            c1TreeView1.Size = new Size(363, 91);
-            c1TreeView1.TabIndex = 34;
+            sbCurrency.Location = new Point(73, 85);
+            sbCurrency.Name = "sbCurrency";
+            sbCurrency.Size = new Size(93, 23);
+            sbCurrency.TabIndex = 34;
+            sbCurrency.Value = "";
             // 
             // TestLookup
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(449, 227);
-            Controls.Add(c1TreeView1);
+            Controls.Add(sbCurrency);
             Controls.Add(places);
             Controls.Add(textBox1);
             Controls.Add(buttonCancel);
@@ -108,7 +92,7 @@ namespace GrpcWinForms.Objects.Test
             Text = "TestLoolkup";
             Load += TestLookup_Load;
             ((System.ComponentModel.ISupportInitialize)places).EndInit();
-            ((System.ComponentModel.ISupportInitialize)c1TreeView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)sbCurrency).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -117,6 +101,6 @@ namespace GrpcWinForms.Objects.Test
         private Button buttonCancel;
         private TextBox textBox1;
         private TreeBox places;
-        private C1.Win.TreeView.C1TreeView c1TreeView1;
+        private SmartLib.Base.SmartBox.SmartBox sbCurrency;
     }
 }
