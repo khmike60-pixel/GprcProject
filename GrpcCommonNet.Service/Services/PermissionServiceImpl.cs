@@ -150,7 +150,32 @@ namespace GrpcCommonNet.Service.Services
             return response;
         }
 
+        public override async Task<GetSubjectsResponse> GetSubjects(GetSubjectsRequest request, ServerCallContext context)
+        {
+            UserData userData = new UserData().GetUserData(context);
+            _logger.LogDebug($"GetLocation called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
+            try
+            {
+                GetSubjectsResponse response = new();
+
+               int subject_id = await _repo.GetSubjectsAsync(request, userData);
+
+                if (subject_id == 0) response.Result = new Result { Status = Status.NotFound };
+                else
+                {
+                    response.Subject = new Subject() { Id = subject_id };
+                    response.Result = new Result { Status = Status.Ok };
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return new GetSubjectsResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+
+            }
+        }
 
 
 

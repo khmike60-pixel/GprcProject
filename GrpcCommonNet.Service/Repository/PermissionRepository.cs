@@ -1,4 +1,5 @@
-﻿using GrpcCommonNet.Library.Common;
+﻿using Google.Protobuf;
+using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Permission;
 using GrpcCommonNet.Service.Models;
 using MySql.Data.MySqlClient;
@@ -237,7 +238,39 @@ namespace GrpcCommonNet.Service.Repository
             return false;
         }
 
+        public async Task<int> GetSubjectsAsync(GetSubjectsRequest request, UserData userData)
+        {
+            try
+            {
+                List<Subject> subjects = new List<Subject>();
+                int user_id = request.User?.Id == null ? Convert.ToInt32(userData.UserId) : request.User.Id; 
+                
+                if (request.User == null) request.User = new();
+                request.User.Id = user_id;
 
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand($"{request.DbName}.GetSubjectId", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("_UserId", user_id);
+
+                    var returnParam = new MySqlParameter("@returnVal", MySqlDbType.Int32)
+                    {
+                        Direction = System.Data.ParameterDirection.ReturnValue
+                    };
+                    command.Parameters.Add(returnParam);
+
+                    command.ExecuteNonQuery();
+                    return returnParam.Value == DBNull.Value? 0: Convert.ToInt32(returnParam.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в GetSubjectsAsync: " + ex.Message);
+            }
+        }
 
         #region ТТехнические меттоды (mapping)
         private RightObject FillRightObject(DbDataReader rdr)
@@ -292,6 +325,14 @@ namespace GrpcCommonNet.Service.Repository
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        private Subject FillSubject(DbDataReader rdr)
+        {
+            Subject subject = new Subject();
+            subject.Id = rdr["id"] == null? 0: Convert.ToInt32(rdr["id"]);
+            subject.User = new() { Id = Convert.ToInt32(rdr["user_id"]) };
+            return subject;
         }
 
         #endregion

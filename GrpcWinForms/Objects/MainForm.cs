@@ -1,31 +1,36 @@
 
+using GrpcCommonNet.Library.Permission;
+using GrpcWinForms.Controls.PermissionManager;
+using GrpcWinForms.Controls.TaskBar;
+using GrpcWinForms.Controls.UserPermissionsUI.Views.Forms;
+using GrpcWinForms.GrpcUtils;
 using GrpcWinForms.Models;
 using GrpcWinForms.Objects;
 using GrpcWinForms.Objects.Applications;
+using GrpcWinForms.Objects.Banks.Forms;
 using GrpcWinForms.Objects.Contracts.Forms;
-using GrpcWinForms.Objects.DocumentTypes.Forms;
 using GrpcWinForms.Objects.Contragents.Components;
 using GrpcWinForms.Objects.Contragents.Forms;
 using GrpcWinForms.Objects.Currencies.Views;
+using GrpcWinForms.Objects.Departaments;
+using GrpcWinForms.Objects.Departaments.Forms;
+using GrpcWinForms.Objects.DocumentTypes.Forms;
+using GrpcWinForms.Objects.Employees.Forms;
+using GrpcWinForms.Objects.Geolocations.Views;
+using GrpcWinForms.Objects.Locations.Views;
 using GrpcWinForms.Objects.OurCompanies.Forms;
 using GrpcWinForms.Objects.Products.ProductsForm;
-using GrpcWinForms.Objects.Test;
-using GrpcWinForms.Objects.Users.Forms;
-using System;
-using System.Windows.Forms;
-using GrpcWinForms.Objects.Departaments;
-using GrpcWinForms.Objects.Banks.Forms;
-using GrpcWinForms.Controls.TaskBar;
-using GrpcWinForms.Objects.Employees.Forms;
-using GrpcWinForms.Objects.Users;
 using GrpcWinForms.Objects.SalePurchaseTypes.Forms;
-using GrpcWinForms.Objects.Departaments.Forms;
-using GrpcWinForms.Objects.Units.Forms;
 using GrpcWinForms.Objects.StockDocuments.Views;
 using GrpcWinForms.Objects.Stocks.Views;
-using GrpcWinForms.Objects.Locations.Views;
-using GrpcWinForms.Objects.Geolocations.Views;
-using GrpcWinForms.Controls.UserPermissionsUI.Views.Forms;
+using GrpcWinForms.Objects.Test;
+using GrpcWinForms.Objects.Units.Forms;
+using GrpcWinForms.Objects.Users;
+using GrpcWinForms.Objects.Users.Forms;
+using System;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace GrpcWinForms.Forms
 {
@@ -337,5 +342,38 @@ namespace GrpcWinForms.Forms
             f.ShowWithPermission();
 
         }
+
+        private async void MainForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                GrpcWinForms.Controls.PermissionManager.GlobalConfig.Enabled = true;
+                GrpcWinForms.Controls.PermissionManager.GlobalConfig.LocalDataBase = "cwatis";
+                GrpcWinForms.Controls.PermissionManager.GlobalConfig.GlobalDataBase = "global_db";
+
+                GetSubjectsRequest request = new GetSubjectsRequest() { DbName = GlobalConfig.LocalDataBase };
+
+                GetSubjectsResponse response = new();
+
+                // Локальный субъект
+                response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Permission.GetSubjectsAsync(request));
+                var localSubject = response.Subject;
+                GrpcWinForms.Controls.PermissionManager.GlobalConfig.LocalSubjectId = response.Subject.Id;
+
+                // Глобальный субъект
+                request.DbName = GlobalConfig.GlobalDataBase;
+                response = await GrpcRetry.CallAsync(() =>
+                    GrpcClients.GrpcClients.Permission.GetSubjectsAsync(request));
+                var globalSubject = response.Subject;
+                GrpcWinForms.Controls.PermissionManager.GlobalConfig.GlobalSubjectId = response.Subject.Id;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Субъект не найден");
+            }
+
+        }
+
     }
 }

@@ -3,6 +3,7 @@
 option csharp_namespace = "GrpcCommonNet.Library.Common";
 
 import "google/protobuf/struct.proto";
+import "protos/common/user.proto";
 
 package Common;
 
@@ -65,5 +66,11 @@ message RightsOfRole {
 	int32 id = 1;
 	Role role = 2;
 	repeated RightValue rights = 3;
+}
+
+message Subject {
+	int32 id = 1;
+	Common.User user = 2;
+	bool is_admin = 3;
 }
 
