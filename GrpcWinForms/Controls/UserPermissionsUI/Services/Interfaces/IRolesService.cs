@@ -10,19 +10,19 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Services.Interfaces
     public interface IRolesService
     {
         /// <summary> Возвращает список всех ролей. </summary>
-        IEnumerable<RoleModel> Get();
+        Task<IEnumerable<RoleModel>> Get();
 
         /// <summary>
         /// Добавление новой роли с пустым именем.
         /// </summary>
         /// <returns>Добавленная модель, или null в случае неудачи.</returns>
-        RoleModel Add();
+        Task<RoleModel> Add();
 
         /// <summary> Редактирование роли. </summary>
-        void Edit(RoleModel role);
+        Task<RoleModel> Edit(RoleModel role);
 
         /// <summary> Удаление указанной роли. </summary>
-        void Delete(RoleModel role);
+        Task<List<int>> Delete(RoleModel role);
 
         /// <summary> Дублирование существующей роли. </summary>
         RoleModel Duplicate(int roleId);

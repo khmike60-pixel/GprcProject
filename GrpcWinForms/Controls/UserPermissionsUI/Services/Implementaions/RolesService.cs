@@ -1,5 +1,9 @@
-﻿using GrpcWinForms.Controls.UserPermissionsUI.Models;
+﻿using GrpcCommonNet.Library.Common;
+using GrpcCommonNet.Library.Contract;
+using GrpcCommonNet.Library.Permission;
+using GrpcWinForms.Controls.UserPermissionsUI.Models;
 using GrpcWinForms.Controls.UserPermissionsUI.Services.Interfaces;
+using GrpcWinForms.GrpcUtils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,79 +33,132 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Services.Implementaions
         }
 
         /// <summary> Возвращает список всех ролей. </summary>
-        public IEnumerable<RoleModel> Get()
+        public async Task<IEnumerable<RoleModel>>  Get()
         {
-            var rolesTable = CallService.CallProcedureDT(
-                $"{_sourceDbName}.{_proc_GetRoles}",
-                new Dictionary<string, object>());
+            GetRolesRequest request = new GetRolesRequest() { DbName = _sourceDbName };
+            GetRolesResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Permission.GetRolesAsync(request));
 
-            return rolesTable.AsEnumerable().Select(r => _roleMapper.Map(r));
+            List<RoleModel> roles = new();
+            foreach (var role in response.Roles)
+            {
+                roles.Add(new RoleModel {
+                    Id = role.Id,
+                    Name = role.Name,
+                    IsDefault = role.Default,
+                    IsChecked = role.Checked,
+                    CheckedBy = role.CheckBy,
+                    IsApproved = role.Approved,
+                    ApprovedBy = role.ApproveBy
+                });
+            }
+            return roles;
         }
+
 
         /// <summary>
         /// Добавление новой роли с пустым именем.
         /// </summary>
         /// <returns>Добавленная модель, или null в случае неудачи.</returns>
-        public RoleModel Add()
+        public async Task<RoleModel> Add()
         {
-            var newRole = CallService.CallProcedureDT(
-                $"{_sourceDbName}.{_proc_Add}",
-                new Dictionary<string, object>()
+            RoleRequest request = new RoleRequest
+            {
+                DbName = _sourceDbName,
+                Role = new Role()
                 {
-                    { "_Name", GenerateUniqueRoleName() }
-                });
-
-            return _roleMapper.Map(newRole.AsEnumerable().First());
+                    Name = GenerateUniqueRoleName()
+                }
+            };
+            RoleResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Permission.AddRoleAsync(request));
+            RoleModel role = new()
+            {
+                Id = response.Role.Id,
+                Name = response.Role.Name,
+                IsDefault = response.Role.Default,
+                IsChecked = response.Role.Checked,
+                IsApproved = response.Role.Approved,
+                CheckedBy = response.Role.CheckBy,
+                ApprovedBy= response.Role.ApproveBy
+            };
+            return role;
         }
 
         /// <summary> Редактирование роли. </summary>
-        public void Edit(RoleModel role)
+        public async Task<RoleModel> Edit(RoleModel role)
         {
-            CallService.CallProcedureNonQuery(
-                $"{_sourceDbName}.{_proc_Edit}",
-                new Dictionary<string, object>()
-                {
-                    { "_Id", role.Id },
-                    { "_Name", role.Name },
-                    { "_IsDefault", role.IsDefault },
-                    { "_IsChecked", role.IsChecked },
-                    { "_IsApproved", role.IsApproved },
-                    { "_UserId", CallService.UserInfo.UserId }
-                }, out string _error);
-
-            if (_error.Length > 0)
-                throw new ApplicationException(_error);
+            RoleRequest request = new RoleRequest();
+            request.DbName = _sourceDbName;
+            request.Role = new Role()
+            {
+                Id = role.Id,
+                Name = role.Name,
+                Default = role.IsDefault,
+                Checked = role.IsChecked,
+                CheckBy = role.CheckedBy,
+                Approved = role.IsApproved,
+                ApproveBy = role.ApprovedBy
+            };
+            
+            RoleResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Permission.AddRoleAsync(request));
+            RoleModel edit_role = new()
+            {
+                Id = response.Role.Id,
+                Name = response.Role.Name,
+                IsDefault = response.Role.Default,
+                IsChecked = response.Role.Checked,
+                IsApproved = response.Role.Approved,
+                CheckedBy = response.Role.CheckBy,
+                ApprovedBy = response.Role.ApproveBy
+            };
+            return edit_role;
         }
 
         /// <summary> Удаление указанной роли. </summary>
-        public void Delete(RoleModel role)
+        public async Task<List<int>> Delete(RoleModel role)
         {
-            CallService.CallProcedureNonQuery(
-                $"{_sourceDbName}.{_proc_Delete}",
-                new Dictionary<string, object>()
-                {
-                    { "_Id", role.Id }
-                }, out string _error);
+            List<int> undeleted = new List<int>();
 
-            if (_error.Length > 0)
-                throw new ApplicationException(_error);
+            DeleteRoleRequest request = new DeleteRoleRequest();
+            request.DbName = _sourceDbName;
+            request.Ids.Add(role.Id);
+
+            UndeleteRoleResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Permission.DeleteRoleAsync(request));
+
+            if (response.Result.Status == Status.Ok)
+                undeleted.AddRange(response.UndeletedIds);
+            return undeleted;
         }
 
         /// <summary> Дублирование существующей роли. </summary>
-        public RoleModel Duplicate(int roleId)
+        public async Task<RoleModel> Duplicate(int roleId)
         {
-            var newRole = Add();
+            RoleModel newRole = new();
+            newRole = await Add();
 
-            CallService.CallProcedureNonQuery(
-                $"{_sourceDbName}.{_proc_CopyRights}",
-                new Dictionary<string, object>()
-                {
-                    { "_SourceId", roleId },
-                    { "_DestId", newRole.Id }
-                }, out string _error);
+            Role sourceRole = new() { Id = roleId };
+            Role destinationRole = new() { Id = newRole.Id };
 
-            if (_error.Length > 0)
-                throw new ApplicationException(_error);
+            DuplicateRoleRequest request = new DuplicateRoleRequest()
+            {
+                SourceRole = sourceRole,
+                DestinationRole = destinationRole
+            };
+            RoleResponse response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Permission.DuplicateRoleAsync(request));
+            if (response.Result.Status == Status.Ok)
+            {
+                newRole.Id = response.Role.Id;
+                newRole.Name = response.Role.Name;
+                newRole.IsDefault = response.Role.Default;
+                newRole.IsChecked = response.Role.Checked;
+                newRole.CheckedBy = response.Role.CheckBy;
+                newRole.IsApproved = response.Role.Approved;
+                newRole.ApprovedBy = response.Role.ApproveBy;
+            };
 
             return newRole;
         }

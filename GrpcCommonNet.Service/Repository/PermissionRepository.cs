@@ -2,6 +2,7 @@
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Permission;
 using GrpcCommonNet.Service.Models;
+using GrpcCommonNet.Service.Utils;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Data;
@@ -86,6 +87,7 @@ namespace GrpcCommonNet.Service.Repository
             }
         }
 
+        #region Объекты прав
         public async Task<List<RightObject>> GetRightObjectsAsync(GetRightObjectsRequest request, UserData userData)
         {
             try
@@ -238,6 +240,172 @@ namespace GrpcCommonNet.Service.Repository
             return false;
         }
 
+        #endregion
+
+        #region Роли
+
+        public async Task<List<Role>> GetRolesAsync(GetRolesRequest request, UserData userData)
+        {
+            try
+            {
+                List<Role> roles = new List<Role>();
+                string dbName = request.DbName;
+
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand($"{dbName}.GetRoles", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        while (await rdr.ReadAsync())
+                        {
+                            roles.Add(FillRole(rdr));
+                        }
+                    }
+                }
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в GetRolesAsync: " + ex.Message);
+            }
+        }
+
+        public async Task<Role> AddRoleAsync(RoleRequest request, UserData userData)
+        {
+            try
+            {
+                Role role = new Role();
+                string dbName = request.DbName;
+
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand($"{dbName}.AddNewRole", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("_Name", request.Role.Name);
+
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        if (await rdr.ReadAsync())
+                        {
+                            role =FillRole(rdr);
+                        }
+                    }
+                }
+                return role;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в AddRoleAsync: " + ex.Message);
+            }
+        }
+
+        public async Task<Role> EditRoleAsync(RoleRequest request, UserData userData)
+        {
+            try
+            {
+                Role role = new Role();
+                string dbName = request.DbName;
+
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand($"{dbName}.EditRole", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("_Id", request.Role.Id);
+                    command.Parameters.AddWithValue("_Name", request.Role.Name);
+                    command.Parameters.AddWithValue("_IsDefault", request.Role.Default);
+                    command.Parameters.AddWithValue("_IsChecked", request.Role.Checked);
+                    command.Parameters.AddWithValue("_IsApproved", request.Role.Approved);
+                    command.Parameters.AddWithValue("_UserId", userData.UserId);
+
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        if (await rdr.ReadAsync())
+                        {
+                            role = FillRole(rdr);
+                        }
+                    }
+                }
+                return role;
+                return role;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в EditRoleAsync: " + ex.Message);
+            }
+        }
+
+        public async Task<List<int>> DeleteRoleAsync(DeleteRoleRequest request, UserData userData)
+        {
+            try
+            {
+                List<int> undeleted = new();
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand($"{request.DbName}.DeleteRole", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("_Id", request.Ids[0]);
+
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        while (await rdr.ReadAsync())
+                        {
+                            undeleted.Add(Convert.ToInt32(rdr[0]));
+                        }
+                    }
+                }
+
+
+                return undeleted;
+            }
+            catch (Exception ex) {
+                throw new Exception("Ошибка в EditRoleAsync: " + ex.Message);
+            }
+        }
+
+        public async Task<Role> DuplicateRoleAsync(DuplicateRoleRequest request, UserData userData)
+        {
+            try
+            {
+                Role role = new Role();
+
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand($"{request.DbName}.CopyRoleRights", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("_SourceId", request.SourceRole.Id);
+                    command.Parameters.AddWithValue("_DestId", request.DestinationRole.Id);
+
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        if (await rdr.ReadAsync())
+                        {
+                            role = FillRole(rdr);
+                        }
+                    }
+                }
+                return role;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в DuplicateRoleAsync: " + ex.Message);
+            }
+        }
+
+        #endregion
+
+
         public async Task<int> GetSubjectsAsync(GetSubjectsRequest request, UserData userData)
         {
             try
@@ -334,6 +502,20 @@ namespace GrpcCommonNet.Service.Repository
                 throw new Exception("Ошибка в FillRightObject: " + ex.Message);
             }
             return right;
+        }
+
+        private Role FillRole(DbDataReader rdr)
+        {
+            Role role = new Role();
+            if (MyMethod.HasColumn(rdr, "Role_Id")) { role.Id = rdr["Role_Id"] == DBNull.Value ? 0 : Convert.ToInt32(rdr["Role_Id"]); }
+            if (MyMethod.HasColumn(rdr, "Role_Name")) { role.Name = rdr["Role_Name"].ToString(); }
+            if (MyMethod.HasColumn(rdr, "Role_Default")) { role.Default = Convert.ToBoolean(rdr["Role_Default"]); }
+            if(MyMethod.HasColumn(rdr, "Role_Checked")) { role.Checked = Convert.ToBoolean(rdr["Role_Checked"]); }
+            if (MyMethod.HasColumn(rdr, "Role_Approved")) { role.Checked = Convert.ToBoolean(rdr["Role_Approved"]); }
+            if(MyMethod.HasColumn(rdr, "Role_CheckedBy")) { role.CheckBy = rdr["Role_CheckedBy"].ToString(); }
+            if (MyMethod.HasColumn(rdr, "Role_ApprovedBy")) { role.CheckBy = rdr["Role_ApprovedBy"].ToString(); }
+
+            return role;
         }
 
         private Permission FillPermission(DbDataReader rdr)

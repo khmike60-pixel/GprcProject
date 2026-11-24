@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using GrpcCommonNet.Library.Common;
 using GrpcCommonNet.Library.Location;
 using GrpcCommonNet.Library.Permission;
@@ -48,6 +49,7 @@ namespace GrpcCommonNet.Service.Services
             }
         }
 
+        #region Объекты прав
         public override async Task<GetRightObjectsResponse> GetRightObjects(GetRightObjectsRequest request, ServerCallContext context)
         {
             UserData userData = new UserData().GetUserData(context);
@@ -204,6 +206,136 @@ namespace GrpcCommonNet.Service.Services
 
             }
         }
+
+        #endregion
+
+        #region Роли
+
+        public override async Task<GetRolesResponse> GetRoles(GetRolesRequest request, ServerCallContext context)
+        {
+            UserData userData = new UserData().GetUserData(context);
+            _logger.LogDebug($"GetRoles called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+            try
+            {
+                GetRolesResponse response = new();
+                List<Role> roles = await _repo.GetRolesAsync(request, userData);
+                if (roles == null || roles.Count == 0) response.Result = new Result { Status = Status.NotFound };
+                else
+                {
+                    if (request.FieldMask == null || request.FieldMask.Paths.Count == 0)
+                        response.Roles.AddRange(roles);
+                    else
+                    {
+                        foreach (Role role in roles)
+                        {
+                            Role new_role = new Role();
+                            request.FieldMask.Merge(role, new_role);
+                            response.Roles.Add(new_role);
+                        }
+                    }
+                    response.Result = new Result { Status = Status.Ok };
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return new GetRolesResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+            }
+        }
+
+        public override async Task<RoleResponse> AddRole(RoleRequest request, ServerCallContext context)
+        {
+            UserData userData = new UserData().GetUserData(context);
+            _logger.LogDebug($"AddRole called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+            try
+            {
+                RoleResponse response = new RoleResponse();
+                Role role = await _repo.AddRoleAsync(request, userData);
+
+                if (role != null && role.Id != 0)
+                {
+                    response.Role = role;
+                    response.Result = new Result { Status= Status.Ok };
+                }
+                return response;
+            }
+            catch (Exception ex) {
+                _logger.LogError(ex, ex.Message);
+                return new RoleResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+            }
+        }
+
+        public override async Task<RoleResponse> EditRole(RoleRequest request, ServerCallContext context)
+        {
+            UserData userData = new UserData().GetUserData(context);
+            _logger.LogDebug($"EditRole called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+            try
+            {
+                RoleResponse response = new RoleResponse();
+                Role role = await _repo.EditRoleAsync(request, userData);
+                if (role != null && role.Id != 0)
+                {
+                    response.Role = role;
+                    response.Result = new Result { Status = Status.Ok };
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return new RoleResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+            }
+        }
+
+        public override async Task<UndeleteRoleResponse> DeleteRole(DeleteRoleRequest request, ServerCallContext context)
+        {
+            UserData userData = new UserData().GetUserData(context);
+            _logger.LogDebug($"DeleteRole called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+            try
+            {
+                UndeleteRoleResponse response = new UndeleteRoleResponse();
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return new UndeleteRoleResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+            }
+        }
+
+        public override async Task<RoleResponse> DuplicateRole(DuplicateRoleRequest request, ServerCallContext context)
+        {
+            UserData userData = new UserData().GetUserData(context);
+            _logger.LogDebug($"DuplicateRole called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+
+            try
+            {
+                RoleResponse response = new RoleResponse();
+                Role role = await _repo.DuplicateRoleAsync(request, userData);
+                if (role != null && role.Id != 0)
+                {
+                    response.Role = role;
+                    response.Result = new Result { Status = Status.Ok };
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return new RoleResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+            }
+        }
+
+
+        #endregion
 
     }
 }

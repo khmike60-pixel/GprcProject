@@ -10,21 +10,35 @@ import "protos/common/user.proto";
 package permission;
 
 service PermissionServices {
-	rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse);  // Полчить права на объект 
+	rpc GetPermission (GetPermissionRequest) returns (GetPermissionResponse);				// Полчить права на объект 
 
-	rpc GetRightObjects(GetRightObjectsRequest) returns (GetRightObjectsResponse); // 
-	rpc AddRightObject(RightObjectRequest) returns(RightObjectResponse); // 
-	rpc EditRightObject(RightObjectRequest) returns(RightObjectResponse); // 
-	rpc DeleteRightObject(DeleteRightObjectRequest) returns(DeleteRightObjectResponse); //
-	rpc MoveRightObject(MoveRightObjectRequest) returns(BoolResponse); //
-	rpc GetRightValues(GetRightValuesRequest) returns(GetRightValuesResponse);
+	// Объекты
+	rpc GetRightObjects(GetRightObjectsRequest) returns (GetRightObjectsResponse);			// 
+	rpc AddRightObject(RightObjectRequest) returns(RightObjectResponse);					// 
+	rpc EditRightObject(RightObjectRequest) returns(RightObjectResponse);					// 
+	rpc DeleteRightObject(DeleteRightObjectRequest) returns(DeleteRightObjectResponse);		//
+	rpc MoveRightObject(MoveRightObjectRequest) returns(BoolResponse);						//
+	rpc GetRightValues(GetRightValuesRequest) returns(GetRightValuesResponse);				//
 
-	rpc IsRightObjectNameExists(IsRightObjectNameExistsRequest) returns(BoolResponse); // Возвразает true если имя уже существует.
-	rpc IsRightObjectCodeExists(IsRightObjectCodeExistsRequest) returns(BoolResponse); // Возвразает true если код уже существует.
-	rpc IsRightObjectHasForeignKey(IsRightObjectHasForeignKeyRequest) returns(BoolResponse); // Возвращает true если на объект права ссылаются внешние ключи.
-	rpc IsRightObjectHasChilds(IsRightObjectHasChildsRequest) returns(BoolResponse); // Возвращает true если объект имеет детей.
+	rpc IsRightObjectNameExists(IsRightObjectNameExistsRequest) returns(BoolResponse);			// Возвращает true если имя уже существует.
+	rpc IsRightObjectCodeExists(IsRightObjectCodeExistsRequest) returns(BoolResponse);			// Возвразает true если код уже существует.
+	rpc IsRightObjectHasForeignKey(IsRightObjectHasForeignKeyRequest) returns(BoolResponse);	// Возвращает true если на объект права ссылаются внешние ключи.
+	rpc IsRightObjectHasChilds(IsRightObjectHasChildsRequest) returns(BoolResponse);			// Возвращает true если объект имеет детей.
 
 	rpc GetSubjects(GetSubjectsRequest) returns(GetSubjectsResponse); // Получить субъектов по user_id
+
+	// Роли
+	rpc GetRoles(GetRolesRequest) returns(GetRolesResponse);							// Получить список ролей
+	rpc AddRole(RoleRequest) returns(RoleResponse);										// Добавить новую роль
+	rpc EditRole(RoleRequest) returns(RoleResponse);									// Редактировать роль
+	rpc DeleteRole(DeleteRoleRequest) returns(UndeleteRoleResponse);						// Удалить помеченные Роли
+	rpc DuplicateRole(DuplicateRoleRequest) returns(RoleResponse);									// Дублировать роль
+	rpc IsNameExistsRole(IsNameExistRoleRequest) returns(BoolResponse);					// Проверка имени роли на существование (функция)		
+	rpc IsDefaultRoleExistsRole(IsDefaultRoleExistsRoleRequest) returns(BoolResponse);	// Проверка на существование роли по умолчанию (функция)	
+	rpc CanDeleteRole(CanDeleteRoleRequest) returns(BoolResponse);						// Проверка на возможность удаления (функция)	
+
+	// Субъекты
+
 }
 
 enum DbType {
@@ -132,4 +146,54 @@ message GetRightValuesResponse {
 
 message GetRightValuesRequest {
 	string db_name = 1;
+}
+
+message  GetRolesRequest {
+	string db_name  = 1;
+	google.protobuf.FieldMask field_mask = 2;
+}
+
+message GetRolesResponse {
+	Common.Result result = 1;
+	repeated Common.Role roles = 2;
+}
+
+message RoleRequest {
+	string db_name  = 1;
+	Common.Role role = 2;
+}
+
+message RoleResponse {
+	Common.Result result = 1;
+	Common.Role role = 2;
+}
+
+message DeleteRoleRequest {
+	string db_name  = 1;
+	repeated int32 ids = 2;
+}
+
+message UndeleteRoleResponse {
+	Common.Result result = 1;
+	repeated int32 undeleted_ids = 2;
+}
+
+message IsNameExistRoleRequest {
+	string db_name  = 1;
+	string name = 2;
+}
+
+message IsDefaultRoleExistsRoleRequest {
+	string db_name = 1;
+}
+
+message CanDeleteRoleRequest {
+	string db_name = 1;
+	Common.Role role = 2;
+}
+
+message DuplicateRoleRequest {
+	string db_name = 1;
+	Common.Role source_role = 2;
+	Common.Role destination_role = 3;
 }
