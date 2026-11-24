@@ -61,7 +61,6 @@ message RightValue {
 	Permission value = 2;
 }
 
-
 message RightsOfRole {
 	int32 id = 1;
 	Role role = 2;
@@ -72,5 +71,10 @@ message Subject {
 	int32 id = 1;
 	Common.User user = 2;
 	bool is_admin = 3;
+}
+
+message RightValueValue {
+	PermissionValue value = 1;
+	string name = 2;
 }
 

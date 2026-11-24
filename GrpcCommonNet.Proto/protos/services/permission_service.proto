@@ -17,6 +17,7 @@ service PermissionServices {
 	rpc EditRightObject(RightObjectRequest) returns(RightObjectResponse); // 
 	rpc DeleteRightObject(DeleteRightObjectRequest) returns(DeleteRightObjectResponse); //
 	rpc MoveRightObject(MoveRightObjectRequest) returns(BoolResponse); //
+	rpc GetRightValues(GetRightValuesRequest) returns(GetRightValuesResponse);
 
 	rpc IsRightObjectNameExists(IsRightObjectNameExistsRequest) returns(BoolResponse); // Возвразает true если имя уже существует.
 	rpc IsRightObjectCodeExists(IsRightObjectCodeExistsRequest) returns(BoolResponse); // Возвразает true если код уже существует.
@@ -122,4 +123,13 @@ message GetSubjectsRequest {
 message GetSubjectsResponse {
 	Common.Result result = 1;
 	Common.Subject subject = 2;
+}
+
+message GetRightValuesResponse {
+	Common.Result result = 1;
+	repeated Common.RightValueValue right_value_values = 2;
+}
+
+message GetRightValuesRequest {
+	string db_name = 1;
 }

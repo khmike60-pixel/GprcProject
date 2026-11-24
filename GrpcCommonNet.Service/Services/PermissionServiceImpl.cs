@@ -4,6 +4,7 @@ using GrpcCommonNet.Library.Location;
 using GrpcCommonNet.Library.Permission;
 using GrpcCommonNet.Service.Models;
 using GrpcCommonNet.Service.Repository;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Status = GrpcCommonNet.Library.Common.Status;
 
 namespace GrpcCommonNet.Service.Services
@@ -153,7 +154,7 @@ namespace GrpcCommonNet.Service.Services
         public override async Task<GetSubjectsResponse> GetSubjects(GetSubjectsRequest request, ServerCallContext context)
         {
             UserData userData = new UserData().GetUserData(context);
-            _logger.LogDebug($"GetLocation called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
+            _logger.LogDebug($"GetSubjects called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
             try
             {
@@ -177,7 +178,32 @@ namespace GrpcCommonNet.Service.Services
             }
         }
 
+        public override async Task<GetRightValuesResponse> GetRightValues(GetRightValuesRequest request, ServerCallContext context)
+        {
+            UserData userData = new UserData().GetUserData(context);
+            _logger.LogDebug($"GetRightValues called: {request} UserData : " + "{" + $"User = {userData.User}, Application = {userData.Application}" + "}");
 
+            try
+            {
+                GetRightValuesResponse response = new();
+
+                List<RightValueValue> rightValues = await _repo.GetRightValuesAsync(request, userData);
+
+                if (rightValues == null || rightValues.Count == 0) response.Result = new Result { Status = Status.NotFound };
+                else
+                {
+                    response.RightValueValues.AddRange(rightValues);
+                    response.Result = new Result { Status = Status.Ok };
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return new GetRightValuesResponse { Result = new Result { Status = Status.BadRequest, Message = ex.Message } };
+
+            }
+        }
 
     }
 }

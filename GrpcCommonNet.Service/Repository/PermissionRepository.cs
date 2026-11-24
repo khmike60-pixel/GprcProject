@@ -272,7 +272,47 @@ namespace GrpcCommonNet.Service.Repository
             }
         }
 
-        #region ТТехнические меттоды (mapping)
+        public async Task<List<RightValueValue>> GetRightValuesAsync(GetRightValuesRequest request, UserData userData)
+        {
+            try
+            {
+                List<RightValueValue> rightValueValues = new List<RightValueValue>();
+
+                using var conn = new MySqlConnection(_connectionString);
+                await conn.OpenAsync();
+
+                using (MySqlCommand command = new MySqlCommand($"{request.DbName}.GetRightValues", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.ExecuteNonQuery();
+
+                    using (var rdr = await command.ExecuteReaderAsync())
+                    {
+                        while(await rdr.ReadAsync())
+                        {
+                            rightValueValues.Add(
+                                new RightValueValue
+                                {
+                                    Name = rdr["Right_Values_ValueDisplayName"].ToString(),
+                                    Value = rdr["Right_Values_Value"] == DBNull.Value ? PermissionValue.None :
+                                        Convert.ToInt32(rdr["Right_Values_Value"]) == 10 ? PermissionValue.View :
+                                        Convert.ToInt32(rdr["Right_Values_Value"]) == 20 ? PermissionValue.Select :
+                                        Convert.ToInt32(rdr["Right_Values_Value"]) == 30 ? PermissionValue.Edit :
+                                        PermissionValue.None
+                                });
+                        }
+                    }
+                }
+                return rightValueValues;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ошибка в GetRightValuesAsync: " + ex.Message);
+            }
+        }
+
+
+        #region Технические меттоды (mapping)
         private RightObject FillRightObject(DbDataReader rdr)
         {
             RightObject right = new RightObject();
