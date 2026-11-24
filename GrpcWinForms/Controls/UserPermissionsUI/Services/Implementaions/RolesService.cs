@@ -167,34 +167,34 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Services.Implementaions
         /// <param name="name">Имя для проверки.</param>
         /// <param name="excludeId">ID записи для исключения. -1 для игнорирования</param>
         /// <returns>true если существует</returns>
-        public bool IsNameExists(string name, int excludeId = -1) =>
-            (bool)CallService.GetValueFromFunc(
-                $"{_sourceDbName}.{_func_IsRoleExists}",
-                new Dictionary<string, object>()
-                {
-                    { "_Name", name },
-                    { "_ExcludeId", excludeId }
-                });
+        public bool IsNameExists(string name, int excludeId = -1) => false;
+        //(bool)CallService.GetValueFromFunc(
+        //    $"{_sourceDbName}.{_func_IsRoleExists}",
+        //    new Dictionary<string, object>()
+        //    {
+        //        { "_Name", name },
+        //        { "_ExcludeId", excludeId }
+        //    });
 
 
-        /// <summary> Проверка на сущетсования роли по умолчанию. </summary>
+        /// <summary> Проверка на существования роли по умолчанию. </summary>
         /// <param name="excludeId">ID записи для исключения. -1 для игнорирования</param>
         /// <returns>true если существует.</returns>
-        public bool IsDefaultRoleExists(int excludeId = -1) =>
-            (bool)CallService.GetValueFromFunc(
-                $"{_sourceDbName}.{_func_IsDefaultRoleExists}",
-                new Dictionary<string, object>()
-                {
-                    { "_ExcludeId", excludeId }
-                });
+        public bool IsDefaultRoleExists(int excludeId = -1) => false;
+        //(bool)CallService.GetValueFromFunc(
+        //    $"{_sourceDbName}.{_func_IsDefaultRoleExists}",
+        //    new Dictionary<string, object>()
+        //    {
+        //        { "_ExcludeId", excludeId }
+        //    });
 
-        public bool CanDeleteRole(int id) =>
-            (bool)CallService.GetValueFromFunc(
-                $"{_sourceDbName}.{_func_CanDelteRole}",
-                new Dictionary<string, object>()
-                {
-                    { "_Id", id }
-                });
+        public bool CanDeleteRole(int id) => true;
+            //(bool)CallService.GetValueFromFunc(
+            //    $"{_sourceDbName}.{_func_CanDelteRole}",
+            //    new Dictionary<string, object>()
+            //    {
+            //        { "_Id", id }
+            //    });
 
         private string GenerateUniqueRoleName()
         {
