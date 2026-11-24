@@ -38,8 +38,8 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Presenters
         public DialogResult ShowViewAsDialog() =>
             _view.ShowAsDialog();
 
-        private void View_RefreshRolesData(RoleModel selectedModel = null) =>
-            _view.RefreshRolesData(_rolesService.Get(), selectedModel);
+        private async void View_RefreshRolesData(RoleModel selectedModel = null) =>
+            _view.RefreshRolesData(await  _rolesService.Get(), selectedModel);
 
         private void View_RefreshRoleRightsData(RoleRightTreeModel selectedModel = null)
         {
@@ -58,8 +58,8 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Presenters
             View_RefreshRoleRightsData();
         }
 
-        private void View_OnAddRole() =>
-            View_RefreshRolesData(_rolesService.Add());
+        private async void View_OnAddRole() =>
+            View_RefreshRolesData(await _rolesService.Add());
 
         private void View_OnEditRole(RoleModel role)
         {
@@ -75,8 +75,8 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Presenters
             View_RefreshRolesData(role);
         }
 
-        private void View_OnDuplicateRole(int roleId) =>
-            View_RefreshRolesData(_rolesService.Duplicate(roleId));
+        private async void View_OnDuplicateRole(int roleId) =>
+            View_RefreshRolesData(await _rolesService.Duplicate(roleId));
 
         private void View_OnDeleteRole(RoleModel role)
         {

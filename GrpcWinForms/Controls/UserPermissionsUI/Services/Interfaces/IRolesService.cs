@@ -25,7 +25,7 @@ namespace GrpcWinForms.Controls.UserPermissionsUI.Services.Interfaces
         Task<List<int>> Delete(RoleModel role);
 
         /// <summary> Дублирование существующей роли. </summary>
-        RoleModel Duplicate(int roleId);
+        Task<RoleModel> Duplicate(int roleId);
 
         /// <summary> Проверка имени роли на существование. </summary>
         /// <param name="name">Имя для проверки.</param>
