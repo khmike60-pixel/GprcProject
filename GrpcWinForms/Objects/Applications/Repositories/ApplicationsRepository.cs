@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using GrpcCommonNet.Library.Application;
 using GrpcCommonNet.Library.Common;
@@ -9,16 +9,14 @@ using Application = GrpcCommonNet.Library.Common.Application;
 
 namespace GrpcWinForms.Objects.Applications.Repositories
 {
-    internal class ApplicationsRepository
+    public class ApplicationsRepository : IApplicationsRepository
     {
-        public ApplicationsRepository() { }
-
         /// <summary>
         /// Создает новое приложение в системе.
         /// </summary>
-        /// <param name="application"></param>
-        /// <returns>Новое приложение</returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="application">Данные нового приложения</param>
+        /// <returns>Созданное приложение</returns>
+        /// <exception cref="Exception">Сервер вернул ошибку</exception>
         public async Task<Application> CreateApplicationAsync(Application application)
         {
             var request = new CreateApplicationRequest
@@ -30,12 +28,10 @@ namespace GrpcWinForms.Objects.Applications.Repositories
             var response = await GrpcRetry.CallAsync(() =>
                 GrpcClients.GrpcClients.Application.CreateApplicationAsync(request).ResponseAsync);
 
-            if (response.Result.Status != Status.Ok)
-            {   
-                throw new Exception(string.Join(Environment.NewLine,
-                    "Добавить данные не удалось.",
-                    $"Ошибка при  создании нового приложения: {response.Result.Message}")); 
-            }
+            EnsureOk(response.Result.Status, response.Result.Message,
+                "Добавить данные не удалось.",
+                "Ошибка при создании нового приложения");
+
             return response.Application;
         }
 
@@ -44,7 +40,7 @@ namespace GrpcWinForms.Objects.Applications.Repositories
         /// </summary>
         /// <param name="application">Приложение для обновления</param>
         /// <returns>Обновленное приложение</returns>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="Exception">Сервер вернул ошибку</exception>
         public async Task<Application> UpdateApplicationAsync(Application application)
         {
             var request = new UpdateApplicationRequest
@@ -56,12 +52,11 @@ namespace GrpcWinForms.Objects.Applications.Repositories
             };
             var response = await GrpcRetry.CallAsync(() =>
                 GrpcClients.GrpcClients.Application.UpdateApplicationAsync(request).ResponseAsync);
-            if (response.Result.Status != Status.Ok)
-            {
-                throw new Exception(string.Join(Environment.NewLine,
-                    "Обновить данные не удалось.",
-                    $"Ошибка при обновлении приложения: {response.Result.Message}"));
-            }
+
+            EnsureOk(response.Result.Status, response.Result.Message,
+                "Обновить данные не удалось.",
+                "Ошибка при обновлении приложения");
+
             return response.Application;
         }
 
@@ -69,8 +64,7 @@ namespace GrpcWinForms.Objects.Applications.Repositories
         /// Удаляет приложение из системы по его идентификатору.
         /// </summary>
         /// <param name="applicationId">Идентификатор приложения для удаления</param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <exception cref="Exception">Сервер вернул ошибку</exception>
         public async Task DeleteApplicationAsync(int applicationId)
         {
             var request = new DeleteApplicationRequest
@@ -79,19 +73,38 @@ namespace GrpcWinForms.Objects.Applications.Repositories
             };
             var response = await GrpcRetry.CallAsync(() =>
                 GrpcClients.GrpcClients.Application.DeleteApplicationAsync(request).ResponseAsync);
-            if (response.Result.Status != Status.Ok)
-            {
-                throw new Exception(string.Join(Environment.NewLine,
-                    "Удалить данные не удалось.",
-                    $"Ошибка при удалении приложения: {response.Result.Message}"));
-            }
+
+            EnsureOk(response.Result.Status, response.Result.Message,
+                "Удалить данные не удалось.",
+                "Ошибка при удалении приложения");
         }
 
         /// <summary>
-        /// Получает список всех приложений в системе.
+        /// Удаляет несколько приложений.
         /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="ids">Идентификаторы приложений для удаления</param>
+        /// <returns>Идентификаторы приложений, которые удалить не удалось</returns>
+        /// <exception cref="Exception">Сервер вернул ошибку</exception>
+        public async Task<List<int>> DeleteApplicationsAsync(List<int> ids)
+        {
+            DeleteIdsApplicationRequest request = new();
+            request.Ids.AddRange(ids);
+
+            var response = await GrpcRetry.CallAsync(() =>
+                GrpcClients.GrpcClients.Application.DeleteIdsApplicationAsync(request).ResponseAsync);
+
+            EnsureOk(response.Result.Status, response.Result.Message,
+                "Удалить данные не удалось.",
+                "Ошибка при удалении приложений");
+
+            return [.. response.UndeletedIds];
+        }
+
+        /// <summary>
+        /// Получает список приложений по фильтру.
+        /// </summary>
+        /// <returns>Список приложений</returns>
+        /// <exception cref="Exception">Сервер вернул ошибку</exception>
         public async Task<List<Application>> GetApplicationsAsync(string name, string db, string product)
         {
             var request = new ApplicationFilterRequest
@@ -102,39 +115,24 @@ namespace GrpcWinForms.Objects.Applications.Repositories
             };
             var response = await GrpcRetry.CallAsync(() =>
                 GrpcClients.GrpcClients.Application.GetListApplicationAsync(request).ResponseAsync);
-            if (response.Result.Status != Status.Ok)
-            {
-                throw new Exception(string.Join(Environment.NewLine,
-                    "Не удалось получить список приложений.",
-                    $"Ошибка при получении списка приложений: {response.Result.Message}"));
-            }
+
+            EnsureOk(response.Result.Status, response.Result.Message,
+                "Не удалось получить список приложений.",
+                "Ошибка при получении списка приложений");
+
             return response.Applications.ToList();
         }
 
-        public async Task<List<int>> DeleteApplicationsAsync(List<int> ids)
+        /// <summary>
+        /// Выбрасывает исключение, если сервер вернул статус, отличный от Ok.
+        /// </summary>
+        private static void EnsureOk(Status status, string serverMessage, string failure, string details)
         {
-            try
-            {
-                DeleteIdsApplicationRequest request = new();
-                request.Ids.AddRange(ids);
+            if (status == Status.Ok) return;
 
-                var response = await GrpcRetry.CallAsync(() =>
-                    GrpcClients.GrpcClients.Application.DeleteIdsApplicationAsync(request).ResponseAsync);
-
-                if (response.Result.Status != Status.Ok)
-                {
-                    throw new Exception(string.Join(Environment.NewLine,
-                   "Удалить данные не удалось.",
-                   $"Ошибка при удалении приложений: {response.Result.Message}"));
-                }
-
-                return [.. response.UndeletedIds];
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Ошибка при удалении приложений: {ex.Message}", ex);
-            }
+            throw new Exception(string.Join(Environment.NewLine,
+                failure,
+                $"{details}: {serverMessage}"));
         }
-
     }
 }

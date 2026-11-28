@@ -41,5 +41,8 @@ namespace GrpcWinForms.Objects.Applications.Views.Interfaces
 
         // Утилиты отображения
         void ShowMessage(string text, string caption = "");
+
+        // Запрос подтверждения у пользователя (true — OK)
+        bool Confirm(string text, string caption = "");
     }
 }

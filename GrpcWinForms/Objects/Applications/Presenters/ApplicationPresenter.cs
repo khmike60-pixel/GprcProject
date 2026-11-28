@@ -35,19 +35,9 @@ namespace GrpcWinForms.Objects.Applications.Presenters
             }
 
             // Сохранение значений в модель
-            if (!_view.IsNew)
-            {
-                if (int.TryParse(_view.IdText, out int id))
-                    _view.Application.Id = id;
-                else
-                    _view.Application.Id = 0;
-            }
-            else
-            {
-                _view.Application.Id = 0;
-            }
+            _view.Application.Id = !_view.IsNew && int.TryParse(_view.IdText, out int id) ? id : 0;
 
-            _view.Application.Name = _view.AppName ?? string.Empty;
+            _view.Application.Name = _view.AppName;
             _view.Application.Db = _view.Db ?? string.Empty;
             _view.Application.Product = _view.Product ?? string.Empty;
 

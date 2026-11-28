@@ -79,8 +79,6 @@ namespace GrpcWinForms.Objects.Applications
                 smartGrid1.SelectedRows.AddRange(value);
             }
         }
-
-        IList<int> IApplicationsView.SelectedRows { get => SelectedRows; set => SelectedRows = value; }
         #endregion
 
 
@@ -145,6 +143,9 @@ namespace GrpcWinForms.Objects.Applications
         }
 
         public void ShowMessage(string text, string caption = "") => MessageBox.Show(text, caption);
+
+        public bool Confirm(string text, string caption = "") =>
+            MessageBox.Show(text, caption, MessageBoxButtons.OKCancel) == DialogResult.OK;
 
         // События формы пересылают действия в презентер
         private async void ApplicationsForm_Load(object sender, EventArgs e)

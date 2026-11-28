@@ -1,6 +1,5 @@
-﻿using GrpcCommonNet.Library.Application;
-using GrpcCommonNet.Library.Common;
-using GrpcWinForms.GrpcUtils;
+using GrpcWinForms.Objects.Applications.Repositories;
+using GrpcWinForms.Objects.Applications.Views.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,30 +7,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Application = GrpcCommonNet.Library.Common.Application;
-using GrpcWinForms.Objects.Applications.Views.Interfaces;
-using GrpcWinForms.Objects.Applications.Repositories;
 
 namespace GrpcWinForms.Objects.Applications.Presenters
 {
     public class ApplicationsPresenter
     {
         private readonly IApplicationsView _view;
-        private readonly ApplicationsRepository _repository = new ApplicationsRepository();
+        private readonly IApplicationsRepository _repository;
 
         public ApplicationsPresenter(IApplicationsView view)
+            : this(view, new ApplicationsRepository())
+        {
+        }
+
+        public ApplicationsPresenter(IApplicationsView view, IApplicationsRepository repository)
         {
             _view = view ?? throw new ArgumentNullException(nameof(view));
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         public async Task RefreshAsync()
         {
             _view.BeginUpdate();
             try
-            { 
-                List<Application> applications = await _repository.GetApplicationsAsync(
-                    _view.NameFilter ?? string.Empty, 
-                    _view.NameFilter ?? string.Empty, 
-                    _view.NameFilter ?? string.Empty);
+            {
+                // TODO: одна и та же строка передаётся как фильтр по имени, базе и продукту.
+                // Уточнить, как сервер объединяет условия (И / ИЛИ).
+                string filter = _view.NameFilter ?? string.Empty;
+                List<Application> applications = await _repository.GetApplicationsAsync(filter, filter, filter);
 
                 _view.Applications = new BindingList<Application>(applications);
             }
@@ -53,8 +56,8 @@ namespace GrpcWinForms.Objects.Applications.Presenters
                 if (_view.ShowApplicationDialog(form) != DialogResult.OK) return;
 
                 Application application = await _repository.CreateApplicationAsync(form.Application);
-                
-                if (application.Id == 0 )
+
+                if (application.Id == 0)
                 {
                     _view.ShowMessage("Не удалось создать запись.", "Ошибка");
                     return;
@@ -100,49 +103,42 @@ namespace GrpcWinForms.Objects.Applications.Presenters
         {
             try
             {
-                if (_view.SelectedRows == null || _view.SelectedRows.Count == 0)
-                {
-                    var dr = MessageBox.Show("Удалить текущую строку данных?", "Удаление", MessageBoxButtons.OKCancel);
-                    if (dr != DialogResult.OK) return;
+                IList<int> selectedRows = _view.SelectedRows;
 
-                    int id = _view.GetIdAtRow(_view.RowSel);
-                    var request = new DeleteApplicationRequest { Id = id };
-                    var response = await GrpcRetry.CallAsync(() =>
-                        GrpcClients.GrpcClients.Application.DeleteApplicationAsync(request).ResponseAsync);
-
-                    int i = _view.RowSel - _view.RowsFixed;
-                    if (response.Result.Status == Status.Ok)
-                    {
-                        _view.RemoveAt(i);
-                    }
-                    else
-                    {
-                        _view.ShowMessage("Ошибка при удалении: " + response.Result.Message, "Ошибка");
-                    }
-                }
+                if (selectedRows == null || selectedRows.Count == 0)
+                    await DeleteCurrentRowAsync();
                 else
-                {
-                    var dr = MessageBox.Show($"Вы отметили {_view.SelectedRows.Count} строк.\nУдалить отмеченные строки?", "Удаление", MessageBoxButtons.OKCancel);
-                    if (dr != DialogResult.OK) return;
-
-                    var ids = new List<int>();
-                    foreach (var idx in _view.SelectedRows) ids.Add(_view.GetIdAtRow(idx));
-
-                    List<int> undeletedIds = await _repository.DeleteApplicationsAsync(ids);
-
-                    var undeleted = undeletedIds.Select(i => Convert.ToInt32(i)).ToList();
-                    var removed = ids.Except(undeleted).ToList();
-                    _view.RemoveApplicationsByIds(removed);
-
-                    if (undeleted.Count > 0)
-                    {
-                        _view.ShowMessage("Данные, которые не удалось удалить остались выделенными.", "Внимание");
-                    }
-                }
+                    await DeleteSelectedRowsAsync(selectedRows);
             }
             catch (Exception ex)
             {
                 _view.ShowMessage("Ошибка при удалении: " + ex.Message, "Ошибка");
+            }
+        }
+
+        private async Task DeleteCurrentRowAsync()
+        {
+            if (!_view.Confirm("Удалить текущую строку данных?", "Удаление")) return;
+
+            int id = _view.GetIdAtRow(_view.RowSel);
+            await _repository.DeleteApplicationAsync(id);
+
+            _view.RemoveAt(_view.RowSel - _view.RowsFixed);
+        }
+
+        private async Task DeleteSelectedRowsAsync(IList<int> selectedRows)
+        {
+            if (!_view.Confirm($"Вы отметили {selectedRows.Count} строк.\nУдалить отмеченные строки?", "Удаление")) return;
+
+            List<int> ids = selectedRows.Select(row => _view.GetIdAtRow(row)).ToList();
+            List<int> undeletedIds = await _repository.DeleteApplicationsAsync(ids);
+
+            List<int> removedIds = ids.Except(undeletedIds).ToList();
+            _view.RemoveApplicationsByIds(removedIds);
+
+            if (undeletedIds.Count > 0)
+            {
+                _view.ShowMessage("Данные, которые не удалось удалить остались выделенными.", "Внимание");
             }
         }
     }
